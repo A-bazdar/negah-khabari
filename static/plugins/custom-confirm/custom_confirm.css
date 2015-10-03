@@ -1,0 +1,43 @@
+#dialog-overlay{
+    display: none;
+    opacity: 0.4;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000;
+    width: 100%;
+    z-index: 1000000;
+}
+
+#dialog-box{
+    display: none;
+    position: fixed;
+    background: #ffffff;
+    border-radius: 7px;
+    width: 550px;
+    z-index: 1000000;
+}
+
+#dialog-box-head{
+    background: #b8b8b8;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 7px 7px 0 0;
+}
+
+#dialog-box-body{
+    background: #FFFFFF;
+    padding: 30px 15px;
+    color: #828282;
+    font-size: 14pt;
+    min-height: 100px;
+    text-align: center;
+}
+
+#dialog-box-footer{
+    background: #cccccc;
+    padding: 10px 15px;
+    color: white;
+    text-align: center;
+    border-radius: 0 0 7px 7px;
+}

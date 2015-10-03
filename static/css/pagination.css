@@ -1,0 +1,23 @@
+.pagination{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination .change-page{
+    cursor: pointer;
+    display: inline-block;
+}
+
+.pagination .change-page .number{
+    background: #ffffff;
+    color: #cccccc;
+    font-size: 13pt;
+    border: 1px solid #cccccc;
+    display: inline;
+    padding: 0 10px;
+    border-radius: 5px !important;
+}
+
+.pagination .change-page .number.active{
+    box-shadow: 0 0 4px #898989;
+}
