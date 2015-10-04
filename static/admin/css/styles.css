@@ -1,0 +1,47 @@
+@charset "utf-8";
+/* CSS Document */
+
+.header{
+    background: white;
+    box-shadow: 0 0 10px #aaa;
+    padding: 10px;
+}
+
+.header_links{
+    color: #828282;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 10pt;
+}
+
+.header_links:hover{
+    color: #EF3F3E;
+    text-decoration: none;
+}
+
+.dropdown-alerts{
+    left: 0 !important;
+    right: auto !important;
+}
+
+.dropdown-tasks{
+    left: 0 !important;
+    right: auto !important;
+}
+
+.dropdown-messages{
+    left: 0 !important;
+    right: auto !important;
+}
+
+.font-yekan{
+    font-family: 'yekan' !important;
+}
+
+.panel-heading i{
+    font-size: 13pt;
+}
+.panel-heading span{
+    margin-right: 10px;
+    vertical-align: 3px;
+}

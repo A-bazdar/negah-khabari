@@ -3,4 +3,9 @@
 
 __author__ = 'Morteza'
 
-url_patterns = []
+from handlers.admin import *
+
+url_patterns = [
+    (r'/admin', AdminHandler),
+    (r'/admin/content_management', AdminContentHandler)
+]

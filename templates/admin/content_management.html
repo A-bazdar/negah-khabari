@@ -1,0 +1,42 @@
+{% extends admin_base.html %}
+
+{% block content_management %}
+    <li class="active">
+        <a href=""><i class="fa fa-dashboard fa-fw"></i> مدیریت<span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level">
+            <li>
+                <a class="active" href="/admin/content_management">مدیریت قالب محتوا</a>
+            </li>
+            <li>
+                <a href="">مدیریت موضوعات</a>
+            </li>
+            <li>
+                <a href="">مدیریت رده</a>
+            </li>
+            <li>
+                <a href="">مدیریت گروه های خبری</a>
+            </li>
+            <li>
+                <a href="">مدیریت حوزه های جغرافیایی</a>
+            </li>
+            <li>
+                <a href="">مدیریت جهت گیری</a>
+            </li>
+        </ul>
+    </li>
+{% end block content_management %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>ایجاد و مدیریت قالب های محتوا</span> </div>
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end block container %}
