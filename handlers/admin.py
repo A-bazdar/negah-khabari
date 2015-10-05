@@ -12,3 +12,7 @@ class AdminHandler(tornado.web.RequestHandler):
 class AdminContentHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/content_management.html')
+
+class AdminLoginHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_login.html')
