@@ -5,7 +5,7 @@
         <a href=""><i class="fa fa-dashboard fa-fw"></i> مدیریت<span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">
             <li>
-                <a class="active" href="/admin/content_management">مدیریت قالب محتوا</a>
+                <a href="/admin/content_management">مدیریت قالب محتوا</a>
             </li>
             <li>
                 <a href="/admin/subject_management">مدیریت موضوعات</a>
@@ -14,7 +14,7 @@
                 <a href="/admin/category_management">مدیریت رده</a>
             </li>
             <li>
-                <a href="/admin/group_management">مدیریت گروه های خبری</a>
+                <a class="active" href="/admin/group_management">مدیریت گروه های خبری</a>
             </li>
             <li>
                 <a href="">مدیریت حوزه های جغرافیایی</a>
@@ -31,25 +31,32 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default margin-top-30 font-yekan">
-                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>ایجاد و مدیریت قالب های محتوا</span> </div>
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>ایجاد و مدیریت حوزه های جغرافیایی</span> </div>
                     <div class="panel-body">
                         <div class="show_box" data-action="1">
                             <div class="box_header">
-                                <span>فهرست قالب های محتوا</span>
+                                <span>فهرست حوزه های جغرافیایی</span>
                                 <div class="new_content_btn">
-                                    <i class="fa fa-plus"></i>ایجاد قالب جدید
+                                    <i class="fa fa-plus"></i>ایجاد حوزه جدید
                                 </div>
                             </div>
                             <div class="box_body">
                                 <div class="content_detail">
-                                    <div class="display-inline-block">1. تیتر1</div>
+                                    <div class="display-inline-block"><span>1. تیتر1</span><span class="margin-right-35 font-size-10">(دارای 1 زیرمجموعه)</span> </div>
+                                    <div class="display-inline-block content_icon pull-left">
+                                        <i class="fa fa-pencil"></i>
+                                        <i class="fa fa-trash-o"></i>
+                                    </div>
+                                </div>
+                                <div class="content_sub_detail">
+                                    <div class="display-inline-block"><span>1. تیتر1</span> </div>
                                     <div class="display-inline-block content_icon pull-left">
                                         <i class="fa fa-pencil"></i>
                                         <i class="fa fa-trash-o"></i>
                                     </div>
                                 </div>
                                 <div class="content_detail">
-                                    <div class="display-inline-block">2. اخبار ویژه</div>
+                                    <div class="display-inline-block"><span>2. اخبار ویژه</span></div>
                                     <div class="display-inline-block content_icon pull-left">
                                         <i class="fa fa-pencil"></i>
                                         <i class="fa fa-trash-o"></i>
@@ -66,25 +73,30 @@
                         </div>
                         <div class="show_box display-none" data-action="2">
                             <div class="box_header">
-                                <span>اضافه کردن قالب محتوا</span>
+                                <span>اضافه کردن گروه خبری</span>
                             </div>
                             <div class="box_body">
                                 <form>
                                     <div class="row">
                                         <div class="col-xs-9">
                                             <div class="row">
-                                                <div class="col-xs-2 text-left">
-                                                    <span>نام قالب:</span>
+                                                <div class="col-xs-3 text-right">
+                                                    <span>نام:</span>
                                                 </div>
                                                 <div class="col-xs-9">
                                                     <input type="text" class="form-control">
                                                 </div>
                                             </div>
+                                            <div class="row margin-top-10">
+                                                <div class="col-xs-3 text-right">
+                                                    <span>زیر مجموعه کردن گروه:</span>
+                                                </div>
+                                                <div class="col-xs-9">
+                                                    <select class="form-control"><option>asd</option><option>asd</option></select>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-xs-3">
-                                            <input type="checkbox">
-                                            <span class="vertical-3">نمایش در صفحه اصلی</span>
-                                        </div>
+                                        <div class="col-xs-3"></div>
                                     </div>
                                     <div class="row margin-top-10">
                                         <div class="col-xs-2 pull-left">

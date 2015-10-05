@@ -1,11 +1,11 @@
 /*author : Morteza*/
 
 .R_butt_blue {
-    border: none;
     border-radius: 5px;
-    background: #00a0dc;
-    padding: 5px 15px;
-    font-size: 12pt;
+    border: 1px solid #707070 !important;
+    background: #4691B7;
+    padding: 3px 25px !important;
+    font-size: 10pt !important;
     color: #ffffff;
     vertical-align: middle;
     margin: 1px !important;
@@ -21,6 +21,7 @@
 
 .R_butt_blue:hover {
     background: #0079a6;
+    color: #ffffff;
     text-decoration: none;
     -webkit-transition: background 0.2s;
     -moz-transition: background 0.2s;
@@ -83,7 +84,7 @@
 }
 
 .R_butt_green:hover {
-    background: #4c9f18;
+    background: #7da93d;
     text-decoration: none;
     -webkit-transition: background 0.2s;
     -moz-transition: background 0.2s;
