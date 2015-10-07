@@ -11,5 +11,7 @@ url_patterns = [
     (r'/admin/subject_management', AdminSubjectHandler),
     (r'/admin/category_management', AdminCategoryHandler),
     (r'/admin/group_management', AdminGroupHandler),
+    (r'/admin/geo_management', AdminGeoHandler),
+    (r'/admin/source_management', AdminSourceHandler),
     (r'/admin/login', AdminLoginHandler)
 ]

@@ -17,7 +17,7 @@
                 <a href="/admin/group_management">مدیریت گروه های خبری</a>
             </li>
             <li>
-                <a href="">مدیریت حوزه های جغرافیایی</a>
+                <a href="/admin/geo_management">مدیریت حوزه های جغرافیایی</a>
             </li>
             <li>
                 <a href="">مدیریت جهت گیری</a>
@@ -36,7 +36,7 @@
                         <div class="show_box" data-action="1">
                             <div class="box_header">
                                 <span>فهرست قالب های محتوا</span>
-                                <div class="new_content_btn">
+                                <div class="new_content_btn" data-toggle="modal" href="#new_content_modal">
                                     <i class="fa fa-plus"></i>ایجاد قالب جدید
                                 </div>
                             </div>
@@ -64,36 +64,53 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="show_box display-none" data-action="2">
-                            <div class="box_header">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade in" id="new_content_modal" tabindex="-1" role="basic" aria-hidden="false">
+        <div class="modal-dialog" style="font-family: Yekan;width: 60%">
+            <div class="modal-content" style="border-radius: 7px !important; margin-top: 100px">
+                <div class="show_box">
+                    <div class="box_header">
+                        <div class="row">
+                            <div class="col-xs-11">
                                 <span>اضافه کردن قالب محتوا</span>
                             </div>
-                            <div class="box_body">
-                                <form>
-                                    <div class="row">
-                                        <div class="col-xs-9">
-                                            <div class="row">
-                                                <div class="col-xs-2 text-left">
-                                                    <span>نام قالب:</span>
-                                                </div>
-                                                <div class="col-xs-9">
-                                                    <input type="text" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <input type="checkbox">
-                                            <span class="vertical-3">نمایش در صفحه اصلی</span>
-                                        </div>
-                                    </div>
-                                    <div class="row margin-top-10">
-                                        <div class="col-xs-2 pull-left">
-                                            <button class="btn R_butt_green">افزودن</button>
-                                        </div>
-                                    </div>
-                                </form>
+                            <div class="col-xs-1">
+                                <span class="cursor fa fa-times"
+                                      style="font-size:12pt;color: #828282;margin-top: 5px;cursor: pointer"
+                                      data-dismiss="modal" aria-hidden="true"></span>
                             </div>
                         </div>
+                    </div>
+                    <div class="box_body" style="padding: 50px 10px">
+                        <form>
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <div class="row">
+                                        <div class="col-xs-2 text-left">
+                                            <span>نام قالب:</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <input type="checkbox">
+                                    <span class="vertical-3">نمایش در صفحه اصلی</span>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-xs-2 pull-left">
+                                    <button class="btn R_butt_green">افزودن</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -102,12 +119,4 @@
 {% end block container %}
 
 {% block other_scripts %}
-<script>
-    $('.new_content_btn').click(function(){
-        var data = 1;
-        var data_form = 2;
-        $('.show_box[data-action=' + data + ']').css('display','none');
-        $('.show_box[data-action=' + data_form + ']').fadeIn();
-    });
-</script>
 {% end block other_scripts %}

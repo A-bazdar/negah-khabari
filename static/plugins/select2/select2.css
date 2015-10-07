@@ -28,7 +28,7 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
 
 .select2-container .select2-choice {
     display: block;
-    height: 26px;
+    height: 30px;
     padding: 0 0 0 8px;
     overflow: hidden;
     position: relative;
@@ -179,11 +179,11 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
     width: 18px;
     height: 100%;
     position: absolute;
-    right: 0;
+    left: 0;
     top: 0;
 
-    border-left: 1px solid #aaa;
-    border-radius: 0 4px 4px 0;
+    border-right: 1px solid #aaa;
+    border-radius: 4px 0 0 4px;
 
     background-clip: padding-box;
 

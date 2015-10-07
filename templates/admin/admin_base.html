@@ -10,15 +10,22 @@
     <meta name="author" content="">
 
     <title>Admin Panel</title>
-    <link type="text/css" rel="stylesheet" href="/static/admin/css/styles.css">
-    <link type="text/css" rel="stylesheet" href="/static/css/common.css">
-    <link type="text/css" rel="stylesheet" href="/static/admin/css/fonts.css">
-    <link type="text/css" rel="stylesheet" href="/static/admin/plugins/bootstrap/dist/css/bootstrap.min.css">
-    <link href="/static/admin/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
-    <link href="/static/admin/plugins/timeline.css" rel="stylesheet">
-    <link href="/static/admin/css/sb-admin-2.css" rel="stylesheet">
-    <link href="/static/admin/plugins/morris.css" rel="stylesheet">
-    <link href="/static/admin/plugins/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link type="text/css" rel="stylesheet" href="{{ static_url('admin/css/styles.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ static_url('css/common.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ static_url('admin/css/fonts.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ static_url('admin/plugins/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link href="{{ static_url('admin/plugins/metisMenu/metisMenu.min.css') }}" rel="stylesheet">
+    <link href="{{ static_url('admin/plugins/timeline.css') }}" rel="stylesheet">
+    <link href="{{ static_url('admin/css/sb-admin-2.css') }}" rel="stylesheet">
+    <link href="{{ static_url('admin/plugins/morris.css') }}" rel="stylesheet">
+    <link href="{{ static_url('admin/plugins/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ static_url('plugins/select2/select2.css') }}" rel="stylesheet" type="text/css">
+
+    <style>
+        .select{
+            width: 100%;
+        }
+    </style>
 
 {% block other_css %}
 {% end block other_css %}
@@ -63,7 +70,7 @@
                 <ul class="nav" id="side-menu">
                     {% block content_management %}
                     <li>
-                        <a class="active" href=""><i class="fa fa-dashboard fa-fw"></i> مدیریت<span class="fa arrow"></span></a>
+                        <a href=""><i class="fa fa-dashboard fa-fw"></i> مدیریت<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="/admin/content_management">مدیریت قالب محتوا</a>
@@ -78,7 +85,7 @@
                                 <a href="/admin/group_management">مدیریت گروه های خبری</a>
                             </li>
                             <li>
-                                <a href="">مدیریت حوزه های جغرافیایی</a>
+                                <a href="/admin/geo_management">مدیریت حوزه های جغرافیایی</a>
                             </li>
                             <li>
                                 <a href="">مدیریت جهت گیری</a>
@@ -88,7 +95,7 @@
                     {% end block content_management %}
                     {% block source_management %}
                     <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت منابع خبری</a>
+                        <a href="/admin/source_management"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت منابع خبری</a>
                     </li>
                     {% end block source_management %}
                     {% block table_management %}
@@ -231,17 +238,27 @@
     {% end block container %}
 
 </div>
-<script src="/static/plugins/jquery/jquery.min.js"></script>
+<script src="{{ static_url('plugins/jquery/jquery.min.js') }}"></script>
 
-<script src="/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="{{ static_url('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
 
-<script src="/static/admin/plugins/metisMenu/metisMenu.min.js"></script>
+<script src="{{ static_url('admin/plugins/metisMenu/metisMenu.min.js') }}"></script>
 
-<script src="/static/admin/js/sb-admin-2.js"></script>
+<script src="{{ static_url('admin/js/sb-admin-2.js') }}"></script>
+
+<script src="{{ static_url('plugins/select2/select2.min.js') }}"></script>
 
 {% block other_scripts %}
 {% end block other_scripts %}
+<script>
+    $('.select').select2({
+        placeholder: "انتخاب کنید",
+        dir: "rtl",
+        theme: "classic"
+    });
 
+    $('.select2-input.select2-focused').attr('spellcheck','true');
+</script>
 </body>
 
 </html>

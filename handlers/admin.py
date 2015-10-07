@@ -25,6 +25,14 @@ class AdminGroupHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/group_management.html')
 
+class AdminGeoHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/geo_area_management.html')
+
+class AdminSourceHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/source_management.html')
+
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')
