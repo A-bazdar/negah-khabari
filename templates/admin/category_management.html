@@ -5,13 +5,13 @@
         <a href=""><i class="fa fa-dashboard fa-fw"></i> مدیریت<span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">
             <li>
-                <a class="active" href="/admin/content_management">مدیریت قالب محتوا</a>
+                <a href="/admin/content_management">مدیریت قالب محتوا</a>
             </li>
             <li>
                 <a href="/admin/subject_management">مدیریت موضوعات</a>
             </li>
             <li>
-                <a href="/admin/category_management">مدیریت رده</a>
+                <a class="active" href="/admin/category_management">مدیریت رده</a>
             </li>
             <li>
                 <a href="/admin/group_management">مدیریت گروه های خبری</a>
@@ -31,13 +31,13 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default margin-top-30 font-yekan">
-                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>ایجاد و مدیریت قالب های محتوا</span> </div>
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>ایجاد و مدیریت رده ها</span> </div>
                     <div class="panel-body">
                         <div class="show_box" data-action="1">
                             <div class="box_header">
-                                <span>فهرست قالب های محتوا</span>
-                                <div class="new_content_btn" data-toggle="modal" href="#new_content_modal">
-                                    <i class="fa fa-plus"></i>ایجاد قالب جدید
+                                <span>فهرست رده ها</span>
+                                <div class="new_content_btn" data-toggle="modal" href="#new_category_modal">
+                                    <i class="fa fa-plus"></i>ایجاد رده جدید
                                 </div>
                             </div>
                             <div class="box_body">
@@ -71,14 +71,14 @@
     </div>
 
 
-    <div class="modal fade in" id="new_content_modal" tabindex="-1" role="basic" aria-hidden="false">
+    <div class="modal fade in" id="new_category_modal" tabindex="-1" role="basic" aria-hidden="false">
         <div class="modal-dialog" style="font-family: Yekan;width: 60%">
             <div class="modal-content" style="border-radius: 7px !important; margin-top: 100px">
                 <div class="show_box">
                     <div class="box_header">
                         <div class="row">
                             <div class="col-xs-11">
-                                <span>اضافه کردن قالب محتوا</span>
+                                <span>اضافه کردن رده</span>
                             </div>
                             <div class="col-xs-1">
                                 <span class="cursor fa fa-times"
@@ -92,18 +92,15 @@
                             <div class="row">
                                 <div class="col-xs-9">
                                     <div class="row">
-                                        <div class="col-xs-2 text-left">
-                                            <span>نام قالب:</span>
+                                        <div class="col-xs-3 text-right">
+                                            <span>نام:</span>
                                         </div>
                                         <div class="col-xs-9">
                                             <input type="text" class="form-control">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-3">
-                                    <input type="checkbox">
-                                    <span class="vertical-3">نمایش در صفحه اصلی</span>
-                                </div>
+                                <div class="col-xs-3"></div>
                             </div>
                             <div class="row margin-top-10">
                                 <div class="col-xs-2 pull-left">
