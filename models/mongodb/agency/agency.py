@@ -7,23 +7,58 @@ __author__ = 'Morteza'
 
 
 class AgencyModel():
-    def __init__(self):
-        self.body = {}
+    def __init__(self, _id=None):
+        self.id = _id
 
-    def get_all(self):
+    @staticmethod
+    def get_all():
         try:
-            r = MongodbModel(body=self.body).get_all()
+            r = MongodbModel(body={}).get_all()
             if r:
                 return [dict(
+                    id=i['_id'],
                     name=i['name'],
                     link=i['link'],
-                    link_news=i['link_news'],
-                    title=i['title'],
-                    ro_title=i['ro_title'],
-                    summary=i['summary'],
-                    container=i['container'],
-                    thumbnail=i['thumbnail']
+                    base_link=i['base_link'],
+                    brief_link=i['brief_link'],
+                    brief_title=i['brief_title'],
+                    brief_ro_title=i['brief_ro_title'],
+                    brief_summary=i['brief_summary'],
+                    brief_container=i['brief_container'],
+                    brief_thumbnail=i['brief_thumbnail'],
+                    news_title=i['news_title'],
+                    news_ro_title=i['news_ro_title'],
+                    news_summary=i['news_summary'],
+                    news_body=i['news_body'],
+                    news_thumbnail=i['news_thumbnail'],
                 ) for i in r]
+            return {}
+        except:
+            Debug.get_exception()
+            return {}
+
+    def get_one(self):
+        try:
+            body = {'_id': self.id}
+            r = MongodbModel(body=body).get_one()
+            if r:
+                return dict(
+                    id=r['_id'],
+                    name=r['name'],
+                    link=r['link'],
+                    base_link=r['base_link'],
+                    brief_link=r['brief_link'],
+                    brief_title=r['brief_title'],
+                    brief_ro_title=r['brief_ro_title'],
+                    brief_summary=r['brief_summary'],
+                    brief_container=r['brief_container'],
+                    brief_thumbnail=r['brief_thumbnail'],
+                    news_title=r['news_title'],
+                    news_ro_title=r['news_ro_title'],
+                    news_summary=r['news_summary'],
+                    news_body=r['news_body'],
+                    news_thumbnail=r['news_thumbnail'],
+                )
             return {}
         except:
             Debug.get_exception()

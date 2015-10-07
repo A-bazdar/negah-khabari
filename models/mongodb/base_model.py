@@ -27,3 +27,9 @@ class MongodbModel(MongodbBaseModel):
             return self.db.agency.find(self.__body)
         except:
             return False
+
+    def get_one(self):
+        try:
+            return self.db.agency.find_one(self.__body)
+        except:
+            return False
