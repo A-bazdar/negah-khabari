@@ -41,6 +41,26 @@ class AdminUserGeneralInfoHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/user_management/general_info.html')
 
+class AdminUserGroupHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/user_management/user_group_management.html')
+
+class AdminSearchPatternsHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/user_management/search_patterns.html')
+
+class AdminAccessSourceHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/user_management/access_source.html')
+
+class AdminBoltonManagementHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/user_management/bolton_management.html')
+
+class AdminChartsContentHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/user_management/charts_content.html')
+
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')

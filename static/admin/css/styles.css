@@ -181,13 +181,18 @@
     color: #b91b09;
 }
 
-.i.fa-pencil{
-    color: #828282;
+i.fa.fa-pencil{
+    color: #828282 !important;
     margin: 0 5px;
 }
 
-.i.fa-trash-o{
-    color: #b91b09;
+i.fa-trash-o{
+    color: #b91b09 !important;
+    margin: 0 5px;
+}
+
+i.fa-wrench{
+    color: #126FB2 !important;
     margin: 0 5px;
 }
 
@@ -228,6 +233,15 @@
     padding: 15px;
     box-shadow: 0 0 2px #aaa;
     border-radius: 5px;
+    position: relative;
+}
+
+.form_body_title{
+    position: absolute;
+    top: -12px;
+    right: 15px;
+    background: white;
+    padding: 0 10px;
 }
 
 .nav li a{

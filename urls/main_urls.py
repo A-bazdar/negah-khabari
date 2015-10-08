@@ -15,5 +15,10 @@ url_patterns = [
     (r'/admin/source_management', AdminSourceHandler),
     (r'/admin/direction_management', AdminDirectionHandler),
     (r'/admin/user_management/general_info', AdminUserGeneralInfoHandler),
+    (r'/admin/user_management/user_group', AdminUserGroupHandler),
+    (r'/admin/user_management/search_patterns', AdminSearchPatternsHandler),
+    (r'/admin/user_management/access_to_source', AdminAccessSourceHandler),
+    (r'/admin/user_management/bolton_management', AdminBoltonManagementHandler),
+    (r'/admin/user_management/charts_content', AdminChartsContentHandler),
     (r'/admin/login', AdminLoginHandler)
 ]
