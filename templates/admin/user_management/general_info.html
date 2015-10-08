@@ -1,0 +1,654 @@
+{% extends '../admin_base.html' %}
+
+{% block other_css %}
+<link rel="stylesheet" href="{{ static_url('plugins/DatePicker/pwt-datepicker.css') }}">
+<link rel="stylesheet" href="{{ static_url('plugins/Lc_Switch/lc_switch.css') }}">
+<link rel="stylesheet" type="text/css" href="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
+{% end block other_css %}
+
+{% block user_management %}
+<li class="active">
+    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت کاربر<span class="fa arrow"></span></a>
+    <ul class="nav nav-second-level">
+        <li>
+            <a class="active" href="/admin/user_management/general_info">اطلاعات عمومی</a>
+        </li>
+        <li>
+            <a href="">جستجو و الگوها</a>
+        </li>
+        <li>
+            <a href="">دسترسی به منابع خبری</a>
+        </li>
+        <li>
+            <a href="">مدیریت بولتن</a>
+        </li>
+        <li>
+            <a href="">نمودار و تحلیل محتوا</a>
+        </li>
+        <li>
+            <a href="">مدیریت زیر مجموعه</a>
+        </li>
+        <li>
+            <a href="">کلمات کلیدی</a>
+        </li>
+        <li>
+            <a href="">مدیریت گروه های کاربر</a>
+        </li>
+    </ul>
+</li>
+{% end block user_management %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>اطلاعات عمومی کاربران</span> </div>
+                    <div class="panel-body">
+                        <div class="show_box">
+                            <div class="box_header">
+                                <span>فهرست کاربران</span>
+                                <div class="new_user_btn" data-toggle="modal" href="#new_user_modal">
+                                    <i class="fa fa-plus"></i>افزودن
+                                </div>
+                                <div class="search_user_btn" data-toggle="modal" href="#search_user_modal">
+                                    <i class="fa fa-search"></i>جستجوی پیشرفته
+                                </div>
+                            </div>
+                            <div class="box_body">
+                                <table class="table table-bordered source_news_table">
+                                    <tr>
+                                        <td>سازمان</td>
+                                        <td>نام خانوادگی</td>
+                                        <td>نام کاربری</td>
+                                        <td>ایمیل</td>
+                                        <td>آخرین بازدید</td>
+                                        <td>شماره تلفن</td>
+                                        <td>کلمات کلیدی</td>
+                                        <td>مدیریت زیرمجموعه</td>
+                                        <td>وضعیت</td>
+                                        <td>عملیات</td>
+                                    </tr>
+                                    <tr>
+                                        <td>نظام پزشکی</td>
+                                        <td>مجیدی</td>
+                                        <td>Majidi</td>
+                                        <td>ma@dd.com</td>
+                                        <td>93/06/02</td>
+                                        <td>09122222222</td>
+                                        <td>فعال</td>
+                                        <td>فعال</td>
+                                        <td>فعال</td>
+                                        <td>
+                                            <i class="fa fa-pencil"></i>
+                                            <i class="fa fa-trash-o"></i>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="box_footer">
+                                <div class="row margin-top-10">
+                                    <div class="col-xs-2">
+                                        <button class="btn R_butt_blue">چیدن موضوعات</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade in" id="new_user_modal" tabindex="-1" role="basic" aria-hidden="false">
+        <div class="modal-dialog" style="font-family: Yekan;width: 60%">
+            <div class="modal-content" style="border-radius: 7px !important">
+                <div class="show_box">
+                    <div class="box_header">
+                        <div class="row">
+                            <div class="col-xs-11">
+                                <span>اضافه کردن رده</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span class="cursor fa fa-times"
+                                      style="font-size:12pt;color: #828282;margin-top: 5px;cursor: pointer"
+                                      data-dismiss="modal" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box_body" style="padding: 50px 10px">
+                        <div class="row">
+                            <div class="col-xs-8 col-xs-offset-2 form_modal_body">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">نام</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">نام خانوادگی</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">نام سازمان</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">رمز عبور</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">شماره تلفن</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">شماره موبایل </span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">شماره نمابر </span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">ایمیل </span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">وضعیت کاربر</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <select class="select"><option>فعال</option><option>غیرفعال</option></select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">خوش آمد گویی</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <select class="select"><option>سازمان</option><option>مدیر</option></select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">تاریخ عضویت</span>
+                                        </div>
+                                        <div class="col-xs-1">
+                                            <span class="form_label">از</span>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <input type="text" name="" class="datePicker form-control">
+                                        </div>
+                                        <div class="col-xs-1">
+                                            <span class="form_label">تا</span>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <input type="text" name="" class="datePicker form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">دسترسی به آرشیو</span>
+                                        </div>
+                                        <div class="col-xs-1">
+                                            <span class="form_label">از</span>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <input type="text" name="" class="datePicker form-control">
+                                        </div>
+                                        <div class="col-xs-1">
+                                            <span class="form_label">تا</span>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <input type="text" name="" class="datePicker form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">گروه کاربری</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <select class="select"><option>گروه1</option><option>گروه2</option></select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">عکس کاربر</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                <div id="photo_show" class="fileupload-new thumbnail" style="width: 184px; height: 134px;">
+                                                    <img  src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                                                </div>
+                                                <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+                                                <div>
+                                                    <span class="btn backgroundBlue colorWhite btn-file">
+                                                    <span data-toggle="modal" href="#cropper-foodlist" class="fileupload-new"><i class="fa fa-paper-clip"></i> انتخاب تصویر </span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i> تغییر</span>
+                                                    <input name="avatar" type="file" class="default" />
+                                                    </span>
+                                                    <a href="#" class="btn backgroundRed colorWhite fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> حذف</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+
+                                    <div class="row text-center margin-top-10">
+                                        <button class="btn R_butt_green">ثبت</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade in" id="search_user_modal" tabindex="-1" role="basic" aria-hidden="false">
+        <div class="modal-dialog" style="font-family: Yekan;width: 60%">
+            <div class="modal-content" style="border-radius: 7px !important">
+                <div class="show_box">
+                    <div class="box_header">
+                        <div class="row">
+                            <div class="col-xs-11">
+                                <span>جستجوی کاربران</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span class="cursor fa fa-times"
+                                      style="font-size:12pt;color: #828282;margin-top: 5px;cursor: pointer"
+                                      data-dismiss="modal" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box_body" style="padding: 50px 10px">
+                        <form>
+                            <div class="row">
+                                <div class="col-xs-10 col-xs-offset-1 form_modal_body">
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <span class="form_label">نام کاربری</span>
+                                                </div>
+                                                <div class="col-xs-9">
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <span class="form_label">نام و نام خانوادگی</span>
+                                                </div>
+                                                <div class="col-xs-9">
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <span class="form_label">نام سازمان</span>
+                                                </div>
+                                                <div class="col-xs-9">
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <span class="form_label">شماره موبایل</span>
+                                                </div>
+                                                <div class="col-xs-9">
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <span class="form_label">شماره تلفن</span>
+                                                </div>
+                                                <div class="col-xs-9">
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <span class="form_label">شماره نمابر</span>
+                                                </div>
+                                                <div class="col-xs-9">
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <span class="form_label">ایمیل</span>
+                                                </div>
+                                                <div class="col-xs-9">
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <span class="form_label">آدرس</span>
+                                                </div>
+                                                <div class="col-xs-9">
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1 form_modal_body">
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-12 col-sm-12">
+                                            <div class="row">
+                                                <div class="col-xs-2 ">
+                                                    <span class="form_label">تاریخ عضویت</span>
+                                                </div>
+                                                <div class="col-xs-1">
+                                                    <span class="form_label">از</span>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <input type="text" class="form-control datePicker">
+                                                </div>
+                                                <div class="col-xs-1">
+                                                    <span class="form_label">تا</span>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <input type="text" class="form-control datePicker">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-12 col-sm-12">
+                                            <div class="row">
+                                                <div class="col-xs-2 ">
+                                                    <span class="form_label">دسترسی به آرشیو</span>
+                                                </div>
+                                                <div class="col-xs-1">
+                                                    <span class="form_label">از</span>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <input type="text" class="form-control datePicker">
+                                                </div>
+                                                <div class="col-xs-1">
+                                                    <span class="form_label">تا</span>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <input type="text" class="form-control datePicker">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">جستجوی ساده</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">جستجوی پیشرفته</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">پالایش خبر</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">الگوی منابع خبری</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">الگوی جستجو</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">افزودن کلمات کلیدی</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">ویرایش کلمات کلیدی</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">مدیریت زیر مجموعه</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">بولتن ساز</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">بولتن ساز خودکار</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">نمودار و آمار</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">نمودار بولتن</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">تحلیل محتوا</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">تحلیل محتوای بولتن</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1 form_modal_body">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">
+                                            <h5>نمایش لیست کاربران بر اساس</h5>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">نام کاربری</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">تاریخ عضویت</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <span class="form_label">آخرین بازدید</span>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="checkbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1 margin-top-10">
+                                    <div class="row">
+                                        <div class="col-md-12 text-left">
+                                            <button class="btn R_butt_light_gray" data-dismiss="modal">انصراف</button>
+                                            <button class="btn R_butt_orange">از نو</button>
+                                            <button class="btn R_butt_green">جستجو</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/DatePicker/pwt-date.js') }}"></script>
+<script src="{{ static_url('plugins/DatePicker/pwt-datepicker.js') }}"></script>
+<script src="{{ static_url('plugins/Lc_Switch/lc_switch.min.js') }}"></script>
+<script type="text/javascript" src="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+<script>
+$(".datePicker").val("").pDatepicker();
+$('input[type=checkbox]').lc_switch();
+</script>
+{% end block other_scripts %}

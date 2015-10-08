@@ -93,6 +93,33 @@
     vertical-align: -2px;
 }
 
+.box_header .new_user_btn{
+    border-right: 1px solid #d7d7d7;
+    padding-right: 10px;
+    display: inline-block;
+    float: left;
+    cursor: pointer;
+}
+
+.box_header .search_user_btn{
+    /*border-right: 1px solid #d7d7d7;*/
+    padding-right: 10px;
+    display: inline-block;
+    float: left;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.box_header .search_user_btn i{
+    margin-left: 10px;
+    vertical-align: -2px;
+}
+
+.box_header .new_user_btn i{
+    margin-left: 10px;
+    vertical-align: -2px;
+}
+
 .box_body{
     padding: 10px;
 }
@@ -154,6 +181,16 @@
     color: #b91b09;
 }
 
+.i.fa-pencil{
+    color: #828282;
+    margin: 0 5px;
+}
+
+.i.fa-trash-o{
+    color: #b91b09;
+    margin: 0 5px;
+}
+
 .source_news_table tr:first-child{
     background: -webkit-linear-gradient(#dedede, #b0b0b0);
     background: -o-linear-gradient(#dedede, #b0b0b0);
@@ -172,6 +209,7 @@
 .source_news_table tr td i{
     cursor: pointer;
     font-size: 14pt;
+    margin: 0 5px;
 }
 
 .source_news_table tr td i.fa-trash-o{
@@ -190,4 +228,13 @@
     padding: 15px;
     box-shadow: 0 0 2px #aaa;
     border-radius: 5px;
+}
+
+.nav li a{
+    cursor: pointer !important;
+}
+
+.direction_form{
+    box-shadow: 0 0 2px #aaa;
+    padding: 10px;
 }
