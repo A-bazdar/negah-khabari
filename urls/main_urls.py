@@ -13,5 +13,7 @@ url_patterns = [
     (r'/admin/group_management', AdminGroupHandler),
     (r'/admin/geo_management', AdminGeoHandler),
     (r'/admin/source_management', AdminSourceHandler),
+    (r'/admin/direction_management', AdminDirectionHandler),
+    (r'/admin/user_management/general_info', AdminUserGeneralInfoHandler),
     (r'/admin/login', AdminLoginHandler)
 ]

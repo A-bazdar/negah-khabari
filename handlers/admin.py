@@ -188,6 +188,14 @@ class AdminSourceHandler(tornado.web.RequestHandler):
         self.render('admin/source_management.html')
 
 
+class AdminDirectionHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/direction_management.html')
+
+class AdminUserGeneralInfoHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/user_management/general_info.html')
+
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')
