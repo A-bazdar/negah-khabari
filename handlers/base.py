@@ -40,6 +40,14 @@ class BaseHandler(tornado.web.RequestHandler, SessionMixin, NotificationMixin):
     def __init__(self, application, request, **kwargs):
         super(BaseHandler, self).__init__(application, request, **kwargs)
 
+        self.result = {'value': {}, 'status': False, 'messages': []}
+
+        self.data = dict(
+            title="",
+            me=None,
+        )
+        self.errors = []
+
     def get_current_user(self):
         return self.session.get('current_user')
 
@@ -66,17 +74,29 @@ class BaseHandler(tornado.web.RequestHandler, SessionMixin, NotificationMixin):
             return True
         return False
 
+    @property
+    def value(self):
+        return self.result['value']
 
-class WebBaseHandler(BaseHandler):
-    def __init__(self, application, request, **kwargs):
-        super(WebBaseHandler, self).__init__(application, request, **kwargs)
+    @value.setter
+    def value(self, value):
+        self.result['value'] = value
 
-        self.data = dict(
-            title="",
-            me=None,
-        )
+    @property
+    def status(self):
+        return self.result['status']
 
-        self.errors = []
+    @status.setter
+    def status(self, status):
+        self.result['status'] = status
+
+    @property
+    def messages(self):
+        return self.result['messages']
+
+    @messages.setter
+    def messages(self, messages):
+        self.result['messages'] = messages
 
     def check_sent_value(self, val, _table, _field, error_msg=None, nullable=False, default=None):
         vl = self.get_argument(val, None)
@@ -97,9 +117,9 @@ class WebBaseHandler(BaseHandler):
 
 def error_handler(self, status_code, **kwargs):
     if status_code == 404:
-        self.render("base/notifications/404.html")
+        self.render("notifications/404.html")
     else:
-        self.render("base/notifications/error_page.html")
+        self.render("notifications/error_page.html")
 
 
 tornado.web.RequestHandler.write_error = error_handler

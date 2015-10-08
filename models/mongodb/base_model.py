@@ -12,24 +12,61 @@ class MongodbBaseModel():
 
 
 class MongodbModel(MongodbBaseModel):
-    def __init__(self, body=None):
+    def __init__(self, collection=None, body=None):
         MongodbBaseModel.__init__(self)
         self.__body = body
+        if collection == 'agency':
+            self.collection = self.db.agency
+        elif collection == 'content':
+            self.collection = self.db.content
+        elif collection == 'subject':
+            self.collection = self.db.subject
+        elif collection == 'category':
+            self.collection = self.db.category
+        elif collection == 'group':
+            self.collection = self.db.group
+        elif collection == 'geographic':
+            self.collection = self.db.geographic
 
     def insert(self):
         try:
-            return self.db.agency.insert(self.__body)
+            return self.collection.insert(self.__body)
         except:
             return False
 
     def get_all(self):
         try:
-            return self.db.agency.find(self.__body)
+            return self.collection.find(self.__body)
         except:
             return False
 
     def get_one(self):
         try:
-            return self.db.agency.find_one(self.__body)
+            return self.collection.find_one(self.__body)
         except:
             return False
+
+
+class BaseModel:
+    def __init__(self):
+        self.result = {'value': {}, 'status': False}
+
+    @property
+    def value(self):
+        return self.result['value']
+
+    @value.setter
+    def value(self, value):
+        print self.result
+        print self.result['value']
+        self.result['value'] = value
+        print self.result
+        print self.result['value']
+
+    @property
+    def status(self):
+        return self.result['status']
+
+    @status.setter
+    def status(self, status):
+        self.result['status'] = status

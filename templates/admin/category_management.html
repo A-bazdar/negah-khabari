@@ -40,21 +40,19 @@
                                     <i class="fa fa-plus"></i>ایجاد رده جدید
                                 </div>
                             </div>
-                            <div class="box_body">
-                                <div class="content_detail">
-                                    <div class="display-inline-block">1. تیتر1</div>
-                                    <div class="display-inline-block content_icon pull-left">
-                                        <i class="fa fa-pencil"></i>
-                                        <i class="fa fa-trash-o"></i>
+                            <div class="box_body categories-div">
+                                {% for category in categories %}
+                                    <div class="content_detail">
+                                        <div class="display-inline-block">{{ category['name'] }}</div>
+                                        <div class="display-inline-block content_icon pull-left">
+                                            <i class="fa fa-pencil"></i>
+                                            <i class="fa fa-trash-o"></i>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="content_detail">
-                                    <div class="display-inline-block">2. اخبار ویژه</div>
-                                    <div class="display-inline-block content_icon pull-left">
-                                        <i class="fa fa-pencil"></i>
-                                        <i class="fa fa-trash-o"></i>
-                                    </div>
-                                </div>
+                                {% end %}
+                                {% if not len(categories) %}
+                                    <div class="text-center empty">موردی وجود ندارد.</div>
+                                {% end %}
                             </div>
                             <div class="box_footer">
                                 <div class="row margin-top-10">
@@ -88,15 +86,17 @@
                         </div>
                     </div>
                     <div class="box_body" style="padding: 50px 10px">
-                        <form>
+                        <form id="add_category">
+                            {% module xsrf_form_html() %}
+                            <input type="hidden" name="action" value="add">
                             <div class="row">
                                 <div class="col-xs-9">
                                     <div class="row">
-                                        <div class="col-xs-3 text-right">
+                                        <div class="col-xs-3 text-left">
                                             <span>نام:</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input name="category-name" type="text" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -104,7 +104,7 @@
                             </div>
                             <div class="row margin-top-10">
                                 <div class="col-xs-2 pull-left">
-                                    <button class="btn R_butt_green">افزودن</button>
+                                    <button type="submit" class="btn R_butt_green add-category-btn">افزودن</button>
                                 </div>
                             </div>
                         </form>
@@ -116,4 +116,65 @@
 {% end block container %}
 
 {% block other_scripts %}
+<script>
+var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+
+var category = '<div class="content_detail">\
+                <div class="display-inline-block">__name__</div>\
+                <div class="display-inline-block content_icon pull-left">\
+                    <i class="fa fa-pencil"></i>\
+                    <i class="fa fa-trash-o"></i>\
+                </div>\
+            </div>';
+
+    var __a = true;
+    $('#add_category').submit(function(e){
+        if(__a){
+            __a = false;
+            e.preventDefault();
+            var btn =$('.add-category-btn') ;
+            btn.html(loader);
+            var postData = $("#add_category").serializeArray();
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        if (!status) {
+                            Alert.render('error', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        if (status == 'empty') {
+                            Alert.render('empty', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        Alert.render('success', function(){
+                            $('.empty').remove();
+                            $('.categories-div').append(category.replace(/__name__/g, value['name']));
+                            btn.html('افزودن');
+                            $('#new_category_modal').modal('toggle');
+                            $('input[name=category-name]').val('');
+                            __a = true;
+                        });
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('افزودن');
+                            __a = true;
+                        });
+                    }
+                });
+        }
+    });
+
+</script>
 {% end block other_scripts %}

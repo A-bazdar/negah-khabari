@@ -40,28 +40,34 @@
                                     <i class="fa fa-plus"></i>ایجاد حوزه جدید
                                 </div>
                             </div>
-                            <div class="box_body">
-                                <div class="content_detail">
-                                    <div class="display-inline-block"><span>1. تیتر1</span><span class="margin-right-35 font-size-10">(دارای 1 زیرمجموعه)</span> </div>
-                                    <div class="display-inline-block content_icon pull-left">
-                                        <i class="fa fa-pencil"></i>
-                                        <i class="fa fa-trash-o"></i>
+                            <div class="box_body geographic-div">
+                                {% for geo in geographic %}
+                                    <div class="geographic"  data-geographic-id="{{ geo['id'] }}">
+                                        <div class="parent">
+                                            <div class="content_detail">
+                                                <div class="display-inline-block"><span>{{ geo['name'] }}</span><span class="margin-right-35 font-size-10">(دارای <span data-geographic-id="{{ geo['id'] }}" class="counter-child">{{ len(geo['child']) }}</span> زیرمجموعه)</span> </div>
+                                                <div class="display-inline-block content_icon pull-left">
+                                                    <i class="fa fa-pencil"></i>
+                                                    <i class="fa fa-trash-o"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="child">
+                                            {% for child in geo['child'] %}
+                                                <div class="content_sub_detail">
+                                                    <div class="display-inline-block"><span>{{ child['name'] }}</span> </div>
+                                                    <div class="display-inline-block content_icon pull-left">
+                                                        <i class="fa fa-pencil"></i>
+                                                        <i class="fa fa-trash-o"></i>
+                                                    </div>
+                                                </div>
+                                            {% end %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="content_sub_detail">
-                                    <div class="display-inline-block"><span>1. تیتر1</span> </div>
-                                    <div class="display-inline-block content_icon pull-left">
-                                        <i class="fa fa-pencil"></i>
-                                        <i class="fa fa-trash-o"></i>
-                                    </div>
-                                </div>
-                                <div class="content_detail">
-                                    <div class="display-inline-block"><span>2. اخبار ویژه</span></div>
-                                    <div class="display-inline-block content_icon pull-left">
-                                        <i class="fa fa-pencil"></i>
-                                        <i class="fa fa-trash-o"></i>
-                                    </div>
-                                </div>
+                                {% end %}
+                                {% if not len(geographic) %}
+                                    <div class="text-center empty">موردی وجود ندارد.</div>
+                                {% end %}
                             </div>
                             <div class="box_footer">
                                 <div class="row margin-top-10">
@@ -69,41 +75,6 @@
                                         <button class="btn R_butt_blue">چیدن موضوعات</button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="show_box display-none" data-action="2">
-                            <div class="box_header">
-                                <span>اضافه کردن گروه خبری</span>
-                            </div>
-                            <div class="box_body">
-                                <form>
-                                    <div class="row">
-                                        <div class="col-xs-9">
-                                            <div class="row">
-                                                <div class="col-xs-3 text-right">
-                                                    <span>نام:</span>
-                                                </div>
-                                                <div class="col-xs-9">
-                                                    <input type="text" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="row margin-top-10">
-                                                <div class="col-xs-3 text-right">
-                                                    <span>زیر مجموعه کردن گروه:</span>
-                                                </div>
-                                                <div class="col-xs-9">
-                                                    <select class="form-control"><option>asd</option><option>asd</option></select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3"></div>
-                                    </div>
-                                    <div class="row margin-top-10">
-                                        <div class="col-xs-2 pull-left">
-                                            <button class="btn R_butt_green">افزودن</button>
-                                        </div>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -131,7 +102,9 @@
                         </div>
                     </div>
                     <div class="box_body" style="padding: 40px 10px">
-                        <form>
+                        <form id="add_geographic">
+                            {% module xsrf_form_html() %}
+                            <input type="hidden" name="action" value="add">
                             <div class="row">
                                 <div class="col-xs-9">
                                     <div class="row">
@@ -139,15 +112,20 @@
                                             <span>نام:</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input name="geographic-name" type="text" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
                                         <div class="col-xs-3 text-right">
-                                            <span>زیر مجموعه کردن گروه:</span>
+                                            <span>زیر مجموعه کردن حوزه:</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <select class="select"><option>asd</option><option>asd</option></select>
+                                            <select name="geographic-parent" style="width: 100%" class="select">
+                                                <option value="0">اصلی</option>
+                                                {% for parent in parent_geographic %}
+                                                    <option value="{{ parent['id'] }}">{{ parent['name'] }}</option>
+                                                {% end %}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -155,7 +133,7 @@
                             </div>
                             <div class="row margin-top-10">
                                 <div class="col-xs-2 pull-left">
-                                    <button class="btn R_butt_green">افزودن</button>
+                                    <button type="submit" class="btn R_butt_green add-geographic-btn">افزودن</button>
                                 </div>
                             </div>
                         </form>
@@ -167,4 +145,91 @@
 {% end block container %}
 
 {% block other_scripts %}
+<script>
+
+    var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+
+    var geographic = '<div class="geographic"  data-geographic-id="__geographic_id__">\
+                <div class="parent">\
+                    <div class="content_detail">\
+                        <div class="display-inline-block"><span>__name__</span><span class="margin-right-35 font-size-10">(دارای <span data-geographic-id="__geographic_id__" class="counter-child">0</span> زیرمجموعه)</span> </div>\
+                        <div class="display-inline-block content_icon pull-left">\
+                            <i class="fa fa-pencil"></i>\
+                            <i class="fa fa-trash-o"></i>\
+                        </div>\
+                    </div>\
+                </div>\
+                <div class="child">\
+                </div>\
+            </div>';
+
+    var sub_geographic = '<div class="content_sub_detail">\
+                        <div class="display-inline-block"><span>__name__</span> </div>\
+                        <div class="display-inline-block content_icon pull-left">\
+                            <i class="fa fa-pencil"></i>\
+                            <i class="fa fa-trash-o"></i>\
+                        </div>\
+                    </div>';
+
+    var __a = true;
+    $('#add_geographic').submit(function(e){
+        if(__a){
+            __a = false;
+            e.preventDefault();
+            var btn =$('.add-geographic-btn') ;
+            btn.html(loader);
+            var postData = $("#add_geographic").serializeArray();
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        if (!status) {
+                            Alert.render('error', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        if (status == 'empty') {
+                            Alert.render('empty', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        Alert.render('success', function(){
+                            $('.empty').remove();
+                            if(value['parent'] == null){
+                                $('.geographic-div').append(geographic.replace(/__name__/g, value['name']).replace(/__geographic_id__/g, value['id']));
+                                var options = '<option value="0">اصلی</option>';
+                                for(var i = 0; i < value['parents'].length; i++){
+                                    options += "<option value='" + value['parents'][i]['id'] + "'>" + value['parents'][i]['name'] + "</option>";
+                                }
+                                $(".select[name=geographic-parent]").html(options).select2("val", 0);
+                            }else{
+                                $('.geographic-div .geographic[data-geographic-id=' + value['parent'] + '] .child').append(sub_geographic.replace(/__name__/g, value['name']));
+                                $(".select[name=geographic-parent]").select2("val", 0);
+                                var c = $('.counter-child[data-geographic-id=' + value['parent'] + ']');
+                                c.html(parseInt(c.html()) + 1);
+                            }
+                            btn.html('افزودن');
+                            $('#new_geo_modal').modal('toggle');
+                            $('input[name=geographic-name]').val('');
+                            __a = true;
+                        });
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('افزودن');
+                            __a = true;
+                        });
+                    }
+                });
+        }
+    });
+</script>
 {% end block other_scripts %}
