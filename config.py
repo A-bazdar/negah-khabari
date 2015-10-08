@@ -13,7 +13,7 @@ class Config:
         self.SESSION_TIME = 86400
 
         self.web = {
-            'port': 8080,
+            'port': 8008,
             'server_ip': '127.0.0.1',
             'server_path': os.path.join(self.applications_root, ''),
             'mysql': {

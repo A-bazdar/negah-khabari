@@ -40,28 +40,34 @@
                                     <i class="fa fa-plus"></i>ایجاد گروه جدید
                                 </div>
                             </div>
-                            <div class="box_body">
-                                <div class="content_detail">
-                                    <div class="display-inline-block"><span>1. تیتر1</span><span class="margin-right-35 font-size-10">(دارای 1 زیرمجموعه)</span> </div>
-                                    <div class="display-inline-block content_icon pull-left">
-                                        <i class="fa fa-pencil"></i>
-                                        <i class="fa fa-trash-o"></i>
+                            <div class="box_body group-div">
+                                {% for group in groups %}
+                                    <div class="group"  data-group-id="{{ group['id'] }}">
+                                        <div class="parent">
+                                            <div class="content_detail">
+                                                <div class="display-inline-block"><span>{{ group['name'] }}</span><span class="margin-right-35 font-size-10">(دارای <span data-group-id="{{ group['id'] }}" class="counter-child">{{ len(group['child']) }}</span> زیرمجموعه)</span> </div>
+                                                <div class="display-inline-block content_icon pull-left">
+                                                    <i class="fa fa-pencil"></i>
+                                                    <i class="fa fa-trash-o"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="child">
+                                            {% for child in group['child'] %}
+                                                <div class="content_sub_detail">
+                                                    <div class="display-inline-block"><span>{{ child['name'] }}</span> </div>
+                                                    <div class="display-inline-block content_icon pull-left">
+                                                        <i class="fa fa-pencil"></i>
+                                                        <i class="fa fa-trash-o"></i>
+                                                    </div>
+                                                </div>
+                                            {% end %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="content_sub_detail">
-                                    <div class="display-inline-block"><span>1. تیتر1</span> </div>
-                                    <div class="display-inline-block content_icon pull-left">
-                                        <i class="fa fa-pencil"></i>
-                                        <i class="fa fa-trash-o"></i>
-                                    </div>
-                                </div>
-                                <div class="content_detail">
-                                    <div class="display-inline-block"><span>2. اخبار ویژه</span></div>
-                                    <div class="display-inline-block content_icon pull-left">
-                                        <i class="fa fa-pencil"></i>
-                                        <i class="fa fa-trash-o"></i>
-                                    </div>
-                                </div>
+                                {% end %}
+                                {% if not len(groups) %}
+                                    <div class="text-center empty">موردی وجود ندارد.</div>
+                                {% end %}
                             </div>
                             <div class="box_footer">
                                 <div class="row margin-top-10">
@@ -96,7 +102,9 @@
                         </div>
                     </div>
                     <div class="box_body" style="padding: 40px 10px;">
-                        <form>
+                        <form id="add_group">
+                            {% module xsrf_form_html() %}
+                            <input type="hidden" name="action" value="add">
                             <div class="row">
                                 <div class="col-xs-9">
                                     <div class="row">
@@ -104,7 +112,7 @@
                                             <span>نام:</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input name="group-name" type="text" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -112,7 +120,12 @@
                                             <span>زیر مجموعه کردن گروه:</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <select class="select"><option>asd</option><option>asd</option></select>
+                                            <select name="group-parent" style="width: 100%" class="select">
+                                                <option value="0">اصلی</option>
+                                                {% for parent in parent_groups %}
+                                                    <option value="{{ parent['id'] }}">{{ parent['name'] }}</option>
+                                                {% end %}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +133,7 @@
                             </div>
                             <div class="row margin-top-10">
                                 <div class="col-xs-2 pull-left">
-                                    <button class="btn R_butt_green">افزودن</button>
+                                    <button type="submit" class="btn R_butt_green add-group-btn">افزودن</button>
                                 </div>
                             </div>
                         </form>
@@ -132,4 +145,91 @@
 {% end block container %}
 
 {% block other_scripts %}
+<script>
+
+    var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+
+    var group = '<div class="group"  data-group-id="__group_id__">\
+                <div class="parent">\
+                    <div class="content_detail">\
+                        <div class="display-inline-block"><span>__name__</span><span class="margin-right-35 font-size-10">(دارای <span data-group-id="__group_id__" class="counter-child">0</span> زیرمجموعه)</span> </div>\
+                        <div class="display-inline-block content_icon pull-left">\
+                            <i class="fa fa-pencil"></i>\
+                            <i class="fa fa-trash-o"></i>\
+                        </div>\
+                    </div>\
+                </div>\
+                <div class="child">\
+                </div>\
+            </div>';
+
+    var sub_group = '<div class="content_sub_detail">\
+                        <div class="display-inline-block"><span>__name__</span> </div>\
+                        <div class="display-inline-block content_icon pull-left">\
+                            <i class="fa fa-pencil"></i>\
+                            <i class="fa fa-trash-o"></i>\
+                        </div>\
+                    </div>';
+
+    var __a = true;
+    $('#add_group').submit(function(e){
+        if(__a){
+            __a = false;
+            e.preventDefault();
+            var btn =$('.add-group-btn') ;
+            btn.html(loader);
+            var postData = $("#add_group").serializeArray();
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        if (!status) {
+                            Alert.render('error', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        if (status == 'empty') {
+                            Alert.render('empty', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        Alert.render('success', function(){
+                            $('.empty').remove();
+                            if(value['parent'] == null){
+                                $('.group-div').append(group.replace(/__name__/g, value['name']).replace(/__group_id__/g, value['id']));
+                                var options = '<option value="0">اصلی</option>';
+                                for(var i = 0; i < value['parents'].length; i++){
+                                    options += "<option value='" + value['parents'][i]['id'] + "'>" + value['parents'][i]['name'] + "</option>";
+                                }
+                                $(".select[name=group-parent]").html(options).select2("val", 0);
+                            }else{
+                                $('.group-div .group[data-group-id=' + value['parent'] + '] .child').append(sub_group.replace(/__name__/g, value['name']));
+                                $(".select[name=group-parent]").select2("val", 0);
+                                var c = $('.counter-child[data-group-id=' + value['parent'] + ']');
+                                c.html(parseInt(c.html()) + 1);
+                            }
+                            btn.html('افزودن');
+                            $('#new_group_modal').modal('toggle');
+                            $('input[name=group-name]').val('');
+                            __a = true;
+                        });
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('افزودن');
+                            __a = true;
+                        });
+                    }
+                });
+        }
+    });
+</script>
 {% end block other_scripts %}

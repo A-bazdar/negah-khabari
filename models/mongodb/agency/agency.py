@@ -13,7 +13,7 @@ class AgencyModel():
     @staticmethod
     def get_all():
         try:
-            r = MongodbModel(body={}).get_all()
+            r = MongodbModel(collection='agency', body={}).get_all()
             if r:
                 return [dict(
                     id=i['_id'],
@@ -40,7 +40,7 @@ class AgencyModel():
     def get_one(self):
         try:
             body = {'_id': self.id}
-            r = MongodbModel(body=body).get_one()
+            r = MongodbModel(collection='agency', body=body).get_one()
             if r:
                 return dict(
                     id=r['_id'],
