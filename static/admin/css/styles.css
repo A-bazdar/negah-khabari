@@ -257,3 +257,10 @@ i.fa-wrench{
     box-shadow: 0 0 2px #aaa;
     padding: 10px;
 }
+
+.tree_container{
+    background: #ffffff;
+    padding: 5px 15px;
+    border-radius: 4px;
+    border: 1px solid #d7d7d7;
+}

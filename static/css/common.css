@@ -214,6 +214,37 @@
     transition: background 0.2s;
 }
 
+.R_butt_white_bordered {
+    border: 1px solid #d7d7d7 !important;
+    width: 100%;
+    border-radius: 5px;
+    background: #ffffff;
+    padding: 5px 15px;
+    text-align: center;
+    font-size: 11pt;
+    color: #828282 !important;
+    vertical-align: middle;
+    margin: 1px !important;
+    /*display: block;*/
+    cursor: pointer;
+    text-decoration: none;
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    -ms-transition: background 0.2s;
+    -o-transition: background 0.2s;
+    transition: background 0.2s;
+}
+
+.R_butt_white_bordered:hover {
+    background: #ffffff;
+    text-decoration: none;
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    -ms-transition: background 0.2s;
+    -o-transition: background 0.2s;
+    transition: background 0.2s;
+}
+
 .R_butt_red2 {
     border: none;
     border-radius: 5px;

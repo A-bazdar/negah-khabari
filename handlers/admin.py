@@ -361,6 +361,10 @@ class AdminChartsContentHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/user_management/charts_content.html')
 
+class AdminSubsetManagementHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/user_management/subset_management.html')
+
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')
