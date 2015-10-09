@@ -26,10 +26,10 @@
             <a href="/admin/user_management/charts_content">نمودار و تحلیل محتوا</a>
         </li>
         <li>
-            <a class="active" href="/admin/user_management/subset_management">مدیریت زیر مجموعه</a>
+            <a href="/admin/user_management/subset_management">مدیریت زیر مجموعه</a>
         </li>
         <li>
-            <a href="/admin/user_management/key_words">کلمات کلیدی</a>
+            <a class="active" href="/admin/user_management/key_words">کلمات کلیدی</a>
         </li>
         <li>
             <a href="/admin/user_management/user_group">مدیریت گروه های کاربر</a>
@@ -47,37 +47,69 @@
                     <div class="panel-body">
                         <div class="show_box">
                             <div class="box_header">
-                                <span>مدیریت زیر مجموعه ها</span>
+                                <span>کلمات کلیدی</span>
                             </div>
                             <div class="box_body">
                                 <div class="row">
                                     <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
-                                        <div class="subset_form display-none close">
+                                        <div class="keyword_form display-none close">
                                             <form>
                                                 <div class="row">
                                                     <div class="col-md-3 col-sm-3">
-                                                        <span class="form_label">نام زیر مجموعه</span>
+                                                        <span class="form_label">اضافه توسط کاربر</span>
                                                     </div>
-                                                    <div class="col-md-7 col-sm-7">
-                                                        <input type="text" class="form-control">
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <input type="checkbox">
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <span class="form_label">ویرایش توسط کاربر</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <input type="checkbox">
                                                     </div>
                                                 </div>
                                                 <div class="row margin-top-10">
                                                     <div class="col-md-3 col-sm-3">
-                                                        <span class="form_label">کاربران</span>
+                                                        <span class="form_label">تعداد سرفصل</span>
                                                     </div>
-                                                    <div class="col-md-7 col-sm-7">
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <span class="form_label">تعداد کلید واژه</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="row margin-top-10">
-                                                    <div class="col-md-3 col-sm-3">
-                                                        <span class="form_label">والد</span>
+                                                    <div class="col-md-12 col-sm-12">
+                                                        <span class="form_label" style="vertical-align: 17px">سرفصل</span>
+                                                        <hr style="width: 80%; display: inline-block; margin-right: 5px">
                                                     </div>
-                                                    <div class="col-md-7 col-sm-7">
-                                                        <select class="select"><option>مجموعه1</option><option>مجموعه2</option></select>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <span class="form_label">کلید واژه</span>
                                                     </div>
-                                                    <div class="col-md-2 col-sm-2 text-left">
+                                                    <div class="col-md-2 col-sm-2 padding-right-0">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <span class="form_label">مترادف</span>
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2 padding-right-0">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <span class="form_label">نامترادف</span>
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2 padding-right-0">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="row margin-top-10">
+                                                    <div class="col-md-2 col-sm-2 pull-left text-left">
                                                         <button class="btn R_butt_green">افزودن</button>
                                                     </div>
                                                 </div>
@@ -89,7 +121,7 @@
                                     <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
                                         <div class="row">
                                             <div class="col-md-3 col-sm-3 text-left pull-left">
-                                                <button class="btn add_subset R_butt_gray">افزودن زیر مجموعه</button>
+                                                <button class="btn add_keyword R_butt_gray">افزودن کلید واژه</button>
                                             </div>
                                         </div>
                                     </div>
@@ -98,13 +130,13 @@
                                     <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
                                         <table class="table table-bordered source_news_table">
                                             <tr>
-                                                <td>نام گروه زیر مجموعه</td>
-                                                <td>کاربران</td>
+                                                <td>نام سرفصل</td>
+                                                <td>کلید واژه</td>
                                                 <td>امکانات</td>
                                             </tr>
                                             <tr>
                                                 <td>اصولگرا</td>
-                                                <td>امید نعمت اللهی، مرتضی وطن پرست</td>
+                                                <td>کلید واژه1</td>
                                                 <td>
                                                     <i class="fa fa-pencil"></i>
                                                     <i class="fa fa-trash-o"></i>
@@ -137,17 +169,17 @@
 <script>
 $(".datePicker").val("").pDatepicker();
 $('input[type=checkbox]').lc_switch();
-    $('.add_subset').click(function(){
-        if($('.subset_form').hasClass('close')){
-            $('.subset_form').slideDown();
-            $('.subset_form').removeClass('close');
-            $('.subset_form').addClass('open');
+    $('.add_keyword').click(function(){
+        if($('.keyword_form').hasClass('close')){
+            $('.keyword_form').slideDown();
+            $('.keyword_form').removeClass('close');
+            $('.keyword_form').addClass('open');
             $(this).html('بستن');
         }
-        else if($('.subset_form').hasClass('open')){
-            $('.subset_form').slideUp();
-            $('.subset_form').removeClass('open');
-            $('.subset_form').addClass('close');
+        else if($('.keyword_form').hasClass('open')){
+            $('.keyword_form').slideUp();
+            $('.keyword_form').removeClass('open');
+            $('.keyword_form').addClass('close');
             $(this).html('افزودن ');
         }
     });

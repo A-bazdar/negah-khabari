@@ -220,6 +220,10 @@ class AdminSubsetManagementHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/user_management/subset_management.html')
 
+class AdminKeyWordsHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/user_management/key_words.html')
+
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')
