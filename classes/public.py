@@ -3,8 +3,11 @@
 import base64
 import datetime
 import hashlib
+import os
 import random
 import khayyam
+from classes.debug import Debug
+from config import Config
 
 __author__ = 'Morteza'
 
@@ -42,3 +45,26 @@ class CreatePassword():
         ps = hashlib.new('ripemd160')
         ps.update(_hash)
         return ps.hexdigest()[3:40]
+
+
+class UploadPic():
+    def __init__(self, name=None, handler=None):
+        self.name = name
+        self.__handler = handler
+
+    def upload(self):
+        try:
+            pic_name = CreateID().create()
+            pic = self.__handler.request.files[self.name][0]
+            extension = os.path.splitext(pic['filename'])[1].lower()
+            upload_folder = os.path.join(Config().applications_root, 'static', 'avatars')
+            photo_name = pic_name + extension
+            full_name = os.path.join(upload_folder, photo_name)
+            output = open(full_name, 'wb')
+            output.write(pic['body'])
+            output.close()
+            return photo_name
+
+        except:
+            Debug.get_exception()
+            return 'default.jpg'

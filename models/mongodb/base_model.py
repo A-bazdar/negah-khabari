@@ -27,6 +27,12 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.group
         elif collection == 'geographic':
             self.collection = self.db.geographic
+        elif collection == 'direction':
+            self.collection = self.db.direction
+        elif collection == 'user':
+            self.collection = self.db.user
+        elif collection == 'user_group':
+            self.collection = self.db.user_group
 
     def insert(self):
         try:
@@ -46,6 +52,12 @@ class MongodbModel(MongodbBaseModel):
         except:
             return False
 
+    def count(self):
+        try:
+            return self.collection.find(self.__body).count()
+        except:
+            return False
+
 
 class BaseModel:
     def __init__(self):
@@ -57,11 +69,7 @@ class BaseModel:
 
     @value.setter
     def value(self, value):
-        print self.result
-        print self.result['value']
         self.result['value'] = value
-        print self.result
-        print self.result['value']
 
     @property
     def status(self):

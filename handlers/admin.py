@@ -1,14 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from bson import ObjectId
+from classes.date import CustomDateTime
 from classes.debug import Debug
+from classes.public import UploadPic, CreateID
+from config import Config
 from handlers.base import BaseHandler
 from models.mongodb.category.category import CategoryModel
 from models.mongodb.content.content import ContentModel
+from models.mongodb.direction.direction import DirectionModel
 from models.mongodb.geographic.geographic import GeographicModel
 from models.mongodb.group.group import GroupModel
 from models.mongodb.subject.subject import SubjectModel
-
+from models.mongodb.user.general_info.general_info import UserGeneralInfoModel
+from models.mongodb.user.group.group import UserGroupModel
+import os
 __author__ = 'Omid'
 import tornado
 import tornado.httpserver
@@ -183,22 +189,120 @@ class AdminGeoHandler(BaseHandler):
             self.write(self.result)
 
 
+class AdminDirectionHandler(BaseHandler):
+    def get(self):
+        self.data['direction_source'] = DirectionModel().get_all('source')['value']
+        self.data['direction_content'] = DirectionModel().get_all('content')['value']
+        self.render('admin/direction_management.html', **self.data)
+
+    def post(self):
+        try:
+            direction = dict()
+            self.check_sent_value("direction-name", direction, "name", u"نام جهت گیری را وارد کنید.")
+            self.check_sent_value("direction-type", direction, "_type", u"نوع جهت گیری را وارد کنید.")
+
+            if not len(self.errors):
+
+                new_direction = DirectionModel(**direction).save()
+                self.value = {'name': direction['name'], 'type': direction['_type'], 'id': new_direction['value']}
+                self.status = True
+            else:
+                self.messages = self.errors
+                self.status = False
+
+            self.write(self.result)
+        except:
+            Debug.get_exception()
+            self.write(self.result)
+
+
 class AdminSourceHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/source_management.html')
 
 
-class AdminDirectionHandler(tornado.web.RequestHandler):
+class AdminUserGeneralInfoHandler(BaseHandler):
     def get(self):
-        self.render('admin/direction_management.html')
+        self.data['users'] = UserGeneralInfoModel().get_all()['value']
+        self.data['user_groups'] = UserGroupModel().get_all()['value']
+        self.render('admin/user_management/general_info.html', **self.data)
 
-class AdminUserGeneralInfoHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render('admin/user_management/general_info.html')
+    def post(self):
+        try:
+            user = dict()
+            self.check_sent_value("name", user, "name", u"نام را وارد کنید.")
+            self.check_sent_value("family", user, "family", u"نام خانوادگی را وارد کنید.")
+            self.check_sent_value("organization", user, "organization", u"سازمان را وارد کنید.")
+            self.check_sent_value("password", user, "password", u"رمز عبور را وارد کنید.")
+            self.check_sent_value("phone", user, "phone", u"تلفن را وارد کنید.")
+            self.check_sent_value("mobile", user, "mobile", u"موبایل را وارد کنید.")
+            self.check_sent_value("fax", user, "fax", u"شماره نمابر را وارد کنید.")
+            self.check_sent_value("email", user, "email", u"ایمیل را وارد کنید.")
+            self.check_sent_value("status", user, "status", u"وضعیت کاربر را وارد کنید.")
+            self.check_sent_value("welcome", user, "welcome", u"خوش آمدگویی را وارد کنید.")
+            self.check_sent_value("register_start_date", user, "register_start_date", u"تاریخ عضویت را وارد کنید.")
+            self.check_sent_value("register_end_date", user, "register_end_date", u"تاریخ عضویت را وارد کنید.")
+            self.check_sent_value("archive_start_date", user, "archive_start_date", u"دسترسی به آرشیو را وارد کنید.")
+            self.check_sent_value("archive_end_date", user, "archive_end_date", u"دسترسی به آرشیو را وارد کنید.")
+            self.check_sent_value("group", user, "group", u"گروه کاربری را وارد کنید.")
 
-class AdminUserGroupHandler(tornado.web.RequestHandler):
+            photo_name = UploadPic(handler=self, name='pic').upload()
+
+            if not len(self.errors):
+                user['pic'] = photo_name
+                user['group'] = ObjectId(user['group'])
+                user['register_start_date'] = CustomDateTime(return_date=True, date_value=user['register_start_date']).to_gregorian()
+                user['register_end_date'] = CustomDateTime(return_date=True, date_value=user['register_end_date']).to_gregorian()
+                user['archive_start_date'] = CustomDateTime(return_date=True, date_value=user['archive_start_date']).to_gregorian()
+                user['archive_end_date'] = CustomDateTime(return_date=True, date_value=user['archive_end_date']).to_gregorian()
+                new_user = UserGeneralInfoModel(**user).save()
+                user['id'] = new_user['value']
+                self.value = dict(
+                    id=user['id'],
+                    organization=user['organization'],
+                    family=user['family'],
+                    name=user['name'],
+                    email=user['email'],
+                    mobile=user['mobile'],
+                    status=user['status'],
+                )
+                self.status = True
+            else:
+                self.messages = self.errors
+                self.status = False
+
+            self.write(self.result)
+        except:
+            Debug.get_exception()
+            self.write(self.result)
+
+
+class AdminUserGroupHandler(BaseHandler):
     def get(self):
-        self.render('admin/user_management/user_group_management.html')
+        self.data['user_groups'] = UserGroupModel().get_all()['value']
+        for g in self.data['user_groups']:
+            g['count_user'] = UserGeneralInfoModel(group=g['id']).get_count_by_group()
+        self.render('admin/user_management/user_group_management.html', **self.data)
+
+    def post(self):
+        try:
+            user_group = dict()
+            self.check_sent_value("group-name", user_group, "name", u"نام گروه کاربری را وارد کنید.")
+
+            if not len(self.errors):
+
+                new_group = UserGroupModel(**user_group).save()
+                self.value = {'name': user_group['name'], 'id': new_group['value']}
+                self.status = True
+            else:
+                self.messages = self.errors
+                self.status = False
+
+            self.write(self.result)
+        except:
+            Debug.get_exception()
+            self.write(self.result)
+
 
 class AdminSearchPatternsHandler(tornado.web.RequestHandler):
     def get(self):
@@ -219,3 +323,29 @@ class AdminChartsContentHandler(tornado.web.RequestHandler):
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')
+
+
+class ValodationHandler(tornado.web.RequestHandler):
+    def post(self):
+        try:
+            _type = self.get_argument('type', None)
+            if _type == 'phone':
+                phone = self.get_argument('phone', None)
+                if UserGeneralInfoModel(phone=phone).is_exist():
+                    self.write("false")
+                else:
+                    self.write("true")
+            elif _type == 'mobile':
+                mobile = self.get_argument('mobile', None)
+                if UserGeneralInfoModel(mobile=mobile).is_exist():
+                    self.write("false")
+                else:
+                    self.write("true")
+            elif _type == 'email':
+                email = self.get_argument('email', None)
+                if UserGeneralInfoModel(email=email).is_exist():
+                    self.write("false")
+                else:
+                    self.write("true")
+        except Exception:
+            self.finish("true")

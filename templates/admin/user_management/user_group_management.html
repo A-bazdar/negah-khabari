@@ -54,16 +54,18 @@
                                     <div class="row">
                                         <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
                                             <div class="direction_form display-none close">
-                                                <form>
+                                                <form id="add_user_group">
+                                                    {% module xsrf_form_html() %}
+                                                    <input type="hidden" name="action" value="add">
                                                     <div class="row">
                                                         <div class="col-md-3 col-sm-3">
                                                             <span class="form_label">نام گروه</span>
                                                         </div>
                                                         <div class="col-md-7 col-sm-7">
-                                                            <input type="text" class="form-control">
+                                                            <input type="text" name="group-name" class="form-control">
                                                         </div>
                                                         <div class="col-md-2 col-sm-2 text-left">
-                                                            <button class="btn R_butt_green">ثبت</button>
+                                                            <button type="submit" class="btn R_butt_green add-user-group-btn">افزودن</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -81,21 +83,28 @@
                                     </div>
                                     <div class="row margin-top-20">
                                         <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
-                                            <table class="table table-bordered source_news_table">
+                                            <table class="table table-bordered source_news_table user-groups-table">
                                                 <tr>
                                                     <td>نام گروه</td>
                                                     <td>تعداد اعضا</td>
                                                     <td>امکانات</td>
                                                 </tr>
-                                                <tr>
-                                                    <td>گروه کاربری مهمان</td>
-                                                    <td>15</td>
-                                                    <td>
-                                                        <i class="fa fa-pencil"></i>
-                                                        <i class="fa fa-wrench" data-toggle="modal" href="#user_group_modal"></i>
-                                                        <i class="fa fa-trash-o"></i>
-                                                    </td>
-                                                </tr>
+                                                {% for group in user_groups %}
+                                                    <tr>
+                                                        <td>{{ group['name'] }}</td>
+                                                        <td>{{ group['count_user'] }}</td>
+                                                        <td>
+                                                            <i class="fa fa-pencil"></i>
+                                                            <i class="fa fa-wrench" data-toggle="modal" href="#user_group_modal"></i>
+                                                            <i class="fa fa-trash-o"></i>
+                                                        </td>
+                                                    </tr>
+                                                {% end %}
+                                                {% if not len(user_groups) %}
+                                                    <tr class="empty">
+                                                        <td colspan="3">موردی وجود ندارد.</td>
+                                                    </tr>
+                                                {% end %}
                                             </table>
                                         </div>
                                     </div>
@@ -701,6 +710,66 @@ $('.dir_tab').click(function(){
     var data_action = $(this).attr('data-action');
     $('.tab_content').css('display','none');
     $('.tab_content[data-action=' + data_action + ']').fadeIn();
+});
+
+var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+
+var content = '<tr>\
+                <td>__name__</td>\
+                <td>0</td>\
+                <td>\
+                    <i class="fa fa-pencil"></i>\
+                    <i class="fa fa-wrench" data-toggle="modal" href="#user_group_modal"></i>\
+                    <i class="fa fa-trash-o"></i>\
+                </td>\
+            </tr>';
+
+var __a = true;
+$('#add_user_group').submit(function(e){
+    if(__a){
+        __a = false;
+        e.preventDefault();
+        var btn =$('.add-user-group-btn') ;
+        btn.html(loader);
+        var postData = $("#add_user_group").serializeArray();
+        jQuery.ajax(
+            {
+                url: '',
+                type: "post",
+                data: postData,
+                success: function (response) {
+                    var status = response['status'];
+                    var value = response['value'];
+                    if (!status) {
+                        Alert.render('error', function(){
+                            btn.html('افزودن');
+                            __a = true;
+                        });
+                        return
+                    }
+                    if (status == 'empty') {
+                        Alert.render('empty', function(){
+                            btn.html('افزودن');
+                            __a = true;
+                        });
+                        return
+                    }
+                    Alert.render('success', function(){
+                        $('.empty').remove();
+                        $('.user-groups-table').append(content.replace(/__name__/g, value['name']));
+                        btn.html('افزودن');
+                        $('input[name=group-name]').val('');
+                        __a = true;
+                    });
+                },
+                error: function () {
+                    Alert.render('error', function(){
+                        btn.html('افزودن');
+                        __a = true;
+                    });
+                }
+            });
+    }
 });
 </script>
 {% end block other_scripts %}

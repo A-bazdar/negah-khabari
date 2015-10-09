@@ -54,7 +54,6 @@ def extract_briefs(document, a):
 
 def briefs():
     agencies = AgencyModel().get_all()
-    print len(agencies)
     for a in agencies:
             data = get_url(a['link'])
             extract_briefs(data, a)

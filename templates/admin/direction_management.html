@@ -51,16 +51,18 @@
                                 <div class="row">
                                     <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
                                         <div class="direction_form display-none close">
-                                            <form>
+                                            <form class="add-direction">
+                                                {% module xsrf_form_html() %}
                                                 <div class="row">
                                                     <div class="col-md-3 col-sm-3">
                                                         <span class="form_label">جهت گیری</span>
                                                     </div>
                                                     <div class="col-md-7 col-sm-7">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" name="direction-name" class="form-control">
+                                                        <input type="hidden" name="direction-type" value="source" class="form-control">
                                                     </div>
                                                     <div class="col-md-2 col-sm-2 text-left">
-                                                        <button class="btn R_butt_green">افزودن</button>
+                                                        <button type="submit" data-type="source" class="btn R_butt_green add-direction-btn">افزودن</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -78,18 +80,25 @@
                                 </div>
                                 <div class="row margin-top-20">
                                     <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
-                                        <table class="table table-bordered source_news_table">
+                                        <table class="table table-bordered source_news_table directions-table" data-type="source">
                                             <tr>
                                                 <td>جهت گیری</td>
                                                 <td>امکانات</td>
                                             </tr>
-                                            <tr>
-                                                <td>اصولگرا</td>
-                                                <td>
-                                                    <i class="fa fa-pencil"></i>
-                                                    <i class="fa fa-trash-o"></i>
-                                                </td>
-                                            </tr>
+                                            {% for d_s in direction_source %}
+                                                <tr>
+                                                    <td>{{ d_s['name'] }}</td>
+                                                    <td>
+                                                        <i class="fa fa-pencil"></i>
+                                                        <i class="fa fa-trash-o"></i>
+                                                    </td>
+                                                </tr>
+                                            {% end %}
+                                            {% if not len(direction_source) %}
+                                                <tr class="empty">
+                                                    <td colspan="2">موردی وجود ندارد.</td>
+                                                </tr>
+                                            {% end %}
                                         </table>
                                     </div>
                                 </div>
@@ -98,16 +107,18 @@
                                 <div class="row">
                                     <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
                                         <div class="direction_form1 display-none close">
-                                            <form>
+                                            <form class="add-direction">
+                                                {% module xsrf_form_html() %}
                                                 <div class="row">
                                                     <div class="col-md-3 col-sm-3">
                                                         <span class="form_label">جهت گیری</span>
                                                     </div>
                                                     <div class="col-md-7 col-sm-7">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" name="direction-name" class="form-control">
+                                                        <input type="hidden" name="direction-type" value="content" class="form-control">
                                                     </div>
                                                     <div class="col-md-2 col-sm-2 text-left">
-                                                        <button class="btn R_butt_green">افزودن</button>
+                                                        <button type="submit" data-type="content" class="btn R_butt_green add-direction-btn">افزودن</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -125,18 +136,25 @@
                                 </div>
                                 <div class="row margin-top-20">
                                     <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
-                                        <table class="table table-bordered source_news_table">
+                                        <table class="table table-bordered source_news_table directions-table" data-type="content">
                                             <tr>
                                                 <td>جهت گیری</td>
                                                 <td>امکانات</td>
                                             </tr>
-                                            <tr>
-                                                <td>اصولگرا</td>
-                                                <td>
-                                                    <i class="fa fa-pencil"></i>
-                                                    <i class="fa fa-trash-o"></i>
-                                                </td>
-                                            </tr>
+                                            {% for d_c in direction_content %}
+                                                <tr>
+                                                    <td>{{ d_c['name'] }}</td>
+                                                    <td>
+                                                        <i class="fa fa-pencil"></i>
+                                                        <i class="fa fa-trash-o"></i>
+                                                    </td>
+                                                </tr>
+                                            {% end %}
+                                            {% if not len(direction_content) %}
+                                                <tr class="empty">
+                                                    <td colspan="2">موردی وجود ندارد.</td>
+                                                </tr>
+                                            {% end %}
                                         </table>
                                     </div>
                                 </div>
@@ -160,31 +178,33 @@
 
 {% block other_scripts %}
 <script>
+    var direction_form1 = $('.direction_form1');
+    var direction_form = $('.direction_form');
     $('.add_direction').click(function(){
-        if($('.direction_form').hasClass('close')){
-            $('.direction_form').slideDown();
-            $('.direction_form').removeClass('close');
-            $('.direction_form').addClass('open');
+        if(direction_form.hasClass('close')){
+            direction_form.slideDown();
+            direction_form.removeClass('close');
+            direction_form.addClass('open');
             $(this).html('بستن');
         }
-        else if($('.direction_form').hasClass('open')){
-            $('.direction_form').slideUp();
-            $('.direction_form').removeClass('open');
-            $('.direction_form').addClass('close');
+        else if(direction_form.hasClass('open')){
+            direction_form.slideUp();
+            direction_form.removeClass('open');
+            direction_form.addClass('close');
             $(this).html('افزودن جهت گیری');
         }
     });
     $('.add_direction1').click(function(){
-        if($('.direction_form1').hasClass('close')){
-            $('.direction_form1').slideDown();
-            $('.direction_form1').removeClass('close');
-            $('.direction_form1').addClass('open');
+        if(direction_form1.hasClass('close')){
+            direction_form1.slideDown();
+            direction_form1.removeClass('close');
+            direction_form1.addClass('open');
             $(this).html('بستن');
         }
-        else if($('.direction_form1').hasClass('open')){
-            $('.direction_form1').slideUp();
-            $('.direction_form1').removeClass('open');
-            $('.direction_form1').addClass('close');
+        else if(direction_form1.hasClass('open')){
+            direction_form1.slideUp();
+            direction_form1.removeClass('open');
+            direction_form1.addClass('close');
             $(this).html('افزودن جهت گیری');
         }
     });
@@ -199,5 +219,64 @@
              $('.tab_content[id=content_dir]').fadeIn();
          }
     });
+
+    var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+
+    var direction = '<tr>\
+                        <td>__name__</td>\
+                        <td>\
+                            <i class="fa fa-pencil"></i>\
+                            <i class="fa fa-trash-o"></i>\
+                        </td>\
+                    </tr>';
+
+    var __a = true;
+    $('.add-direction').submit(function(e){
+        if(__a){
+            __a = false;
+            e.preventDefault();
+            var btn =$('.add-direction-btn') ;
+            btn.html(loader);
+            var postData = $(this).serializeArray();
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        if (!status) {
+                            Alert.render('error', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        if (status == 'empty') {
+                            Alert.render('empty', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        Alert.render('success', function(){
+                            $('.empty').remove();
+                            $('table.directions-table[data-type=' + value['type'] + ']').append(direction.replace(/__name__/g, value['name']));
+                            btn.html('افزودن');
+                            $('input[name=direction-name]').val('');
+                            __a = true;
+                        });
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('افزودن');
+                            __a = true;
+                        });
+                    }
+                });
+        }
+    });
+
 </script>
 {% end block other_scripts %}
