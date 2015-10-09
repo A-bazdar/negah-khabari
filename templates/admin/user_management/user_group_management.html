@@ -26,7 +26,7 @@
             <a href="/admin/user_management/charts_content">نمودار و تحلیل محتوا</a>
         </li>
         <li>
-            <a href="">مدیریت زیر مجموعه</a>
+            <a href="/admin/user_management/subset_management">مدیریت زیر مجموعه</a>
         </li>
         <li>
             <a href="">کلمات کلیدی</a>
@@ -244,106 +244,273 @@
                                             <form>
                                                 <div class="row">
                                                     <div class="col-md-12 col-sm-12">
-                                                        <div class="form_modal_body margin-top-10">
+                                                        <div class="form_modal_body margin-top-10" id="media">
                                                             <span class="form_body_title">رسانه / منبع</span>
                                                             <div class="row">
                                                                 <div class="col-md-4 col-sm-4">
                                                                     <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <span class="form_label">خبرگذاری</span>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="R_butt_white_bordered" data-action="1">خبرگذاری</div>
                                                                         </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="checkbox">
+                                                                    </div>
+                                                                    <div class="row margin-top-5">
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="R_butt_white_bordered" data-action="2">پایگاه خبری</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row margin-top-5">
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="R_butt_white_bordered" data-action="3">روزنامه</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-4 col-sm-4">
+                                                                <div class="col-md-8 col-sm-8 source_content" data-action="1">
                                                                     <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <span class="form_label">پایگاه خبری</span>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">سیاسی</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="checkbox">
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">احزاب</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-10 col-sm-10 col-md-push-2 col-sm-push-2">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">امنیتی</span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-4 col-sm-4">
+                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="2">
                                                                     <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <span class="form_label">روزنامه</span>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">اجتماعی</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="checkbox">
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">احزاب</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-10 col-sm-10 col-md-push-2 col-sm-push-2">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">امنیتی</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="3">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">اقتصادی</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">احزاب</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-10 col-sm-10 col-md-push-2 col-sm-push-2">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">امنیتی</span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form_modal_body margin-top-20">
+                                                    </div>
+                                                </div>
+                                                <div class="row margin-top-10">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        <div class="form_modal_body margin-top-10" id="subject">
                                                             <span class="form_body_title">موضوع</span>
                                                             <div class="row">
                                                                 <div class="col-md-4 col-sm-4">
                                                                     <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <span class="form_label">سیاسی</span>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="R_butt_white_bordered" data-action="4">سیاسی</div>
                                                                         </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="checkbox">
+                                                                    </div>
+                                                                    <div class="row margin-top-5">
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="R_butt_white_bordered" data-action="5">اقتصادی</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row margin-top-5">
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="R_butt_white_bordered" data-action="6">اجتماعی</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-4 col-sm-4">
+                                                                <div class="col-md-8 col-sm-8 source_content" data-action="4">
                                                                     <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <span class="form_label">اقتصادی</span>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">سیاسی</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="checkbox">
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">احزاب</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">امنیتی</span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-4 col-sm-4">
+                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="5">
                                                                     <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <span class="form_label">اجتماعی</span>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">اجتماعی</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="checkbox">
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">احزاب</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">امنیتی</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="6">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">اقتصادی</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">احزاب</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">امنیتی</span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form_modal_body margin-top-20">
+                                                    </div>
+                                                </div>
+                                                <div class="row margin-top-10">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        <div class="form_modal_body margin-top-10" id="area">
                                                             <span class="form_body_title">حوزه</span>
                                                             <div class="row">
                                                                 <div class="col-md-4 col-sm-4">
                                                                     <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <span class="form_label">جغرافیایی</span>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="R_butt_white_bordered" data-action="7">جغرافیایی</div>
                                                                         </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="checkbox">
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="R_butt_white_bordered" data-action="8">آسیا</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="R_butt_white_bordered" data-action="9">ایران</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-4 col-sm-4">
+                                                                <div class="col-md-8 col-sm-8 source_content" data-action="7">
                                                                     <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <span class="form_label">آسیا</span>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">سیاسی</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="checkbox">
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">احزاب</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">امنیتی</span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-4 col-sm-4">
+                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="8">
                                                                     <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <span class="form_label">ایران</span>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">اجتماعی</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="checkbox">
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">احزاب</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">امنیتی</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="9">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">اقتصادی</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">احزاب</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 col-sm-12">
+                                                                            <div class="tree_container">
+                                                                                <input type="checkbox">
+                                                                                <span class="form_label">امنیتی</span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -701,6 +868,21 @@ $('.dir_tab').click(function(){
     var data_action = $(this).attr('data-action');
     $('.tab_content').css('display','none');
     $('.tab_content[data-action=' + data_action + ']').fadeIn();
+});
+$('#media .R_butt_white_bordered').click(function(){
+    var data_action = $(this).attr('data-action');
+    $('#media .source_content').css('display','none');
+    $('#media .source_content[data-action=' + data_action + ']').fadeIn();
+});
+$('#subject .R_butt_white_bordered').click(function(){
+    var data_action = $(this).attr('data-action');
+    $('#subject .source_content').css('display','none');
+    $('#subject .source_content[data-action=' + data_action + ']').fadeIn();
+});
+$('#area .R_butt_white_bordered').click(function(){
+    var data_action = $(this).attr('data-action');
+    $('#area .source_content').css('display','none');
+    $('#area .source_content[data-action=' + data_action + ']').fadeIn();
 });
 </script>
 {% end block other_scripts %}

@@ -20,5 +20,6 @@ url_patterns = [
     (r'/admin/user_management/access_to_source', AdminAccessSourceHandler),
     (r'/admin/user_management/bolton_management', AdminBoltonManagementHandler),
     (r'/admin/user_management/charts_content', AdminChartsContentHandler),
+    (r'/admin/user_management/subset_management', AdminSubsetManagementHandler),
     (r'/admin/login', AdminLoginHandler)
 ]
