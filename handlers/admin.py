@@ -286,17 +286,58 @@ class AdminUserGroupHandler(BaseHandler):
 
     def post(self):
         try:
-            user_group = dict()
-            self.check_sent_value("group-name", user_group, "name", u"نام گروه کاربری را وارد کنید.")
+            action = self.get_argument('action')
+            if action == 'add':
+                user_group = dict()
+                self.check_sent_value("group-name", user_group, "name", u"نام گروه کاربری را وارد کنید.")
 
-            if not len(self.errors):
+                if not len(self.errors):
 
-                new_group = UserGroupModel(**user_group).save()
-                self.value = {'name': user_group['name'], 'id': new_group['value']}
+                    new_group = UserGroupModel(**user_group).save()
+                    self.value = {'name': user_group['name'], 'id': new_group['value']}
+                    self.status = True
+                else:
+                    self.messages = self.errors
+                    self.status = False
+            elif action == 'setting':
+                group = self.get_argument('group_id')
+                self.value = UserGroupModel(_id=group).get_one()
                 self.status = True
-            else:
-                self.messages = self.errors
-                self.status = False
+
+            elif action == 'search_and_patterns':
+                search_and_patterns = dict()
+                self.check_sent_value("simple-search", search_and_patterns, "simple_search", None)
+                self.check_sent_value("advanced-search", search_and_patterns, "advanced_search", None)
+                self.check_sent_value("refining-news", search_and_patterns, "refining_news", None)
+                self.check_sent_value("pattern-sources", search_and_patterns, "pattern_sources", None)
+                self.check_sent_value("count-pattern-sources", search_and_patterns, "count_pattern_sources", u"تعداد الگو منابع خبری را وارد کنید.")
+                self.check_sent_value("pattern-search", search_and_patterns, "pattern_search", None)
+                self.check_sent_value("count-pattern-search", search_and_patterns, "count_pattern_search", u"تعداد الگو جستجو را وارد کنید.")
+                if not len(self.errors):
+                    search_and_patterns['simple_search'] = False
+                    if 'simple_search' in search_and_patterns:
+                        search_and_patterns['simple_search'] = True
+
+                    search_and_patterns['advanced_search'] = False
+                    if 'advanced_search' in search_and_patterns:
+                        search_and_patterns['advanced_search'] = True
+
+                    search_and_patterns['refining_news'] = False
+                    if 'refining_news' in search_and_patterns:
+                        search_and_patterns['refining_news'] = True
+
+                    search_and_patterns['pattern_sources'] = False
+                    if 'pattern_sources' in search_and_patterns:
+                        search_and_patterns['pattern_sources'] = True
+
+                    search_and_patterns['pattern_search'] = False
+                    if 'pattern_search' in search_and_patterns:
+                        search_and_patterns['pattern_search'] = True
+
+
+                else:
+                    self.messages = self.errors
+                    self.status = False
 
             self.write(self.result)
         except:
