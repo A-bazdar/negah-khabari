@@ -26,6 +26,7 @@ url_patterns = [
     (r'/admin/manager_logs/source_action', AdminSourceActionHandler),
     (r'/admin/manager_logs/general_statistic_source', AdminGeneralStatisticSourceHandler),
     (r'/admin/manager_logs/daily_statistic', AdminDailyStatisticHandler),
+    (r'/admin/manager_logs/most_important_topic', AdminImportantTopicHandler),
     (r'/admin/login', AdminLoginHandler),
     (r'/admin/profile', AdminProfileHandler),
     (r'/admin/ChangePassword', AdminChangePasswordHandler)

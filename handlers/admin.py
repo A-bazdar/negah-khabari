@@ -240,6 +240,10 @@ class AdminDailyStatisticHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_logs/daily_statistic.html')
 
+class AdminImportantTopicHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_logs/most_important_topics.html')
+
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')
