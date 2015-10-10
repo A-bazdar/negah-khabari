@@ -1,0 +1,68 @@
+{% extends admin_base.html %}
+
+{% block other_css %}
+<link rel="stylesheet" href="{{ static_url('plugins/DatePicker/pwt-datepicker.css') }}">
+<link rel="stylesheet" type="text/css" href="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
+{% end block other_css %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>تغییر کلمه عبور</span> </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
+                                <form>
+                                    <div class="form_modal_body">
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">کلمه عبور قبلی</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">کلمه عبور جدید</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">تکرار کلمه عبور جدید</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-12 col-sm-12 text-center">
+                                                <button class="btn R_butt_green">ثبت</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/DatePicker/pwt-date.js') }}"></script>
+<script src="{{ static_url('plugins/DatePicker/pwt-datepicker.js') }}"></script>
+<script type="text/javascript" src="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+<script>
+$(".datePicker").val("").pDatepicker();
+$('input[type=checkbox]').lc_switch();
+</script>
+{% end block other_scripts %}

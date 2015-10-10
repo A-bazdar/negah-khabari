@@ -22,5 +22,11 @@ url_patterns = [
     (r'/admin/user_management/charts_content', AdminChartsContentHandler),
     (r'/admin/user_management/subset_management', AdminSubsetManagementHandler),
     (r'/admin/user_management/key_words', AdminKeyWordsHandler),
-    (r'/admin/login', AdminLoginHandler)
+    (r'/admin/manager_logs/content_format', AdminContentFormatHandler),
+    (r'/admin/manager_logs/source_action', AdminSourceActionHandler),
+    (r'/admin/manager_logs/general_statistic_source', AdminGeneralStatisticSourceHandler),
+    (r'/admin/manager_logs/daily_statistic', AdminDailyStatisticHandler),
+    (r'/admin/login', AdminLoginHandler),
+    (r'/admin/profile', AdminProfileHandler),
+    (r'/admin/ChangePassword', AdminChangePasswordHandler)
 ]

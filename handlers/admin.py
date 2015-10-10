@@ -224,6 +224,30 @@ class AdminKeyWordsHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/user_management/key_words.html')
 
+class AdminContentFormatHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_logs/content_format.html')
+
+class AdminSourceActionHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_logs/source_action.html')
+
+class AdminGeneralStatisticSourceHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_logs/general_statistic_source.html')
+
+class AdminDailyStatisticHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_logs/daily_statistic.html')
+
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')
+
+class AdminProfileHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_profile.html')
+
+class AdminChangePasswordHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/change_admin_pass.html')
