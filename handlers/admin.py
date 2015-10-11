@@ -6,6 +6,7 @@ from classes.debug import Debug
 from classes.public import UploadPic, CreateID
 from config import Config
 from handlers.base import BaseHandler
+from models.mongodb.agency.agency import AgencyModel
 from models.mongodb.category.category import CategoryModel
 from models.mongodb.content.content import ContentModel
 from models.mongodb.direction.direction import DirectionModel
@@ -216,9 +217,54 @@ class AdminDirectionHandler(BaseHandler):
             self.write(self.result)
 
 
-class AdminSourceHandler(tornado.web.RequestHandler):
+class AdminSourceHandler(BaseHandler):
     def get(self):
-        self.render('admin/source_management.html')
+        self.data['agencies'] = AgencyModel().get_all()['value']
+        self.data['categories'] = CategoryModel().get_all()['value']
+        self.data['directions'] = DirectionModel().get_all('source')['value']
+        self.render('admin/source_management.html', **self.data)
+
+    def post(self):
+        try:
+            agency = dict()
+            self.check_sent_value("name", agency, "name", u"نام را وارد کنید.")
+            self.check_sent_value("link", agency, "link", u"لینک را وارد کنید.")
+            self.check_sent_value("color", agency, "color", u"رنگ را وارد کنید.")
+            self.check_sent_value("category", agency, "category", u"رده عبور را وارد کنید.")
+            self.check_sent_value("direction", agency, "direction", u"جهت گیری را وارد کنید.")
+            self.check_sent_value("status", agency, "status", u"وضعیت را وارد کنید.")
+            agency['pic'] = UploadPic(handler=self, name='pic', folder='agency').upload()
+
+            key_words = self.request.arguments['key_word']
+            if not len(key_words) and '' in key_words:
+                self.errors.append(u"کلید واژه ها را وارد کنید.")
+
+            agency['category'] = ObjectId(agency['category'])
+            agency['direction'] = ObjectId(agency['direction'])
+
+            new_agency = AgencyModel(**agency).save()
+            agency['id'] = new_agency['value']
+
+            category = CategoryModel(_id=agency['category']).get_one()['value']
+            direction = DirectionModel(_id=agency['direction']).get_one()['value']
+
+            self.value = dict(
+                id=agency['id'],
+                name=agency['name'],
+                link=agency['link'],
+                color=agency['color'],
+                category=category['name'],
+                direction=direction['name'],
+                status=agency['status'],
+                pic=agency['pic'],
+                add_to_confirm=True,
+                extract_image=True
+            )
+            self.status = True
+            self.write(self.result)
+        except:
+            Debug.get_exception()
+            self.write(self.result)
 
 
 class AdminUserGeneralInfoHandler(BaseHandler):
@@ -282,7 +328,17 @@ class AdminUserGroupHandler(BaseHandler):
         self.data['user_groups'] = UserGroupModel().get_all()['value']
         for g in self.data['user_groups']:
             g['count_user'] = UserGeneralInfoModel(group=g['id']).get_count_by_group()
+
+        self.data['categories'] = CategoryModel().get_all()['value']
+        self.data['subjects'] = SubjectModel().get_all()['value']
+        self.data['geographic'] = GeographicModel().get_all()['value']
         self.render('admin/user_management/user_group_management.html', **self.data)
+
+    @staticmethod
+    def check_checkbox_val(__dict, __key):
+        if __key in __dict.keys():
+            return True
+        return False
 
     def post(self):
         try:
@@ -301,11 +357,12 @@ class AdminUserGroupHandler(BaseHandler):
                     self.status = False
             elif action == 'setting':
                 group = self.get_argument('group_id')
-                self.value = UserGroupModel(_id=group).get_one()
+                self.value = UserGroupModel(_id=ObjectId(group)).get_one()['value']
                 self.status = True
 
             elif action == 'search_and_patterns':
                 search_and_patterns = dict()
+                self.check_sent_value("group-id", search_and_patterns, "group")
                 self.check_sent_value("simple-search", search_and_patterns, "simple_search", None)
                 self.check_sent_value("advanced-search", search_and_patterns, "advanced_search", None)
                 self.check_sent_value("refining-news", search_and_patterns, "refining_news", None)
@@ -314,26 +371,25 @@ class AdminUserGroupHandler(BaseHandler):
                 self.check_sent_value("pattern-search", search_and_patterns, "pattern_search", None)
                 self.check_sent_value("count-pattern-search", search_and_patterns, "count_pattern_search", u"تعداد الگو جستجو را وارد کنید.")
                 if not len(self.errors):
-                    search_and_patterns['simple_search'] = False
-                    if 'simple_search' in search_and_patterns:
-                        search_and_patterns['simple_search'] = True
 
-                    search_and_patterns['advanced_search'] = False
-                    if 'advanced_search' in search_and_patterns:
-                        search_and_patterns['advanced_search'] = True
+                    a = self.check_checkbox_val(search_and_patterns, 'simple_search')
+                    search_and_patterns['simple_search'] = a
 
-                    search_and_patterns['refining_news'] = False
-                    if 'refining_news' in search_and_patterns:
-                        search_and_patterns['refining_news'] = True
+                    a = self.check_checkbox_val(search_and_patterns, 'advanced_search')
+                    search_and_patterns['advanced_search'] = a
 
-                    search_and_patterns['pattern_sources'] = False
-                    if 'pattern_sources' in search_and_patterns:
-                        search_and_patterns['pattern_sources'] = True
+                    a = self.check_checkbox_val(search_and_patterns, 'refining_news')
+                    search_and_patterns['refining_news'] = a
 
-                    search_and_patterns['pattern_search'] = False
-                    if 'pattern_search' in search_and_patterns:
-                        search_and_patterns['pattern_search'] = True
+                    a = self.check_checkbox_val(search_and_patterns, 'pattern_sources')
+                    search_and_patterns['pattern_sources'] = a
 
+                    a = self.check_checkbox_val(search_and_patterns, 'pattern_search')
+                    search_and_patterns['pattern_search'] = a
+
+                    UserGroupModel(_id=search_and_patterns['group']).save_search_pattern(**search_and_patterns)
+
+                    self.status = True
 
                 else:
                     self.messages = self.errors

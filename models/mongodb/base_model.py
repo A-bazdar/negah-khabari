@@ -1,4 +1,5 @@
 import pymongo
+from classes.debug import Debug
 from config import Config
 
 __author__ = 'Morteza'
@@ -12,9 +13,10 @@ class MongodbBaseModel():
 
 
 class MongodbModel(MongodbBaseModel):
-    def __init__(self, collection=None, body=None):
+    def __init__(self, collection=None, body=None, condition=None):
         MongodbBaseModel.__init__(self)
         self.__body = body
+        self.__condition = condition
         if collection == 'agency':
             self.collection = self.db.agency
         elif collection == 'content':
@@ -56,6 +58,13 @@ class MongodbModel(MongodbBaseModel):
         try:
             return self.collection.find(self.__body).count()
         except:
+            return False
+
+    def update(self):
+        try:
+            return self.collection.update(self.__condition, self.__body)
+        except:
+            Debug.get_exception()
             return False
 
 

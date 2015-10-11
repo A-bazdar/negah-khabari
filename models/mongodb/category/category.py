@@ -40,3 +40,19 @@ class CategoryModel(BaseModel):
         except:
             Debug.get_exception()
             return self.result
+
+    def get_one(self):
+        try:
+            r = MongodbModel(collection='category', body={'_id': self.id}).get_one()
+            if r:
+                self.result['value'] = dict(
+                    id=r['_id'],
+                    name=r['name']
+                )
+
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception()
+            return self.result

@@ -48,16 +48,17 @@ class CreatePassword():
 
 
 class UploadPic():
-    def __init__(self, name=None, handler=None):
+    def __init__(self, name=None, handler=None, folder='avatars'):
         self.name = name
         self.__handler = handler
+        self.folder = folder
 
     def upload(self):
         try:
             pic_name = CreateID().create()
             pic = self.__handler.request.files[self.name][0]
             extension = os.path.splitext(pic['filename'])[1].lower()
-            upload_folder = os.path.join(Config().applications_root, 'static', 'avatars')
+            upload_folder = os.path.join(Config().applications_root, 'static', 'images', self.folder)
             photo_name = pic_name + extension
             full_name = os.path.join(upload_folder, photo_name)
             output = open(full_name, 'wb')

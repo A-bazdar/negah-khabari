@@ -166,7 +166,7 @@
                                         <div class="tab_content" data-action="1">
                                             <form id="search_and_patterns">
                                                 {% module xsrf_form_html() %}
-                                                <input name="group_id" type="hidden" name="setting-group-id">
+                                                <input name="group-id" type="hidden" class="setting-group-id">
                                                 <input name="action" value="search_and_patterns" type="hidden">
                                                 <div class="row">
                                                     <div class="col-md-4 col-sm-4">
@@ -260,88 +260,29 @@
                                                             <span class="form_body_title">رسانه / منبع</span>
                                                             <div class="row">
                                                                 <div class="col-md-4 col-sm-4">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="R_butt_white_bordered" data-action="1">خبرگذاری</div>
+                                                                    {% for category in categories %}
+                                                                        <div class="row margin-top-5">
+                                                                            <div class="col-md-12 col-sm-12">
+                                                                                <div class="R_butt_white_bordered" data-action="{{ category['id'] }}">{{ category['name'] }}</div>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="row margin-top-5">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="R_butt_white_bordered" data-action="2">پایگاه خبری</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row margin-top-5">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="R_butt_white_bordered" data-action="3">روزنامه</div>
-                                                                        </div>
-                                                                    </div>
+                                                                    {% end %}
                                                                 </div>
-                                                                <div class="col-md-8 col-sm-8 source_content" data-action="1">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">سیاسی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">احزاب</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-10 col-sm-10 col-md-push-2 col-sm-push-2">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">امنیتی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="2">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">اجتماعی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">احزاب</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-10 col-sm-10 col-md-push-2 col-sm-push-2">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">امنیتی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="3">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">اقتصادی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">احزاب</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-10 col-sm-10 col-md-push-2 col-sm-push-2">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">امنیتی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                {% set a = False %}
+{#                                                                {% for category in categories %}#}
+{#                                                                    <div class="col-md-8 col-sm-8 source_content {% if a %}display-none{% else %}{% set a = True %}{% end %}" data-action="{{ category['id'] }}">#}
+{#                                                                        <div class="row">#}
+{#                                                                            {% for child in category %}#}
+{#                                                                                <div class="col-md-12 col-sm-12">#}
+{#                                                                                    <div class="tree_container">#}
+{#                                                                                        <input type="checkbox">#}
+{#                                                                                        <span class="form_label">{{ child['name'] }}</span>#}
+{#                                                                                    </div>#}
+{#                                                                                </div>#}
+{#                                                                            {% end %}#}
+{#                                                                        </div>#}
+{#                                                                    </div>#}
+{#                                                                {% end %}#}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -352,88 +293,35 @@
                                                             <span class="form_body_title">موضوع</span>
                                                             <div class="row">
                                                                 <div class="col-md-4 col-sm-4">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="R_butt_white_bordered" data-action="4">سیاسی</div>
+                                                                    {% for subject in subjects %}
+                                                                        <div class="row margin-top-5">
+                                                                            <div class="col-md-12 col-sm-12">
+                                                                                <div class="R_butt_white_bordered" data-action="{{ subject['id'] }}">{{ subject['name'] }}</div>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="row margin-top-5">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="R_butt_white_bordered" data-action="5">اقتصادی</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row margin-top-5">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="R_butt_white_bordered" data-action="6">اجتماعی</div>
-                                                                        </div>
-                                                                    </div>
+                                                                    {% end %}
                                                                 </div>
-                                                                <div class="col-md-8 col-sm-8 source_content" data-action="4">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">سیاسی</span>
+                                                                {% set a = False %}
+                                                                {% for subject in subjects %}
+                                                                    <div class="col-md-8 col-sm-8 source_content {% if a %}display-none{% else %}{% set a = True %}{% end %}" data-action="{{ subject['id'] }}">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-sm-12">
+                                                                                <div class="tree_container">
+                                                                                    <input class="parent" data-id="{{ subject['id'] }}" type="checkbox">
+                                                                                    <span class="form_label">{{ subject['name'] }}</span>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">احزاب</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">امنیتی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="5">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">اجتماعی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">احزاب</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">امنیتی</span>
-                                                                            </div>
+                                                                            {% for child in subject['child'] %}
+                                                                                <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                                    <div class="tree_container">
+                                                                                        <input class="child" data-parent-id="{{ subject['id'] }}" type="checkbox">
+                                                                                        <span class="form_label">{{ child['name'] }}</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            {% end %}
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="6">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">اقتصادی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">احزاب</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">امنیتی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                {% end %}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -444,88 +332,35 @@
                                                             <span class="form_body_title">حوزه</span>
                                                             <div class="row">
                                                                 <div class="col-md-4 col-sm-4">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="R_butt_white_bordered" data-action="7">جغرافیایی</div>
+                                                                    {% for geo in geographic %}
+                                                                        <div class="row margin-top-5">
+                                                                            <div class="col-md-12 col-sm-12">
+                                                                                <div class="R_butt_white_bordered" data-action="{{ geo['id'] }}">{{ geo['name'] }}</div>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="R_butt_white_bordered" data-action="8">آسیا</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="R_butt_white_bordered" data-action="9">ایران</div>
-                                                                        </div>
-                                                                    </div>
+                                                                    {% end %}
                                                                 </div>
-                                                                <div class="col-md-8 col-sm-8 source_content" data-action="7">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">سیاسی</span>
+                                                                {% set a = False %}
+                                                                {% for geo in geographic %}
+                                                                    <div class="col-md-8 col-sm-8 source_content {% if a %}display-none{% else %}{% set a = True %}{% end %}" data-action="{{ geo['id'] }}">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-sm-12">
+                                                                                <div class="tree_container">
+                                                                                    <input type="checkbox">
+                                                                                    <span class="form_label">{{ geo['name'] }}</span>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">احزاب</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">امنیتی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="8">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">اجتماعی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">احزاب</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">امنیتی</span>
-                                                                            </div>
+                                                                            {% for child in geo['child'] %}
+                                                                                <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
+                                                                                    <div class="tree_container">
+                                                                                        <input type="checkbox">
+                                                                                        <span class="form_label">{{ child['name'] }}</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            {% end %}
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-8 col-sm-8 source_content display-none" data-action="9">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">اقتصادی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-11 col-sm-11 col-md-push-1 col-sm-push-1">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">احزاب</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-12 col-sm-12">
-                                                                            <div class="tree_container">
-                                                                                <input type="checkbox">
-                                                                                <span class="form_label">امنیتی</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                {% end %}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -876,6 +711,16 @@ $('.add_direction').click(function(){
 
 $('input[type=checkbox]').lc_switch();
 
+$('body').delegate('input.parent[type=checkbox]', 'lcs-statuschange', function() {
+    var parent_id = $(this).attr('data-id');
+    if($(this).is(':checked')){
+        $('input.child[type=checkbox][data-parent-id=' + parent_id + ']').lcs_on();
+    }else{
+        $('input.child[type=checkbox][data-parent-id=' + parent_id + ']').lcs_off();
+    }
+});
+
+
 $('.dir_tab').click(function(){
     var data_action = $(this).attr('data-action');
     $('.tab_content').css('display','none');
@@ -971,7 +816,42 @@ $('#add_user_group').submit(function(e){
                 type: "post",
                 data: postData,
                 success: function (response) {
-                    $('input[name=setting-group-id]').val(group_id);
+                    var value = response['value'];
+                    $('input[type=checkbox]').lcs_off();
+                    $('input[name=count-pattern-search]').val('');
+                    $('input[name=count-pattern-sources]').val('');
+                    if(value['search_pattern']){
+                        var s_p = value['search_pattern'];
+                        if(s_p['simple_search']){
+                            $('input[name=simple-search]').lcs_on();
+                        }else{
+                            $('input[name=simple-search]').lcs_off();
+                        }
+                        if(s_p['advanced_search']){
+                            $('input[name=advanced-search]').lcs_on();
+                        }else{
+                            $('input[name=advanced-search]').lcs_off();
+                        }
+                        if(s_p['refining_news']){
+                            $('input[name=refining-news]').lcs_on();
+                        }else{
+                            $('input[name=refining-news]').lcs_off();
+                        }
+                        if(s_p['pattern_sources']){
+                            $('input[name=pattern-sources]').lcs_on();
+                        }else{
+                            $('input[name=pattern-sources]').lcs_off();
+                        }
+                        if(s_p['pattern_search']){
+                            $('input[name=pattern-search]').lcs_on();
+                        }else{
+                            $('input[name=pattern-search]').lcs_off();
+                        }
+                        $('input[name=count-pattern-search]').val(s_p['count_pattern_search']);
+                        $('input[name=count-pattern-sources]').val(s_p['count_pattern_sources']);
+
+                    }
+                    $('input.setting-group-id').val(group_id);
                     $('#user_group_modal').modal('toggle');
                 }
             });
