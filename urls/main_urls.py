@@ -83,6 +83,26 @@ url_patterns = [
     (r'^/Admin/ManagerLogs/MostImportantTopic', AdminImportantTopicHandler, None,
      "admin:manager_logs:most_important_topic"),
 
+    (r'^(?i)/Admin/ManagerLogs/MostImportantTags[/]?$', AdminImportantTagHandler),
+    (r'^/Admin/ManagerLogs/MostImportantTags', AdminImportantTagHandler, None,
+     "admin:manager_logs:most_important_tags"),
+
+    (r'^(?i)/Admin/ManagerLogs/NewsReflect[/]?$', AdminNewsReflectHandler),
+    (r'^/Admin/ManagerLogs/NewsReflect', AdminNewsReflectHandler, None,
+     "admin:manager_logs:news_reflect"),
+
+    (r'^(?i)/Admin/ManagerLogs/ContentDirection[/]?$', AdminContentDirectionHandler),
+    (r'^/Admin/ManagerLogs/ContentDirection', AdminContentDirectionHandler, None,
+     "admin:manager_logs:content_direction"),
+
+    (r'^(?i)/Admin/ManagerLogs/MostImportantNewMaker[/]?$', AdminMostImportantNewMakerHandler),
+    (r'^/Admin/ManagerLogs/MostImportantNewMaker', AdminMostImportantNewMakerHandler, None,
+     "admin:manager_logs:most_important_newsmaker"),
+
+    (r'^(?i)/Admin/LogAndCharts/BoltonLog[/]?$', AdminBoltonLogHandler),
+    (r'^/Admin/LogAndCharts/BoltonLog', AdminBoltonLogHandler, None,
+     "admin:log_and_charts:bolton_log"),
+
 
 
     # (r'/admin', AdminHandler),

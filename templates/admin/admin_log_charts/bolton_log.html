@@ -1,0 +1,295 @@
+{% extends '../admin_base.html' %}
+
+{% block other_css %}
+
+<style>
+    .amcharts-chart-div a{
+        display: none !important;
+    }
+
+    .highcharts-title, .highcharts-button, .highcharts-yaxis-title{
+        display: none !important;
+    }
+
+    svg > text{
+        display: none !important;
+    }
+
+    text{
+        font-family: Yekan !important;
+    }
+</style>
+{% end block other_css %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>لاگ و نمودار</span> </div>
+                    <div class="panel-body">
+                        <div class="show_box">
+                            <div class="box_header">
+                                <span>گزارش بولتن</span>
+                            </div>
+                            <div class="box_body">
+                                <div class="row">
+
+                                </div>
+                                <div class="show_table">
+                                    <table class="table table-bordered source_news_table">
+                                        <tr>
+                                            <td>مثبت</td>
+                                            <td>منفی</td>
+                                            <td>خنثی</td>
+                                        </tr>
+                                        <tr>
+                                            <td>113</td>
+                                            <td>47</td>
+                                            <td>165</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="row margin-top-10">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div>
+                                            <ul>
+                                                <li><b>165 مطلب ( 44.90 درصد )</b> با جهت گیری خنثی منتشر شده است.</li>
+                                                <li><b>113 مطلب ( 44.90 درصد )</b> با جهت گیری مثبت منتشر شده است.</li>
+                                                <li>
+                                                    <b>47 مطلب ( 44.90 درصد )</b>
+                                                    <span> با جهت گیری منفی منتشر شده است.</span>
+                                                    <ul>
+                                                        <li>متولی و جایگاه حمل و نقل مشخص نیست.</li>
+                                                        <li>متولی و جایگاه حمل و نقل مشخص نیست.</li>
+                                                        <li>متولی و جایگاه حمل و نقل مشخص نیست.</li>
+                                                        <li>متولی و جایگاه حمل و نقل مشخص نیست.</li>
+                                                        <li>متولی و جایگاه حمل و نقل مشخص نیست.</li>
+                                                        <li>متولی و جایگاه حمل و نقل مشخص نیست.</li>
+                                                        <li>متولی و جایگاه حمل و نقل مشخص نیست.</li>
+                                                        <li>متولی و جایگاه حمل و نقل مشخص نیست.</li>
+                                                        <li>متولی و جایگاه حمل و نقل مشخص نیست.</li>
+                                                        <li>متولی و جایگاه حمل و نقل مشخص نیست.</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-35">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div id="chartdiv" style="direction: ltr ;height: 300px; width: 100%; font-size: 15pt; font-family: Yekan !important;"></div>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-35">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div id="container" style="direction: ltr ;min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="show_box margin-top-10">
+                            <div class="box_header">
+                                <span>جهت گیری منابع خبری</span>
+                            </div>
+                            <div class="box_body">
+                                <table class="table table-bordered source_news_table">
+                                    <tr>
+                                        <td>بیشترین اخبار در منابع اصولگرا</td>
+                                        <td>بیشترین اخبار در منابع اصلاح طلب</td>
+                                    </tr>
+                                    <tr>
+                                        <td>فارس ( 30 خبر )</td>
+                                        <td>خبر آنلاین ( 15 خبر )</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ایسنا ( 30 خبر )</td>
+                                        <td>مهر ( 15 خبر )</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ایرنا ( 30 خبر )</td>
+                                        <td>آفتاب ( 15 خبر )</td>
+                                    </tr>
+                                </table>
+                                <div class="row margin-top-35">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div id="chartdiv1" style="direction: ltr ;height: 300px; width: 100%; font-size: 15pt; font-family: Yekan !important;"></div>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-35">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div id="container1" style="direction: ltr ;min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/amchart/amcharts.js')}}"></script>
+<script src="{{ static_url('plugins/amchart/pie.js')}}"></script>
+<script src="{{ static_url('plugins/amchart/light.js')}}"></script>
+<script src="{{ static_url('plugins/Highchart/highcharts.js')}}"></script>
+<script src="{{ static_url('plugins/Highchart/exporting.js')}}"></script>
+
+<script>
+var chart = AmCharts.makeChart( "chartdiv", {
+    "type": "pie",
+    "theme": "light",
+    "dataProvider": [{
+    "title": "خبر",
+    "value": 4852
+    }, {
+    "title": "یادداشت",
+    "value": 9899
+    }, {
+    "title": "گزارش",
+    "value": 9899
+    }, {
+    "title": "مقاله",
+    "value": 9899
+    }, {
+    "title": "اطلاعیه",
+    "value": 9899
+    }, {
+    "title": "گفتگو",
+    "value": 9899
+    }, {
+    "title": "تصویری",
+    "value": 9899
+    }, {
+    "title": "بدون قالب",
+    "value": 9899
+    }],
+    "titleField": "title",
+    "valueField": "value",
+    "labelRadius": 8,
+
+    "radius": "42%",
+    "innerRadius": "60%",
+    "labelText": "[[title]]",
+    "export": {
+        "enabled": true
+    }
+});
+
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        xAxis: {
+            categories: ['روزنامه','خبرگذاری','پایگاه خبری','هفته نامه و ماهنامه'],
+            crosshair: true
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'خبر',
+            data: [49.9, 71.5, 106.4, 129.2]
+
+        }, {
+            name: 'یادداشت',
+            data: [83.6, 78.8, 98.5, 93.4]
+
+        }, {
+            name: 'گزارش',
+            data: [48.9, 38.8, 39.3, 41.4]
+
+        }, {
+            name: 'مقاله',
+            data: [42.4, 33.2, 34.5, 39.7]
+
+        }, {
+            name: 'اطلاعیه',
+            data: [42.4, 33.2, 34.5, 39.7]
+
+        }, {
+            name: 'گفتگو',
+            data: [42.4, 33.2, 34.5, 39.7]
+
+        }, {
+            name: 'تصویری',
+            data: [42.4, 33.2, 34.5, 39.7]
+
+        }, {
+            name: 'بدون قالب',
+            data: [42.4, 33.2, 34.5, 39.7]
+
+        }]
+    });
+});
+var chart1 = AmCharts.makeChart( "chartdiv1", {
+    "type": "pie",
+    "theme": "light",
+    "dataProvider": [{
+    "title": "اخبار منتشر شده در منابع اصاح طلب",
+    "value": 4852
+    }, {
+    "title": "اخبار منتشر شده در منابع اصولگرا",
+    "value": 9899
+    }, {
+    "title": "اخبار منتشر شده در منابع بدون جهت گیری",
+    "value": 9899
+    }],
+    "titleField": "title",
+    "valueField": "value",
+    "labelRadius": 8,
+
+    "radius": "42%",
+    "innerRadius": "60%",
+    "labelText": "[[title]]",
+    "export": {
+        "enabled": true
+    }
+});
+
+$(function () {
+    $('#container1').highcharts({
+        chart: {
+            type: 'column'
+        },
+        xAxis: {
+            categories: ['منابع اصلاح طلب','منابع اصولگرا','منابع بی طرف'],
+            crosshair: true
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'جهت گیری منابع خبری',
+            data: [49.9, 71.5, 106.4]
+
+        }]
+    });
+});
+</script>
+{% end block other_scripts %}

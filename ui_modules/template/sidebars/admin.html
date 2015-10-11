@@ -78,10 +78,10 @@
                         <a href="{{ reverse_url('admin:manager_logs:most_important_topic') }}">مهمترین سرفصل های خبری</a>
                     </li>
                     <li>
-                        <a href="">مهمترین تگ های خبری</a>
+                        <a href="{{ reverse_url('admin:manager_logs:most_important_tags') }}">مهمترین تگ های خبری</a>
                     </li>
                     <li>
-                        <a href="">بازتاب خبری</a>
+                        <a href="{{ reverse_url('admin:manager_logs:news_reflect') }}">بازتاب خبری</a>
                     </li>
                     <li>
                         <a href="">اهمیت خبر در جایگاه رسانه</a>
@@ -90,10 +90,10 @@
                         <a href="">اهمیت خبر</a>
                     </li>
                     <li>
-                        <a href="">جهت گیری</a>
+                        <a href="{{ reverse_url('admin:manager_logs:content_direction') }}">جهت گیری</a>
                     </li>
                     <li>
-                        <a href="">مهمترین خبرسازان + جداول مهمترین خبرسازان</a>
+                        <a href="{{ reverse_url('admin:manager_logs:most_important_newsmaker') }}">مهمترین خبرسازان + جداول مهمترین خبرسازان</a>
                     </li>
                 </ul>
             </li>
@@ -101,7 +101,7 @@
                 <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> لاگ و نمودار<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="">گزارش بولتن</a>
+                        <a href="{{ reverse_url('admin:log_and_charts:bolton_log') }}">گزارش بولتن</a>
                     </li>
                     <li>
                         <a href="">آمار اخبار خوانده شده</a>

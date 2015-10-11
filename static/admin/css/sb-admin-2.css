@@ -95,7 +95,13 @@ body {
 }
 
 .sidebar ul li a.active {
-    background-color: #eee;
+    background-color: #e0e0e0;
+    color: #ffffff;
+}
+
+.sidebar ul li a:hover {
+    background-color: #e0e0e0;
+    color: #ffffff;
 }
 
 .sidebar .arrow {
@@ -117,6 +123,12 @@ body {
 
 .sidebar .nav-second-level li a {
     padding-right: 37px;
+    background: #EEEEEE;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-second-level li a:hover {
+    background: #dedede;
 }
 
 .sidebar .nav-third-level li a {

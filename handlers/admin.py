@@ -244,6 +244,26 @@ class AdminImportantTopicHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_logs/most_important_topics.html')
 
+class AdminImportantTagHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_logs/most_important_tags.html')
+
+class AdminNewsReflectHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_logs/news_reflect.html')
+
+class AdminContentDirectionHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_logs/content_direction.html')
+
+class AdminMostImportantNewMakerHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_logs/most_important_newsmaker.html')
+
+class AdminBoltonLogHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_log_charts/bolton_log.html')
+
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')
