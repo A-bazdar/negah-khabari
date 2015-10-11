@@ -83,7 +83,7 @@ url_patterns = [
     (r'^/Admin/ManagerLogs/MostImportantTopic', AdminImportantTopicHandler, None,
      "admin:manager_logs:most_important_topic"),
     
-    (r'/validation', ValodationHandler, None, "validation")
+    (r'/validation', ValodationHandler, None, "validation"),
     
     (r'^(?i)/Admin/ManagerLogs/MostImportantTags[/]?$', AdminImportantTagHandler),
     (r'^/Admin/ManagerLogs/MostImportantTags', AdminImportantTagHandler, None,
