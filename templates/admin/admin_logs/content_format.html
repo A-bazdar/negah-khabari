@@ -1,0 +1,232 @@
+{% extends '../admin_base.html' %}
+
+{% block other_css %}
+
+<style>
+    .amcharts-chart-div a{
+        display: none !important;
+    }
+
+    .highcharts-title{
+        display: none !important;
+    }
+
+    .highcharts-button{
+        display: none !important;
+    }
+
+    .highcharts-yaxis-title{
+        display: none !important;
+    }
+
+    .highcharts-legend{
+        display: none !important;
+    }
+    text{
+        font-family: Yekan !important;
+    }
+</style>
+{% end block other_css %}
+
+{% block manager_logs %}
+    <li class="active">
+        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> گزارشات مدیریت<span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level">
+            <li>
+                <a class="active" href="/admin/manager_logs/content_format">قالب محتوا</a>
+            </li>
+            <li>
+                <a href="/admin/manager_logs/source_action">عملکرد منابع خبری بر اساس تعداد اخبار</a>
+            </li>
+            <li>
+                <a href="/admin/manager_logs/general_statistic_source">آمار کلی منابع خبری</a>
+            </li>
+            <li>
+                <a href="/admin/manager_logs/daily_statistic">آمار روزانه انتشار اخبار</a>
+            </li>
+            <li>
+                <a href="/admin/manager_logs/most_important_topic">مهمترین سرفصل های خبری</a>
+            </li>
+            <li>
+                <a href="">مهمترین تگ های خبری</a>
+            </li>
+            <li>
+                <a href="">بازتاب خبری</a>
+            </li>
+            <li>
+                <a href="">اهمیت خبر در جایگاه رسانه</a>
+            </li>
+            <li>
+                <a href="">اهمیت خبر</a>
+            </li>
+            <li>
+                <a href="">جهت گیری</a>
+            </li>
+            <li>
+                <a href="">مهمترین خبرسازان + جداول مهمترین خبرسازان</a>
+            </li>
+        </ul>
+    </li>
+    {% end block manager_logs %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>گزارشات مدیریت</span> </div>
+                    <div class="panel-body">
+                        <div class="show_box">
+                            <div class="box_header">
+                                <span>قالب محتوا</span>
+                            </div>
+                            <div class="box_body">
+                                <table class="table table-bordered source_news_table">
+                                    <tr>
+                                        <td>خبر</td>
+                                        <td>یادداشت</td>
+                                        <td>گزارش</td>
+                                        <td>مقاله</td>
+                                        <td>اطلاعیه</td>
+                                        <td>گفتگو</td>
+                                        <td>تصویری</td>
+                                        <td>بدون قالب</td>
+                                    </tr>
+                                    <tr>
+                                        <td>28600</td>
+                                        <td>1800</td>
+                                        <td>600</td>
+                                        <td>200</td>
+                                        <td>800</td>
+                                        <td>100</td>
+                                        <td>21530</td>
+                                        <td>500</td>
+                                    </tr>
+                                </table>
+                                <div class="row margin-top-35">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div id="chartdiv" style="height: 300px; width: 100%; font-size: 15pt; font-family: Yekan !important;"></div>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-35">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/amchart/amcharts.js')}}"></script>
+<script src="{{ static_url('plugins/amchart/pie.js')}}"></script>
+<script src="{{ static_url('plugins/amchart/light.js')}}"></script>
+<script src="{{ static_url('plugins/Highchart/highcharts.js')}}"></script>
+<script src="{{ static_url('plugins/Highchart/exporting.js')}}"></script>
+
+<script>
+var chart = AmCharts.makeChart( "chartdiv", {
+    "type": "pie",
+    "theme": "light",
+    "dataProvider": [{
+    "title": "خبر",
+    "value": 4852
+    }, {
+    "title": "یادداشت",
+    "value": 9899
+    }, {
+    "title": "گزارش",
+    "value": 9899
+    }, {
+    "title": "مقاله",
+    "value": 9899
+    }, {
+    "title": "اطلاعیه",
+    "value": 9899
+    }, {
+    "title": "گفتگو",
+    "value": 9899
+    }, {
+    "title": "تصویری",
+    "value": 9899
+    }, {
+    "title": "بدون قالب",
+    "value": 9899
+    }],
+    "titleField": "title",
+    "valueField": "value",
+    "labelRadius": 8,
+
+    "radius": "42%",
+    "innerRadius": "60%",
+    "labelText": "[[title]]",
+    "export": {
+        "enabled": true
+    }
+});
+
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        xAxis: {
+            categories: ['روزنامه','خبرگذاری','پایگاه خبری','هفته نامه و ماهنامه'],
+            crosshair: true
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'خبر',
+            data: [49.9, 71.5, 106.4, 129.2]
+
+        }, {
+            name: 'یادداشت',
+            data: [83.6, 78.8, 98.5, 93.4]
+
+        }, {
+            name: 'گزارش',
+            data: [48.9, 38.8, 39.3, 41.4]
+
+        }, {
+            name: 'مقاله',
+            data: [42.4, 33.2, 34.5, 39.7]
+
+        }, {
+            name: 'اطلاعیه',
+            data: [42.4, 33.2, 34.5, 39.7]
+
+        }, {
+            name: 'گفتگو',
+            data: [42.4, 33.2, 34.5, 39.7]
+
+        }, {
+            name: 'تصویری',
+            data: [42.4, 33.2, 34.5, 39.7]
+
+        }, {
+            name: 'بدون قالب',
+            data: [42.4, 33.2, 34.5, 39.7]
+
+        }]
+    });
+});
+</script>
+{% end block other_scripts %}

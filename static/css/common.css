@@ -1737,3 +1737,7 @@
 .vertical-3{
     vertical-align: 3px;
 }
+
+textarea{
+    resize: none;
+}

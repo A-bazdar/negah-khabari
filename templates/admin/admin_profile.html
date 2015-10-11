@@ -1,0 +1,116 @@
+{% extends admin_base.html %}
+
+{% block other_css %}
+<link rel="stylesheet" href="{{ static_url('plugins/DatePicker/pwt-datepicker.css') }}">
+<link rel="stylesheet" type="text/css" href="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
+{% end block other_css %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>ویرایش پروفایل مدیر</span> </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
+                                <form>
+                                    <div class="form_modal_body">
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">نام</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">نام خانوادگی</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">ایمیل</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">نام کاربری</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">موبایل</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">تاریخ تولد</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input class="form-control datePicker">
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">آدرس</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <textarea class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-3 col-sm-3">
+                                                <span class="form_label">عکس</span>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9">
+                                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                    <div id="photo_show" class="fileupload-new thumbnail" style="width: 184px; height: 134px;">
+                                                        <img  src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                                                    </div>
+                                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+                                                    <div>
+                                                        <span class="btn backgroundBlue colorWhite btn-file">
+                                                        <span data-toggle="modal" href="#cropper-foodlist" class="fileupload-new"><i class="fa fa-paper-clip"></i> انتخاب تصویر </span>
+                                                        <span class="fileupload-exists"><i class="fa fa-undo"></i> تغییر</span>
+                                                        <input name="avatar" type="file" class="default" />
+                                                        </span>
+                                                        <a href="#" class="btn backgroundRed colorWhite fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> حذف</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/DatePicker/pwt-date.js') }}"></script>
+<script src="{{ static_url('plugins/DatePicker/pwt-datepicker.js') }}"></script>
+<script type="text/javascript" src="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+<script>
+$(".datePicker").val("").pDatepicker();
+$('input[type=checkbox]').lc_switch();
+</script>
+{% end block other_scripts %}

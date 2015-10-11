@@ -1,0 +1,180 @@
+{% extends '../admin_base.html' %}
+
+{% block other_css %}
+
+<style>
+    .amcharts-chart-div a{
+        display: none !important;
+    }
+
+    .highcharts-title, .highcharts-subtitle, .highcharts-button,.highcharts-yaxis-title{
+        display: none !important;
+    }
+
+    text{
+        font-family: Yekan !important;
+    }
+</style>
+{% end block other_css %}
+
+{% block manager_logs %}
+    <li class="active">
+        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> گزارشات مدیریت<span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level">
+            <li>
+                <a href="/admin/manager_logs/content_format">قالب محتوا</a>
+            </li>
+            <li>
+                <a href="/admin/manager_logs/source_action">عملکرد منابع خبری بر اساس تعداد اخبار</a>
+            </li>
+            <li>
+                <a href="/admin/manager_logs/general_statistic_source">آمار کلی منابع خبری</a>
+            </li>
+            <li>
+                <a href="/admin/manager_logs/daily_statistic">آمار روزانه انتشار اخبار</a>
+            </li>
+            <li>
+                <a class="active" href="/admin/manager_logs/most_important_topic">مهمترین سرفصل های خبری</a>
+            </li>
+            <li>
+                <a href="">مهمترین تگ های خبری</a>
+            </li>
+            <li>
+                <a href="">بازتاب خبری</a>
+            </li>
+            <li>
+                <a href="">اهمیت خبر در جایگاه رسانه</a>
+            </li>
+            <li>
+                <a href="">اهمیت خبر</a>
+            </li>
+            <li>
+                <a href="">جهت گیری</a>
+            </li>
+            <li>
+                <a href="">مهمترین خبرسازان + جداول مهمترین خبرسازان</a>
+            </li>
+        </ul>
+    </li>
+    {% end block manager_logs %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>گزارشات مدیریت</span> </div>
+                    <div class="panel-body">
+                        <div class="show_box">
+                            <div class="box_header">
+                                <span>آمار روزانه انتشار اخبار</span>
+                            </div>
+                            <div class="box_body">
+                                <div class="row margin-top-10">
+                                    <div class="col-md-12 col-sm-12">
+                                        <p>بیشترین اخبار در این دوره در تاریخ 1390/09/28 با 45 مطلب و سپس در تاریخ 1390/09/30 با 36 مطلب منتشر شد.</p>
+                                        <p>از جمله مهمترین تیترها:</p>
+                                        <div>
+                                            <ul>
+                                                <li>
+                                                    <span class="color-69AFDB">مهمترین تیترهای مثبت</span>
+                                                    <ul>
+                                                        <li>ترانزیت 7.5 میلیون تن کالا از مرزهای جاده ای کشور</li>
+                                                        <li>پیش بینی برنامه پنجم در بخش ترانزیت محقق شد</li>
+                                                        <li>بررسی منطقی شدن نرخ عوارض آزادراه ها</li>
+                                                        <li>کاهش 12 درصدی مرگ و میر دانش آموزان در در حاشیه جاده ها</li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <span class="color-69AFDB">مهمترین تیترهای منفی</span>
+                                                    <ul>
+                                                        <li>ترانزیت 7.5 میلیون تن کالا از مرزهای جاده ای کشور</li>
+                                                        <li>پیش بینی برنامه پنجم در بخش ترانزیت محقق شد</li>
+                                                        <li>بررسی منطقی شدن نرخ عوارض آزادراه ها</li>
+                                                        <li>کاهش 12 درصدی مرگ و میر دانش آموزان در در حاشیه جاده ها</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-35">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div id="chart_container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/Highchart/highcharts.js')}}"></script>
+<script src="{{ static_url('plugins/Highchart/exporting.js')}}"></script>
+
+<script>
+$(function () {
+    $('#chart_container').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        xAxis: {
+            categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Population (millions)',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' millions'
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 80,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Year 1800',
+            data: [107, 31, 635, 203, 2]
+        }, {
+            name: 'Year 1900',
+            data: [133, 156, 947, 408, 6]
+        }, {
+            name: 'Year 2012',
+            data: [1052, 954, 4250, 740, 38]
+        }]
+    });
+});
+
+    $('.highcharts-axis-labels text').setAttribute('x','20');
+</script>
+{% end block other_scripts %}

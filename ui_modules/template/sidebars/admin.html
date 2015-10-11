@@ -1,0 +1,142 @@
+<div class="navbar-default sidebar font-yekan" role="navigation">
+    <div class="sidebar-nav navbar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="menu-main-item">
+                <a href=""><i class="fa fa-dashboard fa-fw"></i> مدیریت<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{{ reverse_url('admin:management:content') }}">مدیریت قالب محتوا</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:management:subject') }}">مدیریت موضوعات</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:management:category') }}">مدیریت رده</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:management:group') }}">مدیریت گروه های خبری</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:management:geo') }}">مدیریت حوزه های جغرافیایی</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:management:direction') }}">مدیریت جهت گیری</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu-main-item">
+                <a href="{{ reverse_url('admin:source_management') }}"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت منابع خبری</a>
+            </li>
+            <li class="menu-main-item">
+                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت جداول</a>
+            </li>
+            <li class="menu-main-item">
+                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت کاربر<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{{ reverse_url('admin:user_management:general_info') }}">اطلاعات عمومی</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:user_management:search_patterns') }}">جستجو و الگوها</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:user_management:access_to_source') }}">دسترسی به منابع خبری</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:user_management:bolton_management') }}">مدیریت بولتن</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:user_management:charts_content') }}">نمودار و تحلیل محتوا</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:user_management:subset_management') }}">مدیریت زیر مجموعه</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:user_management:key_words') }}">کلمات کلیدی</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:user_management:user_group') }}">مدیریت گروه های کاربر</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu-main-item">
+                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> گزارشات مدیریت<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{{ reverse_url('admin:manager_logs:content_format') }}">قالب محتوا</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:manager_logs:source_action') }}">عملکرد منابع خبری بر اساس تعداد اخبار</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:manager_logs:general_statistic_source') }}">آمار کلی منابع خبری</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:manager_logs:daily_statistic') }}">آمار روزانه انتشار اخبار</a>
+                    </li>
+                    <li>
+                        <a href="{{ reverse_url('admin:manager_logs:most_important_topic') }}">مهمترین سرفصل های خبری</a>
+                    </li>
+                    <li>
+                        <a href="">مهمترین تگ های خبری</a>
+                    </li>
+                    <li>
+                        <a href="">بازتاب خبری</a>
+                    </li>
+                    <li>
+                        <a href="">اهمیت خبر در جایگاه رسانه</a>
+                    </li>
+                    <li>
+                        <a href="">اهمیت خبر</a>
+                    </li>
+                    <li>
+                        <a href="">جهت گیری</a>
+                    </li>
+                    <li>
+                        <a href="">مهمترین خبرسازان + جداول مهمترین خبرسازان</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu-main-item">
+                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> لاگ و نمودار<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="">گزارش بولتن</a>
+                    </li>
+                    <li>
+                        <a href="">آمار اخبار خوانده شده</a>
+                    </li>
+                    <li>
+                        <a href="">آمار اخبار مشکل دار</a>
+                    </li>
+                    <li>
+                        <a href="">آمار اخبار مشکل دار در ادامه خبر</a>
+                    </li>
+                    <li>
+                        <a href="">آمار کاربران</a>
+                    </li>
+                    <li>
+                        <a href="">آمار خرابی</a>
+                    </li>
+                </ul>
+            </li>
+            <li class=" class="menu-main-item"">
+                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> تنظیمات مدیریت<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="">عمومی</a>
+                    </li>
+                    <li>
+                        <a href="">فونت</a>
+                    </li>
+                    <li>
+                        <a href="">درباره ما</a>
+                    </li>
+                    <li>
+                        <a href="">تماس با ما</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
