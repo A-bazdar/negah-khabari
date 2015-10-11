@@ -253,6 +253,11 @@ i.fa-wrench{
     padding: 10px;
 }
 
+.direction_form1{
+    box-shadow: 0 0 2px #aaa;
+    padding: 10px;
+}
+
 .tree_container{
     background: #ffffff;
     padding: 5px 15px;

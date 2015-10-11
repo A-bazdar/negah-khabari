@@ -1,4 +1,5 @@
 import pymongo
+from classes.debug import Debug
 from config import Config
 
 __author__ = 'Morteza'
@@ -12,9 +13,10 @@ class MongodbBaseModel():
 
 
 class MongodbModel(MongodbBaseModel):
-    def __init__(self, collection=None, body=None):
+    def __init__(self, collection=None, body=None, condition=None):
         MongodbBaseModel.__init__(self)
         self.__body = body
+        self.__condition = condition
         if collection == 'agency':
             self.collection = self.db.agency
         elif collection == 'content':
@@ -27,6 +29,12 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.group
         elif collection == 'geographic':
             self.collection = self.db.geographic
+        elif collection == 'direction':
+            self.collection = self.db.direction
+        elif collection == 'user':
+            self.collection = self.db.user
+        elif collection == 'user_group':
+            self.collection = self.db.user_group
 
     def insert(self):
         try:
@@ -46,6 +54,19 @@ class MongodbModel(MongodbBaseModel):
         except:
             return False
 
+    def count(self):
+        try:
+            return self.collection.find(self.__body).count()
+        except:
+            return False
+
+    def update(self):
+        try:
+            return self.collection.update(self.__condition, self.__body)
+        except:
+            Debug.get_exception()
+            return False
+
 
 class BaseModel:
     def __init__(self):
@@ -57,11 +78,7 @@ class BaseModel:
 
     @value.setter
     def value(self, value):
-        print self.result
-        print self.result['value']
         self.result['value'] = value
-        print self.result
-        print self.result['value']
 
     @property
     def status(self):

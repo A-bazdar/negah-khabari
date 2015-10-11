@@ -82,7 +82,9 @@ url_patterns = [
     (r'^(?i)/Admin/ManagerLogs/MostImportantTopic[/]?$', AdminImportantTopicHandler),
     (r'^/Admin/ManagerLogs/MostImportantTopic', AdminImportantTopicHandler, None,
      "admin:manager_logs:most_important_topic"),
-
+    
+    (r'/validation', ValodationHandler, None, "validation")
+    
     (r'^(?i)/Admin/ManagerLogs/MostImportantTags[/]?$', AdminImportantTagHandler),
     (r'^/Admin/ManagerLogs/MostImportantTags', AdminImportantTagHandler, None,
      "admin:manager_logs:most_important_tags"),
@@ -102,6 +104,7 @@ url_patterns = [
     (r'^(?i)/Admin/LogAndCharts/BoltonLog[/]?$', AdminBoltonLogHandler),
     (r'^/Admin/LogAndCharts/BoltonLog', AdminBoltonLogHandler, None,
      "admin:log_and_charts:bolton_log"),
+
 
 
 

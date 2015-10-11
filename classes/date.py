@@ -16,7 +16,7 @@ class CustomDateTime:
             self.inp = date_value
             self.inp_type = type(date_value)
 
-    def to_miladi(self):
+    def to_gregorian(self):
         if self.inp_type == str or self.inp_type == unicode:
             if self.return_date:
                 return khayyam.JalaliDatetime.strptime(self.inp, "%Y/%m/%d").todate()

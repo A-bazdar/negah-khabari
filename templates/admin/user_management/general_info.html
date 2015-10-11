@@ -56,7 +56,7 @@
                                 </div>
                             </div>
                             <div class="box_body">
-                                <table class="table table-bordered source_news_table">
+                                <table class="table table-bordered source_news_table users-table">
                                     <tr>
                                         <td>سازمان</td>
                                         <td>نام خانوادگی</td>
@@ -69,21 +69,28 @@
                                         <td>وضعیت</td>
                                         <td>عملیات</td>
                                     </tr>
-                                    <tr>
-                                        <td>نظام پزشکی</td>
-                                        <td>مجیدی</td>
-                                        <td>Majidi</td>
-                                        <td>ma@dd.com</td>
-                                        <td>93/06/02</td>
-                                        <td>09122222222</td>
-                                        <td>فعال</td>
-                                        <td>فعال</td>
-                                        <td>فعال</td>
-                                        <td>
-                                            <i class="fa fa-pencil"></i>
-                                            <i class="fa fa-trash-o"></i>
-                                        </td>
-                                    </tr>
+                                    {% for user in users %}
+                                        <tr>
+                                            <td>{{ user['organization'] }}</td>
+                                            <td>{{ user['family'] }}</td>
+                                            <td>{{ user['name'] }}</td>
+                                            <td>{{ user['email'] }}</td>
+                                            <td>93/06/02</td>
+                                            <td>{{ user['mobile'] }}</td>
+                                            <td>فعال</td>
+                                            <td>فعال</td>
+                                            <td>{% if user['status'] == 'active' %}فعال{% elif user['status'] == 'deactive' %}غیر فعال{% end %}</td>
+                                            <td>
+                                                <i class="fa fa-pencil"></i>
+                                                <i class="fa fa-trash-o"></i>
+                                            </td>
+                                        </tr>
+                                    {% end %}
+                                    {% if not len(users) %}
+                                        <tr class="empty">
+                                            <td colspan="10">موردی وجود ندارد.</td>
+                                        </tr>
+                                    {% end %}
                                 </table>
                             </div>
                             <div class="box_footer">
@@ -120,13 +127,14 @@
                     <div class="box_body" style="padding: 50px 10px">
                         <div class="row">
                             <div class="col-xs-8 col-xs-offset-2 form_modal_body">
-                                <form>
+                                <form id="add_user" enctype="multipart/form-data">
+                                    {% module xsrf_form_html() %}
                                     <div class="row">
                                         <div class="col-xs-3">
                                             <span class="form_label">نام</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input type="text" name="name" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -134,7 +142,7 @@
                                             <span class="form_label">نام خانوادگی</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input type="text" name="family" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -142,7 +150,7 @@
                                             <span class="form_label">نام سازمان</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input type="text" name="organization" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -150,7 +158,7 @@
                                             <span class="form_label">رمز عبور</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input type="password" name="password" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -158,7 +166,7 @@
                                             <span class="form_label">شماره تلفن</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input type="text" maxlength="11" name="phone" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -166,7 +174,7 @@
                                             <span class="form_label">شماره موبایل </span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input type="text" maxlength="11" name="mobile" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -174,7 +182,7 @@
                                             <span class="form_label">شماره نمابر </span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input type="text" name="fax" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -182,7 +190,7 @@
                                             <span class="form_label">ایمیل </span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input type="text" class="form-control">
+                                            <input type="text" name="email" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -190,7 +198,10 @@
                                             <span class="form_label">وضعیت کاربر</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <select class="select"><option>فعال</option><option>غیرفعال</option></select>
+                                            <select name="status" class="select">
+                                                <option value="active">فعال</option>
+                                                <option value="deactive">غیرفعال</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -198,7 +209,10 @@
                                             <span class="form_label">خوش آمد گویی</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <select class="select"><option>سازمان</option><option>مدیر</option></select>
+                                            <select name="welcome" class="select">
+                                                <option value="organization">سازمان</option>
+                                                <option value="manager">مدیر</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -209,13 +223,13 @@
                                             <span class="form_label">از</span>
                                         </div>
                                         <div class="col-xs-3">
-                                            <input type="text" name="" class="datePicker form-control">
+                                            <input type="text" name="register_start_date" class="datePicker form-control">
                                         </div>
                                         <div class="col-xs-1">
                                             <span class="form_label">تا</span>
                                         </div>
                                         <div class="col-xs-3">
-                                            <input type="text" name="" class="datePicker form-control">
+                                            <input type="text" name="register_end_date" class="datePicker form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -226,13 +240,13 @@
                                             <span class="form_label">از</span>
                                         </div>
                                         <div class="col-xs-3">
-                                            <input type="text" name="" class="datePicker form-control">
+                                            <input type="text" name="archive_start_date" class="datePicker form-control">
                                         </div>
                                         <div class="col-xs-1">
                                             <span class="form_label">تا</span>
                                         </div>
                                         <div class="col-xs-3">
-                                            <input type="text" name="" class="datePicker form-control">
+                                            <input type="text" name="archive_end_date" class="datePicker form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -240,7 +254,11 @@
                                             <span class="form_label">گروه کاربری</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <select class="select"><option>گروه1</option><option>گروه2</option></select>
+                                            <select name="group" class="select">
+                                                {% for g in user_groups %}
+                                                    <option value="{{ g['id'] }}">{{ g['name'] }}</option>
+                                                {% end %}
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -257,7 +275,7 @@
                                                     <span class="btn backgroundBlue colorWhite btn-file">
                                                     <span data-toggle="modal" href="#cropper-foodlist" class="fileupload-new"><i class="fa fa-paper-clip"></i> انتخاب تصویر </span>
                                                     <span class="fileupload-exists"><i class="fa fa-undo"></i> تغییر</span>
-                                                    <input name="avatar" type="file" class="default" />
+                                                    <input name="pic" type="file" class="default" />
                                                     </span>
                                                     <a href="#" class="btn backgroundRed colorWhite fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> حذف</a>
                                                 </div>
@@ -267,7 +285,7 @@
                                     <hr>
 
                                     <div class="row text-center margin-top-10">
-                                        <button class="btn R_butt_green">ثبت</button>
+                                        <button type="submit" class="btn R_butt_green add-user-btn">افزودن</button>
                                     </div>
                                 </form>
                             </div>
@@ -421,13 +439,13 @@
                                                     <span class="form_label">از</span>
                                                 </div>
                                                 <div class="col-xs-3">
-                                                    <input type="text" class="form-control datePicker">
+                                                    <input type="text" name="archive_start_date" class="form-control datePicker">
                                                 </div>
                                                 <div class="col-xs-1">
                                                     <span class="form_label">تا</span>
                                                 </div>
                                                 <div class="col-xs-3">
-                                                    <input type="text" class="form-control datePicker">
+                                                    <input type="text" name="archive_end_date" class="form-control datePicker">
                                                 </div>
                                             </div>
                                         </div>
@@ -643,12 +661,186 @@
 {% end block container %}
 
 {% block other_scripts %}
+<script type="text/javascript" src="{{ static_url('plugins/jquery-validation/dist/jquery.validate.min.js') }}"></script>
 <script src="{{ static_url('plugins/DatePicker/pwt-date.js') }}"></script>
 <script src="{{ static_url('plugins/DatePicker/pwt-datepicker.js') }}"></script>
 <script src="{{ static_url('plugins/Lc_Switch/lc_switch.min.js') }}"></script>
 <script type="text/javascript" src="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
 <script>
-$(".datePicker").val("").pDatepicker();
-$('input[type=checkbox]').lc_switch();
+    $(".datePicker").val("").pDatepicker();
+    $('input[type=checkbox]').lc_switch();
+
+    jQuery.validator.addMethod("iran_mobiles", function (value, element) {
+        return this.optional(element) || /^(09\d{9})$/.test(value);
+    }, "شماره موبایل را صحیح وارد کنید.");
+    jQuery.validator.addMethod("iran_phones", function (value, element) {
+        return this.optional(element) || /^(0\d{10})$/.test(value);
+    }, "شماره تلفن را صحیح وارد کنید.");
+
+    var frm = $("#add_user").validate({
+        errorClass: "colorRed font-size-9",
+        rules: {
+            mobile: {
+                required: true,
+                iran_mobiles: true,
+                minlength: 11,
+                remote: {
+                    url: "{{ reverse_url("validation") }}",
+                    type: "post",
+                    data: {
+                        phone: function () {
+                            return $("input[name=mobile]").val();
+                        },
+                        _xsrf: '{{ handler.xsrf_token }}',
+                        type: 'mobile'
+                    }
+                }
+            },
+            phone: {
+                required: true,
+                iran_phones: true,
+                minlength: 11,
+                remote: {
+                    url: "{{ reverse_url("validation") }}",
+                    type: "post",
+                    data: {
+                        phone: function () {
+                            return $("input[name=phone]").val();
+                        },
+                        _xsrf: '{{ handler.xsrf_token }}',
+                        type: 'phone'
+                    }
+                }
+            },
+            email: {
+                required: false,
+                email: true,
+                remote: {
+                    url: "{{ reverse_url("validation") }}",
+                    type: "post",
+                    data: {
+                        email: function () {
+                            return $("input[name=email]").val();
+                        },
+                        _xsrf: '{{ handler.xsrf_token }}',
+                        type: 'email'
+                    }
+                }
+            },
+            name: "required",
+            family: "required",
+            organization: "required",
+            password: "required",
+            fax: "required",
+            register_start_date: "required",
+            register_end_date: "required",
+            archive_start_date: "required",
+            archive_end_date: "required"
+        },
+        messages: {
+            mobile: {
+                required: "شماره موبایل خود را وارد کنید.",
+                iran_mobiles: "شماره موبایل را به درستی وارد کنید.",
+                minlength: "شماره موبایل باید 11 رقمی باشد.",
+                remote: "این شماره موبایل قبلاً ثبت شده است."
+            },
+            phone: {
+                required: "شماره تلفن خود را وارد کنید.",
+                iran_phones: "شماره تلفن را به درستی وارد کنید.",
+                minlength: "شماره تلفن باید 11 رقمی باشد.",
+                remote: "این شماره تلفن قبلاً ثبت شده است."
+            },
+            email: {
+                email: "ایمیل خود را به صورت صحیح وارد کنید.",
+                remote: "این ایمیل قبلاً ثبت شده است."
+            },
+            name: "نام را وارد کنید.",
+            family: "نام خانوادگی را وارد کنید.",
+            np: "شماره نظام پزشکی را وارد کنید.",
+            organization: "سازمان را وارد کنید.",
+            password: "رمز عبور را وارد کنید.",
+            fax: "شماره نمابر را وارد کنید.",
+            register_start_date: "تاریخ عضویت را وارد کنید.",
+            register_end_date: "تاریخ عضویت را وارد کنید.",
+            archive_start_date: "دسترسی به آرشیو را وارد کنید.",
+            archive_end_date: "دسترسی به آرشیو را وارد کنید."
+        }
+    });
+
+    var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+    var user = '<tr>\
+                    <td>__organization__</td>\
+                    <td>__family__</td>\
+                    <td>__name__</td>\
+                    <td>__email__</td>\
+                    <td>93/06/02</td>\
+                    <td>__mobile__</td>\
+                    <td>فعال</td>\
+                    <td>فعال</td>\
+                    <td>__status__</td>\
+                    <td>\
+                        <i class="fa fa-pencil"></i>\
+                        <i class="fa fa-trash-o"></i>\
+                    </td>\
+                </tr>';
+
+    var __a = true;
+    $('#add_user').submit(function(e){
+        if(__a){
+            __a = false;
+            e.preventDefault();
+            var btn =$('.add-user-btn') ;
+            btn.html(loader);
+            var formData = new FormData($(this)[0]);
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        if (!status) {
+                            Alert.render('error', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        if (status == 'empty') {
+                            Alert.render('empty', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        Alert.render('success', function(){
+                            $('.empty').remove();
+                            var s = 'غیر فعال';
+                            if(value['status'] == 'active')
+                                s = 'فعال';
+                            var h = user.replace(/__organization__/g, value['organization']).replace(/__family__/g, value['family'])
+                                    .replace(/__name__/g, value['name']).replace(/__email__/g, value['email'])
+                                    .replace(/__mobile__/g, value['mobile']).replace(/__status__/g, s);
+                            $('table.users-table').append(h);
+                            $('#new_user_modal').modal('toggle');
+                            btn.html('افزودن');
+                            $('#new_user_modal input').val('');
+                            __a = true;
+                        });
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('افزودن');
+                            __a = true;
+                        });
+                    }
+                });
+        }
+    });
 </script>
 {% end block other_scripts %}
