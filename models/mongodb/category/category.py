@@ -31,7 +31,7 @@ class CategoryModel(BaseModel):
             r = MongodbModel(collection='category', body={}).get_all()
             if r:
                 l = [dict(
-                     id=i['_id'],
+                     id=str(i['_id']),
                      name=i['name']) for i in r]
                 self.result['value'] = l
                 self.result['status'] = True

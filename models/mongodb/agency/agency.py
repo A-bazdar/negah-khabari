@@ -21,6 +21,36 @@ class AgencyModel():
         self.pic = pic
         self.result = {'value': {}, 'status': False}
 
+    @staticmethod
+    def get_agency(agency):
+        try:
+            category = CategoryModel(_id=agency['category']).get_one()['value']
+            direction = DirectionModel(_id=agency['direction']).get_one()['value']
+            return dict(
+                id=agency['_id'],
+                name=agency['name'],
+                link=agency['link'],
+                color=agency['color'],
+                category=category,
+                direction=direction,
+                status=agency['status'],
+                pic=agency['pic'],
+                base_link=agency['base_link'],
+                brief_link=agency['brief_link'],
+                brief_title=agency['brief_title'],
+                brief_ro_title=agency['brief_ro_title'],
+                brief_summary=agency['brief_summary'],
+                brief_container=agency['brief_container'],
+                brief_thumbnail=agency['brief_thumbnail'],
+                news_title=agency['news_title'],
+                news_ro_title=agency['news_ro_title'],
+                news_summary=agency['news_summary'],
+                news_body=agency['news_body'],
+                news_thumbnail=agency['news_thumbnail'],
+            )
+        except:
+            return False
+
     def save(self):
         try:
             __body = {
@@ -58,30 +88,25 @@ class AgencyModel():
             if r:
                 l = []
                 for i in r:
-                    category = CategoryModel(_id=i['category']).get_one()['value']
-                    direction = DirectionModel(_id=i['direction']).get_one()['value']
-                    l.append(dict(
-                        id=i['_id'],
-                        name=i['name'],
-                        link=i['link'],
-                        color=i['color'],
-                        category=category,
-                        direction=direction,
-                        status=i['status'],
-                        pic=i['pic'],
-                        base_link=i['base_link'],
-                        brief_link=i['brief_link'],
-                        brief_title=i['brief_title'],
-                        brief_ro_title=i['brief_ro_title'],
-                        brief_summary=i['brief_summary'],
-                        brief_container=i['brief_container'],
-                        brief_thumbnail=i['brief_thumbnail'],
-                        news_title=i['news_title'],
-                        news_ro_title=i['news_ro_title'],
-                        news_summary=i['news_summary'],
-                        news_body=i['news_body'],
-                        news_thumbnail=i['news_thumbnail'],
-                    ))
+                    a = self.get_agency(i)
+                    if a:
+                        l.append(a)
+                self.result['value'] = l
+                self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception()
+            return self.result
+
+    def get_all_by_category(self):
+        try:
+            r = MongodbModel(collection='agency', body={'category': self.category}).get_all()
+            if r:
+                l = []
+                for i in r:
+                    a = self.get_agency(i)
+                    if a:
+                        l.append(a)
                 self.result['value'] = l
                 self.result['status'] = True
             return self.result
@@ -94,23 +119,7 @@ class AgencyModel():
             body = {'_id': self.id}
             r = MongodbModel(collection='agency', body=body).get_one()
             if r:
-                return dict(
-                    id=r['_id'],
-                    name=r['name'],
-                    link=r['link'],
-                    base_link=r['base_link'],
-                    brief_link=r['brief_link'],
-                    brief_title=r['brief_title'],
-                    brief_ro_title=r['brief_ro_title'],
-                    brief_summary=r['brief_summary'],
-                    brief_container=r['brief_container'],
-                    brief_thumbnail=r['brief_thumbnail'],
-                    news_title=r['news_title'],
-                    news_ro_title=r['news_ro_title'],
-                    news_summary=r['news_summary'],
-                    news_body=r['news_body'],
-                    news_thumbnail=r['news_thumbnail'],
-                )
+                return self.get_agency(r)
             return {}
         except:
             Debug.get_exception()

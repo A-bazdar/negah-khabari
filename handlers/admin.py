@@ -329,7 +329,11 @@ class AdminUserGroupHandler(BaseHandler):
         for g in self.data['user_groups']:
             g['count_user'] = UserGeneralInfoModel(group=g['id']).get_count_by_group()
 
-        self.data['categories'] = CategoryModel().get_all()['value']
+        categories = CategoryModel().get_all()['value']
+
+        for cat in categories:
+            cat['agencies'] = AgencyModel(category=ObjectId(cat['id'])).get_all_by_category()['value']
+        self.data['categories'] = categories
         self.data['subjects'] = SubjectModel().get_all()['value']
         self.data['geographic'] = GeographicModel().get_all()['value']
         self.render('admin/user_management/user_group_management.html', **self.data)
@@ -394,6 +398,139 @@ class AdminUserGroupHandler(BaseHandler):
                 else:
                     self.messages = self.errors
                     self.status = False
+
+            elif action == 'access_sources':
+                group = self.get_argument('group-id', 0)
+                try:
+                    agency = map(ObjectId, self.request.arguments['agency'])
+                except:
+                    agency = []
+                try:
+                    subject = map(ObjectId, self.request.arguments['subject'])
+                except:
+                    subject = []
+                try:
+                    geographic = map(ObjectId, self.request.arguments['geographic'])
+                except:
+                    geographic = []
+
+                UserGroupModel(_id=group).save_access_sources(agency, subject, geographic)
+                self.status = True
+
+            elif action == 'bolton_management':
+                b_m = dict()
+                self.check_sent_value("group-id", b_m, "group")
+                self.check_sent_value("bolton-name", b_m, "name", u"نام بولتن را وارد کنید")
+                self.check_sent_value("make-bolton", b_m, "make_bolton", None)
+                self.check_sent_value("bolton-count", b_m, "bolton_count", None)
+                self.check_sent_value("bolton-count-part", b_m, "bolton_count_part", None)
+                self.check_sent_value("make-bolton-automatic", b_m, "make_bolton_automatic", None)
+                self.check_sent_value("bolton-automatic-count", b_m, "bolton_automatic_count", None)
+                self.check_sent_value("bolton-automatic-count-part", b_m, "bolton_automatic_count_part", None)
+                self.check_sent_value("make-newspaper", b_m, "make_newspaper", None)
+                self.check_sent_value("newspaper-count", b_m, "newspaper_count", None)
+                self.check_sent_value("newspaper-count-part", b_m, "newspaper_count_part", None)
+                self.check_sent_value("time-edit-bolton", b_m, "time_edit_bolton", u"مدت ویرایش روزنامه را وارد کنید.")
+                self.check_sent_value("time-edit-newspaper", b_m, "time_edit_newspaper", u"مدت ویرایش بولتن را وارد کنید.")
+
+                a = self.check_checkbox_val(b_m, 'make_bolton')
+                b_m['make_bolton'] = a
+                a = self.check_checkbox_val(b_m, 'make_bolton_automatic')
+                b_m['make_bolton_automatic'] = a
+                a = self.check_checkbox_val(b_m, 'make_newspaper')
+                b_m['make_newspaper'] = a
+
+                if b_m['make_bolton']:
+                    if b_m['bolton_count'] == '' or b_m['bolton_count_part'] == '':
+                        self.errors.append(u"همه موارد را وارد کنید.")
+                    try:
+                        b_m['bolton_count'] = int(b_m['bolton_count'])
+                        b_m['bolton_count_part'] = int(b_m['bolton_count_part'])
+                    except:
+                        self.errors.append(u"همه موارد را وارد کنید.")
+                else:
+                    b_m['bolton_count'] = b_m['bolton_count_part'] = 0
+
+                if b_m['make_bolton_automatic']:
+                    if b_m['bolton_automatic_count'] == '' or b_m['bolton_automatic_count_part'] == '':
+                        self.errors.append(u"همه موارد را وارد کنید.")
+                    try:
+                        b_m['bolton_automatic_count'] = int(b_m['bolton_automatic_count'])
+                        b_m['bolton_automatic_count_part'] = int(b_m['bolton_automatic_count_part'])
+                    except:
+                        self.errors.append(u"همه موارد را وارد کنید.")
+                else:
+                    b_m['bolton_automatic_count'] = b_m['bolton_automatic_count_part'] = 0
+
+                if b_m['make_newspaper']:
+                    if b_m['newspaper_count'] == '' or b_m['newspaper_count_part'] == '':
+                        self.errors.append(u"همه موارد را وارد کنید.")
+                    try:
+                        b_m['newspaper_count'] = int(b_m['newspaper_count'])
+                        b_m['newspaper_count_part'] = int(b_m['newspaper_count_part'])
+                    except:
+                        self.errors.append(u"همه موارد را وارد کنید.")
+                else:
+                    b_m['newspaper_count'] = b_m['newspaper_count_part'] = 0
+
+                try:
+                    b_m['time_edit_bolton'] = int(b_m['time_edit_bolton'])
+                    b_m['time_edit_newspaper'] = int(b_m['time_edit_newspaper'])
+                except:
+                    self.errors.append(u"همه موارد را وارد کنید.")
+                if not len(self.errors):
+                    UserGroupModel(_id=b_m['group']).save_bolton_management(**b_m)
+                    self.status = True
+
+            elif action == 'charts_content':
+                c_c = dict()
+                self.check_sent_value("group-id", c_c, "group")
+                self.check_sent_value("content-format", c_c, "content_format", None)
+                self.check_sent_value("importance-news", c_c, "importance_news", None)
+                self.check_sent_value("based-count-news", c_c, "based_count_news", None)
+                self.check_sent_value("stats-news", c_c, "stats_news", None)
+                self.check_sent_value("daily-news", c_c, "daily_news", None)
+                self.check_sent_value("news-headlines", c_c, "news_headlines", None)
+                self.check_sent_value("tags-news", c_c, "tags_news", None)
+                self.check_sent_value("reflecting-news", c_c, "reflecting_news", None)
+                self.check_sent_value("importance-media", c_c, "importance_media", None)
+                self.check_sent_value("positive-negative-orientation", c_c, "positive_negative_orientation", None)
+                self.check_sent_value("orientation-news-sources", c_c, "orientation_news_sources", None)
+                self.check_sent_value("important-news-makers", c_c, "important_news_makers", None)
+                self.check_sent_value("main-sources-news-1", c_c, "main_sources_news_1", None)
+                self.check_sent_value("main-sources-news-2", c_c, "main_sources_news_2", None)
+
+                a = self.check_checkbox_val(c_c, 'content_format')
+                c_c['content_format'] = a
+                a = self.check_checkbox_val(c_c, 'importance_news')
+                c_c['importance_news'] = a
+                a = self.check_checkbox_val(c_c, 'based_count_news')
+                c_c['based_count_news'] = a
+                a = self.check_checkbox_val(c_c, 'stats_news')
+                c_c['stats_news'] = a
+                a = self.check_checkbox_val(c_c, 'daily_news')
+                c_c['daily_news'] = a
+                a = self.check_checkbox_val(c_c, 'news_headlines')
+                c_c['news_headlines'] = a
+                a = self.check_checkbox_val(c_c, 'tags_news')
+                c_c['tags_news'] = a
+                a = self.check_checkbox_val(c_c, 'reflecting_news')
+                c_c['reflecting_news'] = a
+                a = self.check_checkbox_val(c_c, 'importance_media')
+                c_c['importance_media'] = a
+                a = self.check_checkbox_val(c_c, 'positive_negative_orientation')
+                c_c['positive_negative_orientation'] = a
+                a = self.check_checkbox_val(c_c, 'orientation_news_sources')
+                c_c['orientation_news_sources'] = a
+                a = self.check_checkbox_val(c_c, 'important_news_makers')
+                c_c['important_news_makers'] = a
+                a = self.check_checkbox_val(c_c, 'main_sources_news_1')
+                c_c['main_sources_news_1'] = a
+                a = self.check_checkbox_val(c_c, 'main_sources_news_2')
+                c_c['main_sources_news_2'] = a
+
+                UserGroupModel(_id=c_c['group']).save_charts_content(**c_c)
+                self.status = True
 
             self.write(self.result)
         except:
