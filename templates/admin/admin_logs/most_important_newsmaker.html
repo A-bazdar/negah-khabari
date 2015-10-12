@@ -1,0 +1,200 @@
+{% extends '../admin_base.html' %}
+
+{% block other_css %}
+
+<style>
+    .amcharts-chart-div a{
+        display: none !important;
+    }
+
+    .highcharts-title, .highcharts-subtitle, .highcharts-button,.highcharts-yaxis-title{
+        display: none !important;
+    }
+
+    svg > text{
+        display: none !important;
+    }
+
+    text{
+        font-family: Yekan !important;
+    }
+</style>
+{% end block other_css %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>گزارشات مدیریت</span> </div>
+                    <div class="panel-body">
+                        <div class="show_box">
+                            <div class="box_header">
+                                <span>مهمترین خبرسازان</span>
+                            </div>
+                            <div class="box_body">
+                                <table class="table table-bordered source_news_table">
+                                    <tr>
+                                        <td>نام خبرساز</td>
+                                        <td>پایگاه خبری</td>
+                                        <td>خبرگزاری</td>
+                                        <td>روزنامه</td>
+                                        <td>جمع</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ریاست سازمان</td>
+                                        <td>68</td>
+                                        <td>55</td>
+                                        <td>46</td>
+                                        <td>169</td>
+                                    </tr>
+                                    <tr>
+                                        <td>معاون راهداری و هماهنگی امور استان ها</td>
+                                        <td>68</td>
+                                        <td>55</td>
+                                        <td>46</td>
+                                        <td>169</td>
+                                    </tr>
+                                    <tr>
+                                        <td>وزیر راه و شهرسازی</td>
+                                        <td>68</td>
+                                        <td>55</td>
+                                        <td>46</td>
+                                        <td>169</td>
+                                    </tr>
+                                </table>
+                                <div class="row margin-top-10">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div>
+                                            <ul>
+                                                <li>
+                                                    <span class="color-69AFDB">ریاست سازمان</span>
+                                                    <ul>
+                                                        <li>ترانزیت 7.5 میلیون تن کالا از مرزهای جاده ای کشور</li>
+                                                        <li>پیش بینی برنامه پنجم در بخش ترانزیت محقق شد</li>
+                                                        <li>بررسی منطقی شدن نرخ عوارض آزادراه ها</li>
+                                                        <li>کاهش 12 درصدی مرگ و میر دانش آموزان در در حاشیه جاده ها</li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <span class="color-69AFDB">معاون راهداری و هماهنگی امور استانها</span>
+                                                    <ul>
+                                                        <li>ترانزیت 7.5 میلیون تن کالا از مرزهای جاده ای کشور</li>
+                                                        <li>پیش بینی برنامه پنجم در بخش ترانزیت محقق شد</li>
+                                                        <li>بررسی منطقی شدن نرخ عوارض آزادراه ها</li>
+                                                        <li>کاهش 12 درصدی مرگ و میر دانش آموزان در در حاشیه جاده ها</li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <span class="color-69AFDB">وزیر راه و شهرسازی</span>
+                                                    <ul>
+                                                        <li>ترانزیت 7.5 میلیون تن کالا از مرزهای جاده ای کشور</li>
+                                                        <li>پیش بینی برنامه پنجم در بخش ترانزیت محقق شد</li>
+                                                        <li>بررسی منطقی شدن نرخ عوارض آزادراه ها</li>
+                                                        <li>کاهش 12 درصدی مرگ و میر دانش آموزان در در حاشیه جاده ها</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-35">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div id="chart_container" style="min-width: 310px; direction: ltr; height: 400px; margin: 0 auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/Highchart/highcharts.js')}}"></script>
+<script src="{{ static_url('plugins/Highchart/exporting.js')}}"></script>
+
+<script>
+$(function () {
+    $('#chart_container').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Historic World Population by Region'
+        },
+        subtitle: {
+            text: 'Source: <a href="https://en.wikipedia.org/wiki/World_population">Wikipedia.org</a>'
+        },
+        xAxis: {
+            categories: ['ریاست سازمان', 'معاون راهداری و هماهنگی امور استان ها', 'وزیر راه و شهرسازی', 'مدیران استانی', 'کارشناسان', 'دولت', 'معاون ساخت و نگهداری راه های روستایی', 'روابط عمومی سازمان', 'معاون حمل و نقل سازمان'],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Population (millions)',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Year 1800',
+            data: [107, 31, 635, 203, 2, 50, 48, 31, 71, 65, 26]
+        }]
+    });
+});
+
+$(function () {
+    $('#chart_container').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Stacked bar chart'
+        },
+        xAxis: {
+            categories: ['ریاست سازمان', 'معاون راهداری و هماهنگی امور استان ها', 'وزیر راه و شهرسازی', 'مدیران استانی', 'کارشناسان', 'دولت', 'معاون ساخت و نگهداری راه های روستایی', 'روابط عمومی سازمان', 'معاون حمل و نقل سازمان'],
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Total fruit consumption'
+            }
+        },
+        plotOptions: {
+            series: {
+                stacking: 'normal'
+            }
+        },
+        series: [{
+            name: 'مثبت',
+            data: [5, 3, 4, 7, 2, 6, 9, 8, 1]
+        },{
+            name: 'منفی',
+            data: [2, 6, 9, 8, 1, 5, 3, 4, 7]
+        },{
+            name: 'خنثی',
+            data: [5, 3, 4, 9, 8, 1, 7, 2, 6]
+        }]
+    });
+});
+
+</script>
+{% end block other_scripts %}

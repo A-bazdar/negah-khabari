@@ -28,47 +28,6 @@
 </style>
 {% end block other_css %}
 
-{% block manager_logs %}
-    <li class="active">
-        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> گزارشات مدیریت<span class="fa arrow"></span></a>
-        <ul class="nav nav-second-level">
-            <li>
-                <a href="/admin/manager_logs/content_format">قالب محتوا</a>
-            </li>
-            <li>
-                <a class="active" href="/admin/manager_logs/source_action">عملکرد منابع خبری بر اساس تعداد اخبار</a>
-            </li>
-            <li>
-                <a href="/admin/manager_logs/general_statistic_source">آمار کلی منابع خبری</a>
-            </li>
-            <li>
-                <a href="/admin/manager_logs/daily_statistic">آمار روزانه انتشار اخبار</a>
-            </li>
-            <li>
-                <a href="/admin/manager_logs/most_important_topic">مهمترین سرفصل های خبری</a>
-            </li>
-            <li>
-                <a href="">مهمترین تگ های خبری</a>
-            </li>
-            <li>
-                <a href="">بازتاب خبری</a>
-            </li>
-            <li>
-                <a href="">اهمیت خبر در جایگاه رسانه</a>
-            </li>
-            <li>
-                <a href="">اهمیت خبر</a>
-            </li>
-            <li>
-                <a href="">جهت گیری</a>
-            </li>
-            <li>
-                <a href="">مهمترین خبرسازان + جداول مهمترین خبرسازان</a>
-            </li>
-        </ul>
-    </li>
-    {% end block manager_logs %}
-
 {% block container %}
     <div id="page-wrapper">
         <div class="row">
@@ -105,12 +64,12 @@
                                 </table>
                                 <div class="row margin-top-35">
                                     <div class="col-md-12 col-sm-12">
-                                        <div id="chartdiv" style="height: 300px; width: 100%; font-size: 15pt; font-family: Yekan !important;"></div>
+                                        <div id="chartdiv" style="direction: ltr ;height: 300px; width: 100%; font-size: 15pt; font-family: Yekan !important;"></div>
                                     </div>
                                 </div>
                                 <div class="row margin-top-35">
                                     <div class="col-md-12 col-sm-12">
-                                        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                        <div id="container" style="direction: ltr ;min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     </div>
                                 </div>
                             </div>

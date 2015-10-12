@@ -1138,6 +1138,18 @@
     vertical-align: bottom;
 }
 
+.vertical-align-3 {
+    vertical-align: 3px;
+}
+
+.vertical-align-5 {
+    vertical-align: 5px;
+}
+
+.vertical-align-10 {
+    vertical-align: 10px;
+}
+
 .no-text-decoration {
     text-decoration: none !important;
 }

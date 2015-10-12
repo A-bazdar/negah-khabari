@@ -83,7 +83,49 @@ url_patterns = [
     (r'^/Admin/ManagerLogs/MostImportantTopic', AdminImportantTopicHandler, None,
      "admin:manager_logs:most_important_topic"),
     
-    (r'/validation', ValodationHandler, None, "validation")
+    (r'/validation', ValodationHandler, None, "validation"),
+    
+    (r'^(?i)/Admin/ManagerLogs/MostImportantTags[/]?$', AdminImportantTagHandler),
+    (r'^/Admin/ManagerLogs/MostImportantTags', AdminImportantTagHandler, None,
+     "admin:manager_logs:most_important_tags"),
+
+    (r'^(?i)/Admin/ManagerLogs/NewsReflect[/]?$', AdminNewsReflectHandler),
+    (r'^/Admin/ManagerLogs/NewsReflect', AdminNewsReflectHandler, None,
+     "admin:manager_logs:news_reflect"),
+
+    (r'^(?i)/Admin/ManagerLogs/ContentDirection[/]?$', AdminContentDirectionHandler),
+    (r'^/Admin/ManagerLogs/ContentDirection', AdminContentDirectionHandler, None,
+     "admin:manager_logs:content_direction"),
+
+    (r'^(?i)/Admin/ManagerLogs/MostImportantNewMaker[/]?$', AdminMostImportantNewMakerHandler),
+    (r'^/Admin/ManagerLogs/MostImportantNewMaker', AdminMostImportantNewMakerHandler, None,
+     "admin:manager_logs:most_important_newsmaker"),
+
+    (r'^(?i)/Admin/LogAndCharts/BoltonLog[/]?$', AdminBoltonLogHandler),
+    (r'^/Admin/LogAndCharts/BoltonLog', AdminBoltonLogHandler, None,
+     "admin:log_and_charts:bolton_log"),
+
+    (r'^(?i)/Admin/LogAndCharts/ReadNewsStatistic[/]?$', AdminReadNewsStatisticHandler),
+    (r'^/Admin/LogAndCharts/ReadNewsStatistic', AdminReadNewsStatisticHandler, None,
+     "admin:log_and_charts:read_news_statistic"),
+
+    (r'^(?i)/Admin/LogAndCharts/ProblemNewsLog[/]?$', AdminProblemNewsLogHandler),
+    (r'^/Admin/LogAndCharts/ProblemNewsLog', AdminProblemNewsLogHandler, None,
+     "admin:log_and_charts:problem_news_log"),
+
+    (r'^(?i)/Admin/LogAndCharts/ProblemNewsInContinueLog[/]?$', AdminProblemNewsInContinueLogHandler),
+    (r'^/Admin/LogAndCharts/ProblemNewsInContinueLog', AdminProblemNewsInContinueLogHandler, None,
+     "admin:log_and_charts:problem_news_in_continue_log"),
+
+    (r'^(?i)/Admin/LogAndCharts/UsersLog[/]?$', AdminUsersLogHandler),
+    (r'^/Admin/LogAndCharts/UsersLog', AdminUsersLogHandler, None,
+     "admin:log_and_charts:users_log"),
+
+    (r'^(?i)/Admin/LogAndCharts/FailureLog[/]?$', AdminFailureLogHandler),
+    (r'^/Admin/LogAndCharts/FailureLog', AdminFailureLogHandler, None,
+     "admin:log_and_charts:failure_log"),
+
+
 
 
     # (r'/admin', AdminHandler),
