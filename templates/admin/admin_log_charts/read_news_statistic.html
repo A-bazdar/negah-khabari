@@ -60,14 +60,18 @@
                                     <table class="table table-bordered source_news_table">
                                         <tr>
                                             <td></td>
-                                            <td>تعداد بولتن</td>
-                                            <td>تعداد بخش های خبری</td>
-                                            <td>تعداد اخبار منتقل شده به بولتن</td>
+                                            <td>کل اخبار</td>
+                                            <td>رده</td>
+                                            <td>منبع</td>
+                                            <td>گروه</td>
+                                            <td>موضوع</td>
                                         </tr>
                                         <tr>
                                             <td>ساعت: 24</td>
                                             <td><a class="open_details bolton">56</a></td>
                                             <td><a class="open_details news_part">3</a></td>
+                                            <td><a class="open_details transfer_news">30</a></td>
+                                            <td><a class="open_details transfer_news">30</a></td>
                                             <td><a class="open_details transfer_news">30</a></td>
                                         </tr>
                                         <tr>
@@ -75,11 +79,15 @@
                                             <td><a class="open_details bolton">33</a></td>
                                             <td><a class="open_details news_part">5</a></td>
                                             <td><a class="open_details transfer_news">17</a></td>
+                                            <td><a class="open_details transfer_news">17</a></td>
+                                            <td><a class="open_details transfer_news">17</a></td>
                                         </tr>
                                         <tr>
                                             <td>ساعت: 22</td>
                                             <td><a class="open_details bolton">17</a></td>
                                             <td><a class="open_details news_part">41</a></td>
+                                            <td><a class="open_details transfer_news">27</a></td>
+                                            <td><a class="open_details transfer_news">27</a></td>
                                             <td><a class="open_details transfer_news">27</a></td>
                                         </tr>
                                         <tr>
@@ -87,17 +95,23 @@
                                             <td><a class="open_details bolton">10</a></td>
                                             <td><a class="open_details news_part">23</a></td>
                                             <td><a class="open_details transfer_news">12</a></td>
+                                            <td><a class="open_details transfer_news">12</a></td>
+                                            <td><a class="open_details transfer_news">12</a></td>
                                         </tr>
                                         <tr>
                                             <td>ساعت: 20</td>
                                             <td><a class="open_details bolton">33</a></td>
                                             <td><a class="open_details news_part">5</a></td>
                                             <td><a class="open_details transfer_news">17</a></td>
+                                            <td><a class="open_details transfer_news">17</a></td>
+                                            <td><a class="open_details transfer_news">17</a></td>
                                         </tr>
                                         <tr>
                                             <td>ساعت: 19</td>
                                             <td><a class="open_details bolton">33</a></td>
                                             <td><a class="open_details news_part">5</a></td>
+                                            <td><a class="open_details transfer_news">17</a></td>
+                                            <td><a class="open_details transfer_news">17</a></td>
                                             <td><a class="open_details transfer_news">17</a></td>
                                         </tr>
                                     </table>
@@ -203,13 +217,19 @@ var chart = AmCharts.makeChart( "chartdiv", {
     "type": "pie",
     "theme": "light",
     "dataProvider": [{
-    "title": " بولتن",
+    "title": " کل اخبار",
     "value": 4852
     }, {
-    "title": " بخش های خبری",
+    "title": " رده",
     "value": 9899
     }, {
-    "title": " اخبار منتقل شده به بولتن",
+    "title": "منبع",
+    "value": 9899
+    }, {
+    "title": "گروه",
+    "value": 9899
+    }, {
+    "title": " موضوع",
     "value": 9899
     }],
     "titleField": "title",
@@ -249,15 +269,23 @@ $(function () {
             }
         },
         series: [{
-            name: 'تعداد بولتن',
+            name: 'کل اخبار',
             data: [49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2]
 
         }, {
-            name: 'تعداد بخش های خبری',
+            name: 'رده',
             data: [49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2]
 
         }, {
-            name: 'تعداد اخبار منتقل شده به بولتن',
+            name: 'منبع',
+            data: [49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2]
+
+        }, {
+            name: 'گروه',
+            data: [49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2]
+
+        }, {
+            name: 'موضوع',
             data: [49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2]
 
         }]

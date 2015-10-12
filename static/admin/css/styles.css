@@ -268,3 +268,7 @@ i.fa-wrench{
 .color-69AFDB{
     color: #69AFDB !important;
 }
+
+a.open_details{
+    cursor: pointer;
+}

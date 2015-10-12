@@ -465,6 +465,26 @@ class AdminBoltonLogHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_log_charts/bolton_log.html')
 
+class AdminReadNewsStatisticHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_log_charts/read_news_statistic.html')
+
+class AdminProblemNewsLogHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_log_charts/problem_news_log.html')
+
+class AdminProblemNewsInContinueLogHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_log_charts/problem_news_in_continue.html')
+
+class AdminUsersLogHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_log_charts/users_log.html')
+
+class AdminFailureLogHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_log_charts/failure_log.html')
+
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')

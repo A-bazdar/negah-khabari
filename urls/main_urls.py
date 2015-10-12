@@ -105,6 +105,26 @@ url_patterns = [
     (r'^/Admin/LogAndCharts/BoltonLog', AdminBoltonLogHandler, None,
      "admin:log_and_charts:bolton_log"),
 
+    (r'^(?i)/Admin/LogAndCharts/ReadNewsStatistic[/]?$', AdminReadNewsStatisticHandler),
+    (r'^/Admin/LogAndCharts/ReadNewsStatistic', AdminReadNewsStatisticHandler, None,
+     "admin:log_and_charts:read_news_statistic"),
+
+    (r'^(?i)/Admin/LogAndCharts/ProblemNewsLog[/]?$', AdminProblemNewsLogHandler),
+    (r'^/Admin/LogAndCharts/ProblemNewsLog', AdminProblemNewsLogHandler, None,
+     "admin:log_and_charts:problem_news_log"),
+
+    (r'^(?i)/Admin/LogAndCharts/ProblemNewsInContinueLog[/]?$', AdminProblemNewsInContinueLogHandler),
+    (r'^/Admin/LogAndCharts/ProblemNewsInContinueLog', AdminProblemNewsInContinueLogHandler, None,
+     "admin:log_and_charts:problem_news_in_continue_log"),
+
+    (r'^(?i)/Admin/LogAndCharts/UsersLog[/]?$', AdminUsersLogHandler),
+    (r'^/Admin/LogAndCharts/UsersLog', AdminUsersLogHandler, None,
+     "admin:log_and_charts:users_log"),
+
+    (r'^(?i)/Admin/LogAndCharts/FailureLog[/]?$', AdminFailureLogHandler),
+    (r'^/Admin/LogAndCharts/FailureLog', AdminFailureLogHandler, None,
+     "admin:log_and_charts:failure_log"),
+
 
 
 

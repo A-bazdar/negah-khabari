@@ -60,45 +60,18 @@
                                     <table class="table table-bordered source_news_table">
                                         <tr>
                                             <td></td>
-                                            <td>تعداد بولتن</td>
-                                            <td>تعداد بخش های خبری</td>
-                                            <td>تعداد اخبار منتقل شده به بولتن</td>
+                                            <td>تعداد کابران</td>
+                                            <td>تعداد افراد آنلاین</td>
                                         </tr>
                                         <tr>
                                             <td>ساعت: 24</td>
-                                            <td><a class="open_details bolton">56</a></td>
-                                            <td><a class="open_details news_part">3</a></td>
-                                            <td><a class="open_details transfer_news">30</a></td>
+                                            <td><a class="open_details users_count">56</a></td>
+                                            <td><a class="open_details users_online_count">3</a></td>
                                         </tr>
                                         <tr>
-                                            <td>ساعت: 23</td>
-                                            <td><a class="open_details bolton">33</a></td>
-                                            <td><a class="open_details news_part">5</a></td>
-                                            <td><a class="open_details transfer_news">17</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ساعت: 22</td>
-                                            <td><a class="open_details bolton">17</a></td>
-                                            <td><a class="open_details news_part">41</a></td>
-                                            <td><a class="open_details transfer_news">27</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ساعت: 21</td>
-                                            <td><a class="open_details bolton">10</a></td>
-                                            <td><a class="open_details news_part">23</a></td>
-                                            <td><a class="open_details transfer_news">12</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ساعت: 20</td>
-                                            <td><a class="open_details bolton">33</a></td>
-                                            <td><a class="open_details news_part">5</a></td>
-                                            <td><a class="open_details transfer_news">17</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ساعت: 19</td>
-                                            <td><a class="open_details bolton">33</a></td>
-                                            <td><a class="open_details news_part">5</a></td>
-                                            <td><a class="open_details transfer_news">17</a></td>
+                                            <td>ساعت: 24</td>
+                                            <td><a class="open_details users_count">60</a></td>
+                                            <td><a class="open_details users_online_count">2</a></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -169,32 +142,23 @@
 <script>
 
 $('.open_details').click(function(){
-    if($(this).hasClass('bolton')){
-        $('.detail_title').html('تعداد بولتن');
-        $('.bolton_name_title').html('نام بولتن');
-        $('.news_part_count_title').html('تعداد بخش های خبری');
-        $('.news_count_title').html('تعداد اخبار');
-        $('.bolton_name').html('بولتن 1');
-        $('.news_part_count').html('12');
-        $('.news_count').html('50');
+    if($(this).hasClass('users_count')){
+        $('.detail_title').html('تعداد کاربران');
+        $('.bolton_name_title').html('نام کاربری');
+        $('.news_part_count_title').html('نام سازمان');
+        $('.news_count_title').html('نام و نام خانوادگی');
+        $('.bolton_name').html('omidnematollahi');
+        $('.news_part_count').html('سازمان 1');
+        $('.news_count').html('امید نعمت اللهی');
     }
-    if($(this).hasClass('news_part')){
-        $('.detail_title').html('تعداد بخش های خبری');
-        $('.bolton_name_title').html('نام بخش خبری');
-        $('.news_part_count_title').html('نام بولتن');
-        $('.news_count_title').html('تعداد اخبار');
-        $('.bolton_name').html('بخش خبری 1');
-        $('.news_part_count').html('بولتن 1');
-        $('.news_count').html('40');
-    }
-    if($(this).hasClass('transfer_news')){
-        $('.detail_title').html('تعداد اخبار منتقل شده به بولتن');
-        $('.bolton_name_title').html('متن خبر');
-        $('.news_part_count_title').html('نام بولتن');
-        $('.news_count_title').html('نام بخش خبری');
-        $('.bolton_name').html('خبر 1');
-        $('.news_part_count').html('بولتن 1');
-        $('.news_count').html('60');
+    if($(this).hasClass('users_online_count')){
+        $('.detail_title').html('تعداد کاربران');
+        $('.bolton_name_title').html('نام کاربری');
+        $('.news_part_count_title').html('نام سازمان');
+        $('.news_count_title').html('نام و نام خانوادگی');
+        $('.bolton_name').html('omidnematollahi');
+        $('.news_part_count').html('سازمان 1');
+        $('.news_count').html('امید نعمت اللهی');
     }
     $('#show_details').modal('show');
 });
@@ -203,13 +167,10 @@ var chart = AmCharts.makeChart( "chartdiv", {
     "type": "pie",
     "theme": "light",
     "dataProvider": [{
-    "title": " بولتن",
+    "title": " تعداد کاربران",
     "value": 4852
     }, {
-    "title": " بخش های خبری",
-    "value": 9899
-    }, {
-    "title": " اخبار منتقل شده به بولتن",
+    "title": " تعداد افراد آنلاین",
     "value": 9899
     }],
     "titleField": "title",
@@ -249,15 +210,11 @@ $(function () {
             }
         },
         series: [{
-            name: 'تعداد بولتن',
+            name: 'تعداد کاربران',
             data: [49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2]
 
         }, {
-            name: 'تعداد بخش های خبری',
-            data: [49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2]
-
-        }, {
-            name: 'تعداد اخبار منتقل شده به بولتن',
+            name: 'تعداد افراد آنلاین',
             data: [49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2,49.9, 71.5, 106.4, 129.2]
 
         }]
