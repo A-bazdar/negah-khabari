@@ -4,7 +4,6 @@ import sys
 
 sys.path.append("/root/projects/negah-khabari")
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
-from web_app.classes.debug import Debug
 from web_app.models.mongodb.agency.agency import AgencyModel
 import urllib2
 from bs4 import BeautifulSoup
@@ -31,7 +30,6 @@ def extract_briefs(document, a):
             if 'http' not in link and 'www' not in link:
                 link = a['base_link'].encode('utf-8') + link
         except:
-            Debug.get_exception()
             link = None
         try:
             if a['brief_ro_title']:
@@ -39,24 +37,20 @@ def extract_briefs(document, a):
             else:
                 ro_title = None
         except:
-            Debug.get_exception()
             ro_title = None
         try:
             title = i.select_one(a['brief_title']).text.encode('utf-8').strip()
         except:
-            Debug.get_exception()
             title = None
         try:
             summary = i.select_one(a['brief_summary']).text.encode('utf-8').strip()
         except:
-            Debug.get_exception()
             summary = None
         try:
             thumbnail = i.select_one(a['brief_thumbnail']).find('img')['src'].encode('utf-8')
             if 'http' not in thumbnail and 'www' not in thumbnail:
                 thumbnail = a['base_link'].encode('utf-8') + thumbnail
         except:
-            Debug.get_exception()
             thumbnail = None
         if link and title and summary and thumbnail:
             BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(a['id'])).insert()
