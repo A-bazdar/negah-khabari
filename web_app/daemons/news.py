@@ -16,10 +16,11 @@ def get_url(url):
 
 
 def extract_news(document, b):
-    if b['agency']['base_link'] == 'http://alef.ir':
+    if b['agency']['base_link'] != 'http://alef.ir':
+        print b['agency']['base_link']
         soap = BeautifulSoup(document, "html.parser")
         try:
-            body = soap.select_one(b['agency']['news_body']).text.encode('utf-8')
+            body = soap.select_one(b['agency']['news_body']).text.encode('utf-8').strip()
         except:
             body = None
         try:
