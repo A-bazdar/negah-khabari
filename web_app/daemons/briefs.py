@@ -32,7 +32,7 @@ def extract_briefs(document, a):
                     link = i.find('a')['href'].encode('utf-8')
                     print link, '###########'
                 if 'http' not in link and 'www' not in link:
-                    link = a['base_link'] + link
+                    link = a['base_link'].encode('utf-8') + link
             except:
                 Debug.get_exception()
                 link = None
@@ -52,9 +52,9 @@ def extract_briefs(document, a):
             except:
                 summary = None
             try:
-                thumbnail = i.select_one(a['brief_thumbnail']).find('img')['src']
+                thumbnail = i.select_one(a['brief_thumbnail']).find('img')['src'].encode('utf-8')
                 if 'http' not in thumbnail and 'www' not in thumbnail:
-                    thumbnail = a['base_link'] + thumbnail
+                    thumbnail = a['base_link'].encode('utf-8') + thumbnail
             except:
                 thumbnail = None
             print link
