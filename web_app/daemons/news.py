@@ -11,7 +11,7 @@ __author__ = 'Morteza'
 
 
 def get_url(url):
-    response = urllib2.urlopen(url)
+    response = urllib2.urlopen(url.encode('utf-8'))
     return response.read()
 
 
