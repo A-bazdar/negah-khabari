@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
+from web_app.classes.debug import Debug
+
 sys.path.append("/root/projects/negah-khabari")
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
 from web_app.models.mongodb.agency.agency import AgencyModel
@@ -22,14 +24,17 @@ def extract_briefs(document, a):
     if a['base_link'] == 'http://www.598.ir':
         for i in list_briefs:
             try:
-                print i.select_one(a['brief_link']).text.encode('utf-8')
+                print a['brief_link']
                 if a['brief_link'] != '':
                     link = i.select_one(a['brief_link']).find('a')['href'].encode('utf-8')
+                    print link, '!!!!!'
                 else:
                     link = i.find('a')['href'].encode('utf-8')
+                    print link, '###########'
                 if 'http' not in link and 'www' not in link:
                     link = a['base_link'] + link
             except:
+                Debug.get_exception()
                 link = None
             try:
                 if a['brief_ro_title']:
