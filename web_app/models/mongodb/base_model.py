@@ -1,5 +1,5 @@
 import pymongo
-from classes.debug import Debug
+from web_app.classes.debug import Debug
 from config import Config
 
 __author__ = 'Morteza'

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append("/root/projects/negah-khabari")
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
 from web_app.models.mongodb.agency.agency import AgencyModel
 import urllib2
@@ -63,4 +65,6 @@ def briefs():
     for a in agencies:
             data = get_url(a['link'])
             extract_briefs(data, a)
-briefs()
+
+if __name__ == '__main__':
+    briefs()
