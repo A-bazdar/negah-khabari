@@ -61,11 +61,11 @@ def extract_briefs(document, a):
 
 
 def briefs():
-    agencies = AgencyModel().get_all()
+    agencies = AgencyModel().get_all()['value']
     for a in agencies:
         print a['link']
-        # data = get_url(a['link'])
-        # extract_briefs(data, a)
+        data = get_url(a['link'])
+        extract_briefs(data, a)
 
 if __name__ == '__main__':
     briefs()
