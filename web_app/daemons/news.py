@@ -16,7 +16,7 @@ def get_url(url):
 
 
 def extract_news(document, b):
-    if b['agency']['base_link'] != 'http://alef.ir':
+    if b['agency']['base_link'] == 'http://www.598.ir':
         print b['agency']['base_link']
         soap = BeautifulSoup(document, "html.parser")
         try:
