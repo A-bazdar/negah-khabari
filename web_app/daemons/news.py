@@ -16,6 +16,7 @@ def get_url(url):
 
 
 def extract_news(document, b):
+    print a['base_link']
     soap = BeautifulSoup(document, "html.parser")
     try:
         body = soap.select_one(b['agency']['news_body']).text.encode('utf-8')

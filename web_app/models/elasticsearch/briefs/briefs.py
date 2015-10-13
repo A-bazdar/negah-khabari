@@ -87,7 +87,7 @@ class BriefsModel:
 
             r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
             self.result['status'] = True
-
+            print len(r['hits']['hits']), '##############'
             for b in r['hits']['hits']:
                 self.get_brief(b['_source'], b['_id'])
             self.result['value'] = self.value
