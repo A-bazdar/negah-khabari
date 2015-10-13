@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append("/root/projects/negah-khabari")
 import urllib2
 from bs4 import BeautifulSoup
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
@@ -35,9 +37,9 @@ def extract_news(document, b):
     except:
         summary = None
     try:
-        thumbnail = soap.select_one(b['agency']['news_thumbnail']).find('img')['src']
+        thumbnail = soap.select_one(b['agency']['news_thumbnail']).find('img')['src'].encode('utf-8')
         if 'http' not in thumbnail and 'www' not in thumbnail:
-            thumbnail = b['agency']['base_link'] + thumbnail
+            thumbnail = b['agency']['base_link'].encode('utf-8') + thumbnail
     except:
         thumbnail = None
 
@@ -50,14 +52,21 @@ def extract_news(document, b):
     if thumbnail is None or thumbnail == '':
         thumbnail = b['thumbnail']
 
-    if title and body:
-        NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id'])).insert()
+    print body
+    print ro_title
+    print title
+    print summary
+    print thumbnail
+    # if title and body:
+    #     NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id'])).insert()
 
 
 def news():
-    briefs = BriefsModel().get_all()
+    briefs = BriefsModel().get_all()['value']
     for b in briefs['value']:
         data = get_url(b['link'])
         extract_news(data, b)
 
-news()
+
+if __name__ == '__main__':
+    news()
