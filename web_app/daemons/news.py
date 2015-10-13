@@ -16,50 +16,50 @@ def get_url(url):
 
 
 def extract_news(document, b):
-    print b['agency']['base_link']
-    soap = BeautifulSoup(document, "html.parser")
-    try:
-        body = soap.select_one(b['agency']['news_body']).text.encode('utf-8')
-    except:
-        body = None
-    try:
-        if b['agency']['news_ro_title']:
-            ro_title = soap.select_one(b['agency']['news_ro_title']).text.encode('utf-8').strip()
-        else:
+    if b['agency']['base_link'] == 'http://alef.ir':
+        soap = BeautifulSoup(document, "html.parser")
+        try:
+            body = soap.select_one(b['agency']['news_body']).text.encode('utf-8')
+        except:
+            body = None
+        try:
+            if b['agency']['news_ro_title']:
+                ro_title = soap.select_one(b['agency']['news_ro_title']).text.encode('utf-8').strip()
+            else:
+                ro_title = None
+        except:
             ro_title = None
-    except:
-        ro_title = None
-    try:
-        title = soap.select_one(b['agency']['news_title']).text.encode('utf-8').strip()
-    except:
-        title = None
-    try:
-        summary = soap.select_one(b['agency']['news_summary']).text.encode('utf-8').strip()
-    except:
-        summary = None
-    try:
-        thumbnail = soap.select_one(b['agency']['news_thumbnail']).find('img')['src'].encode('utf-8')
-        if 'http' not in thumbnail and 'www' not in thumbnail:
-            thumbnail = b['agency']['base_link'].encode('utf-8') + thumbnail
-    except:
-        thumbnail = None
+        try:
+            title = soap.select_one(b['agency']['news_title']).text.encode('utf-8').strip()
+        except:
+            title = None
+        try:
+            summary = soap.select_one(b['agency']['news_summary']).text.encode('utf-8').strip()
+        except:
+            summary = None
+        try:
+            thumbnail = soap.select_one(b['agency']['news_thumbnail']).find('img')['src'].encode('utf-8')
+            if 'http' not in thumbnail and 'www' not in thumbnail:
+                thumbnail = b['agency']['base_link'].encode('utf-8') + thumbnail
+        except:
+            thumbnail = None
 
-    if summary is None or summary == '':
-        summary = b['summary']
+        if summary is None or summary == '':
+            summary = b['summary']
 
-    if summary is None or summary == '':
-        summary = b['summary']
+        if summary is None or summary == '':
+            summary = b['summary']
 
-    if thumbnail is None or thumbnail == '':
-        thumbnail = b['thumbnail']
+        if thumbnail is None or thumbnail == '':
+            thumbnail = b['thumbnail']
 
-    print body
-    print ro_title
-    print title
-    print summary
-    print thumbnail
-    # if title and body:
-    #     NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id'])).insert()
+        print body
+        print ro_title
+        print title
+        print summary
+        print thumbnail
+        # if title and body:
+        #     NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id'])).insert()
 
 
 def news():
