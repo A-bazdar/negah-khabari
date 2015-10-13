@@ -16,10 +16,10 @@ def get_url(url):
 
 
 def extract_briefs(document, a):
+    counter = 0
     soap = BeautifulSoup(document, "html.parser")
     list_briefs = soap.select(a['brief_container'])
     print a['base_link']
-    print '-------------------------------------------------'
     for i in list_briefs:
         try:
             if a['brief_link'] != '':
@@ -53,12 +53,14 @@ def extract_briefs(document, a):
             thumbnail = None
         if link and title and summary and thumbnail:
             BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(a['id'])).insert()
+            counter += 1
+    print counter
+    print '-------------------------------------------------'
 
 
 def briefs():
     agencies = AgencyModel().get_all()['value']
     for a in agencies:
-        print a['link']
         data = get_url(a['link'])
         extract_briefs(data, a)
 
