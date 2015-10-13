@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import datetime
 import hashlib
-from classes.debug import Debug
-from models.elasticsearch.base_model import ElasticSearchModel
+from web_app.classes.debug import Debug
+from web_app.models.elasticsearch.base_model import ElasticSearchModel
 
 __author__ = 'Morteza'
 
