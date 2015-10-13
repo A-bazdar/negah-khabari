@@ -51,13 +51,8 @@ def extract_briefs(document, a):
                 thumbnail = a['base_link'] + thumbnail
         except:
             thumbnail = None
-        print link
-        print ro_title
-        print title
-        print summary
-        print thumbnail
-        # if link and title and summary and thumbnail:
-        #     BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(a['id'])).insert()
+        if link and title and summary and thumbnail:
+            BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(a['id'])).insert()
 
 
 def briefs():
