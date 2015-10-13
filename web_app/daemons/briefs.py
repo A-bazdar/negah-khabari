@@ -22,7 +22,7 @@ def extract_briefs(document, a):
     if a['base_link'] == 'http://www.598.ir':
         for i in list_briefs:
             try:
-                print a['brief_link']
+                print i.select_one(a['brief_link']).text.encode('utf-8')
                 if a['brief_link'] != '':
                     link = i.select_one(a['brief_link']).find('a')['href'].encode('utf-8')
                 else:
