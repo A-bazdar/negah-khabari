@@ -64,7 +64,7 @@ def extract_news(document, b):
 
 def news():
     briefs = BriefsModel().get_all()['value']
-    for b in briefs['value']:
+    for b in briefs:
         data = get_url(b['link'])
         extract_news(data, b)
 
