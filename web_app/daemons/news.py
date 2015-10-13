@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
+
+
 sys.path.append("/root/projects/negah-khabari")
+from web_app.classes.debug import Debug
 import urllib2
 from bs4 import BeautifulSoup
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
@@ -12,7 +15,7 @@ __author__ = 'Morteza'
 
 def get_url(url):
     print url.encode('utf-8')
-    response = urllib2.urlopen(url)
+    response = urllib2.urlopen(url.encode('utf-8'))
     return response.read()
 
 
@@ -68,8 +71,11 @@ def news():
     for b in briefs:
         # if b['agency']['base_link'] != 'http://www.598.ir' and b['agency']['base_link'] != 'http://alef.ir':
         if b['agency']['base_link'] == 'http://www.yjc.ir':
-            data = get_url(b['link'])
-            extract_news(data, b)
+            try:
+                data = get_url(b['link'])
+                extract_news(data, b)
+            except:
+                Debug.get_exception()
 
 
 if __name__ == '__main__':
