@@ -85,7 +85,7 @@ def news():
     briefs = BriefsModel().get_all()['value']
     for b in briefs:
         # if b['agency']['base_link'] != 'http://alef.ir' and b['agency']['base_link'] != 'http://alef.ir' and b['agency']['base_link'] != 'http://www.yjc.ir':
-        if b['agency']['base_link'] == 'http://www.mashreghnews.ir':
+        if b['agency']['base_link'] == 'http://www.baharnews.ir':
             try:
                 data = get_url(b['link'])
                 extract_news(data, b)
