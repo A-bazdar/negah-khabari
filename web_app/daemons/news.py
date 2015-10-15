@@ -72,25 +72,18 @@ def extract_news(document, b):
     if thumbnail is None or thumbnail == '':
         thumbnail = b['thumbnail']
 
-    print body
-    print ro_title
-    print title
-    print summary
-    print thumbnail
-    # if title and body:
-    #     NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id'])).insert()
+    if title and body:
+        NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=b['agency']['id']).insert()
 
 
 def news():
     briefs = BriefsModel().get_all()['value']
     for b in briefs:
-        # if b['agency']['base_link'] != 'http://alef.ir' and b['agency']['base_link'] != 'http://alef.ir' and b['agency']['base_link'] != 'http://www.yjc.ir':
-        if b['agency']['base_link'] == 'http://www.baharnews.ir':
-            try:
-                data = get_url(b['link'])
-                extract_news(data, b)
-            except:
-                Debug.get_exception()
+        try:
+            data = get_url(b['link'])
+            extract_news(data, b)
+        except:
+            Debug.get_exception()
 
 
 if __name__ == '__main__':
