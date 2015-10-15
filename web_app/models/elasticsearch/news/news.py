@@ -26,7 +26,7 @@ class NewsModel:
 
     @staticmethod
     def get_hash(__key):
-        return hashlib.md5(__key).hexdigest()
+        return hashlib.md5(__key.encode('utf-8')).hexdigest()
 
     def is_exist(self):
         try:
