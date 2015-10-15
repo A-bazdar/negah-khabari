@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
-
+import urllib
 
 sys.path.append("/root/projects/negah-khabari")
 from web_app.classes.debug import Debug
 import urllib2
+import re, urlparse
 from bs4 import BeautifulSoup
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
 from web_app.models.elasticsearch.news.news import NewsModel
@@ -13,9 +14,20 @@ from web_app.models.elasticsearch.news.news import NewsModel
 __author__ = 'Morteza'
 
 
+def urlEncodeNonAscii(b):
+    return re.sub('[\x80-\xFF]', lambda c: '%%%02x' % ord(c.group(0)), b)
+
+
+def iriToUri(iri):
+    parts= urlparse.urlparse(iri)
+    return urlparse.urlunparse(
+        part.encode('idna') if parti==1 else urlEncodeNonAscii(part.encode('utf-8'))
+        for parti, part in enumerate(parts)
+    )
+
+
 def get_url(url):
-    print url.encode('utf-8')
-    response = urllib2.urlopen(url.encode('utf-8'))
+    response = urllib2.urlopen(iriToUri(url))
     return response.read()
 
 
