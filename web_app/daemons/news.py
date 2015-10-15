@@ -32,7 +32,6 @@ def get_url(url):
 
 
 def extract_news(document, b):
-    print b['agency']['base_link']
     soap = BeautifulSoup(document, "html.parser")
     try:
         body = soap.select_one(b['agency']['news_body']).text.encode('utf-8').strip()
@@ -73,7 +72,7 @@ def extract_news(document, b):
         thumbnail = b['thumbnail']
 
     if title and body:
-        NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=b['agency']['id']).insert()
+        NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id'])).insert()
 
 
 def news():
