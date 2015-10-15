@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
-import urllib
-
 sys.path.append("/root/projects/negah-khabari")
 from web_app.classes.debug import Debug
 import urllib2
