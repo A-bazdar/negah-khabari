@@ -72,6 +72,8 @@ def extract_news(document, b):
     if title and body:
         NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id'])).insert()
 
+error_links = []
+
 
 def news():
     briefs = BriefsModel().get_all()['value']
@@ -80,6 +82,8 @@ def news():
             data = get_url(b['link'])
             extract_news(data, b)
         except:
+            print b['link']
+            error_links.append(b['link'])
             Debug.get_exception()
 
 
