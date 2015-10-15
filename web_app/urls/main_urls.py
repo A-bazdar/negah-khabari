@@ -125,31 +125,6 @@ url_patterns = [
     (r'^/Admin/LogAndCharts/FailureLog', AdminFailureLogHandler, None,
      "admin:log_and_charts:failure_log"),
 
-
-
-
-    # (r'/admin', AdminHandler),
-    # (r'/admin/content_management', AdminContentHandler),
-    # (r'/admin/subject_management', AdminSubjectHandler),
-    # (r'/admin/category_management', AdminCategoryHandler),
-    # (r'/admin/group_management', AdminGroupHandler),
-    # (r'/admin/geo_management', AdminGeoHandler),
-    # (r'/admin/source_management', AdminSourceHandler),
-    # (r'/admin/direction_management', AdminDirectionHandler),
-    # (r'/admin/user_management/general_info', AdminUserGeneralInfoHandler),
-    # (r'/admin/user_management/user_group', AdminUserGroupHandler),
-    # (r'/admin/user_management/search_patterns', AdminSearchPatternsHandler),
-    # (r'/admin/user_management/access_to_source', AdminAccessSourceHandler),
-    # (r'/admin/user_management/bolton_management', AdminBoltonManagementHandler),
-    # (r'/admin/user_management/charts_content', AdminChartsContentHandler),
-    # (r'/admin/user_management/subset_management', AdminSubsetManagementHandler),
-    # (r'/admin/user_management/key_words', AdminKeyWordsHandler),
-    # (r'/admin/manager_logs/content_format', AdminContentFormatHandler),
-    # (r'/admin/manager_logs/source_action', AdminSourceActionHandler),
-    # (r'/admin/manager_logs/general_statistic_source', AdminGeneralStatisticSourceHandler),
-    # (r'/admin/manager_logs/daily_statistic', AdminDailyStatisticHandler),
-    # (r'/admin/manager_logs/most_important_topic', AdminImportantTopicHandler),
-    # (r'/admin/login', AdminLoginHandler),
-    # (r'/admin/profile', AdminProfileHandler),
-    # (r'/admin/ChangePassword', AdminChangePasswordHandler)
+    (r'^(?i)/Admin/ShowBriefs[/]?$', AdminShowBriefsHandler),
+    (r'^/Admin/ShowBriefs', AdminShowBriefsHandler, None, "admin:show_briefs"),
 ]

@@ -1,0 +1,50 @@
+{% extends admin_base.html %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>خلاصه اخبار</span> </div>
+                    <div class="panel-body">
+                        {% for brief in briefs %}
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <img style="width: 100px" src="{{ brief['thumbnail'] }}" class="img-responsive">
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-12">{% if brief['ro_title'] %}{{ brief['ro_title'] }}{% end %}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a href="{{ brief['link'] }}">{{ brief['title'] }}</a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {{ brief['summary'] }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        {% end %}
+                        {% if not len(briefs) %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    موردی وجود ندارد
+                                </div>
+                            </div>
+                        {% end %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% end block container %}
+
+{% block other_scripts %}
+{% end block other_scripts %}

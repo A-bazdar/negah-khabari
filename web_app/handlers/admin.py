@@ -6,6 +6,7 @@ from web_app.classes.debug import Debug
 from web_app.classes.public import UploadPic, CreateID
 from config import Config
 from web_app.handlers.base import BaseHandler
+from web_app.models.elasticsearch.briefs.briefs import BriefsModel
 from web_app.models.mongodb.agency.agency import AgencyModel
 from web_app.models.mongodb.category.category import CategoryModel
 from web_app.models.mongodb.content.content import ContentModel
@@ -659,3 +660,9 @@ class ValodationHandler(tornado.web.RequestHandler):
                     self.write("true")
         except Exception:
             self.finish("true")
+
+
+class AdminShowBriefsHandler(BaseHandler):
+    def get(self):
+        self.data['briefs'] = BriefsModel().get_all()['value']
+        self.render('admin/show_briefs.html', **self.data)
