@@ -63,8 +63,11 @@ def extract_news(document, b):
     if summary is None or summary == '':
         summary = b['summary']
 
-    if summary is None or summary == '':
-        summary = b['summary']
+    if title is None or title == '':
+        title = b['title']
+
+    if ro_title is None or ro_title == '':
+        ro_title = b['ro_title']
 
     if thumbnail is None or thumbnail == '':
         thumbnail = b['thumbnail']
@@ -82,7 +85,7 @@ def news():
     briefs = BriefsModel().get_all()['value']
     for b in briefs:
         # if b['agency']['base_link'] != 'http://alef.ir' and b['agency']['base_link'] != 'http://alef.ir' and b['agency']['base_link'] != 'http://www.yjc.ir':
-        if b['agency']['base_link'] == 'http://www.598.ir':
+        if b['agency']['base_link'] == 'http://www.yjc.ir':
             try:
                 data = get_url(b['link'])
                 extract_news(data, b)
