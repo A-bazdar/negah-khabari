@@ -7,8 +7,8 @@ import tornado.ioloop
 import tornado.web
 import tornado
 import os
-from ui_modules.modules import main_modules
-from urls.main_urls import url_patterns
+from web_app.ui_modules.modules import main_modules
+from web_app.urls.main_urls import url_patterns
 from tornado.options import options, define
 from config import Config
 
@@ -29,7 +29,7 @@ class WebSystemApplication(tornado.web.Application):
             xsrf_cookies=True,
             login_url=config.global_config['login_url'],
             logout_url=config.global_config['logout_url'],
-            template_path=os.path.join(os.path.dirname(__file__), "templates"),
+            template_path=os.path.join(os.path.dirname(__file__), "web_app/templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             ui_modules=main_modules,
             **{

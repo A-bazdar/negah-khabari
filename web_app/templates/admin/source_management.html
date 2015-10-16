@@ -1,0 +1,422 @@
+{% extends admin_base.html %}
+
+{% block other_css %}
+<link rel="stylesheet" href="{{ static_url('plugins/bootstrap-colorpicker/css/colorpicker.css') }}">
+<link rel="stylesheet" type="text/css" href="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
+<style>
+    .colorpicker{
+        z-index: 99999;
+    }
+    .colorpicker.dropdown-menu{
+        width: 150px;
+    }
+</style>
+{% end block other_css %}
+
+{% block source_management %}
+<li class="active">
+    <a class="active" href="/admin/source_management"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت منابع خبری</a>
+</li>
+{% end block source_management %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>ایجاد و مدیریت منابع خبری</span> </div>
+                    <div class="panel-body">
+                        <div class="show_box" data-action="1">
+                            <div class="box_header">
+                                <span>فهرست منابع خبری</span>
+                                <div class="new_content_btn" data-toggle="modal" href="#new_source_modal">
+                                    <i class="fa fa-plus"></i>افزودن
+                                </div>
+                                <div class="search_content_btn" data-toggle="modal" href="#search_source_modal">
+                                    <i class="fa fa-search"></i>جستجوی پیشرفته
+                                </div>
+                            </div>
+                            <div class="box_body">
+                                <table class="table table-bordered source_news_table agency-table">
+                                    <tr>
+                                        <td>نام منبع</td>
+                                        <td>لینک</td>
+                                        <td>رنگ</td>
+                                        <td>لوگو</td>
+                                        <td>رده</td>
+                                        <td>جهت گیری منبع</td>
+                                        <td>تعداد فید</td>
+                                        <td>پروکسی</td>
+                                        <td>وضعیت</td>
+                                        <td>اضافه با تایید</td>
+                                        <td>استخراج عکس</td>
+                                        <td>امکانات</td>
+                                    </tr>
+                                    {% for agency in agencies %}
+                                        <tr>
+                                            <td>{{ agency['name'] }}</td>
+                                            <td><a href="{{ agency['link'] }}">{{ agency['link'] }}</a></td>
+                                            <td><div style="background-color: {{ agency['color'] }}">{{ agency['color'] }}</div></td>
+                                            <td><img style="width: 30px; height: 30px" src="{{ static_url('images/agency/') + agency["pic"] }}"></td>
+                                            <td>{{ agency["category"]['name'] }}</td>
+                                            <td>{{ agency["direction"]['name'] }}</td>
+                                            <td>10</td>
+                                            <td>گروه 1</td>
+                                            <td>{% if agency["status"] == 'active' %}فعال{% else %}غیر فعال{% end %}</td>
+                                            <td><i class="fa fa-check colorGreen"></i></td>
+                                            <td><i class="fa fa-check colorGreen"></i></td>
+                                            <td>
+                                                <i class="fa fa-trash-o"></i>
+                                                <i class="fa fa-check-circle-o"></i>
+                                            </td>
+                                        </tr>
+                                    {% end %}
+                                    {% if not len(agencies) %}
+                                        <tr class="empty">
+                                            <td colspan="12">موردی وجود ندارد.</td>
+                                        </tr>
+                                    {% end %}
+                                </table>
+                            </div>
+                            <div class="box_footer">
+                                <div class="row margin-top-10">
+                                    <div class="col-xs-2">
+                                        <button class="btn R_butt_blue">چیدن موضوعات</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade in" id="new_source_modal" tabindex="-1" role="basic" aria-hidden="false">
+        <div class="modal-dialog" style="font-family: Yekan;width: 60%">
+            <div class="modal-content" style="border-radius: 7px !important; margin-top: 50px">
+                <div class="show_box">
+                    <div class="box_header">
+                        <div class="row">
+                            <div class="col-xs-11">
+                                <span>اضافه کردن منبع خبری</span>
+                            </div>
+                            <div class="col-xs-1 text-left">
+                                <span class="cursor fa fa-times"
+                                      style="font-size:12pt;color: #828282;margin-top: 5px;cursor: pointer"
+                                      data-dismiss="modal" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box_body" style="padding: 50px 10px">
+                        <div class="row">
+                            <div class="col-xs-8 col-xs-offset-2 form_modal_body">
+                                <form id="add_agency" enctype="multipart/form-data">
+                                    {% module xsrf_form_html() %}
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">نام سایت</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input name="name" type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">آدرس سایت</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input name="link" type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">رنگ</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input id="color_box" name="color" type="text" class="colorpicker-default form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">رده</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <select name="category" class="select">
+                                                {% for cat in categories %}
+                                                    <option value="{{ cat['id'] }}">{{ cat['name'] }}</option>
+                                                {% end %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">جهت گیری</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <select name="direction" class="select">
+                                                {% for dir in directions %}
+                                                    <option value="{{ dir['id'] }}">{{ dir['name'] }}</option>
+                                                {% end %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">وضعیت</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <select name="status" class="select">
+                                                <option value="active">فعال</option>
+                                                <option value="deactive">غیرفعال</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">لوگو</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                <div id="photo_show" class="fileupload-new thumbnail" style="width: 184px; height: 134px;">
+                                                    <img  src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                                                </div>
+                                                <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+                                                <div>
+                                                    <span class="btn backgroundBlue colorWhite btn-file">
+                                                    <span data-toggle="modal" href="#cropper-foodlist" class="fileupload-new"><i class="fa fa-paper-clip"></i> انتخاب تصویر </span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i> تغییر</span>
+                                                    <input name="pic" type="file" class="default" />
+                                                    </span>
+                                                    <a href="#" class="btn backgroundRed colorWhite fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> حذف</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">کلمات کلیدی خبر کپی</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="row key_words">
+                                                <div class="col-md-10 key_words_inputs">
+                                                    <input name="key_word" type="text" class="form-control">
+                                                </div>
+                                                <div class="col-md-2" style="padding-left: 5px">
+                                                    <i class="fa fa-plus-circle add_field" style="color: green; vertical-align: -10px; font-size: 16pt; cursor: pointer"></i>
+                                                    <i class="fa fa-close remove_field" style="color: red; vertical-align: -10px; font-size: 16pt; cursor: pointer"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row text-center margin-top-10">
+                                        <button class="btn R_butt_green add-agency-btn">افزودن</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade in" id="search_source_modal" tabindex="-1" role="basic" aria-hidden="false">
+        <div class="modal-dialog" style="font-family: Yekan;width: 60%">
+            <div class="modal-content" style="border-radius: 7px !important; margin-top: 50px">
+                <div class="show_box">
+                    <div class="box_header">
+                        <div class="row">
+                            <div class="col-xs-11">
+                                <span>جستجوی پیشرفته</span>
+                            </div>
+                            <div class="col-xs-1 text-left">
+                                <span class="cursor fa fa-times"
+                                      style="font-size:12pt;color: #828282;margin-top: 5px;cursor: pointer"
+                                      data-dismiss="modal" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box_body" style="padding: 50px 15px">
+                        <div class="row">
+                            <div class="col-xs-8 col-xs-offset-2 form_modal_body">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">نام منبع:</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">کلمات کلیدی خبر کپی:</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">چپ چین</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <select class="select"><option>فعال</option><option>غیرفعال</option></select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">فعال</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <select class="select"><option>فعال</option><option>غیرفعال</option></select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">استخراج عکس</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <select class="select"><option>فعال</option><option>غیرفعال</option></select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">لینک</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">جهتگیری</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="row text-center margin-top-10">
+                                        <button class="btn R_butt_green">جستجو</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script type="text/javascript" src="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+
+<script>
+    $('.colorpicker-default').colorpicker({
+            format: 'hex'
+    });
+
+    $('.add_field').click(function(){
+        $('.key_words .key_words_inputs').append('<input name="key_word" type="text" class="form-control margin-top-10">');
+    });
+
+    $('.remove_field').click(function(){
+        $('.key_words .key_words_inputs input:last-child').remove();
+    });
+
+    var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+    var agency = '<tr>\
+                    <td>__name__</td>\
+                    <td><a href="__link__">__link__</a></td>\
+                    <td><div style="background-color: __color__">__color__</div></td>\
+                    <td><img style="width: 30px; height: 30px" src="{{ static_url('images/agency/__pic__') }}"></td>\
+                    <td>__category__</td>\
+                    <td>__direction__</td>\
+                    <td>10</td>\
+                    <td>گروه 1</td>\
+                    <td>__status__</td>\
+                    <td><i class="fa fa-__add_to_confirm__"></i></td>\
+                    <td><i class="fa fa-__extract_image__"></i></td>\
+                    <td>\
+                        <i class="fa fa-trash-o"></i>\
+                        <i class="fa fa-check-circle-o"></i>\
+                    </td>\
+                </tr>';
+
+    var __a = true;
+    $('#add_agency').submit(function(e){
+        if(__a){
+            __a = false;
+            e.preventDefault();
+            var btn =$('.add-agency-btn') ;
+            btn.html(loader);
+            var formData = new FormData($(this)[0]);
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        if (!status) {
+                            Alert.render('error', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        if (status == 'empty') {
+                            Alert.render('empty', function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                            return
+                        }
+                        Alert.render('success', function(){
+                            $('.empty').remove();
+                            var status = 'غیر فعال';
+                            if(value['status'] == 'active')
+                                status = 'فعال';
+                            var confirm = 'times colorRed';
+                            if(value['add_to_confirm'])
+                                confirm = 'check colorGreen';
+                            var extract_image = 'times colorRed';
+                            if(value['extract_image'])
+                                extract_image = 'check colorGreen';
+                            var h = agency.replace(/__name__/g, value['name']).replace(/__link__/g, value['link'])
+                                    .replace(/__color__/g, value['color']).replace(/__pic__/g, value['pic'])
+                                    .replace(/__status__/g, status).replace(/__add_to_confirm__/g, confirm)
+                                    .replace(/__extract_image__/g, extract_image).replace(/__category__/g, value['category'])
+                                    .replace(/__direction__/g, value['direction']);
+                            $('table.agency-table').append(h);
+                            $('#new_source_modal').modal('toggle');
+                            btn.html('افزودن');
+                            $('#new_source_modal input').val('');
+                            __a = true;
+                        });
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('افزودن');
+                            __a = true;
+                        });
+                    }
+                });
+        }
+    });
+</script>
+
+{% end block other_scripts %}
