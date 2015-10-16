@@ -79,12 +79,14 @@ def news():
     briefs = BriefsModel().get_all()['value']
     for b in briefs:
         try:
-            data = get_url(b['link'])
-            extract_news(data, b)
+            if not NewsModel(link=b['link']).is_exist():
+                data = get_url(b['link'])
+                extract_news(data, b)
         except:
             print b['link']
             error_links.append(b['link'])
             Debug.get_exception()
+    print error_links
 
 
 if __name__ == '__main__':

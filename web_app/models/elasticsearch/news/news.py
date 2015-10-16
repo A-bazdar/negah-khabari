@@ -34,8 +34,8 @@ class NewsModel:
                 "query": {"term": {"hash_link": self.get_hash(self.link)}},
             }
             if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
-                return False
-            return True
+                return True
+            return False
         except:
             return False
 
@@ -53,7 +53,7 @@ class NewsModel:
                 'date': datetime.datetime.today()
             }
 
-            if self.is_exist():
+            if not self.is_exist():
                 print self.link
                 self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).insert()
                 self.result['status'] = True
