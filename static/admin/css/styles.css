@@ -272,3 +272,10 @@ i.fa-wrench{
 a.open_details{
     cursor: pointer;
 }
+
+.up_down_button{
+    cursor: pointer;
+}
+.up_down_button:hover{
+    color: #828282;
+}

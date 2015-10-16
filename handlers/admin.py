@@ -485,6 +485,14 @@ class AdminFailureLogHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_log_charts/failure_log.html')
 
+class AdminGeneralSettingsHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_settings/general_setting.html')
+
+class AdminFontSettingsHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_settings/font_setting.html')
+
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_login.html')

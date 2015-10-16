@@ -1,0 +1,71 @@
+.bootstrap-tagsinput {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    display: inline-block;
+    padding: 4px 6px;
+    margin-bottom: 10px;
+    color: #555;
+    vertical-align: middle;
+    border-radius: 4px;
+    width: 100%;
+    line-height: 22px;
+    cursor: text;
+}
+
+.bootstrap-tagsinput input {
+    border: none;
+    box-shadow: none;
+    outline: none;
+    height: 36px;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    width: 5em !important;
+    max-width: inherit;
+}
+
+.bootstrap-tagsinput input:focus {
+    border: none;
+    box-shadow: none;
+}
+
+.bootstrap-tagsinput .tag {
+    margin-right: 2px;
+    color: white;
+    padding: 8px;
+    font-weight: normal;
+    font-size: 9pt;
+    display: inline-block;
+}
+
+.bootstrap-tagsinput .tag .label-info{
+    background: red !important;
+}
+
+
+.bootstrap-tagsinput .tag [data-role="remove"] {
+    margin-right: 8px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.bootstrap-tagsinput .tag [data-role="remove"]:after {
+    content: "x";
+    vertical-align: middle;
+    font-family: Arial, serif;
+    background: #8e8e8e;
+    border-radius: 50%;
+    width: 16px;
+    padding-top: 1px;
+    height: 15px;
+    display: inline-block;
+    font-weight: bolder;
+}
+
+.bootstrap-tagsinput .tag [data-role="remove"]:hover:after {
+    background: #a2a2a2;
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:hover:active {
+    box-shadow: inset 0 3px 5px rgba(105, 105, 105, 0.67);
+}

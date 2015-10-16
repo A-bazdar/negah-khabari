@@ -125,6 +125,14 @@ url_patterns = [
     (r'^/Admin/LogAndCharts/FailureLog', AdminFailureLogHandler, None,
      "admin:log_and_charts:failure_log"),
 
+    (r'^(?i)/Admin/Settings/GeneralSettings[/]?$', AdminGeneralSettingsHandler),
+    (r'^/Admin/Settings/GeneralSettings', AdminGeneralSettingsHandler, None,
+     "admin:settings:general_settings"),
+
+    (r'^(?i)/Admin/Settings/FontSettings[/]?$', AdminFontSettingsHandler),
+    (r'^/Admin/Settings/FontSettings', AdminFontSettingsHandler, None,
+     "admin:settings:font_settings"),
+
 
 
 

@@ -94,8 +94,6 @@
 
 <script type="text/javascript" src="{{ static_url('plugins/custom-confirm/custom_confirm.js') }}"></script>
 
-{% block other_scripts %}
-{% end block other_scripts %}
 <script>
     $('.select').select2({
         placeholder: "انتخاب کنید",
@@ -105,6 +103,9 @@
 
     $('.select2-input.select2-focused').attr('spellcheck','true');
 </script>
+
+{% block other_scripts %}
+{% end block other_scripts %}
 </body>
 
 </html>

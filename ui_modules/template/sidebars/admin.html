@@ -120,14 +120,14 @@
                     </li>
                 </ul>
             </li>
-            <li class=" class="menu-main-item"">
+            <li class="menu-main-item">
                 <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> تنظیمات مدیریت<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="">عمومی</a>
+                        <a href="{{ reverse_url('admin:settings:general_settings') }}">عمومی</a>
                     </li>
                     <li>
-                        <a href="">فونت</a>
+                        <a href="{{ reverse_url('admin:settings:font_settings') }}">فونت</a>
                     </li>
                     <li>
                         <a href="">درباره ما</a>

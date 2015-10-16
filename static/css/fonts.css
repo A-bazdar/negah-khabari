@@ -3,3 +3,8 @@
   src: url('../fonts/Yekan.otf?#'),  /* IE6–8 */
        url('../fonts/Yekan.ttf') format('truetype');  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
 }
+@font-face {
+  font-family: 'Zar';
+  src: url('../fonts/Zar.otf?#'),  /* IE6–8 */
+       url('../fonts/Zar.ttf') format('truetype');  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+}
