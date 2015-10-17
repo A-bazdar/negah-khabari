@@ -133,11 +133,11 @@ url_patterns = [
 
     ("/GetAgency", admin.GetAgencyHandler, None, "get_agency"),
 
-    (r'^(?i)/Admin/Settings/GeneralSettings[/]?$', AdminGeneralSettingsHandler),
-    (r'^/Admin/Settings/GeneralSettings', AdminGeneralSettingsHandler, None,
+    (r'^(?i)/Admin/Settings/GeneralSettings[/]?$', admin.AdminGeneralSettingsHandler),
+    (r'^/Admin/Settings/GeneralSettings', admin.AdminGeneralSettingsHandler, None,
      "admin:settings:general_settings"),
 
-    (r'^(?i)/Admin/Settings/FontSettings[/]?$', AdminFontSettingsHandler),
-    (r'^/Admin/Settings/FontSettings', AdminFontSettingsHandler, None,
+    (r'^(?i)/Admin/Settings/FontSettings[/]?$', admin.AdminFontSettingsHandler),
+    (r'^/Admin/Settings/FontSettings', admin.AdminFontSettingsHandler, None,
      "admin:settings:font_settings"),
 ]
