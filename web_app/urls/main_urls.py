@@ -37,8 +37,8 @@ url_patterns = [
     (r'^(?i)/Admin/Management/Direction[/]?$', admin.AdminDirectionHandler),
     (r'^/Admin/Management/Direction', admin.AdminDirectionHandler, None, "admin:management:direction"),
 
-    (r'^(?i)/Admin/SourceManagement[/]?$', AdminSourceHandler),
-    (r'^/Admin/SourceManagement', AdminSourceHandler, None, "admin:source_management"),
+    (r'^(?i)/Admin/SourceManagement[/]?$', admin.AdminSourceHandler),
+    (r'^/Admin/SourceManagement', admin.AdminSourceHandler, None, "admin:source_management"),
 
     (r'^(?i)/Admin/UserManagement/GeneralInfo[/]?$', admin.AdminUserGeneralInfoHandler),
     (r'^/Admin/UserManagement/GeneralInfo', admin.AdminUserGeneralInfoHandler, None, "admin:user_management:general_info"),
