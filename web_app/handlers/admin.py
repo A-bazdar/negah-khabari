@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from bson import ObjectId
+import datetime
+import khayyam
 from web_app.classes.date import CustomDateTime
 from web_app.classes.debug import Debug
 from web_app.classes.public import UploadPic, CreateID
 from config import Config
 from web_app.handlers.base import BaseHandler
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
+from web_app.models.elasticsearch.news.news import NewsModel
 from web_app.models.mongodb.agency.agency import AgencyModel
 from web_app.models.mongodb.category.category import CategoryModel
 from web_app.models.mongodb.content.content import ContentModel
@@ -666,3 +669,85 @@ class AdminShowBriefsHandler(BaseHandler):
     def get(self):
         self.data['briefs'] = BriefsModel().get_all()['value']
         self.render('admin/show_briefs.html', **self.data)
+
+
+class AdminSearchNewsHandler(BaseHandler):
+    def get(self):
+        self.data['categories'] = CategoryModel().get_all()['value']
+        self.render('admin/search_news.html', **self.data)
+
+    @staticmethod
+    def get_words(__dict, __key):
+        try:
+            return __dict[__key].split(',')
+        except:
+            return []
+
+    def post(self):
+        try:
+            search = dict()
+            self.check_sent_value("period", search, "period")
+            self.check_sent_value("start-date", search, "start_date")
+            self.check_sent_value("end-date", search, "end_date")
+            self.check_sent_value("all-words", search, "all_words")
+            self.check_sent_value("exactly-word", search, "exactly_word")
+            self.check_sent_value("each-words", search, "each_words")
+            self.check_sent_value("without-words", search, "without_words")
+            self.check_sent_value("category", search, "category", u"رده را وارد کنید")
+            self.check_sent_value("agency", search, "agency", u"منبع خبری را وارد کنید")
+            now = datetime.datetime.today()
+            start = None
+            end = None
+            if search['period'] == 'hour':
+                start = now - datetime.timedelta(hours=1)
+                end = now
+            elif search['period'] == 'half-day':
+                start = now - datetime.timedelta(hours=12)
+                end = now
+            elif search['period'] == 'day':
+                start = now - datetime.timedelta(days=1)
+                end = now
+            elif search['period'] == 'week':
+                start = now - datetime.timedelta(weeks=1)
+                end = now
+            elif search['period'] == 'month':
+                start = now - datetime.timedelta(days=30)
+                end = now
+            elif search['period'] == 'period':
+                start = khayyam.JalaliDatetime().strptime(search['start_date'] + ' 00:00:00', "%Y/%m/%d %H:%M:%S").todatetime()
+                end = khayyam.JalaliDatetime().strptime(search['end_date'] + ' 23:59:59', "%Y/%m/%d %H:%M:%S").todatetime()
+            else:
+                self.errors.append(u"موارد درخواستی را صحیح وارد کنید.")
+
+            all_words = self.get_words(search, 'all_words')
+            exactly_word = [search['exactly_word']]
+            each_words = self.get_words(search, 'each_words')
+            without_words = self.get_words(search, 'without_words')
+
+            with_word = all_words + exactly_word + each_words
+            if not len(self.errors):
+                news = NewsModel().search(with_word=with_word, without_words=without_words, start=start, end=end, agency=search['agency'], category=search['category'])
+
+                r = ''
+                for n in news['value']:
+                    r += self.render_string('../ui_modules/template/news/brief.html', brief=n)
+
+                self.value = r
+                self.status = True
+            self.write(self.result)
+        except:
+            Debug.get_exception()
+            self.write(self.result)
+
+
+class GetAgencyHandler(BaseHandler):
+    def post(self):
+        try:
+            _id = self.get_argument("cid", "")
+            ct = AgencyModel(category=ObjectId(_id)).get_all_by_category()['value']
+            ct = [{'id': str(i['id']), 'name': i['name']} for i in ct]
+            sorted_ls = sorted(ct, key=lambda k: k['name'], reverse=False)
+            self.write({'agency': sorted_ls})
+
+        except Exception:
+            self.write("0")

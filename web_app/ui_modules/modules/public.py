@@ -3,6 +3,11 @@ from tornado.web import UIModule
 __author__ = 'Omid'
 
 
+class Brief(UIModule):
+    def render(self, brief):
+        return self.render_string('../ui_modules/template/news/brief.html', brief=brief)
+
+
 class Sidebar(UIModule):
     def render(self):
         return self.render_string('../ui_modules/template/sidebars/admin.html')

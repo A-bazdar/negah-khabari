@@ -1,5 +1,6 @@
 from config import Config
 from elasticsearch import Elasticsearch
+from web_app.classes.debug import Debug
 
 __author__ = 'Morteza'
 c = Config()
@@ -23,6 +24,7 @@ class ElasticSearchModel(ElasticSearchBaseModel):
             return self.db.search(index=self.index, doc_type=self.doc_type, body=self.body)
 
         except:
+            Debug.get_exception()
             return False
 
     def insert(self):
