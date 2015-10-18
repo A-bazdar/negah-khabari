@@ -54,6 +54,12 @@ class MongodbModel(MongodbBaseModel):
         except:
             return False
 
+    def delete(self):
+        try:
+            return self.collection.remove(self.__body)
+        except:
+            return False
+
     def count(self):
         try:
             return self.collection.find(self.__body).count()

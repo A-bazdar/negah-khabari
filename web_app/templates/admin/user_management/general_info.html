@@ -6,38 +6,6 @@
 <link rel="stylesheet" type="text/css" href="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
 {% end block other_css %}
 
-{% block user_management %}
-<li class="active">
-    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت کاربر<span class="fa arrow"></span></a>
-    <ul class="nav nav-second-level">
-        <li>
-            <a class="active" href="/admin/user_management/general_info">اطلاعات عمومی</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/search_patterns">جستجو و الگوها</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/access_to_source">دسترسی به منابع خبری</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/bolton_management">مدیریت بولتن</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/charts_content">نمودار و تحلیل محتوا</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/subset_management">مدیریت زیر مجموعه</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/key_words">کلمات کلیدی</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/user_group">مدیریت گروه های کاربر</a>
-        </li>
-    </ul>
-</li>
-{% end block user_management %}
-
 {% block container %}
     <div id="page-wrapper">
         <div class="row">
@@ -70,7 +38,7 @@
                                         <td>عملیات</td>
                                     </tr>
                                     {% for user in users %}
-                                        <tr>
+                                        <tr class="user-row">
                                             <td>{{ user['organization'] }}</td>
                                             <td>{{ user['family'] }}</td>
                                             <td>{{ user['name'] }}</td>
@@ -82,7 +50,9 @@
                                             <td>{% if user['status'] == 'active' %}فعال{% elif user['status'] == 'deactive' %}غیر فعال{% end %}</td>
                                             <td>
                                                 <i class="fa fa-pencil"></i>
-                                                <i class="fa fa-trash-o"></i>
+                                                <span class="delete-user" data-user="{{ user['id'] }}">
+                                                    <i class="fa fa-trash-o"></i>
+                                                </span>
                                             </td>
                                         </tr>
                                     {% end %}
@@ -129,6 +99,7 @@
                             <div class="col-xs-8 col-xs-offset-2 form_modal_body">
                                 <form id="add_user" enctype="multipart/form-data">
                                     {% module xsrf_form_html() %}
+                                    <input type="hidden" value="add" name="action">
                                     <div class="row">
                                         <div class="col-xs-3">
                                             <span class="form_label">نام</span>
@@ -767,8 +738,9 @@
         }
     });
 
+    var trash = '<i class="fa fa-trash-o"></i>';
     var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
-    var user = '<tr>\
+    var user = '<tr class="user-row">\
                     <td>__organization__</td>\
                     <td>__family__</td>\
                     <td>__name__</td>\
@@ -780,7 +752,9 @@
                     <td>__status__</td>\
                     <td>\
                         <i class="fa fa-pencil"></i>\
-                        <i class="fa fa-trash-o"></i>\
+                        <span class="delete-user" data-user="__id__">\
+                            <i class="fa fa-trash-o"></i>\
+                        </span>\
                     </td>\
                 </tr>';
 
@@ -804,39 +778,88 @@
                     success: function (response) {
                         var status = response['status'];
                         var value = response['value'];
-                        if (!status) {
-                            Alert.render('error', function(){
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                $('.empty').remove();
+                                var s = 'غیر فعال';
+                                if (value['status'] == 'active')
+                                    s = 'فعال';
+                                var h = user.replace(/__organization__/g, value['organization']).replace(/__family__/g, value['family'])
+                                        .replace(/__name__/g, value['name']).replace(/__email__/g, value['email'])
+                                        .replace(/__mobile__/g, value['mobile']).replace(/__status__/g, s).replace(/__id__/g, value['id']);
+                                $('table.users-table').append(h);
+                                $('#new_user_modal').modal('toggle');
+                                btn.html('افزودن');
+                                $('#new_user_modal input').val('');
+                                __a = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
                                 btn.html('افزودن');
                                 __a = true;
                             });
-                            return
                         }
-                        if (status == 'empty') {
-                            Alert.render('empty', function(){
-                                btn.html('افزودن');
-                                __a = true;
-                            });
-                            return
-                        }
-                        Alert.render('success', function(){
-                            $('.empty').remove();
-                            var s = 'غیر فعال';
-                            if(value['status'] == 'active')
-                                s = 'فعال';
-                            var h = user.replace(/__organization__/g, value['organization']).replace(/__family__/g, value['family'])
-                                    .replace(/__name__/g, value['name']).replace(/__email__/g, value['email'])
-                                    .replace(/__mobile__/g, value['mobile']).replace(/__status__/g, s);
-                            $('table.users-table').append(h);
-                            $('#new_user_modal').modal('toggle');
-                            btn.html('افزودن');
-                            $('#new_user_modal input').val('');
-                            __a = true;
-                        });
                     },
                     error: function () {
                         Alert.render('error', function(){
                             btn.html('افزودن');
                             __a = true;
+                        });
+                    }
+                });
+        }
+    });
+
+    var __b = true;
+    $(document).on('click', '.delete-user', function(e){
+        if(__b){
+            __b = false;
+            var elm = $(e.target).closest('.delete-user');
+            var user = elm.attr('data-user');
+            elm.html(loader.replace(/20/g, '15'));
+            var postData = [
+                {name: 'user', value: user},
+                {name: '_xsrf', value: '{{ handler.xsrf_token }}'},
+                {name: 'action', value: 'delete'}
+            ];
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                elm.closest('.user-row').remove();
+                                __b = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
+                                elm.html(trash);
+                                __b = true;
+                            });
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            elm.html(trash);
+                            __b = true;
                         });
                     }
                 });

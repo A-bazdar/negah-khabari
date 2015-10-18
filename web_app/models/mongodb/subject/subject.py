@@ -62,7 +62,8 @@ class SubjectModel(BaseModel):
             if r:
                 self.result['value'] = dict(
                     id=r['_id'],
-                    name=r['name']
+                    name=r['name'],
+                    parent=r['parent']
                 )
 
                 self.result['status'] = True
@@ -75,7 +76,6 @@ class SubjectModel(BaseModel):
     def get_all_parent(self):
         try:
             r = MongodbModel(collection='subject', body={"parent": None}).get_all()
-            l = []
             if r:
                 l = [dict(
                     id=i['_id'],
@@ -84,6 +84,31 @@ class SubjectModel(BaseModel):
                 ) for i in r]
                 self.result['value'] = l
                 self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception()
+            return self.result
+
+    def delete(self):
+        try:
+            subject = self.get_one()['value']
+            if subject['parent'] is None:
+                self.parent = self.id
+                self.delete_childs()
+
+            self.result['value'] = MongodbModel(collection='subject', body={'_id': self.id}).delete()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception()
+            return self.result
+
+    def delete_childs(self):
+        try:
+            self.result['value'] = MongodbModel(collection='subject', body={'parent': self.parent}).delete()
+            self.result['status'] = True
 
             return self.result
         except:

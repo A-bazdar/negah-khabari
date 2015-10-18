@@ -72,3 +72,45 @@ class GeographicModel(BaseModel):
         except:
             Debug.get_exception()
             return self.result
+
+    def get_one(self):
+        try:
+            r = MongodbModel(collection='geographic', body={'_id': self.id}).get_one()
+            if r:
+                self.result['value'] = dict(
+                    id=r['_id'],
+                    name=r['name'],
+                    parent=r['parent']
+                )
+
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception()
+            return self.result
+
+    def delete(self):
+        try:
+            geographic = self.get_one()['value']
+            if geographic['parent'] is None:
+                self.parent = self.id
+                self.delete_childs()
+
+            self.result['value'] = MongodbModel(collection='geographic', body={'_id': self.id}).delete()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception()
+            return self.result
+
+    def delete_childs(self):
+        try:
+            self.result['value'] = MongodbModel(collection='geographic', body={'parent': self.parent}).delete()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception()
+            return self.result

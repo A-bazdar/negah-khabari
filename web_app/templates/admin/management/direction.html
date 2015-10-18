@@ -1,30 +1,4 @@
-{% extends admin_base.html %}
-
-{% block content_management %}
-<li class="active">
-    <a href=""><i class="fa fa-dashboard fa-fw"></i> مدیریت<span class="fa arrow"></span></a>
-    <ul class="nav nav-second-level">
-        <li>
-            <a href="/admin/content_management">مدیریت قالب محتوا</a>
-        </li>
-        <li>
-            <a href="/admin/subject_management">مدیریت موضوعات</a>
-        </li>
-        <li>
-            <a href="/admin/category_management">مدیریت رده</a>
-        </li>
-        <li>
-            <a href="/admin/group_management">مدیریت گروه های خبری</a>
-        </li>
-        <li>
-            <a href="/admin/geo_management">مدیریت حوزه های جغرافیایی</a>
-        </li>
-        <li>
-            <a class="active" href="/admin/direction_management">مدیریت جهت گیری</a>
-        </li>
-    </ul>
-</li>
-{% end block content_management %}
+{% extends ../admin_base.html %}
 
 {% block container %}
 <div id="page-wrapper">
@@ -53,6 +27,7 @@
                                         <div class="direction_form display-none close">
                                             <form class="add-direction">
                                                 {% module xsrf_form_html() %}
+                                                <input type="hidden" value="add" name="action">
                                                 <div class="row">
                                                     <div class="col-md-3 col-sm-3">
                                                         <span class="form_label">جهت گیری</span>
@@ -86,11 +61,13 @@
                                                 <td>امکانات</td>
                                             </tr>
                                             {% for d_s in direction_source %}
-                                                <tr>
+                                                <tr class="direction-row">
                                                     <td>{{ d_s['name'] }}</td>
                                                     <td>
                                                         <i class="fa fa-pencil"></i>
-                                                        <i class="fa fa-trash-o"></i>
+                                                        <span class="delete-direction" data-direction="{{ d_s['id'] }}">
+                                                            <i class="fa fa-trash-o"></i>
+                                                        </span>
                                                     </td>
                                                 </tr>
                                             {% end %}
@@ -109,6 +86,7 @@
                                         <div class="direction_form1 display-none close">
                                             <form class="add-direction">
                                                 {% module xsrf_form_html() %}
+                                                <input type="hidden" value="add" name="action">
                                                 <div class="row">
                                                     <div class="col-md-3 col-sm-3">
                                                         <span class="form_label">جهت گیری</span>
@@ -142,11 +120,13 @@
                                                 <td>امکانات</td>
                                             </tr>
                                             {% for d_c in direction_content %}
-                                                <tr>
+                                                <tr class="direction-row">
                                                     <td>{{ d_c['name'] }}</td>
                                                     <td>
                                                         <i class="fa fa-pencil"></i>
-                                                        <i class="fa fa-trash-o"></i>
+                                                        <span class="delete-direction" data-direction="{{ d_c['id'] }}">
+                                                            <i class="fa fa-trash-o"></i>
+                                                        </span>
                                                     </td>
                                                 </tr>
                                             {% end %}
@@ -178,6 +158,9 @@
 
 {% block other_scripts %}
 <script>
+
+    var trash = '<i class="fa fa-trash-o"></i>';
+
     var direction_form1 = $('.direction_form1');
     var direction_form = $('.direction_form');
     $('.add_direction').click(function(){
@@ -222,11 +205,13 @@
 
     var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
 
-    var direction = '<tr>\
+    var direction = '<tr class="direction-row">\
                         <td>__name__</td>\
                         <td>\
                             <i class="fa fa-pencil"></i>\
-                            <i class="fa fa-trash-o"></i>\
+                            <span class="delete-direction" data-direction="__id__">\
+                                <i class="fa fa-trash-o"></i>\
+                            </span>\
                         </td>\
                     </tr>';
 
@@ -246,32 +231,81 @@
                     success: function (response) {
                         var status = response['status'];
                         var value = response['value'];
-                        if (!status) {
-                            Alert.render('error', function(){
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                $('.empty').remove();
+                                $('table.directions-table[data-type=' + value['type'] + ']').append(direction.replace(/__name__/g, value['name']).replace(/__id__/g, value['id']));
+                                btn.html('افزودن');
+                                $('input[name=direction-name]').val('');
+                                __a = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
                                 btn.html('افزودن');
                                 __a = true;
                             });
-                            return
                         }
-                        if (status == 'empty') {
-                            Alert.render('empty', function(){
-                                btn.html('افزودن');
-                                __a = true;
-                            });
-                            return
-                        }
-                        Alert.render('success', function(){
-                            $('.empty').remove();
-                            $('table.directions-table[data-type=' + value['type'] + ']').append(direction.replace(/__name__/g, value['name']));
-                            btn.html('افزودن');
-                            $('input[name=direction-name]').val('');
-                            __a = true;
-                        });
                     },
                     error: function () {
                         Alert.render('error', function(){
                             btn.html('افزودن');
                             __a = true;
+                        });
+                    }
+                });
+        }
+    });
+
+    var __b = true;
+    $(document).on('click', '.delete-direction', function(e){
+        if(__b){
+            __b = false;
+            var elm = $(e.target).closest('.delete-direction');
+            var direction = elm.attr('data-direction');
+            elm.html(loader.replace(/20/g, '15'));
+            var postData = [
+                {name: 'direction', value: direction},
+                {name: '_xsrf', value: '{{ handler.xsrf_token }}'},
+                {name: 'action', value: 'delete'}
+            ];
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                elm.closest('.direction-row').remove();
+                                __b = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
+                                elm.html(trash);
+                                __b = true;
+                            });
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            elm.html(trash);
+                            __b = true;
                         });
                     }
                 });

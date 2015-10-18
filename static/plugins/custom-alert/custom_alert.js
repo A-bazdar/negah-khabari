@@ -11,7 +11,7 @@ var html = '<div id="dialog-overlay"></div>' +
 
 var dialogs = {
     error: {txt: 'متاسفانه در سیستم خطایی به وجود آمده، لطفا دوباره امتحان کنید.', btn: 'R_butt_red', icn: 'fa-times colorRed'},
-    success: {txt: 'اطلاعات با موفقیت ثبت شد.', btn: 'R_butt_green', icn: 'fa-check colorGreen'},
+    success: {txt: 'عملیات با موفقیت انجام شد.', btn: 'R_butt_green', icn: 'fa-check colorGreen'},
     message_send: {txt: 'پیام با موفقیت ارسال شد.', btn: 'R_butt_green', icn: 'fa-check colorGreen'},
     empty: {txt: 'لطفا همه فیلدها را وارد کنید.', btn: 'R_butt_yellow', icn: 'fa-exclamation-triangle  colorYellow'},
     report_password: {txt: 'حساب کاربری با موفقیت ایجاد شد و تلفن همراه کابر به عنوان گذرواژه انتخاب شد.', btn: 'R_butt_green', icn: 'fa-check colorGreen'}

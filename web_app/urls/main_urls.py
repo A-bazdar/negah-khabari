@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'Morteza'
+from web_app.handlers.admin import admin
+from web_app.handlers.admin import management
 
-from web_app.handlers import admin
+__author__ = 'Morteza'
 
 url_patterns = [
 
@@ -19,23 +20,23 @@ url_patterns = [
     (r'^(?i)/Admin/ChangePassword[/]?$', admin.AdminChangePasswordHandler),
     (r'^/Admin/ChangePassword', admin.AdminChangePasswordHandler, None, "admin:change_password"),
 
-    (r'^(?i)/Admin/Management/Content[/]?$', admin.AdminContentHandler),
-    (r'^/Admin/ContentManagement/Content', admin.AdminContentHandler, None, "admin:management:content"),
+    (r'^(?i)/Admin/Management/Content[/]?$', management.AdminManagementContentHandler),
+    (r'^/Admin/Management/Content', management.AdminManagementContentHandler, None, "admin:management:content"),
 
-    (r'^(?i)/Admin/Management/Subject[/]?$', admin.AdminSubjectHandler),
-    (r'^/Admin/Management/Subject', admin.AdminSubjectHandler, None, "admin:management:subject"),
+    (r'^(?i)/Admin/Management/Subject[/]?$', management.AdminManagementSubjectHandler),
+    (r'^/Admin/Management/Subject', management.AdminManagementSubjectHandler, None, "admin:management:subject"),
 
-    (r'^(?i)/Admin/Management/Category[/]?$', admin.AdminCategoryHandler),
-    (r'^/Admin/Management/Category', admin.AdminCategoryHandler, None, "admin:management:category"),
+    (r'^(?i)/Admin/Management/Category[/]?$', management.AdminManagementCategoryHandler),
+    (r'^/Admin/Management/Category', management.AdminManagementCategoryHandler, None, "admin:management:category"),
 
-    (r'^(?i)/Admin/Management/Group[/]?$', admin.AdminGroupHandler),
-    (r'^/Admin/Management/Group', admin.AdminGroupHandler, None, "admin:management:group"),
+    (r'^(?i)/Admin/Management/Group[/]?$', management.AdminManagementGroupHandler),
+    (r'^/Admin/Management/Group', management.AdminManagementGroupHandler, None, "admin:management:group"),
 
-    (r'^(?i)/Admin/Management/Geo[/]?$', admin.AdminGeoHandler),
-    (r'^/Admin/Management/Geo', admin.AdminGeoHandler, None, "admin:management:geo"),
+    (r'^(?i)/Admin/Management/Geo[/]?$', management.AdminManagementGeoHandler),
+    (r'^/Admin/Management/Geo', management.AdminManagementGeoHandler, None, "admin:management:geo"),
 
-    (r'^(?i)/Admin/Management/Direction[/]?$', admin.AdminDirectionHandler),
-    (r'^/Admin/Management/Direction', admin.AdminDirectionHandler, None, "admin:management:direction"),
+    (r'^(?i)/Admin/Management/Direction[/]?$', management.AdminManagementDirectionHandler),
+    (r'^/Admin/Management/Direction', management.AdminManagementDirectionHandler, None, "admin:management:direction"),
 
     (r'^(?i)/Admin/SourceManagement[/]?$', admin.AdminSourceHandler),
     (r'^/Admin/SourceManagement', admin.AdminSourceHandler, None, "admin:source_management"),
