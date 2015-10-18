@@ -3,6 +3,7 @@
 {% block other_css %}
 <link rel="stylesheet" href="{{ static_url('plugins/DatePicker/pwt-datepicker.css') }}">
 <link rel="stylesheet" type="text/css" href="/static/plugins/select2/select2_metro_rtl.css" />
+<link rel="stylesheet" type="text/css" href="{{ static_url('css/pagination.css') }}" />
 {% end block other_css %}
 {% block container %}
     <div id="page-wrapper">
@@ -15,6 +16,7 @@
                             <form id="search_news">
                                 {% module xsrf_form_html() %}
                                 <input type="hidden" name="action" value="search">
+                                <input type="hidden" name="page" value="0">
                                 <div class="col-lg-12">
                                     <div class="row padding-5">
                                         <div class="col-md-3">بازه زمانی</div>
@@ -102,7 +104,7 @@
                                     </div>
                                     <div class="row padding-5">
                                         <div class="col-md-2 col-md-offset-5">
-                                            <button type="submit" class="btn R_butt_green search-news-btn">جستجو</button>
+                                            <div class="btn R_butt_green search-news-btn">جستجو</div>
                                         </div>
                                     </div>
                                 </div>
@@ -120,6 +122,9 @@
 
                     </div>
                 </div>
+            </div>
+            <div class="pagination-news">
+
             </div>
         </div>
     </div>
@@ -194,12 +199,11 @@
                             });
                             return
                         }
-                        Alert.render('success', function(){
-                            btn.html('جستجو');
-                            $('.result-search').html(value);
-                            $('.result-search-div').fadeIn();
-                            __a = true;
-                        });
+                        btn.html('جستجو');
+                        $('.result-search').html(value['news']);
+                        $('.pagination-news').html(value['pagination']);
+                        $('.result-search-div').fadeIn();
+                        __a = true;
                     },
                     error: function () {
                         Alert.render('error', function(){
@@ -209,6 +213,20 @@
                     }
                 });
         }
+    });
+
+    $(document).on('click', '.change-page', function(e) {
+        var elm = $(e.target).closest('.change-page');
+        var page = elm.attr('data-page');
+        $('input[name=page]').val(page - 1);
+        $('#search_news').submit();
+        $('html, body').animate({scrollTop : $('.result-search-div').offset().top},800);
+    });
+
+    $(document).on('click', '.search-news-btn', function(e) {
+        $('input[name=page]').val('0');
+        $('#search_news').submit();
+        $('html, body').animate({scrollTop : $('.result-search-div').offset().top},800);
     });
 </script>
 {% end block other_scripts %}

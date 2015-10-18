@@ -531,10 +531,38 @@ class AdminSearchNewsHandler(BaseHandler):
         except:
             return []
 
+    @staticmethod
+    def get_period(__dict):
+        try:
+            now = datetime.datetime.today()
+            start = None
+            end = None
+            if __dict['period'] == 'hour':
+                start = now - datetime.timedelta(hours=1)
+                end = now
+            elif __dict['period'] == 'half-day':
+                start = now - datetime.timedelta(hours=12)
+                end = now
+            elif __dict['period'] == 'day':
+                start = now - datetime.timedelta(days=1)
+                end = now
+            elif __dict['period'] == 'week':
+                start = now - datetime.timedelta(weeks=1)
+                end = now
+            elif __dict['period'] == 'month':
+                start = now - datetime.timedelta(days=30)
+                end = now
+            elif __dict['period'] == 'period':
+                start = khayyam.JalaliDatetime().strptime(__dict['start_date'] + ' 00:00:00', "%Y/%m/%d %H:%M:%S").todatetime()
+                end = khayyam.JalaliDatetime().strptime(__dict['end_date'] + ' 23:59:59', "%Y/%m/%d %H:%M:%S").todatetime()
+            return start, end
+        except:
+            return None, None
+
     def post(self):
         try:
             search = dict()
-            page = self.get_argument('page', 0)
+            page = int(self.get_argument('page', 0))
             self.check_sent_value("period", search, "period")
             self.check_sent_value("start-date", search, "start_date")
             self.check_sent_value("end-date", search, "end_date")
@@ -544,32 +572,15 @@ class AdminSearchNewsHandler(BaseHandler):
             self.check_sent_value("without-words", search, "without_words")
             self.check_sent_value("category", search, "category", u"رده را وارد کنید")
             self.check_sent_value("agency", search, "agency", u"منبع خبری را وارد کنید")
-            now = datetime.datetime.today()
-            start = None
-            end = None
-            if search['period'] == 'hour':
-                start = now - datetime.timedelta(hours=1)
-                end = now
-            elif search['period'] == 'half-day':
-                start = now - datetime.timedelta(hours=12)
-                end = now
-            elif search['period'] == 'day':
-                start = now - datetime.timedelta(days=1)
-                end = now
-            elif search['period'] == 'week':
-                start = now - datetime.timedelta(weeks=1)
-                end = now
-            elif search['period'] == 'month':
-                start = now - datetime.timedelta(days=30)
-                end = now
-            elif search['period'] == 'period':
-                start = khayyam.JalaliDatetime().strptime(search['start_date'] + ' 00:00:00', "%Y/%m/%d %H:%M:%S").todatetime()
-                end = khayyam.JalaliDatetime().strptime(search['end_date'] + ' 23:59:59', "%Y/%m/%d %H:%M:%S").todatetime()
-            else:
+            start, end = self.get_period(search)
+
+            if not start or not end:
                 self.errors.append(u"موارد درخواستی را صحیح وارد کنید.")
 
             all_words = self.get_words(search, 'all_words')
-            exactly_word = [search['exactly_word']]
+            exactly_word = []
+            if 'exactly_word' in search.keys():
+                exactly_word = [search['exactly_word']]
             each_words = self.get_words(search, 'each_words')
             without_words = self.get_words(search, 'without_words')
 
@@ -580,10 +591,12 @@ class AdminSearchNewsHandler(BaseHandler):
                 news = NewsModel().search(words=words, start=start, end=end, agency=search['agency'], category=search['category'], _page=page)
 
                 r = ''
-                for n in news['value']:
+                for n in news['value']['news']:
                     r += self.render_string('../ui_modules/template/news/brief.html', brief=n)
 
-                self.value = r
+                pagination = self.render_string('../ui_modules/template/pagination/pagination.html', count_all=news['value']['count_all'], count_per_page=20, active_page=page + 1)
+
+                self.value = {'news': r, 'pagination': pagination}
                 self.status = True
             self.write(self.result)
         except:
