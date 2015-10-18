@@ -81,30 +81,30 @@ class NewsModel:
 
     def search(self, words=None, _page=0, _size=20, start=None, end=None, agency='all', category='all'):
         try:
-            with_word = words['with_word']
+            all_words = words['all_words']
             without_words = words['without_words']
             each_words = words['each_words']
+            _exactly = words['exactly_word'].encode('utf-8')
 
-            _must = [{
-                "query_string": {
-                    "fields": ["ro_title", "title", "summary", "body"],
-                    "query": _with
-                }
-            } for _with in with_word]
+            _all = ' AND '.join(e.encode('utf-8') for e in all_words)
+            _without = ' OR '.join(e.encode('utf-8') for e in without_words)
+            _each = ' OR '.join(e.encode('utf-8') for e in each_words)
 
-            _must_not = [{
-                "query_string": {
-                    "fields": ["ro_title", "title", "summary", "body"],
-                    "query": _without
-                }
-            } for _without in without_words]
+            _query = ''
+            if _all != '':
+                _query += '({})'.format(_all)
 
-            _or = [{
-                "query_string": {
-                    "fields": ["ro_title", "title", "summary", "body"],
-                    "query": _each
-                }
-            } for _each in each_words]
+            if _each != '':
+                if _query == '':
+                    _query += '({})'.format(_each)
+                else:
+                    _query += ' AND ({})'.format(_each)
+
+            if _without != '':
+                if _query == '':
+                    _query += 'NOT({})'.format(_without)
+                else:
+                    _query += ' AND NOT({})'.format(_without)
 
             body = {
                 "from": _page * _size, "size": _size,
@@ -118,24 +118,57 @@ class NewsModel:
                                         "gte": str(start.date()) + 'T' + str(start.time())
                                     }
                                 }
-                            },
-                            {
-                                "query": {
-                                    "bool": {
-                                        "must": _must,
-                                        "must_not": _must_not
-                                    }
-                                }
-                            },
-                            {
-                                "or": {
-                                    "filters": _or
-                                }
                             }
                         ]
                     }
                 }
             }
+
+            if _query != '':
+                body['filter']['and']['filters'].append({
+                    "query": {
+                        "query_string": {
+                            "fields": ["ro_title", "title", "summary", "body"],
+                            "query": _query
+                        }
+                    }
+                })
+
+            if _exactly != '':
+                body['filter']['and']['filters'].append({
+                    "or": {
+                        "filters": [
+                            {
+                                "query": {
+                                    "match_phrase": {
+                                        "ro_title": _exactly
+                                    }
+                                }
+                            },
+                            {
+                                "query": {
+                                    "match_phrase": {
+                                        "title": _exactly
+                                    }
+                                }
+                            },
+                            {
+                                "query": {
+                                    "match_phrase": {
+                                        "summary": _exactly
+                                    }
+                                }
+                            },
+                            {
+                                "query": {
+                                    "match_phrase": {
+                                        "body": _exactly
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                })
 
             if agency == 'all' and category != 'all':
                 agencies = AgencyModel(category=ObjectId(category)).get_all_by_category()['value']
@@ -153,8 +186,11 @@ class NewsModel:
                 count_all = r['hits']['total']
             except:
                 count_all = 0
-            for b in r['hits']['hits']:
-                self.get_news(b['_source'], b['_id'])
+            try:
+                for b in r['hits']['hits']:
+                    self.get_news(b['_source'], b['_id'])
+            except:
+                pass
             self.result['value'] = {'news': self.value, 'count_all': count_all, 'count': len(r['hits']['hits'])}
             self.result['status'] = True
 

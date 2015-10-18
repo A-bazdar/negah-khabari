@@ -115,15 +115,15 @@ class AgencyModel():
             return self.result
 
     def get_one(self):
-        try:
+        # try:
             body = {'_id': self.id}
             r = MongodbModel(collection='agency', body=body).get_one()
             if r:
                 return self.get_agency(r)
             return {}
-        except:
-            Debug.get_exception()
-            return {}
+        # except:
+        #     Debug.get_exception()
+        #     return {}
 
     def delete(self):
         try:

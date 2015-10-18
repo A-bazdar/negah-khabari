@@ -77,7 +77,7 @@ class BriefsModel:
             return self.result
 
     def get_all(self):
-        try:
+        # try:
             body = {
                 "from": 0, "size": 1000000,
                 "query": {
@@ -92,6 +92,6 @@ class BriefsModel:
             self.result['status'] = True
             return self.result
 
-        except:
-            Debug.get_exception()
-            return self.result
+        # except:
+            # Debug.get_exception()
+            # return self.result

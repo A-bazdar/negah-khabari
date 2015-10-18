@@ -578,15 +578,13 @@ class AdminSearchNewsHandler(BaseHandler):
                 self.errors.append(u"موارد درخواستی را صحیح وارد کنید.")
 
             all_words = self.get_words(search, 'all_words')
-            exactly_word = []
+            exactly_word = ''
             if 'exactly_word' in search.keys():
-                exactly_word = [search['exactly_word']]
+                exactly_word = search['exactly_word']
             each_words = self.get_words(search, 'each_words')
             without_words = self.get_words(search, 'without_words')
 
-            with_word = all_words + exactly_word
-
-            words = {'with_word': with_word, 'without_words': without_words, 'each_words': each_words}
+            words = {'all_words': all_words, 'without_words': without_words, 'each_words': each_words, 'exactly_word': exactly_word}
             if not len(self.errors):
                 news = NewsModel().search(words=words, start=start, end=end, agency=search['agency'], category=search['category'], _page=page)
 
