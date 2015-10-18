@@ -61,8 +61,9 @@ def extract_briefs(document, a):
 def briefs():
     agencies = AgencyModel().get_all()['value']
     for a in agencies:
-        data = get_url(a['link'])
-        extract_briefs(data, a)
+        if not BriefsModel(link=a['link']).is_exist():
+            data = get_url(a['link'])
+            extract_briefs(data, a)
 
 if __name__ == '__main__':
     briefs()

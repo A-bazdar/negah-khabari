@@ -79,21 +79,32 @@ class NewsModel:
             date=_source['date']
         ))
 
-    def search(self, with_word=None, without_words=None, _page=0, _size=20, start=None, end=None, agency='all', category='all'):
+    def search(self, words=None, _page=0, _size=20, start=None, end=None, agency='all', category='all'):
         try:
-            must = [{
+            with_word = words['with_word']
+            without_words = words['without_words']
+            each_words = words['each_words']
+
+            _must = [{
                 "query_string": {
                     "fields": ["ro_title", "title", "summary", "body"],
                     "query": _with
                 }
             } for _with in with_word]
 
-            must_not = [{
+            _must_not = [{
                 "query_string": {
                     "fields": ["ro_title", "title", "summary", "body"],
                     "query": _without
                 }
             } for _without in without_words]
+
+            _or = [{
+                "query_string": {
+                    "fields": ["ro_title", "title", "summary", "body"],
+                    "query": _each
+                }
+            } for _each in each_words]
 
             body = {
                 "from": _page * _size, "size": _size,
@@ -111,9 +122,14 @@ class NewsModel:
                             {
                                 "query": {
                                     "bool": {
-                                        "must": must,
-                                        "must_not": must_not
+                                        "must": _must,
+                                        "must_not": _must_not
                                     }
+                                }
+                            },
+                            {
+                                "or": {
+                                    "filters": _or
                                 }
                             }
                         ]

@@ -534,6 +534,7 @@ class AdminSearchNewsHandler(BaseHandler):
     def post(self):
         try:
             search = dict()
+            page = self.get_argument('page', 0)
             self.check_sent_value("period", search, "period")
             self.check_sent_value("start-date", search, "start_date")
             self.check_sent_value("end-date", search, "end_date")
@@ -572,9 +573,11 @@ class AdminSearchNewsHandler(BaseHandler):
             each_words = self.get_words(search, 'each_words')
             without_words = self.get_words(search, 'without_words')
 
-            with_word = all_words + exactly_word + each_words
+            with_word = all_words + exactly_word
+
+            words = {'with_word': with_word, 'without_words': without_words, 'each_words': each_words}
             if not len(self.errors):
-                news = NewsModel().search(with_word=with_word, without_words=without_words, start=start, end=end, agency=search['agency'], category=search['category'])
+                news = NewsModel().search(words=words, start=start, end=end, agency=search['agency'], category=search['category'], _page=page)
 
                 r = ''
                 for n in news['value']:
