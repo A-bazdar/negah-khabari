@@ -41,8 +41,8 @@ url_patterns = [
     (r'^(?i)/Admin/SourceManagement[/]?$', admin.AdminSourceHandler),
     (r'^/Admin/SourceManagement', admin.AdminSourceHandler, None, "admin:source_management"),
 
-    (r'^(?i)/Admin/TableManagement[/]?$', AdminTableHandler),
-    (r'^/Admin/TableManagement', AdminTableHandler, None, "admin:table_management"),
+    (r'^(?i)/Admin/TableManagement[/]?$', admin.AdminTableHandler),
+    (r'^/Admin/TableManagement', admin.AdminTableHandler, None, "admin:table_management"),
 
     (r'^(?i)/Admin/UserManagement/GeneralInfo[/]?$', admin.AdminUserGeneralInfoHandler),
     (r'^/Admin/UserManagement/GeneralInfo', admin.AdminUserGeneralInfoHandler, None, "admin:user_management:general_info"),
@@ -145,11 +145,11 @@ url_patterns = [
     (r'^/Admin/Settings/FontSettings', admin.AdminFontSettingsHandler, None,
      "admin:settings:font_settings"),
 
-    (r'^(?i)/Admin/Settings/ContactUs[/]?$', AdminContactUsHandler),
-    (r'^/Admin/Settings/ContactUs', AdminContactUsHandler, None,
+    (r'^(?i)/Admin/Settings/ContactUs[/]?$', admin.AdminContactUsHandler),
+    (r'^/Admin/Settings/ContactUs', admin.AdminContactUsHandler, None,
      "admin:settings:contact_us"),
 
-    (r'^(?i)/Admin/Settings/AboutUs[/]?$', AdminAboutUsHandler),
-    (r'^/Admin/Settings/AboutUs', AdminAboutUsHandler, None,
+    (r'^(?i)/Admin/Settings/AboutUs[/]?$', admin.AdminAboutUsHandler),
+    (r'^/Admin/Settings/AboutUs', admin.AdminAboutUsHandler, None,
      "admin:settings:about_us"),
 ]
