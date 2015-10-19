@@ -1,4 +1,4 @@
-{% extends admin_base.html %}
+{% extends ../admin_base.html %}
 
 {% block container %}
     <div id="page-wrapper">
@@ -16,11 +16,13 @@
                             </div>
                             <div class="box_body contents-div">
                                 {% for content in contents %}
-                                    <div class="content_detail">
+                                    <div class="content_detail content-row">
                                         <div class="display-inline-block">{{ content['name'] }}</div>
                                         <div class="display-inline-block content_icon pull-left">
                                             <i class="fa fa-pencil"></i>
-                                            <i class="fa fa-trash-o"></i>
+                                            <span class="delete-content" data-content="{{ content['id'] }}">
+                                                <i class="fa fa-trash-o"></i>
+                                            </span>
                                         </div>
                                     </div>
                                 {% end %}
@@ -96,11 +98,15 @@
 <script>
     var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
 
-    var content = '<div class="content_detail">\
+    var trash = '<i class="fa fa-trash-o"></i>';
+
+    var content = '<div class="content_detail content-row">\
                     <div class="display-inline-block">__name__</div>\
                     <div class="display-inline-block content_icon pull-left">\
                         <i class="fa fa-pencil"></i>\
-                        <i class="fa fa-trash-o"></i>\
+                        <span class="delete-content" data-content="__id__">\
+                            <i class="fa fa-trash-o"></i>\
+                        </span>\
                     </div>\
                 </div>';
 
@@ -120,33 +126,82 @@
                     success: function (response) {
                         var status = response['status'];
                         var value = response['value'];
-                        if (!status) {
-                            Alert.render('error', function(){
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                $('.empty').remove();
+                                $('.contents-div').append(content.replace(/__name__/g, value['name']).replace(/__id__/g, value['id']));
+                                btn.html('افزودن');
+                                $('#new_content_modal').modal('toggle');
+                                $('input[name=content-name]').val('');
+                                __a = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
                                 btn.html('افزودن');
                                 __a = true;
                             });
-                            return
                         }
-                        if (status == 'empty') {
-                            Alert.render('empty', function(){
-                                btn.html('افزودن');
-                                __a = true;
-                            });
-                            return
-                        }
-                        Alert.render('success', function(){
-                            $('.empty').remove();
-                            $('.contents-div').append(content.replace(/__name__/g, value['name']));
-                            btn.html('افزودن');
-                            $('#new_content_modal').modal('toggle');
-                            $('input[name=content-name]').val('');
-                            __a = true;
-                        });
                     },
                     error: function () {
                         Alert.render('error', function(){
                             btn.html('افزودن');
                             __a = true;
+                        });
+                    }
+                });
+        }
+    });
+
+    var __b = true;
+    $(document).on('click', '.delete-content', function(e){
+        if(__b){
+            __b = false;
+            var elm = $(e.target).closest('.delete-content');
+            var content = elm.attr('data-content');
+            elm.html(loader.replace(/20/g, '15'));
+            var postData = [
+                {name: 'content', value: content},
+                {name: '_xsrf', value: '{{ handler.xsrf_token }}'},
+                {name: 'action', value: 'delete'}
+            ];
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                elm.closest('.content-row').remove();
+                                __b = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
+                                elm.html(trash);
+                                __b = true;
+                            });
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            elm.html(trash);
+                            __b = true;
                         });
                     }
                 });

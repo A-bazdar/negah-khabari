@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from bson import ObjectId
+import datetime
+import khayyam
 from web_app.classes.date import CustomDateTime
 from web_app.classes.debug import Debug
 from web_app.classes.public import UploadPic, CreateID
 from config import Config
 from web_app.handlers.base import BaseHandler
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
+from web_app.models.elasticsearch.news.news import NewsModel
 from web_app.models.mongodb.agency.agency import AgencyModel
 from web_app.models.mongodb.category.category import CategoryModel
 from web_app.models.mongodb.content.content import ContentModel
@@ -30,194 +33,6 @@ class AdminHandler(tornado.web.RequestHandler):
         self.render('admin/admin_base.html')
 
 
-class AdminContentHandler(BaseHandler):
-    def get(self):
-        self.data['contents'] = ContentModel().get_all()['value']
-        self.render('admin/content_management.html', **self.data)
-
-    def post(self):
-        try:
-            content = dict()
-            self.check_sent_value("content-name", content, "name", u"نام قالب محتوا را وارد کنید.")
-            self.check_sent_value("main-page", content, "main_page", None, default=None)
-
-            if not len(self.errors):
-
-                if 'main_page' in content:
-                    content['main_page'] = 1
-                else:
-                    content['main_page'] = 0
-
-                new_content = ContentModel(**content).save()
-                self.value = {'name': content['name'], 'id': new_content['value']}
-                self.status = True
-            else:
-                self.messages = self.errors
-                self.status = False
-
-            self.write(self.result)
-        except:
-            Debug.get_exception()
-            self.write(self.result)
-
-
-class AdminSubjectHandler(BaseHandler):
-    def get(self):
-        self.data['subjects'] = SubjectModel().get_all()['value']
-        self.data['parent_subjects'] = SubjectModel().get_all_parent()['value']
-        self.render('admin/subject_management.html', **self.data)
-
-    def post(self):
-        try:
-            subject = dict()
-            self.check_sent_value("subject-name", subject, "name", u"نام موضوع را وارد کنید.")
-            self.check_sent_value("subject-parent", subject, "parent", u"مجموعه را وارد کنید.")
-            if not len(self.errors):
-                if subject['parent'] == '0':
-                    subject['parent'] = None
-                else:
-                    subject['parent'] = ObjectId(subject['parent'])
-                new_subject = SubjectModel(**subject).save()
-
-                self.value = {
-                    'name': subject['name'],
-                    'parent': str(subject['parent']) if subject['parent'] else subject['parent'],
-                    'id': new_subject['value'],
-                    'parents': SubjectModel().get_all_parent()['value']
-                }
-                self.status = True
-            else:
-                self.messages = self.errors
-                self.status = False
-
-            self.write(self.result)
-        except:
-            Debug.get_exception()
-            self.write(self.result)
-
-
-class AdminCategoryHandler(BaseHandler):
-    def get(self):
-        self.data['categories'] = CategoryModel().get_all()['value']
-        self.render('admin/category_management.html', **self.data)
-
-    def post(self):
-        try:
-            category = dict()
-            self.check_sent_value("category-name", category, "name", u"نام رده را وارد کنید.")
-
-            if not len(self.errors):
-
-                new_category = CategoryModel(**category).save()
-                self.value = {'name': category['name'], 'id': new_category['value']}
-                self.status = True
-            else:
-                self.messages = self.errors
-                self.status = False
-
-            self.write(self.result)
-        except:
-            Debug.get_exception()
-            self.write(self.result)
-
-
-class AdminGroupHandler(BaseHandler):
-    def get(self):
-        self.data['groups'] = GroupModel().get_all()['value']
-        self.data['parent_groups'] = GroupModel().get_all_parent()['value']
-        self.render('admin/group_management.html', **self.data)
-
-    def post(self):
-        try:
-            group = dict()
-            self.check_sent_value("group-name", group, "name", u"نام موضوع را وارد کنید.")
-            self.check_sent_value("group-parent", group, "parent", u"مجموعه را وارد کنید.")
-            if not len(self.errors):
-                if group['parent'] == '0':
-                    group['parent'] = None
-                else:
-                    group['parent'] = ObjectId(group['parent'])
-                new_group = GroupModel(**group).save()
-
-                self.value = {
-                    'name': group['name'],
-                    'parent': str(group['parent']) if group['parent'] else group['parent'],
-                    'id': new_group['value'],
-                    'parents': GroupModel().get_all_parent()['value']
-                }
-                self.status = True
-            else:
-                self.messages = self.errors
-                self.status = False
-
-            self.write(self.result)
-        except:
-            Debug.get_exception()
-            self.write(self.result)
-
-
-class AdminGeoHandler(BaseHandler):
-    def get(self):
-        self.data['geographic'] = GeographicModel().get_all()['value']
-        self.data['parent_geographic'] = GeographicModel().get_all_parent()['value']
-        self.render('admin/geo_area_management.html', **self.data)
-
-    def post(self):
-        try:
-            geographic = dict()
-            self.check_sent_value("geographic-name", geographic, "name", u"نام موضوع را وارد کنید.")
-            self.check_sent_value("geographic-parent", geographic, "parent", u"مجموعه را وارد کنید.")
-            if not len(self.errors):
-                if geographic['parent'] == '0':
-                    geographic['parent'] = None
-                else:
-                    geographic['parent'] = ObjectId(geographic['parent'])
-                new_geographic = GeographicModel(**geographic).save()
-
-                self.value = {
-                    'name': geographic['name'],
-                    'parent': str(geographic['parent']) if geographic['parent'] else geographic['parent'],
-                    'id': new_geographic['value'],
-                    'parents': GeographicModel().get_all_parent()['value']
-                }
-                self.status = True
-            else:
-                self.messages = self.errors
-                self.status = False
-
-            self.write(self.result)
-        except:
-            Debug.get_exception()
-            self.write(self.result)
-
-
-class AdminDirectionHandler(BaseHandler):
-    def get(self):
-        self.data['direction_source'] = DirectionModel().get_all('source')['value']
-        self.data['direction_content'] = DirectionModel().get_all('content')['value']
-        self.render('admin/direction_management.html', **self.data)
-
-    def post(self):
-        try:
-            direction = dict()
-            self.check_sent_value("direction-name", direction, "name", u"نام جهت گیری را وارد کنید.")
-            self.check_sent_value("direction-type", direction, "_type", u"نوع جهت گیری را وارد کنید.")
-
-            if not len(self.errors):
-
-                new_direction = DirectionModel(**direction).save()
-                self.value = {'name': direction['name'], 'type': direction['_type'], 'id': new_direction['value']}
-                self.status = True
-            else:
-                self.messages = self.errors
-                self.status = False
-
-            self.write(self.result)
-        except:
-            Debug.get_exception()
-            self.write(self.result)
-
-
 class AdminSourceHandler(BaseHandler):
     def get(self):
         self.data['agencies'] = AgencyModel().get_all()['value']
@@ -227,41 +42,52 @@ class AdminSourceHandler(BaseHandler):
 
     def post(self):
         try:
-            agency = dict()
-            self.check_sent_value("name", agency, "name", u"نام را وارد کنید.")
-            self.check_sent_value("link", agency, "link", u"لینک را وارد کنید.")
-            self.check_sent_value("color", agency, "color", u"رنگ را وارد کنید.")
-            self.check_sent_value("category", agency, "category", u"رده عبور را وارد کنید.")
-            self.check_sent_value("direction", agency, "direction", u"جهت گیری را وارد کنید.")
-            self.check_sent_value("status", agency, "status", u"وضعیت را وارد کنید.")
-            agency['pic'] = UploadPic(handler=self, name='pic', folder='agency').upload()
+            action = self.get_argument('action', '')
 
-            key_words = self.request.arguments['key_word']
-            if not len(key_words) and '' in key_words:
-                self.errors.append(u"کلید واژه ها را وارد کنید.")
+            if action == 'add':
+                agency = dict()
+                self.check_sent_value("name", agency, "name", u"نام را وارد کنید.")
+                self.check_sent_value("link", agency, "link", u"لینک را وارد کنید.")
+                self.check_sent_value("color", agency, "color", u"رنگ را وارد کنید.")
+                self.check_sent_value("category", agency, "category", u"رده عبور را وارد کنید.")
+                self.check_sent_value("direction", agency, "direction", u"جهت گیری را وارد کنید.")
+                self.check_sent_value("status", agency, "status", u"وضعیت را وارد کنید.")
+                agency['pic'] = UploadPic(handler=self, name='pic', folder='agency').upload()
 
-            agency['category'] = ObjectId(agency['category'])
-            agency['direction'] = ObjectId(agency['direction'])
+                key_words = self.request.arguments['key_word']
+                if not len(key_words) and '' in key_words:
+                    self.errors.append(u"کلید واژه ها را وارد کنید.")
 
-            new_agency = AgencyModel(**agency).save()
-            agency['id'] = new_agency['value']
+                agency['category'] = ObjectId(agency['category'])
+                agency['direction'] = ObjectId(agency['direction'])
 
-            category = CategoryModel(_id=agency['category']).get_one()['value']
-            direction = DirectionModel(_id=agency['direction']).get_one()['value']
+                new_agency = AgencyModel(**agency).save()
+                agency['id'] = new_agency['value']
 
-            self.value = dict(
-                id=agency['id'],
-                name=agency['name'],
-                link=agency['link'],
-                color=agency['color'],
-                category=category['name'],
-                direction=direction['name'],
-                status=agency['status'],
-                pic=agency['pic'],
-                add_to_confirm=True,
-                extract_image=True
-            )
-            self.status = True
+                category = CategoryModel(_id=agency['category']).get_one()['value']
+                direction = DirectionModel(_id=agency['direction']).get_one()['value']
+
+                self.value = dict(
+                    id=agency['id'],
+                    name=agency['name'],
+                    link=agency['link'],
+                    color=agency['color'],
+                    category=category['name'],
+                    direction=direction['name'],
+                    status=agency['status'],
+                    pic=agency['pic'],
+                    add_to_confirm=True,
+                    extract_image=True
+                )
+                self.status = True
+
+            elif action == 'delete':
+                agency = self.get_argument('agency', '')
+                AgencyModel(_id=ObjectId(agency)).delete()
+                self.status = True
+            else:
+                self.messages = [u"عملیا ت با خطا مواجه شد"]
+
             self.write(self.result)
         except:
             Debug.get_exception()
@@ -276,47 +102,56 @@ class AdminUserGeneralInfoHandler(BaseHandler):
 
     def post(self):
         try:
-            user = dict()
-            self.check_sent_value("name", user, "name", u"نام را وارد کنید.")
-            self.check_sent_value("family", user, "family", u"نام خانوادگی را وارد کنید.")
-            self.check_sent_value("organization", user, "organization", u"سازمان را وارد کنید.")
-            self.check_sent_value("password", user, "password", u"رمز عبور را وارد کنید.")
-            self.check_sent_value("phone", user, "phone", u"تلفن را وارد کنید.")
-            self.check_sent_value("mobile", user, "mobile", u"موبایل را وارد کنید.")
-            self.check_sent_value("fax", user, "fax", u"شماره نمابر را وارد کنید.")
-            self.check_sent_value("email", user, "email", u"ایمیل را وارد کنید.")
-            self.check_sent_value("status", user, "status", u"وضعیت کاربر را وارد کنید.")
-            self.check_sent_value("welcome", user, "welcome", u"خوش آمدگویی را وارد کنید.")
-            self.check_sent_value("register_start_date", user, "register_start_date", u"تاریخ عضویت را وارد کنید.")
-            self.check_sent_value("register_end_date", user, "register_end_date", u"تاریخ عضویت را وارد کنید.")
-            self.check_sent_value("archive_start_date", user, "archive_start_date", u"دسترسی به آرشیو را وارد کنید.")
-            self.check_sent_value("archive_end_date", user, "archive_end_date", u"دسترسی به آرشیو را وارد کنید.")
-            self.check_sent_value("group", user, "group", u"گروه کاربری را وارد کنید.")
+            action = self.get_argument('action', '')
 
-            photo_name = UploadPic(handler=self, name='pic').upload()
+            if action == 'add':
+                user = dict()
+                self.check_sent_value("name", user, "name", u"نام را وارد کنید.")
+                self.check_sent_value("family", user, "family", u"نام خانوادگی را وارد کنید.")
+                self.check_sent_value("organization", user, "organization", u"سازمان را وارد کنید.")
+                self.check_sent_value("password", user, "password", u"رمز عبور را وارد کنید.")
+                self.check_sent_value("phone", user, "phone", u"تلفن را وارد کنید.")
+                self.check_sent_value("mobile", user, "mobile", u"موبایل را وارد کنید.")
+                self.check_sent_value("fax", user, "fax", u"شماره نمابر را وارد کنید.")
+                self.check_sent_value("email", user, "email", u"ایمیل را وارد کنید.")
+                self.check_sent_value("status", user, "status", u"وضعیت کاربر را وارد کنید.")
+                self.check_sent_value("welcome", user, "welcome", u"خوش آمدگویی را وارد کنید.")
+                self.check_sent_value("register_start_date", user, "register_start_date", u"تاریخ عضویت را وارد کنید.")
+                self.check_sent_value("register_end_date", user, "register_end_date", u"تاریخ عضویت را وارد کنید.")
+                self.check_sent_value("archive_start_date", user, "archive_start_date", u"دسترسی به آرشیو را وارد کنید.")
+                self.check_sent_value("archive_end_date", user, "archive_end_date", u"دسترسی به آرشیو را وارد کنید.")
+                self.check_sent_value("group", user, "group", u"گروه کاربری را وارد کنید.")
 
-            if not len(self.errors):
-                user['pic'] = photo_name
-                user['group'] = ObjectId(user['group'])
-                user['register_start_date'] = CustomDateTime(return_date=True, date_value=user['register_start_date']).to_gregorian()
-                user['register_end_date'] = CustomDateTime(return_date=True, date_value=user['register_end_date']).to_gregorian()
-                user['archive_start_date'] = CustomDateTime(return_date=True, date_value=user['archive_start_date']).to_gregorian()
-                user['archive_end_date'] = CustomDateTime(return_date=True, date_value=user['archive_end_date']).to_gregorian()
-                new_user = UserGeneralInfoModel(**user).save()
-                user['id'] = new_user['value']
-                self.value = dict(
-                    id=user['id'],
-                    organization=user['organization'],
-                    family=user['family'],
-                    name=user['name'],
-                    email=user['email'],
-                    mobile=user['mobile'],
-                    status=user['status'],
-                )
+                photo_name = UploadPic(handler=self, name='pic').upload()
+
+                if not len(self.errors):
+                    user['pic'] = photo_name
+                    user['group'] = ObjectId(user['group'])
+                    user['register_start_date'] = CustomDateTime(return_date=True, date_value=user['register_start_date']).to_gregorian()
+                    user['register_end_date'] = CustomDateTime(return_date=True, date_value=user['register_end_date']).to_gregorian()
+                    user['archive_start_date'] = CustomDateTime(return_date=True, date_value=user['archive_start_date']).to_gregorian()
+                    user['archive_end_date'] = CustomDateTime(return_date=True, date_value=user['archive_end_date']).to_gregorian()
+                    new_user = UserGeneralInfoModel(**user).save()
+                    user['id'] = new_user['value']
+                    self.value = dict(
+                        id=user['id'],
+                        organization=user['organization'],
+                        family=user['family'],
+                        name=user['name'],
+                        email=user['email'],
+                        mobile=user['mobile'],
+                        status=user['status'],
+                    )
+                    self.status = True
+                else:
+                    self.messages = self.errors
+
+            elif action == 'delete':
+                user = self.get_argument('user', '')
+                UserGeneralInfoModel(_id=ObjectId(user)).delete()
                 self.status = True
             else:
-                self.messages = self.errors
-                self.status = False
+                self.messages = [u"عملیا ت با خطا مواجه شد"]
 
             self.write(self.result)
         except:
@@ -328,7 +163,7 @@ class AdminUserGroupHandler(BaseHandler):
     def get(self):
         self.data['user_groups'] = UserGroupModel().get_all()['value']
         for g in self.data['user_groups']:
-            g['count_user'] = UserGeneralInfoModel(group=g['id']).get_count_by_group()
+            g['count_user'] = UserGeneralInfoModel(group=str(g['id'])).get_count_by_group()
 
         categories = CategoryModel().get_all()['value']
 
@@ -359,7 +194,7 @@ class AdminUserGroupHandler(BaseHandler):
                     self.status = True
                 else:
                     self.messages = self.errors
-                    self.status = False
+
             elif action == 'setting':
                 group = self.get_argument('group_id')
                 self.value = UserGroupModel(_id=ObjectId(group)).get_one()['value']
@@ -375,8 +210,8 @@ class AdminUserGroupHandler(BaseHandler):
                 self.check_sent_value("count-pattern-sources", search_and_patterns, "count_pattern_sources", u"تعداد الگو منابع خبری را وارد کنید.")
                 self.check_sent_value("pattern-search", search_and_patterns, "pattern_search", None)
                 self.check_sent_value("count-pattern-search", search_and_patterns, "count_pattern_search", u"تعداد الگو جستجو را وارد کنید.")
-                if not len(self.errors):
 
+                if not len(self.errors):
                     a = self.check_checkbox_val(search_and_patterns, 'simple_search')
                     search_and_patterns['simple_search'] = a
 
@@ -395,10 +230,8 @@ class AdminUserGroupHandler(BaseHandler):
                     UserGroupModel(_id=search_and_patterns['group']).save_search_pattern(**search_and_patterns)
 
                     self.status = True
-
                 else:
                     self.messages = self.errors
-                    self.status = False
 
             elif action == 'access_sources':
                 group = self.get_argument('group-id', 0)
@@ -479,9 +312,12 @@ class AdminUserGroupHandler(BaseHandler):
                     b_m['time_edit_newspaper'] = int(b_m['time_edit_newspaper'])
                 except:
                     self.errors.append(u"همه موارد را وارد کنید.")
+
                 if not len(self.errors):
                     UserGroupModel(_id=b_m['group']).save_bolton_management(**b_m)
                     self.status = True
+                else:
+                    self.messages = self.errors
 
             elif action == 'charts_content':
                 c_c = dict()
@@ -532,6 +368,13 @@ class AdminUserGroupHandler(BaseHandler):
 
                 UserGroupModel(_id=c_c['group']).save_charts_content(**c_c)
                 self.status = True
+
+            elif action == 'delete':
+                group = self.get_argument('group', '')
+                UserGroupModel(_id=ObjectId(group)).delete()
+                self.status = True
+            else:
+                self.messages = [u"عملیا ت با خطا مواجه شد"]
 
             self.write(self.result)
         except:
@@ -687,3 +530,99 @@ class AdminShowBriefsHandler(BaseHandler):
     def get(self):
         self.data['briefs'] = BriefsModel().get_all()['value']
         self.render('admin/show_briefs.html', **self.data)
+
+
+class AdminSearchNewsHandler(BaseHandler):
+    def get(self):
+        self.data['categories'] = CategoryModel().get_all()['value']
+        self.render('admin/search_news.html', **self.data)
+
+    @staticmethod
+    def get_words(__dict, __key):
+        try:
+            return __dict[__key].split(',')
+        except:
+            return []
+
+    @staticmethod
+    def get_period(__dict):
+        try:
+            now = datetime.datetime.today()
+            start = None
+            end = None
+            if __dict['period'] == 'hour':
+                start = now - datetime.timedelta(hours=1)
+                end = now
+            elif __dict['period'] == 'half-day':
+                start = now - datetime.timedelta(hours=12)
+                end = now
+            elif __dict['period'] == 'day':
+                start = now - datetime.timedelta(days=1)
+                end = now
+            elif __dict['period'] == 'week':
+                start = now - datetime.timedelta(weeks=1)
+                end = now
+            elif __dict['period'] == 'month':
+                start = now - datetime.timedelta(days=30)
+                end = now
+            elif __dict['period'] == 'period':
+                start = khayyam.JalaliDatetime().strptime(__dict['start_date'] + ' 00:00:00', "%Y/%m/%d %H:%M:%S").todatetime()
+                end = khayyam.JalaliDatetime().strptime(__dict['end_date'] + ' 23:59:59', "%Y/%m/%d %H:%M:%S").todatetime()
+            return start, end
+        except:
+            return None, None
+
+    def post(self):
+        try:
+            search = dict()
+            page = int(self.get_argument('page', 0))
+            self.check_sent_value("period", search, "period")
+            self.check_sent_value("start-date", search, "start_date")
+            self.check_sent_value("end-date", search, "end_date")
+            self.check_sent_value("all-words", search, "all_words")
+            self.check_sent_value("exactly-word", search, "exactly_word")
+            self.check_sent_value("each-words", search, "each_words")
+            self.check_sent_value("without-words", search, "without_words")
+            self.check_sent_value("category", search, "category", u"رده را وارد کنید")
+            self.check_sent_value("agency", search, "agency", u"منبع خبری را وارد کنید")
+            start, end = self.get_period(search)
+
+            if not start or not end:
+                self.errors.append(u"موارد درخواستی را صحیح وارد کنید.")
+
+            all_words = self.get_words(search, 'all_words')
+            exactly_word = ''
+            if 'exactly_word' in search.keys():
+                exactly_word = search['exactly_word']
+            each_words = self.get_words(search, 'each_words')
+            without_words = self.get_words(search, 'without_words')
+
+            words = {'all_words': all_words, 'without_words': without_words, 'each_words': each_words, 'exactly_word': exactly_word}
+            if not len(self.errors):
+                news = NewsModel().search(words=words, start=start, end=end, agency=search['agency'], category=search['category'], _page=page)
+
+                r = ''
+                for n in news['value']['news']:
+                    r += self.render_string('../ui_modules/template/news/brief.html', brief=n)
+
+                pagination = self.render_string('../ui_modules/template/pagination/pagination.html', count_all=news['value']['count_all'], count_per_page=20, active_page=page + 1)
+
+                self.value = {'news': r, 'pagination': pagination}
+                self.status = True
+            self.write(self.result)
+        except:
+            Debug.get_exception()
+            self.write(self.result)
+
+
+class GetAgencyHandler(BaseHandler):
+    def post(self):
+        try:
+            _id = self.get_argument("cid", "")
+            ct = AgencyModel(category=ObjectId(_id)).get_all_by_category()['value']
+            ct = [{'id': str(i['id']), 'name': i['name']} for i in ct]
+            sorted_ls = sorted(ct, key=lambda k: k['name'], reverse=False)
+            self.write({'agency': sorted_ls})
+
+        except Exception:
+            self.write("0")

@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
+import datetime
+import khayyam
+
 sys.path.append("/root/projects/negah-khabari")
 from web_app.classes.debug import Debug
 import urllib2
@@ -24,9 +27,23 @@ def iriToUri(iri):
     )
 
 
+def clean_url(url):
+    return url.replace("'", "").replace('"', '')
+
+
 def get_url(url):
-    response = urllib2.urlopen(iriToUri(url))
+    response = urllib2.urlopen(iriToUri(clean_url(url)))
     return response.read()
+
+
+def get_date(_date):
+    a = ''
+    for i in u'{}'.format(_date):
+        try:
+            a += u'{}'.format(str(int(i)))
+        except:
+            a += u'{}'.format(i)
+    return a
 
 
 def extract_news(document, b):
@@ -51,6 +68,14 @@ def extract_news(document, b):
     except:
         summary = None
     try:
+        news_date = soap.select_one(b['agency']['news_date']).text.replace(u'ي', u'ی').strip()
+        news_date.encode('utf-8')
+        news_date = get_date(news_date)
+        date = khayyam.JalaliDatetime().strptime(news_date, u'{}'.format(b['agency']['news_date_format'])).todatetime()
+    except:
+        date = datetime.datetime.now()
+
+    try:
         thumbnail = soap.select_one(b['agency']['news_thumbnail']).find('img')['src'].encode('utf-8')
         if 'http' not in thumbnail and 'www' not in thumbnail:
             thumbnail = b['agency']['base_link'].encode('utf-8') + thumbnail
@@ -70,7 +95,7 @@ def extract_news(document, b):
         thumbnail = b['thumbnail']
 
     if title and body:
-        NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id'])).insert()
+        NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id']), date=date).insert()
 
 error_links = []
 
@@ -79,7 +104,7 @@ def news():
     briefs = BriefsModel().get_all()['value']
     for b in briefs:
         try:
-            if not NewsModel(link=b['link']).is_exist():
+            if b['agency']['base_link'] == 'http://www.baharnews.ir' and not NewsModel(link=b['link']).is_exist():
                 data = get_url(b['link'])
                 extract_news(data, b)
         except:

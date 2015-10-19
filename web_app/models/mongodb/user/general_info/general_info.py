@@ -115,7 +115,17 @@ class UserGeneralInfoModel(BaseModel):
 
     def get_count_by_group(self):
         try:
-            return 0
+            return MongodbModel(collection='user', body={'group': self.group}).count()
         except:
             Debug.get_exception()
             return 0
+
+    def delete(self):
+        try:
+            self.result['value'] = MongodbModel(collection='user', body={'_id': self.id}).delete()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception()
+            return self.result

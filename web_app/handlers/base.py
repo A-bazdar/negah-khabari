@@ -39,9 +39,8 @@ def authentication():
 class BaseHandler(tornado.web.RequestHandler, SessionMixin, NotificationMixin):
     def __init__(self, application, request, **kwargs):
         super(BaseHandler, self).__init__(application, request, **kwargs)
-
         self.result = {'value': {}, 'status': False, 'messages': []}
-
+        self.error_result = {'value': {}, 'status': False, 'messages': [u"عملیا ت با خطا مواجه شد"]}
         self.data = dict(
             title="",
             me=None,
@@ -49,7 +48,8 @@ class BaseHandler(tornado.web.RequestHandler, SessionMixin, NotificationMixin):
         self.errors = []
 
     def get_current_user(self):
-        return self.session.get('current_user')
+        pass
+        # return self.session.get('current_user')
 
     def add_error(self, message):
         error_list = self.session.get('error_list')

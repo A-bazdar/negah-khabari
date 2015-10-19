@@ -43,3 +43,13 @@ class ContentModel(BaseModel):
         except:
             Debug.get_exception()
             return self.result
+
+    def delete(self):
+        try:
+            self.result['value'] = MongodbModel(collection='content', body={'_id': self.id}).delete()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception()
+            return self.result

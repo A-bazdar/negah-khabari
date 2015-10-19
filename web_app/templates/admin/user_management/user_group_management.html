@@ -58,13 +58,15 @@
                                                     <td>امکانات</td>
                                                 </tr>
                                                 {% for group in user_groups %}
-                                                    <tr>
+                                                    <tr class="group-row">
                                                         <td>{{ group['name'] }}</td>
                                                         <td>{{ group['count_user'] }}</td>
                                                         <td>
                                                             <i class="fa fa-pencil"></i>
                                                             <i class="fa fa-wrench setting-group" data-id="{{ group['id'] }}"></i>
-                                                            <i class="fa fa-trash-o"></i>
+                                                            <span class="delete-group" data-group="{{ group['id'] }}">
+                                                                <i class="fa fa-trash-o"></i>
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                 {% end %}
@@ -749,15 +751,19 @@ $('#area .R_butt_white_bordered').click(function(){
     $('#area .source_content[data-action=' + data_action + ']').fadeIn();
 });
 
+
+var trash = '<i class="fa fa-trash-o"></i>';
 var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
 
-var content = '<tr>\
+var content = '<tr class="group-row">\
                 <td>__name__</td>\
                 <td>0</td>\
                 <td>\
                     <i class="fa fa-pencil"></i>\
                     <i class="fa fa-wrench" data-toggle="modal" href="#user_group_modal"></i>\
-                    <i class="fa fa-trash-o"></i>\
+                        <span class="delete-group" data-group="__id__">\
+                            <i class="fa fa-trash-o"></i>\
+                        </span>\
                 </td>\
             </tr>';
 
@@ -777,27 +783,27 @@ $('#add_user_group').submit(function(e){
                 success: function (response) {
                     var status = response['status'];
                     var value = response['value'];
-                    if (!status) {
-                        Alert.render('error', function(){
+                    var messages = response['messages'];
+                    if (status) {
+                        Alert.render('success', function () {
+                            $('.empty').remove();
+                            $('.user-groups-table').append(content.replace(/__name__/g, value['name']).replace(/__id__/g, value['id']));
+                            btn.html('افزودن');
+                            $('input[name=group-name]').val('');
+                            __a = true;
+                        });
+                    }else{
+                        var error = '';
+                        for(var i = 0; i < messages.length ; i++){
+                            error += messages[i] + '<br>';
+                        }
+                        if(error == '')
+                            error = 'error';
+                        Alert.render(error, function(){
                             btn.html('افزودن');
                             __a = true;
                         });
-                        return
                     }
-                    if (status == 'empty') {
-                        Alert.render('empty', function(){
-                            btn.html('افزودن');
-                            __a = true;
-                        });
-                        return
-                    }
-                    Alert.render('success', function(){
-                        $('.empty').remove();
-                        $('.user-groups-table').append(content.replace(/__name__/g, value['name']));
-                        btn.html('افزودن');
-                        $('input[name=group-name]').val('');
-                        __a = true;
-                    });
                 },
                 error: function () {
                     Alert.render('error', function(){
@@ -1008,24 +1014,24 @@ $('#search_and_patterns').submit(function(e){
                 success: function (response) {
                     var status = response['status'];
                     var value = response['value'];
-                    if (!status) {
-                        Alert.render('error', function(){
+                    var messages = response['messages'];
+                    if (status) {
+                        Alert.render('success', function () {
                             btn.html('ثبت');
                             __b = true;
                         });
-                        return
-                    }
-                    if (status == 'empty') {
-                        Alert.render('empty', function(){
+                    }else{
+                        var error = '';
+                        for(var i = 0; i < messages.length ; i++){
+                            error += messages[i] + '<br>';
+                        }
+                        if(error == '')
+                            error = 'error';
+                        Alert.render(error, function(){
                             btn.html('ثبت');
                             __b = true;
                         });
-                        return
                     }
-                    Alert.render('success', function(){
-                        btn.html('ثبت');
-                        __b = true;
-                    });
                 },
                 error: function () {
                     Alert.render('error', function(){
@@ -1053,24 +1059,24 @@ $('#access_sources').submit(function(e){
                 success: function (response) {
                     var status = response['status'];
                     var value = response['value'];
-                    if (!status) {
-                        Alert.render('error', function(){
+                    var messages = response['messages'];
+                    if (status) {
+                        Alert.render('success', function () {
                             btn.html('ثبت');
                             __c = true;
                         });
-                        return
-                    }
-                    if (status == 'empty') {
-                        Alert.render('empty', function(){
+                    }else{
+                        var error = '';
+                        for(var i = 0; i < messages.length ; i++){
+                            error += messages[i] + '<br>';
+                        }
+                        if(error == '')
+                            error = 'error';
+                        Alert.render(error, function(){
                             btn.html('ثبت');
                             __c = true;
                         });
-                        return
                     }
-                    Alert.render('success', function(){
-                        btn.html('ثبت');
-                        __c = true;
-                    });
                 },
                 error: function () {
                     Alert.render('error', function(){
@@ -1098,24 +1104,24 @@ $('#bolton_management').submit(function(e){
                 success: function (response) {
                     var status = response['status'];
                     var value = response['value'];
-                    if (!status) {
-                        Alert.render('error', function(){
+                    var messages = response['messages'];
+                    if (status) {
+                        Alert.render('success', function () {
                             btn.html('ثبت');
                             __d = true;
                         });
-                        return
-                    }
-                    if (status == 'empty') {
-                        Alert.render('empty', function(){
+                    }else{
+                        var error = '';
+                        for(var i = 0; i < messages.length ; i++){
+                            error += messages[i] + '<br>';
+                        }
+                        if(error == '')
+                            error = 'error';
+                        Alert.render(error, function(){
                             btn.html('ثبت');
                             __d = true;
                         });
-                        return
                     }
-                    Alert.render('success', function(){
-                        btn.html('ثبت');
-                        __d = true;
-                    });
                 },
                 error: function () {
                     Alert.render('error', function(){
@@ -1143,24 +1149,24 @@ $('#charts_content').submit(function(e){
                 success: function (response) {
                     var status = response['status'];
                     var value = response['value'];
-                    if (!status) {
-                        Alert.render('error', function(){
+                    var messages = response['messages'];
+                    if (status) {
+                        Alert.render('success', function () {
                             btn.html('ثبت');
                             __e = true;
                         });
-                        return
-                    }
-                    if (status == 'empty') {
-                        Alert.render('empty', function(){
+                    }else{
+                        var error = '';
+                        for(var i = 0; i < messages.length ; i++){
+                            error += messages[i] + '<br>';
+                        }
+                        if(error == '')
+                            error = 'error';
+                        Alert.render(error, function(){
                             btn.html('ثبت');
                             __e = true;
                         });
-                        return
                     }
-                    Alert.render('success', function(){
-                        btn.html('ثبت');
-                        __e = true;
-                    });
                 },
                 error: function () {
                     Alert.render('error', function(){
@@ -1171,6 +1177,55 @@ $('#charts_content').submit(function(e){
             });
     }
 });
+
+    var __g = true;
+    $(document).on('click', '.delete-group', function(e){
+        if(__g){
+            __g = false;
+            var elm = $(e.target).closest('.delete-group');
+            var group = elm.attr('data-group');
+            elm.html(loader.replace(/20/g, '15'));
+            var postData = [
+                {name: 'group', value: group},
+                {name: '_xsrf', value: '{{ handler.xsrf_token }}'},
+                {name: 'action', value: 'delete'}
+            ];
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                elm.closest('.group-row').remove();
+                                __g = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
+                                elm.html(trash);
+                                __g = true;
+                            });
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            elm.html(trash);
+                            __g = true;
+                        });
+                    }
+                });
+        }
+    });
 
 </script>
 {% end block other_scripts %}

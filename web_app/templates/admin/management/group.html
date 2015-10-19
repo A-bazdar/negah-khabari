@@ -1,4 +1,4 @@
-{% extends admin_base.html %}
+{% extends ../admin_base.html %}
 
 {% block container %}
     <div id="page-wrapper">
@@ -16,23 +16,27 @@
                             </div>
                             <div class="box_body group-div">
                                 {% for group in groups %}
-                                    <div class="group"  data-group-id="{{ group['id'] }}">
+                                    <div class="group group-row"  data-group-id="{{ group['id'] }}">
                                         <div class="parent">
                                             <div class="content_detail">
                                                 <div class="display-inline-block"><span>{{ group['name'] }}</span><span class="margin-right-35 font-size-10">(دارای <span data-group-id="{{ group['id'] }}" class="counter-child">{{ len(group['child']) }}</span> زیرمجموعه)</span> </div>
                                                 <div class="display-inline-block content_icon pull-left">
                                                     <i class="fa fa-pencil"></i>
-                                                    <i class="fa fa-trash-o"></i>
+                                                    <span class="delete-group" data-group="{{ group['id'] }}">
+                                                        <i class="fa fa-trash-o"></i>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="child">
                                             {% for child in group['child'] %}
-                                                <div class="content_sub_detail">
+                                                <div class="content_sub_detail group-row">
                                                     <div class="display-inline-block"><span>{{ child['name'] }}</span> </div>
                                                     <div class="display-inline-block content_icon pull-left">
                                                         <i class="fa fa-pencil"></i>
-                                                        <i class="fa fa-trash-o"></i>
+                                                        <span class="delete-group" data-group="{{ child['id'] }}">
+                                                            <i class="fa fa-trash-o"></i>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             {% end %}
@@ -121,15 +125,19 @@
 {% block other_scripts %}
 <script>
 
+    var trash = '<i class="fa fa-trash-o"></i>';
+
     var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
 
-    var group = '<div class="group"  data-group-id="__group_id__">\
+    var group = '<div class="group group-row"  data-group-id="__group_id__">\
                 <div class="parent">\
                     <div class="content_detail">\
                         <div class="display-inline-block"><span>__name__</span><span class="margin-right-35 font-size-10">(دارای <span data-group-id="__group_id__" class="counter-child">0</span> زیرمجموعه)</span> </div>\
                         <div class="display-inline-block content_icon pull-left">\
                             <i class="fa fa-pencil"></i>\
-                            <i class="fa fa-trash-o"></i>\
+                            <span class="delete-group" data-group="__id__">\
+                                <i class="fa fa-trash-o"></i>\
+                            </span>\
                         </div>\
                     </div>\
                 </div>\
@@ -137,11 +145,13 @@
                 </div>\
             </div>';
 
-    var sub_group = '<div class="content_sub_detail">\
+    var sub_group = '<div class="content_sub_detail group-row">\
                         <div class="display-inline-block"><span>__name__</span> </div>\
                         <div class="display-inline-block content_icon pull-left">\
                             <i class="fa fa-pencil"></i>\
-                            <i class="fa fa-trash-o"></i>\
+                            <span class="delete-group" data-group="__id__">\
+                                <i class="fa fa-trash-o"></i>\
+                            </span>\
                         </div>\
                     </div>';
 
@@ -161,45 +171,98 @@
                     success: function (response) {
                         var status = response['status'];
                         var value = response['value'];
-                        if (!status) {
-                            Alert.render('error', function(){
-                                btn.html('افزودن');
-                                __a = true;
-                            });
-                            return
-                        }
-                        if (status == 'empty') {
-                            Alert.render('empty', function(){
-                                btn.html('افزودن');
-                                __a = true;
-                            });
-                            return
-                        }
-                        Alert.render('success', function(){
-                            $('.empty').remove();
-                            if(value['parent'] == null){
-                                $('.group-div').append(group.replace(/__name__/g, value['name']).replace(/__group_id__/g, value['id']));
-                                var options = '<option value="0">اصلی</option>';
-                                for(var i = 0; i < value['parents'].length; i++){
-                                    options += "<option value='" + value['parents'][i]['id'] + "'>" + value['parents'][i]['name'] + "</option>";
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                $('.empty').remove();
+                                if (value['parent'] == null) {
+                                    $('.group-div').append(group.replace(/__name__/g, value['name']).replace(/__group_id__/g, value['id']).replace(/__id__/g, value['id']));
+                                    var options = '<option value="0">اصلی</option>';
+                                    for (var i = 0; i < value['parents'].length; i++) {
+                                        options += "<option value='" + value['parents'][i]['id'] + "'>" + value['parents'][i]['name'] + "</option>";
+                                    }
+                                    $(".select[name=group-parent]").html(options).select2("val", 0);
+                                } else {
+                                    $('.group-div .group[data-group-id=' + value['parent'] + '] .child').append(sub_group.replace(/__name__/g, value['name']).replace(/__id__/g, value['id']));
+                                    $(".select[name=group-parent]").select2("val", 0);
+                                    var c = $('.counter-child[data-group-id=' + value['parent'] + ']');
+                                    c.html(parseInt(c.html()) + 1);
                                 }
-                                $(".select[name=group-parent]").html(options).select2("val", 0);
-                            }else{
-                                $('.group-div .group[data-group-id=' + value['parent'] + '] .child').append(sub_group.replace(/__name__/g, value['name']));
-                                $(".select[name=group-parent]").select2("val", 0);
-                                var c = $('.counter-child[data-group-id=' + value['parent'] + ']');
-                                c.html(parseInt(c.html()) + 1);
+                                btn.html('افزودن');
+                                $('#new_group_modal').modal('toggle');
+                                $('input[name=group-name]').val('');
+                                __a = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
                             }
-                            btn.html('افزودن');
-                            $('#new_group_modal').modal('toggle');
-                            $('input[name=group-name]').val('');
-                            __a = true;
-                        });
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                        }
                     },
                     error: function () {
                         Alert.render('error', function(){
                             btn.html('افزودن');
                             __a = true;
+                        });
+                    }
+                });
+        }
+    });
+
+    var __b = true;
+    $(document).on('click', '.delete-group', function(e){
+        if(__b){
+            __b = false;
+            var elm = $(e.target).closest('.delete-group');
+            var group = elm.attr('data-group');
+            elm.html(loader.replace(/20/g, '15'));
+            var postData = [
+                {name: 'group', value: group},
+                {name: '_xsrf', value: '{{ handler.xsrf_token }}'},
+                {name: 'action', value: 'delete'}
+            ];
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                elm.closest('.group-row').remove();
+                                if (value['parent'] != null){
+                                    var c = $('.counter-child[data-group-id=' + value['parent'] + ']');
+                                    c.html(parseInt(c.html()) - 1);
+                                }
+                                __b = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
+                                elm.html(trash);
+                                __b = true;
+                            });
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            elm.html(trash);
+                            __b = true;
                         });
                     }
                 });

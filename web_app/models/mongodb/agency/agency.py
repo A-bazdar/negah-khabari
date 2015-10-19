@@ -43,6 +43,8 @@ class AgencyModel():
                 brief_container=agency['brief_container'],
                 brief_thumbnail=agency['brief_thumbnail'],
                 news_title=agency['news_title'],
+                news_date=agency['news_date'],
+                news_date_format=agency['news_date_format'],
                 news_ro_title=agency['news_ro_title'],
                 news_summary=agency['news_summary'],
                 news_body=agency['news_body'],
@@ -124,3 +126,13 @@ class AgencyModel():
         except:
             Debug.get_exception()
             return {}
+
+    def delete(self):
+        try:
+            self.result['value'] = MongodbModel(collection='agency', body={'_id': self.id}).delete()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception()
+            return self.result

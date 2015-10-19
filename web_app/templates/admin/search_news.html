@@ -1,0 +1,232 @@
+{% extends admin_base.html %}
+
+{% block other_css %}
+<link rel="stylesheet" href="{{ static_url('plugins/DatePicker/pwt-datepicker.css') }}">
+<link rel="stylesheet" type="text/css" href="/static/plugins/select2/select2_metro_rtl.css" />
+<link rel="stylesheet" type="text/css" href="{{ static_url('css/pagination.css') }}" />
+{% end block other_css %}
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>جستجو</span> </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <form id="search_news">
+                                {% module xsrf_form_html() %}
+                                <input type="hidden" name="action" value="search">
+                                <input type="hidden" name="page" value="0">
+                                <div class="col-lg-12">
+                                    <div class="row padding-5">
+                                        <div class="col-md-3">بازه زمانی</div>
+                                        <div class="col-md-9">
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    <select name="period" style="width: 100%" class="select">
+                                                        <option value="hour">1 ساعت</option>
+                                                        <option value="half-day">12 ساعت</option>
+                                                        <option value="day">1 روز</option>
+                                                        <option value="week">1 هفته</option>
+                                                        <option value="month">1 ماه</option>
+                                                        <option value="period">بازه دلخواه</option>
+                                                    </select>
+                                                </div>
+                                                <div class="period-date" style="display: none">
+                                                    <div class="col-xs-1">
+                                                        <span class="form_label">از</span>
+                                                    </div>
+                                                    <div class="col-xs-3">
+                                                        <input type="text" name="start-date" class="datePicker form-control">
+                                                    </div>
+                                                    <div class="col-xs-1">
+                                                        <span class="form_label">تا</span>
+                                                    </div>
+                                                    <div class="col-xs-3">
+                                                        <input type="text" name="end-date" class="datePicker form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row padding-5">
+                                        <div class="col-md-3">واژه یافتن مطلب با : </div>
+                                        <div class="col-md-9">
+                                        </div>
+                                    </div>
+                                    <div class="row padding-5">
+                                        <div class="col-md-3">همه این کلمات : </div>
+                                        <div class="col-md-9">
+                                            <input type="hidden" class="select2_keywords form-control" name="all-words" value="">
+                                        </div>
+                                    </div>
+                                    <div class="row padding-5">
+                                        <div class="col-md-3">دقیقا این عبارت : </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" name="exactly-word">
+                                        </div>
+                                    </div>
+                                    <div class="row padding-5">
+                                        <div class="col-md-3">هر کدام از این کلمات : </div>
+                                        <div class="col-md-9">
+                                            <input type="hidden" class="select2_keywords form-control" name="each-words" value="">
+                                        </div>
+                                    </div>
+                                    <div class="row padding-5">
+                                        <div class="col-md-3">بدون از این کلمات : </div>
+                                        <div class="col-md-9">
+                                            <input type="hidden" class="select2_keywords form-control" name="without-words" value="">
+                                        </div>
+                                    </div>
+                                    <div class="row padding-5">
+                                        <div class="col-md-3">نتایج را بر این اساس محدود کنید : </div>
+                                        <div class="col-md-9">
+                                        </div>
+                                    </div>
+                                    <div class="row padding-5">
+                                        <div class="col-md-3">جستجو در : </div>
+                                        <div class="col-md-9">
+                                            <select class="select category" name="category">
+                                                <option value="all">همه رده ها</option>
+                                                {% for cat in categories %}
+                                                    <option value="{{ cat['id'] }}">{{ cat['name'] }}</option>
+                                                {% end %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row padding-5">
+                                        <div class="col-md-3">منابع خبری : </div>
+                                        <div class="col-md-9">
+                                            <select class="select agency" name="agency">
+                                                <option value="all">همه منابع خبری</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row padding-5">
+                                        <div class="col-md-2 col-md-offset-5">
+                                            <div class="btn R_butt_green search-news-btn">جستجو</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row result-search-div" style="display:none">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>نتایج جستجو</span> </div>
+                    <div class="panel-body result-search">
+
+                    </div>
+                </div>
+            </div>
+            <div class="pagination-news">
+
+            </div>
+        </div>
+    </div>
+
+
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/DatePicker/pwt-date.js') }}"></script>
+<script src="{{ static_url('plugins/DatePicker/pwt-datepicker.js') }}"></script>
+<script>
+    var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+    $(".datePicker").val("").pDatepicker();
+    $(".select2_keywords").select2({
+        tags: []
+    });
+
+    $(".select[name=category]").select2({
+        placeholder: "انتخاب کنید"
+    }).on("change", function () {
+        var noptions = "";
+        $.ajax({
+            data: {cid: $(this).select2("val"), _xsrf: '{{ handler.xsrf_token }}'},
+            type: 'post',
+            cache: true,
+            url: '{{ reverse_url('get_agency') }}',
+            async: true,
+            success: function (output3) {
+                noptions = '<option value="all">همه منابع خبری</option>';
+                var first_id = 0;
+                if (output3 != '0' && output3['agency'].length > 0) {
+                    for (var i in output3['agency']) {
+                        noptions += "<option value='" + output3['agency'][i]['id'] + "'>" + output3['agency'][i]['name'] + "</option>";
+                    }
+                }
+                $(".select[name=agency]").html(noptions).select2("val", 'all');
+            }, complete: function (output) {
+            }
+        });
+    });
+
+    $(".select[name=period]").select2({
+        placeholder: "انتخاب کنید"
+    }).on("change", function () {
+        if($(this).select2("val") == 'period'){
+            $('.period-date').fadeIn();
+        }else{
+            $('.period-date').fadeOut();
+        }
+    });
+
+    var __a = true;
+    $('#search_news').submit(function(e){
+        if(__a){
+            __a = false;
+            e.preventDefault();
+            var btn =$('.search-news-btn') ;
+            btn.html(loader);
+            var postData = $("#search_news").serializeArray();
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        if (!status) {
+                            Alert.render('error', function(){
+                                btn.html('جستجو');
+                                __a = true;
+                            });
+                            return
+                        }
+                        btn.html('جستجو');
+                        $('.result-search').html(value['news']);
+                        $('.pagination-news').html(value['pagination']);
+                        $('.result-search-div').fadeIn();
+                        __a = true;
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('جستجو');
+                            __a = true;
+                        });
+                    }
+                });
+        }
+    });
+
+    $(document).on('click', '.change-page', function(e) {
+        var elm = $(e.target).closest('.change-page');
+        var page = elm.attr('data-page');
+        $('input[name=page]').val(page - 1);
+        $('#search_news').submit();
+        $('html, body').animate({scrollTop : $('.result-search-div').offset().top},800);
+    });
+
+    $(document).on('click', '.search-news-btn', function(e) {
+        $('input[name=page]').val('0');
+        $('#search_news').submit();
+        $('html, body').animate({scrollTop : $('.result-search-div').offset().top},800);
+    });
+</script>
+{% end block other_scripts %}

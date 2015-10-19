@@ -47,7 +47,7 @@
                                         <td>امکانات</td>
                                     </tr>
                                     {% for agency in agencies %}
-                                        <tr>
+                                        <tr class="agency-row">
                                             <td>{{ agency['name'] }}</td>
                                             <td><a href="{{ agency['link'] }}">{{ agency['link'] }}</a></td>
                                             <td><div style="background-color: {{ agency['color'] }}">{{ agency['color'] }}</div></td>
@@ -60,7 +60,9 @@
                                             <td><i class="fa fa-check colorGreen"></i></td>
                                             <td><i class="fa fa-check colorGreen"></i></td>
                                             <td>
-                                                <i class="fa fa-trash-o"></i>
+                                                <span class="delete-agency" data-agency="{{ agency['id'] }}">
+                                                    <i class="fa fa-trash-o"></i>
+                                                </span>
                                                 <i class="fa fa-check-circle-o"></i>
                                             </td>
                                         </tr>
@@ -108,6 +110,7 @@
                             <div class="col-xs-8 col-xs-offset-2 form_modal_body">
                                 <form id="add_agency" enctype="multipart/form-data">
                                     {% module xsrf_form_html() %}
+                                    <input type="hidden" value="add" name="action">
                                     <div class="row">
                                         <div class="col-xs-3">
                                             <span class="form_label">نام سایت</span>
@@ -314,6 +317,9 @@
 <script type="text/javascript" src="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
 
 <script>
+
+    var trash = '<i class="fa fa-trash-o"></i>';
+
     $('.colorpicker-default').colorpicker({
             format: 'hex'
     });
@@ -327,7 +333,7 @@
     });
 
     var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
-    var agency = '<tr>\
+    var agency = '<tr class="agency-row">\
                     <td>__name__</td>\
                     <td><a href="__link__">__link__</a></td>\
                     <td><div style="background-color: __color__">__color__</div></td>\
@@ -340,7 +346,9 @@
                     <td><i class="fa fa-__add_to_confirm__"></i></td>\
                     <td><i class="fa fa-__extract_image__"></i></td>\
                     <td>\
-                        <i class="fa fa-trash-o"></i>\
+                        <span class="delete-agency" data-agency="__id__">\
+                            <i class="fa fa-trash-o"></i>\
+                        </span>\
                         <i class="fa fa-check-circle-o"></i>\
                     </td>\
                 </tr>';
@@ -365,47 +373,97 @@
                     success: function (response) {
                         var status = response['status'];
                         var value = response['value'];
-                        if (!status) {
-                            Alert.render('error', function(){
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                $('.empty').remove();
+                                var status = 'غیر فعال';
+                                if (value['status'] == 'active')
+                                    status = 'فعال';
+                                var confirm = 'times colorRed';
+                                if (value['add_to_confirm'])
+                                    confirm = 'check colorGreen';
+                                var extract_image = 'times colorRed';
+                                if (value['extract_image'])
+                                    extract_image = 'check colorGreen';
+                                var h = agency.replace(/__name__/g, value['name']).replace(/__link__/g, value['link'])
+                                        .replace(/__color__/g, value['color']).replace(/__pic__/g, value['pic'])
+                                        .replace(/__status__/g, status).replace(/__add_to_confirm__/g, confirm)
+                                        .replace(/__extract_image__/g, extract_image).replace(/__category__/g, value['category'])
+                                        .replace(/__id__/g, value['id'])
+                                        .replace(/__direction__/g, value['direction']);
+                                $('table.agency-table').append(h);
+                                $('#new_source_modal').modal('toggle');
+                                btn.html('افزودن');
+                                $('#new_source_modal input').val('');
+                                __a = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
                                 btn.html('افزودن');
                                 __a = true;
                             });
-                            return
                         }
-                        if (status == 'empty') {
-                            Alert.render('empty', function(){
-                                btn.html('افزودن');
-                                __a = true;
-                            });
-                            return
-                        }
-                        Alert.render('success', function(){
-                            $('.empty').remove();
-                            var status = 'غیر فعال';
-                            if(value['status'] == 'active')
-                                status = 'فعال';
-                            var confirm = 'times colorRed';
-                            if(value['add_to_confirm'])
-                                confirm = 'check colorGreen';
-                            var extract_image = 'times colorRed';
-                            if(value['extract_image'])
-                                extract_image = 'check colorGreen';
-                            var h = agency.replace(/__name__/g, value['name']).replace(/__link__/g, value['link'])
-                                    .replace(/__color__/g, value['color']).replace(/__pic__/g, value['pic'])
-                                    .replace(/__status__/g, status).replace(/__add_to_confirm__/g, confirm)
-                                    .replace(/__extract_image__/g, extract_image).replace(/__category__/g, value['category'])
-                                    .replace(/__direction__/g, value['direction']);
-                            $('table.agency-table').append(h);
-                            $('#new_source_modal').modal('toggle');
-                            btn.html('افزودن');
-                            $('#new_source_modal input').val('');
-                            __a = true;
-                        });
                     },
                     error: function () {
                         Alert.render('error', function(){
                             btn.html('افزودن');
                             __a = true;
+                        });
+                    }
+                });
+        }
+    });
+
+    var __b = true;
+    $(document).on('click', '.delete-agency', function(e){
+        if(__b){
+            __b = false;
+            var elm = $(e.target).closest('.delete-agency');
+            var agency = elm.attr('data-agency');
+            elm.html(loader.replace(/20/g, '15'));
+            var postData = [
+                {name: 'agency', value: agency},
+                {name: '_xsrf', value: '{{ handler.xsrf_token }}'},
+                {name: 'action', value: 'delete'}
+            ];
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                elm.closest('.agency-row').remove();
+                                __b = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
+                                elm.html(trash);
+                                __b = true;
+                            });
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            elm.html(trash);
+                            __b = true;
                         });
                     }
                 });

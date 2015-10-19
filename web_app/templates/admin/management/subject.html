@@ -1,4 +1,4 @@
-{% extends admin_base.html %}
+{% extends ../admin_base.html %}
 
 {% block container %}
     <div id="page-wrapper">
@@ -16,23 +16,27 @@
                             </div>
                             <div class="box_body subject-div">
                                 {% for subject in subjects %}
-                                    <div class="subject"  data-subject-id="{{ subject['id'] }}">
+                                    <div class="subject subject-row" data-subject-id="{{ subject['id'] }}">
                                         <div class="parent">
                                             <div class="content_detail">
                                                 <div class="display-inline-block">{{ subject['name'] }}</div>
                                                 <div class="display-inline-block content_icon pull-left">
                                                     <i class="fa fa-pencil"></i>
-                                                    <i class="fa fa-trash-o"></i>
+                                                    <span class="delete-subject" data-subject="{{ subject['id'] }}">
+                                                        <i class="fa fa-trash-o"></i>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="child">
                                             {% for child in subject['child'] %}
-                                                <div class="content_sub_detail">
+                                                <div class="content_sub_detail subject-row">
                                                     <div class="display-inline-block">{{ child['name'] }}</div>
                                                     <div class="display-inline-block content_icon pull-left">
                                                         <i class="fa fa-pencil"></i>
-                                                        <i class="fa fa-trash-o"></i>
+                                                        <span class="delete-subject" data-subject="{{ child['id'] }}">
+                                                            <i class="fa fa-trash-o"></i>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             {% end %}
@@ -120,15 +124,19 @@
 {% block other_scripts %}
 <script>
 
+    var trash = '<i class="fa fa-trash-o"></i>';
+
     var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
 
-    var subject = '<div class="subject" data-subject-id="__subject_id__">\
+    var subject = '<div class="subject subject-row" data-subject-id="__subject_id__">\
                     <div class="parent">\
                         <div class="content_detail">\
                             <div class="display-inline-block">__name__</div>\
                             <div class="display-inline-block content_icon pull-left">\
                                 <i class="fa fa-pencil"></i>\
-                                <i class="fa fa-trash-o"></i>\
+                                <span class="delete-subject" data-subject="__id__">\
+                                    <i class="fa fa-trash-o"></i>\
+                                </span>\
                             </div>\
                         </div>\
                     </div>\
@@ -136,11 +144,13 @@
                     </div>\
                 </div>';
 
-    var sub_subject = '<div class="content_sub_detail">\
+    var sub_subject = '<div class="content_sub_detail subject-row">\
                         <div class="display-inline-block">__name__</div>\
                         <div class="display-inline-block content_icon pull-left">\
                             <i class="fa fa-pencil"></i>\
-                            <i class="fa fa-trash-o"></i>\
+                            <span class="delete-subject" data-subject="__id__">\
+                                <i class="fa fa-trash-o"></i>\
+                            </span>\
                         </div>\
                     </div>';
 
@@ -160,43 +170,92 @@
                     success: function (response) {
                         var status = response['status'];
                         var value = response['value'];
-                        if (!status) {
-                            Alert.render('error', function(){
-                                btn.html('افزودن');
-                                __a = true;
-                            });
-                            return
-                        }
-                        if (status == 'empty') {
-                            Alert.render('empty', function(){
-                                btn.html('افزودن');
-                                __a = true;
-                            });
-                            return
-                        }
-                        Alert.render('success', function(){
-                            $('.empty').remove();
-                            if(value['parent'] == null){
-                                $('.subject-div').append(subject.replace(/__name__/g, value['name']).replace(/__subject_id__/g, value['id']));
-                                var options = '<option value="0">اصلی</option>';
-                                for(var i = 0; i < value['parents'].length; i++){
-                                    options += "<option value='" + value['parents'][i]['id'] + "'>" + value['parents'][i]['name'] + "</option>";
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                $('.empty').remove();
+                                if (value['parent'] == null) {
+                                    $('.subject-div').append(subject.replace(/__id__/g, value['id']).replace(/__name__/g, value['name']).replace(/__subject_id__/g, value['id']));
+                                    var options = '<option value="0">اصلی</option>';
+                                    for (var i = 0; i < value['parents'].length; i++) {
+                                        options += "<option value='" + value['parents'][i]['id'] + "'>" + value['parents'][i]['name'] + "</option>";
+                                    }
+                                    $(".select[name=subject-parent]").html(options).select2("val", 0);
+                                } else {
+                                    $('.subject-div .subject[data-subject-id=' + value['parent'] + '] .child').append(sub_subject.replace(/__name__/g, value['name']).replace(/__id__/g, value['id']));
+                                    $(".select[name=subject-parent]").select2("val", 0);
                                 }
-                                $(".select[name=subject-parent]").html(options).select2("val", 0);
-                            }else{
-                                $('.subject-div .subject[data-subject-id=' + value['parent'] + '] .child').append(sub_subject.replace(/__name__/g, value['name']));
-                                $(".select[name=subject-parent]").select2("val", 0);
+                                btn.html('افزودن');
+                                $('#new_subject_modal').modal('toggle');
+                                $('input[name=subject-name]').val('');
+                                __a = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
                             }
-                            btn.html('افزودن');
-                            $('#new_subject_modal').modal('toggle');
-                            $('input[name=subject-name]').val('');
-                            __a = true;
-                        });
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                        }
                     },
                     error: function () {
                         Alert.render('error', function(){
                             btn.html('افزودن');
                             __a = true;
+                        });
+                    }
+                });
+        }
+    });
+
+    var __b = true;
+    $(document).on('click', '.delete-subject', function(e){
+        if(__b){
+            __b = false;
+            var elm = $(e.target).closest('.delete-subject');
+            var subject = elm.attr('data-subject');
+            elm.html(loader.replace(/20/g, '15'));
+            var postData = [
+                {name: 'subject', value: subject},
+                {name: '_xsrf', value: '{{ handler.xsrf_token }}'},
+                {name: 'action', value: 'delete'}
+            ];
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (status) {
+                            Alert.render('success', function () {
+                                elm.closest('.subject-row').remove();
+                                __b = true;
+                            });
+                        }else{
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
+                                elm.html(trash);
+                                __b = true;
+                            });
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            elm.html(trash);
+                            __b = true;
                         });
                     }
                 });
