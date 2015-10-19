@@ -1,31 +1,5 @@
 {% extends admin_base.html %}
 
-{% block content_management %}
-    <li class="active">
-        <a href=""><i class="fa fa-dashboard fa-fw"></i> مدیریت<span class="fa arrow"></span></a>
-        <ul class="nav nav-second-level">
-            <li>
-                <a href="/admin/content_management">مدیریت قالب محتوا</a>
-            </li>
-            <li>
-                <a href="/admin/subject_management">مدیریت موضوعات</a>
-            </li>
-            <li>
-                <a href="/admin/category_management">مدیریت رده</a>
-            </li>
-            <li>
-                <a href="/admin/group_management">مدیریت گروه های خبری</a>
-            </li>
-            <li>
-                <a class="active" href="/admin/geo_management">مدیریت حوزه های جغرافیایی</a>
-            </li>
-            <li>
-                <a href="/admin/direction_management">مدیریت جهت گیری</a>
-            </li>
-        </ul>
-    </li>
-{% end block content_management %}
-
 {% block container %}
     <div id="page-wrapper">
         <div class="row">

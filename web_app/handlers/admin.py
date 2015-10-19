@@ -539,6 +539,11 @@ class AdminUserGroupHandler(BaseHandler):
             self.write(self.result)
 
 
+class AdminTableHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/table_management.html')
+
+
 class AdminSearchPatternsHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/user_management/search_patterns.html')
@@ -630,6 +635,14 @@ class AdminGeneralSettingsHandler(tornado.web.RequestHandler):
 class AdminFontSettingsHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_settings/font_setting.html')
+
+class AdminAboutUsHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_settings/about_us.html')
+
+class AdminContactUsHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('admin/admin_settings/contact_us.html')
 
 class AdminLoginHandler(tornado.web.RequestHandler):
     def get(self):

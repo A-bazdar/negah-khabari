@@ -227,6 +227,7 @@ i.fa-wrench{
 
 .form_label{
     font-size: 10pt;
+    vertical-align: -2px;
 }
 
 .form_modal_body{

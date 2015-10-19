@@ -40,6 +40,9 @@ url_patterns = [
     (r'^(?i)/Admin/SourceManagement[/]?$', AdminSourceHandler),
     (r'^/Admin/SourceManagement', AdminSourceHandler, None, "admin:source_management"),
 
+    (r'^(?i)/Admin/TableManagement[/]?$', AdminTableHandler),
+    (r'^/Admin/TableManagement', AdminTableHandler, None, "admin:table_management"),
+
     (r'^(?i)/Admin/UserManagement/GeneralInfo[/]?$', AdminUserGeneralInfoHandler),
     (r'^/Admin/UserManagement/GeneralInfo', AdminUserGeneralInfoHandler, None, "admin:user_management:general_info"),
 
@@ -132,6 +135,14 @@ url_patterns = [
     (r'^(?i)/Admin/Settings/FontSettings[/]?$', AdminFontSettingsHandler),
     (r'^/Admin/Settings/FontSettings', AdminFontSettingsHandler, None,
      "admin:settings:font_settings"),
+
+    (r'^(?i)/Admin/Settings/ContactUs[/]?$', AdminContactUsHandler),
+    (r'^/Admin/Settings/ContactUs', AdminContactUsHandler, None,
+     "admin:settings:contact_us"),
+
+    (r'^(?i)/Admin/Settings/AboutUs[/]?$', AdminAboutUsHandler),
+    (r'^/Admin/Settings/AboutUs', AdminAboutUsHandler, None,
+     "admin:settings:about_us"),
 
     (r'^(?i)/Admin/ShowBriefs[/]?$', AdminShowBriefsHandler),
     (r'^/Admin/ShowBriefs', AdminShowBriefsHandler, None, "admin:show_briefs"),
