@@ -43,6 +43,8 @@ class AgencyModel():
                 brief_container=agency['brief_container'],
                 brief_thumbnail=agency['brief_thumbnail'],
                 news_title=agency['news_title'],
+                news_date=agency['news_date'],
+                news_date_format=agency['news_date_format'],
                 news_ro_title=agency['news_ro_title'],
                 news_summary=agency['news_summary'],
                 news_body=agency['news_body'],
@@ -115,15 +117,15 @@ class AgencyModel():
             return self.result
 
     def get_one(self):
-        # try:
+        try:
             body = {'_id': self.id}
             r = MongodbModel(collection='agency', body=body).get_one()
             if r:
                 return self.get_agency(r)
             return {}
-        # except:
-        #     Debug.get_exception()
-        #     return {}
+        except:
+            Debug.get_exception()
+            return {}
 
     def delete(self):
         try:

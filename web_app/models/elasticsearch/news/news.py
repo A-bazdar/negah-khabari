@@ -14,13 +14,14 @@ class NewsModel:
     index = 'negah_khabari'
     doc_type = 'news'
 
-    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None, body=None):
+    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None, body=None, date=None):
         self.id = _id
         self.title = title
         self.agency = agency
         self.ro_title = ro_title
         self.summary = summary
         self.body = body
+        self.date = date
         self.thumbnail = thumbnail
         self.link = link
         self.result = {'value': {}, 'status': False}
@@ -52,7 +53,7 @@ class NewsModel:
                 'body': self.body,
                 'thumbnail': self.thumbnail,
                 'agency': self.agency,
-                'date': datetime.datetime.today()
+                'date': self.date
             }
 
             if not self.is_exist():
