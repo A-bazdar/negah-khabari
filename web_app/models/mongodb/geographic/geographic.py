@@ -25,7 +25,7 @@ class GeographicModel(BaseModel):
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > save', data='collection > geographic')
             return self.result
 
     def get_all(self):
@@ -53,7 +53,7 @@ class GeographicModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_all', data='collection > geographic')
             return self.result
 
     def get_all_parent(self):
@@ -70,7 +70,7 @@ class GeographicModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_all_parent', data='collection > geographic')
             return self.result
 
     def get_one(self):
@@ -87,7 +87,7 @@ class GeographicModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_one', data='collection > geographic')
             return self.result
 
     def delete(self):
@@ -102,7 +102,7 @@ class GeographicModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > delete', data='collection > geographic')
             return self.result
 
     def delete_childs(self):
@@ -112,5 +112,5 @@ class GeographicModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > delete_childs', data='collection > geographic')
             return self.result

@@ -73,7 +73,7 @@ class BriefsModel:
             return self.result
 
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='insert_brief', data=self.link)
             return self.result
 
     def get_all(self):
@@ -93,5 +93,6 @@ class BriefsModel:
             return self.result
 
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='briefs > count_all',
+                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
             return self.result

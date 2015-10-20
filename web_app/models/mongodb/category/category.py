@@ -23,7 +23,7 @@ class CategoryModel(BaseModel):
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > save', data='collection > category')
             return self.result
 
     def get_all(self):
@@ -38,7 +38,7 @@ class CategoryModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_all', data='collection > category')
             return self.result
 
     def get_one(self):
@@ -54,7 +54,7 @@ class CategoryModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_one', data='collection > category')
             return self.result
 
     def delete(self):
@@ -64,5 +64,5 @@ class CategoryModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > delete', data='collection > category')
             return self.result

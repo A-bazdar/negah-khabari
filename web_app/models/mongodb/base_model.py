@@ -1,3 +1,4 @@
+import json
 import pymongo
 from web_app.classes.debug import Debug
 from config import Config
@@ -40,37 +41,48 @@ class MongodbModel(MongodbBaseModel):
         try:
             return self.collection.insert(self.__body)
         except:
+            Debug.get_exception(sub_system='web', severity='critical_error', tags='mongodb > insert',
+                                data='collection: ' + self.__condition + ' body: ' + str(self.__body))
             return False
 
     def get_all(self):
         try:
             return self.collection.find(self.__body)
         except:
+            Debug.get_exception(sub_system='web', severity='critical_error', tags='mongodb > get_all',
+                                data='collection: ' + self.__condition + ' body: ' + str(self.__body))
             return False
 
     def get_one(self):
         try:
             return self.collection.find_one(self.__body)
         except:
+            Debug.get_exception(sub_system='web', severity='critical_error', tags='mongodb > get_one',
+                                data='collection: ' + self.__condition + ' body: ' + str(self.__body))
             return False
 
     def delete(self):
         try:
             return self.collection.remove(self.__body)
         except:
+            Debug.get_exception(sub_system='web', severity='critical_error', tags='mongodb > delete',
+                                data='collection: ' + self.__condition + ' body: ' + str(self.__body))
             return False
 
     def count(self):
         try:
             return self.collection.find(self.__body).count()
         except:
+            Debug.get_exception(sub_system='web', severity='critical_error', tags='mongodb > count',
+                                data='collection: ' + self.__condition + ' body: ' + str(self.__body))
             return False
 
     def update(self):
         try:
             return self.collection.update(self.__condition, self.__body)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='critical_error', tags='mongodb > update',
+                                data='collection: ' + self.__condition + ' body: ' + str(self.__body) + ' condition: ' + str(self.__condition))
             return False
 
 

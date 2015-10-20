@@ -90,7 +90,7 @@ class AdminSourceHandler(BaseHandler):
 
             self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='source_management')
             self.write(self.result)
 
 
@@ -155,7 +155,7 @@ class AdminUserGeneralInfoHandler(BaseHandler):
 
             self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='user_management > general_info')
             self.write(self.result)
 
 
@@ -378,7 +378,7 @@ class AdminUserGroupHandler(BaseHandler):
 
             self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='user_management > user_group_management')
             self.write(self.result)
 
 
@@ -598,7 +598,7 @@ class AdminSearchNewsHandler(BaseHandler):
                 self.status = True
             self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='search_news')
             self.write(self.result)
 
 

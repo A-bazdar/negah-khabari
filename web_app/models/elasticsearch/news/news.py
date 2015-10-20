@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import hashlib
+import json
 from bson import ObjectId
 from web_app.classes.debug import Debug
 from web_app.models.elasticsearch.base_model import ElasticSearchModel
@@ -63,7 +64,7 @@ class NewsModel:
             return self.result
 
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='save_news', data=self.link)
             return self.result
 
     def get_news(self, _source, _id):
@@ -197,5 +198,5 @@ class NewsModel:
             return self.result
 
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='critical_error', tags='search_news')
             return self.result

@@ -52,14 +52,3 @@ class SendError:
     def parse_response(self):
         if self.__resp['status']:
             self.status = True
-
-
-def a():
-    try:
-        x = 45
-        y = 0
-        e = x / y
-    except:
-        Debug.get_exception()
-
-a()

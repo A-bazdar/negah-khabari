@@ -57,7 +57,7 @@ class UserGeneralInfoModel(BaseModel):
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > save', data='collection > user')
             return self.result
 
     def get_all(self):
@@ -93,7 +93,7 @@ class UserGeneralInfoModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_all', data='collection > user')
             return self.result
 
     def is_exist(self):
@@ -110,14 +110,14 @@ class UserGeneralInfoModel(BaseModel):
                 return True
             return False
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > is_exist', data='collection > user')
             return False
 
     def get_count_by_group(self):
         try:
             return MongodbModel(collection='user', body={'group': self.group}).count()
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_count_by_group', data='collection > user')
             return 0
 
     def delete(self):
@@ -127,5 +127,5 @@ class UserGeneralInfoModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result

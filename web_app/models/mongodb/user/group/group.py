@@ -24,7 +24,7 @@ class UserGroupModel(BaseModel):
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > save', data='collection > user_group')
             return self.result
 
     def save_search_pattern(self, **body):
@@ -44,7 +44,7 @@ class UserGroupModel(BaseModel):
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > save_search_pattern', data='collection > user_group')
             return self.result
 
     def save_access_sources(self, agency, subject, geographic):
@@ -60,7 +60,7 @@ class UserGroupModel(BaseModel):
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > save_access_sources', data='collection > user_group')
             return self.result
 
     def save_bolton_management(self, **body):
@@ -85,7 +85,7 @@ class UserGroupModel(BaseModel):
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > save_bolton_management', data='collection > user_group')
             return self.result
 
     def save_charts_content(self, **body):
@@ -112,7 +112,7 @@ class UserGroupModel(BaseModel):
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > save_charts_content', data='collection > user_group')
             return self.result
 
     def get_all(self):
@@ -127,7 +127,7 @@ class UserGroupModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_all', data='collection > user_group')
             return self.result
 
     def get_one(self):
@@ -152,7 +152,7 @@ class UserGroupModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_one', data='collection > user_group')
             return self.result
 
     def delete(self):
@@ -162,5 +162,5 @@ class UserGroupModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > delete', data='collection > user_group')
             return self.result
