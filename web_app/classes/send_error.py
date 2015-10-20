@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import urllib
 
 import urllib2
 import datetime
@@ -28,10 +29,10 @@ class SendError:
         self.__resp = None
         self.status = False
         self.__send()
-        self.parse_response()
+        # self.parse_response()
 
     def __send(self):
-        print {
+        xx = {
             'project': self.project,
             'sub_system': self.sub_system,
             'severity': self.severity,
@@ -45,20 +46,8 @@ class SendError:
             'date': self.date,
             'data': self.data,
         }
-        req = urllib2.Request(self.url, data={
-            'project': self.project,
-            'sub_system': self.sub_system,
-            'severity': self.severity,
-            'tags': self.tags,
-            'file_name': self.file_name,
-            'file_address': self.file_address,
-            'function': self.function,
-            'line_num': self.line_num,
-            'code': self.code,
-            'message': self.message,
-            'date': self.date,
-            'data': self.data,
-        })
+        xx = urllib.urlencode(xx)
+        req = urllib2.Request(self.url, data=xx)
         page = urllib2.urlopen(req)
         self.__resp = page.read()
 

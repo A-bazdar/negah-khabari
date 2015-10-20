@@ -30,10 +30,6 @@ import tornado.web
 
 class AdminHandler(tornado.web.RequestHandler):
     def get(self):
-        try:
-            int('AA')
-        except:
-            Debug.get_exception(sub_system='web', severity='error', tags='admin_dashboard')
         self.render('admin/admin_base.html')
 
 
