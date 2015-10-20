@@ -31,6 +31,20 @@ class SendError:
         self.parse_response()
 
     def __send(self):
+        print {
+            'project': self.project,
+            'sub_system': self.sub_system,
+            'severity': self.severity,
+            'tags': self.tags,
+            'file_name': self.file_name,
+            'file_address': self.file_address,
+            'function': self.function,
+            'line_num': self.line_num,
+            'code': self.code,
+            'message': self.message,
+            'date': self.date,
+            'data': self.data,
+        }
         req = urllib2.Request(self.url, data={
             'project': self.project,
             'sub_system': self.sub_system,
