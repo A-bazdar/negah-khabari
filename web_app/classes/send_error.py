@@ -3,7 +3,6 @@
 
 import urllib2
 import datetime
-from web_app.classes.debug import Debug
 
 __author__ = 'Morteza'
 
