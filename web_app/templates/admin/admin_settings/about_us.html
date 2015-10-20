@@ -1,0 +1,81 @@
+{% extends '../admin_base.html' %}
+
+{% block other_css %}
+<link rel="stylesheet" href="{{ static_url('plugins/DatePicker/pwt-datepicker.css') }}">
+<style>
+    .colorpicker.dropdown-menu{
+        width: 148px;
+    }
+</style>
+{% end block other_css %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>تنظیمات عمومی</span> </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1">
+                                <form>
+                                    <div class="form_modal_body">
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <span class="form_label">از تاریخ</span>
+                                                    </div>
+                                                    <div class="col-md-9 col-sm-9">
+                                                        <input class="datePicker form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <span class="form_label">تا تاریخ</span>
+                                                    </div>
+                                                    <div class="col-md-9 col-sm-9">
+                                                        <input class="datePicker form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-12 col-sm-12">
+                                                <span class="form_label">محتوای صفحه</span>
+                                            </div>
+                                            <div class="col-md-12 col-sm-12">
+                                                <textarea name="editor1" id="editor1" rows="10" cols="80"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-12 col-sm-12 text-left">
+                                                <button class="btn R_butt_green">ثبت اطلاعات</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/DatePicker/pwt-date.js') }}"></script>
+<script src="{{ static_url('plugins/DatePicker/pwt-datepicker.js') }}"></script>
+<script src="{{ static_url('plugins/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ static_url('plugins/ckeditor/config.js') }}"></script>
+<script src="{{ static_url('plugins/ckeditor/styles.js') }}"></script>
+<script>
+    $(".datePicker").val("").pDatepicker();
+    CKEDITOR.replace( 'editor1' );
+
+</script>
+{% end block other_scripts %}

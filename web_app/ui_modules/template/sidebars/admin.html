@@ -28,7 +28,7 @@
                 <a href="{{ reverse_url('admin:source_management') }}"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت منابع خبری</a>
             </li>
             <li class="menu-main-item">
-                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت جداول</a>
+                <a href="{{ reverse_url('admin:table_management') }}"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت جداول</a>
             </li>
             <li class="menu-main-item">
                 <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت کاربر<span class="fa arrow"></span></a>
@@ -130,10 +130,10 @@
                         <a href="{{ reverse_url('admin:settings:font_settings') }}">فونت</a>
                     </li>
                     <li>
-                        <a href="">درباره ما</a>
+                        <a href="{{ reverse_url('admin:settings:about_us') }}">درباره ما</a>
                     </li>
                     <li>
-                        <a href="">تماس با ما</a>
+                        <a href="{{ reverse_url('admin:settings:contact_us') }}">تماس با ما</a>
                     </li>
                 </ul>
             </li>

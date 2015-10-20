@@ -1,0 +1,56 @@
+{% extends '../admin_base.html' %}
+
+{% block other_css %}
+<link rel="stylesheet" href="{{ static_url('plugins/DatePicker/pwt-datepicker.css') }}">
+<style>
+    .colorpicker.dropdown-menu{
+        width: 148px;
+    }
+</style>
+{% end block other_css %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>تنظیمات عمومی</span> </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1">
+                                <table class="table table-bordered source_news_table">
+                                    <tr>
+                                        <td>نام</td>
+                                        <td>ایمیل</td>
+                                        <td>پیام</td>
+                                        <td>امکانات</td>
+                                    </tr>
+                                    <tr>
+                                        <td>28600</td>
+                                        <td>1800</td>
+                                        <td>606542135480</td>
+                                        <td><i class="fa fa-trash-o"></i> </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/DatePicker/pwt-date.js') }}"></script>
+<script src="{{ static_url('plugins/DatePicker/pwt-datepicker.js') }}"></script>
+<script src="{{ static_url('plugins/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ static_url('plugins/ckeditor/config.js') }}"></script>
+<script src="{{ static_url('plugins/ckeditor/styles.js') }}"></script>
+<script>
+    $(".datePicker").val("").pDatepicker();
+    CKEDITOR.replace( 'editor1' );
+
+</script>
+{% end block other_scripts %}

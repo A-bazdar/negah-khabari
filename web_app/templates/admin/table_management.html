@@ -1,10 +1,196 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+{% extends 'admin_base.html' %}
 
-</body>
-</html>
+{% block other_css %}
+<link rel="stylesheet" href="{{ static_url('plugins/DatePicker/pwt-datepicker.css') }}">
+<link rel="stylesheet" href="{{ static_url('plugins/Lc_Switch/lc_switch.css') }}">
+{% end block other_css %}
+
+{% block container %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default margin-top-30 font-yekan">
+                    <div class="panel-heading"><i class="fa fa-folder-open-o"></i><span>مدیریت جداول</span> </div>
+                    <div class="panel-body">
+                        <div class="show_box">
+                            <div class="box_header">
+                                <span>جداول</span>
+                                <div class="new_user_btn" data-toggle="modal" href="#new_table_modal">
+                                    <i class="fa fa-plus"></i>افزودن
+                                </div>
+                                <div class="search_user_btn" data-toggle="modal" href="#search_user_modal">
+                                    <i class="fa fa-search"></i>جستجوی پیشرفته
+                                </div>
+                            </div>
+                            <div class="box_body">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <table class="table table-bordered source_news_table">
+                                            <tr>
+                                                <td>نام جدول</td>
+                                                <td>وضعیت</td>
+                                                <td>اضافه با تایید</td>
+                                                <td>پیش نمایش</td>
+                                                <td>امکانات</td>
+                                            </tr>
+                                            <tr>
+                                                <td>قیمت ارز</td>
+                                                <td>فعال</td>
+                                                <td><input type="checkbox"></td>
+                                                <td><a href="">پیش نمایش</a> </td>
+                                                <td> <i class="fa fa-pencil"></i><i class="fa fa-trash-o"></i> </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade in" id="new_table_modal" tabindex="-1" role="basic" aria-hidden="false">
+        <div class="modal-dialog" style="font-family: Yekan;width: 75%">
+            <div class="modal-content" style="border-radius: 7px !important; margin-top: 100px">
+                <div class="show_box">
+                    <div class="box_header">
+                        <div class="row">
+                            <div class="col-xs-11">
+                                <span>ساخت جدول</span>
+                            </div>
+                            <div class="col-xs-1 text-left">
+                                <span class="cursor fa fa-times"
+                                      style="font-size:12pt;color: #828282;margin-top: 5px;cursor: pointer"
+                                      data-dismiss="modal" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box_body" style="padding: 50px 10px">
+                        <form id="add_table">
+                            {% module xsrf_form_html() %}
+                            <input type="hidden" name="action" value="add">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="col-md-5 col-sm-5">
+                                        <span class="form_label">نام جدول</span>
+                                    </div>
+                                    <div class="col-md-7 col-sm-7">
+                                        <input type="text" name="table_name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="col-md-5 col-sm-5">
+                                        <span class="form_label">فعال</span>
+                                    </div>
+                                    <div class="col-md-7 col-sm-7">
+                                        <input type="checkbox">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="col-md-5 col-sm-5">
+                                        <span class="form_label">اضافه با تایید</span>
+                                    </div>
+                                    <div class="col-md-7 col-sm-7">
+                                        <input type="checkbox">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="col-md-5 col-sm-5">
+                                        <span class="form_label">تعداد نمایش</span>
+                                    </div>
+                                    <div class="col-md-7 col-sm-7">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="col-md-5 col-sm-5">
+                                        <span class="form_label">خواندن اخبار هر</span>
+                                    </div>
+                                    <div class="col-md-5 col-sm-5">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="col-md-2 col-sm-2">
+                                        <span class="form_label">دقیقه</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-12 col-sm-12">
+                                    <span class="form_label">تعریف جدول</span>
+                                    <hr style="width: 88%; margin-right: 5px; display: inline-block; vertical-align: -20px">
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-5 col-sm-5">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-4">
+                                            <span class="form_label">تعداد سطر</span>
+                                        </div>
+                                        <div class="col-md-8 col-sm-8">
+                                            <input type="text" id="row_count" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 col-sm-5">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-4">
+                                            <span class="form_label">تعداد ستون</span>
+                                        </div>
+                                        <div class="col-md-8 col-sm-8">
+                                            <input type="text" id="column_count" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-2 text-left">
+                                    <span class="R_butt_blue make_table" style="vertical-align: -6px">ساخت جدول</span>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-12 col-sm-12">
+                                    <div id="new_table_container">
+                                        <table class="table table-bordered new_table"></table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-xs-2 pull-left text-left">
+                                    <button type="submit" class="btn R_butt_green add-content-btn">افزودن</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% end block container %}
+
+{% block other_scripts %}
+<script src="{{ static_url('plugins/Lc_Switch/lc_switch.min.js') }}"></script>
+
+<script>
+    $('input[type=checkbox]').lc_switch();
+
+    $('.make_table').click(function(){
+        var row_count = $('#row_count').val();
+        var column_count = $('#column_count').val();
+        var i, j;
+        var html = '';
+        for(i = 0; i < row_count; i++){
+            html += '<tr>';
+            for(j = 0; j < column_count; j++) {
+                html += '<td><input type="text" placeholder="آدرس سایت" class="form-control text-center"><input type="text" placeholder="پوزیشن جدول" class="form-control text-center margin-top-10"></td>';
+            }
+            html += '</tr>';
+        }
+        $('.new_table').html(html);
+    });
+</script>
+{% end block other_scripts %}
