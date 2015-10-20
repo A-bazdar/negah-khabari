@@ -57,7 +57,6 @@ class NewsModel:
             }
 
             if not self.is_exist():
-                print self.link
                 self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).insert()
                 self.result['status'] = True
 
