@@ -626,3 +626,8 @@ class GetAgencyHandler(BaseHandler):
 
         except Exception:
             self.write("0")
+
+
+class IndexHandler(BaseHandler):
+    def get(self):
+        self.redirect(self.reverse_url('admin:dashboard'))
