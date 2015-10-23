@@ -104,7 +104,7 @@ def extract_news(document, b):
     if thumbnail is None or thumbnail == '':
         thumbnail = b['thumbnail']
     if title and body:
-        NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id']), date=date).insert()
+        print NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id']), date=date).insert()
 
 
 def news():
