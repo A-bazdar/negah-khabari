@@ -55,7 +55,7 @@ def extract_news(document, b):
     try:
         body = soap.select_one(b['agency']['news_body']).text.encode('utf-8').strip()
     except:
-        # Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=b['link'])
+        Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=b['link'])
         body = None
     try:
         if b['agency']['news_ro_title']:
@@ -63,17 +63,17 @@ def extract_news(document, b):
         else:
             ro_title = None
     except:
-        # Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_ro_title_news', data=b['link'])
+        Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_ro_title_news', data=b['link'])
         ro_title = None
     try:
         title = soap.select_one(b['agency']['news_title']).text.encode('utf-8').strip()
     except:
-        # Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_news', data=b['link'])
+        Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_news', data=b['link'])
         title = None
     try:
         summary = soap.select_one(b['agency']['news_summary']).text.encode('utf-8').strip()
     except:
-        # Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_summary_news', data=b['link'])
+        Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_summary_news', data=b['link'])
         summary = None
     try:
         news_date = soap.select_one(b['agency']['news_date']).text.replace(u'ي', u'ی').strip()
@@ -81,7 +81,7 @@ def extract_news(document, b):
         news_date = get_date(news_date)
         date = khayyam.JalaliDatetime().strptime(news_date, u'{}'.format(b['agency']['news_date_format'])).todatetime()
     except:
-        # Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_date_news', data=b['link'])
+        Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_date_news', data=b['link'])
         date = datetime.datetime.now()
 
     try:
@@ -89,7 +89,7 @@ def extract_news(document, b):
         if 'http' not in thumbnail and 'www' not in thumbnail:
             thumbnail = b['agency']['base_link'].encode('utf-8') + thumbnail
     except:
-        # Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_news', data=b['link'])
+        Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_news', data=b['link'])
         thumbnail = None
 
     if summary is None or summary == '':
@@ -103,12 +103,8 @@ def extract_news(document, b):
 
     if thumbnail is None or thumbnail == '':
         thumbnail = b['thumbnail']
-    print title.encode('utf-8')
-    print body.encode('utf-8')
-    print date
     if title and body:
-        pass
-        # NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id']), date=date).insert()
+        NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id']), date=date).insert()
 
 
 def news():
@@ -118,6 +114,8 @@ def news():
             data = get_url(b['link'])
             if data:
                 extract_news(data, b)
+            else:
+                print 'ERROR: ' + b['link']
 
 
 if __name__ == '__main__':
