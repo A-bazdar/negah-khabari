@@ -36,7 +36,7 @@ def get_url(url):
         response = urllib2.urlopen(iriToUri(clean_url(url)))
         return response.read()
     except:
-        Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_link_news', data=url)
+        # Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_link_news', data=url)
         return False
 
 
@@ -114,7 +114,7 @@ def extract_news(document, b):
 def news():
     briefs = BriefsModel().get_all()['value']
     for b in briefs:
-        if b['agency']['base_link'] == 'http://www.598.ir' and NewsModel(link=b['link']).is_exist():
+        if b["agency"]["base_link"] == 'http://www.598.ir' and NewsModel(link=b['link']).is_exist():
             data = get_url(b['link'])
             if data:
                 extract_news(data, b)
