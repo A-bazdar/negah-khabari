@@ -89,6 +89,7 @@ def extract_news(document, b):
         if 'http' not in thumbnail and 'www' not in thumbnail:
             thumbnail = b['agency']['base_link'].encode('utf-8') + thumbnail
     except:
+        print b['link']
         Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_news', data=b['link'])
         thumbnail = None
 
