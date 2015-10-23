@@ -36,7 +36,7 @@ def get_url(url):
         response = urllib2.urlopen(iriToUri(clean_url(url)))
         return response.read()
     except:
-        # Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_link_news', data=url)
+        Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_link_news', data=url)
         return False
 
 
