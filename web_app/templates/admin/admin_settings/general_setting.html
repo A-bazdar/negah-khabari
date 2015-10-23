@@ -1,7 +1,7 @@
 {% extends '../admin_base.html' %}
 
 {% block other_css %}
-<link rel="stylesheet" href="{{ static_url('plugins/bootstrap-colorpicker/css/colorpicker.css') }}">
+<link rel="stylesheet" href="{{ static_url('plugins/color-picker/spectrum.css') }}">
 <link rel="stylesheet" href="{{ static_url('plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}">
 <link rel="stylesheet" href="{{ static_url('plugins/DatePicker/pwt-datepicker.css') }}">
 <link rel="stylesheet" type="text/css" href="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
@@ -30,7 +30,7 @@
                                                         <span class="form_label">رنگ پیش زمینه</span>
                                                     </div>
                                                     <div class="col-md-9 col-sm-9">
-                                                        <input id="color_box" name="color" type="text" class="colorpicker-default form-control">
+                                                        <input id="custom" name="color" type="text" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -203,14 +203,14 @@
 {% end block container %}
 
 {% block other_scripts %}
-<script src="{{ static_url('plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script src="{{ static_url('plugins/color-picker/spectrum.js') }}"></script>
 <script src="{{ static_url('plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js') }}"></script>
 <script>
 $('input[name=tags]').tagsinput({
     trimValue: true
 });
-$('.colorpicker-default').colorpicker({
-    format: 'hex'
+$("#custom").spectrum({
+    color: "#f00"
 });
 
     var _time_steps = {

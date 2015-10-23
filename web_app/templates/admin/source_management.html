@@ -1,7 +1,7 @@
 {% extends admin_base.html %}
 
 {% block other_css %}
-<link rel="stylesheet" href="{{ static_url('plugins/bootstrap-colorpicker/css/colorpicker.css') }}">
+<link rel="stylesheet" href="{{ static_url('plugins/color-picker/spectrum.css') }}">
 <link rel="stylesheet" type="text/css" href="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
 <style>
     .colorpicker{
@@ -132,7 +132,7 @@
                                             <span class="form_label">رنگ</span>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input id="color_box" name="color" type="text" class="colorpicker-default form-control">
+                                            <input id="custom" name="color" type="text" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -313,15 +313,15 @@
 {% end block container %}
 
 {% block other_scripts %}
-<script src="{{ static_url('plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script src="{{ static_url('plugins/color-picker/spectrum.js') }}"></script>
 <script type="text/javascript" src="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
 
 <script>
 
     var trash = '<i class="fa fa-trash-o"></i>';
 
-    $('.colorpicker-default').colorpicker({
-            format: 'hex'
+    $("#custom").spectrum({
+        color: "#f00"
     });
 
     $('.add_field').click(function(){
