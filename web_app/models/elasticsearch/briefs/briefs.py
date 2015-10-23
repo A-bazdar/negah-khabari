@@ -53,6 +53,12 @@ class BriefsModel:
         except:
             return False
 
+    def delete(self):
+        try:
+            print ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, _id=self.id).delete()
+        except:
+            return False
+
     def insert(self):
         try:
             body = {

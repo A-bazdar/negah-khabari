@@ -31,12 +31,13 @@ def clean_url(url):
     return url.replace("'", "").replace('"', '')
 
 
-def get_url(url):
+def get_url(url, b_id):
     try:
         response = urllib2.urlopen(iriToUri(clean_url(url)))
         return response.read()
     except:
-        Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_link_news', data=url)
+        BriefsModel(_id=b_id).delete()
+        # Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_link_news', data=url)
         return False
 
 
@@ -111,11 +112,9 @@ def news():
     briefs = BriefsModel().get_all()['value']
     for b in briefs:
         if not NewsModel(link=b['link']).is_exist():
-            data = get_url(b['link'])
+            data = get_url(b['link'], b['id'])
             if data:
                 extract_news(data, b)
-            else:
-                print 'ERROR: ' + b['link']
 
 
 if __name__ == '__main__':
