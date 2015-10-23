@@ -51,6 +51,7 @@ class AgencyModel():
                 news_thumbnail=agency['news_thumbnail'],
             )
         except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_agency')
             return False
 
     def save(self):
@@ -81,7 +82,7 @@ class AgencyModel():
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='agency', severity='error', tags='save')
             return self.result
 
     def get_all(self):
@@ -97,7 +98,7 @@ class AgencyModel():
                 self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
             return self.result
 
     def get_all_by_category(self):
@@ -113,7 +114,7 @@ class AgencyModel():
                 self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_by_category')
             return self.result
 
     def get_one(self):
@@ -124,7 +125,7 @@ class AgencyModel():
                 return self.get_agency(r)
             return {}
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_one')
             return {}
 
     def delete(self):
@@ -134,5 +135,5 @@ class AgencyModel():
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='agency', severity='error', tags='delete')
             return self.result

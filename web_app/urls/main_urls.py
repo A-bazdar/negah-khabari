@@ -8,6 +8,8 @@ __author__ = 'Morteza'
 
 url_patterns = [
 
+    ("/", admin.IndexHandler, None, "index"),
+
     (r'^(?i)/Admin/Dashboard[/]?$', admin.AdminHandler),
     (r'^/Admin/Dashboard', admin.AdminHandler, None, "admin:dashboard"),
 

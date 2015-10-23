@@ -67,5 +67,4 @@ class UploadPic():
             return photo_name
 
         except:
-            Debug.get_exception()
             return 'default.jpg'

@@ -25,7 +25,7 @@ class SubjectModel(BaseModel):
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > save', data='collection > subject')
             return self.result
 
     def get_all(self):
@@ -53,7 +53,7 @@ class SubjectModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_all', data='collection > subject')
             return self.result
 
     def get_one(self):
@@ -70,7 +70,7 @@ class SubjectModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_one', data='collection > subject')
             return self.result
 
     def get_all_parent(self):
@@ -87,7 +87,7 @@ class SubjectModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_all_parent', data='collection > subject')
             return self.result
 
     def delete(self):
@@ -102,7 +102,7 @@ class SubjectModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > delete', data='collection > subject')
             return self.result
 
     def delete_childs(self):
@@ -112,5 +112,5 @@ class SubjectModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > delete_childs', data='collection > subject')
             return self.result

@@ -25,7 +25,7 @@ class DirectionModel(BaseModel):
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > save', data='collection > direction')
             return self.result
 
     def get_all(self, __type):
@@ -41,7 +41,7 @@ class DirectionModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_all', data='collection > direction')
             return self.result
 
     def get_one(self):
@@ -57,7 +57,7 @@ class DirectionModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > get_one', data='collection > direction')
             return self.result
 
     def delete(self):
@@ -67,5 +67,5 @@ class DirectionModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='mongodb > delete', data='collection > direction')
             return self.result

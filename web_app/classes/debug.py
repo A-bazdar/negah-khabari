@@ -1,6 +1,6 @@
-import logging
-import linecache
 import sys
+import traceback
+from web_app.classes.send_error import SendError
 
 
 class Debug:
@@ -8,23 +8,15 @@ class Debug:
         pass
 
     @classmethod
-    def get_exception(cls):
-        exc_type, exc_obj, tb = sys.exc_info()
-        f = tb.tb_frame
-        lineno = tb.tb_lineno
-        filename = f.f_code.co_filename
-        linecache.checkcache(filename)
-        line = linecache.getline(filename, lineno, f.f_globals)
-        print 'EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj)
-        return 'EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj)
+    def get_exception(cls, sub_system=None, severity=None, tags=None, data=None, send=True):
 
-    @classmethod
-    def log(cls, message):
-        logger = logging.getLogger('ChatServer2')
-        logger.setLevel(logging.DEBUG)
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        ch.setFormatter(formatter)
-        logger.addHandler(ch)
-        logger.info(message)
+        exc_type, message, exc_tb = sys.exc_info()
+        file_name, line_num, function, code = traceback.extract_tb(exc_tb)[-1]
+
+        file_address = file_name
+        file_name = file_name.split('/')[-1]
+        if send:
+            SendError(sub_system=sub_system, severity=severity, tags=tags, file_name=file_name, file_address=file_address,
+                      function=function, line_num=line_num, code=code, message=message, data=data)
+
+        print 'EXCEPTION IN ({}, LINE {} "{}"): {}'.format(file_name, line_num, code, message)

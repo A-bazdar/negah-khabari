@@ -46,7 +46,7 @@ class AdminManagementContentHandler(BaseHandler):
 
             self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='management > content')
             self.write(self.error_result)
 
 
@@ -90,7 +90,7 @@ class AdminManagementSubjectHandler(BaseHandler):
 
             self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='management > subject')
             self.write(self.error_result)
 
 
@@ -123,7 +123,7 @@ class AdminManagementCategoryHandler(BaseHandler):
 
             self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='management > category')
             self.write(self.error_result)
 
 
@@ -168,7 +168,7 @@ class AdminManagementGroupHandler(BaseHandler):
 
             self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='management > group')
             self.write(self.error_result)
 
 
@@ -213,7 +213,7 @@ class AdminManagementGeoHandler(BaseHandler):
 
             self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='management > geo_area')
             self.write(self.error_result)
 
 
@@ -248,5 +248,5 @@ class AdminManagementDirectionHandler(BaseHandler):
                 self.messages = [u"عملیا ت با خطا مواجه شد"]
             self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='management > direction')
             self.write(self.error_result)
