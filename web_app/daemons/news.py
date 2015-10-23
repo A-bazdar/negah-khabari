@@ -63,7 +63,7 @@ def extract_news(document, b):
         else:
             ro_title = None
     except:
-        Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_ro_title_news', data=b['link'])
+        Debug.get_exception(sub_system='engine_feed', severity='message', tags='get_ro_title_news', data=b['link'])
         ro_title = None
     try:
         title = soap.select_one(b['agency']['news_title']).text.encode('utf-8').strip()
@@ -73,7 +73,7 @@ def extract_news(document, b):
     try:
         summary = soap.select_one(b['agency']['news_summary']).text.encode('utf-8').strip()
     except:
-        Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_summary_news', data=b['link'])
+        Debug.get_exception(sub_system='engine_feed', severity='message', tags='get_summary_news', data=b['link'])
         summary = None
     try:
         news_date = soap.select_one(b['agency']['news_date']).text.replace(u'ي', u'ی').strip()
@@ -89,8 +89,7 @@ def extract_news(document, b):
         if 'http' not in thumbnail and 'www' not in thumbnail:
             thumbnail = b['agency']['base_link'].encode('utf-8') + thumbnail
     except:
-        print b['link']
-        Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_news', data=b['link'])
+        Debug.get_exception(sub_system='engine_feed', severity='message', tags='get_thumbnail_news', data=b['link'])
         thumbnail = None
 
     if summary is None or summary == '':
