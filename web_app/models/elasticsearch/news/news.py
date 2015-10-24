@@ -72,17 +72,20 @@ class NewsModel:
         except:
             print _source
             print _id
-        agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
-        self.value.append(dict(
-            id=_id,
-            link=_source['link'],
-            title=_source['title'],
-            ro_title=_source['ro_title'],
-            summary=_source['summary'],
-            thumbnail=_source['thumbnail'],
-            agency=agency,
-            date=_source['date']
-        ))
+        try:
+            agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
+            self.value.append(dict(
+                id=_id,
+                link=_source['link'],
+                title=_source['title'],
+                ro_title=_source['ro_title'],
+                summary=_source['summary'],
+                thumbnail=_source['thumbnail'],
+                agency=agency,
+                date=_source['date']
+            ))
+        except:
+            pass
 
     def search(self, words=None, _page=0, _size=20, start=None, end=None, agency='all', category='all'):
         try:
