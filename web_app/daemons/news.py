@@ -122,4 +122,5 @@ from web_app.models.elasticsearch.news.news import NewsModel
 
 news = NewsModel().get_all()
 for i in news:
-    print NewsModel(_id=i['id'], date=i['date']).update_read_date()
+    print 1111
+    # print NewsModel(_id=i['id'], date=i['date']).update_read_date()
