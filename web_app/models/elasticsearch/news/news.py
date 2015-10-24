@@ -54,7 +54,8 @@ class NewsModel:
                 'body': self.body,
                 'thumbnail': self.thumbnail,
                 'agency': self.agency,
-                'date': self.date
+                'date': self.date,
+                'read_date': datetime.datetime.now(),
             }
             if not self.is_exist():
                 self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).insert()
