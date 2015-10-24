@@ -58,3 +58,25 @@ class CustomDateTime:
                 return str(minute) + ' دقیقه پیش'
             else:
                 return 'چند لحظه پیش'
+
+    @staticmethod
+    def generate_date_time(date=None, add=True, hours=None):
+        try:
+            if hours:
+                if add:
+                    return date + datetime.timedelta(hours=hours)
+                else:
+                    return date - datetime.timedelta(hours=hours)
+        except:
+            return date
+
+    def get_last_24_hour_time(self, _date=None):
+        _date = datetime.datetime.now()
+        a = '0' + str(_date.hour) if _date.hour < 10 else str(_date.hour)
+        c = str(_date.date()) + ' ' + a + ':00:00'
+        _date = datetime.datetime.strptime(c, '%Y-%m-%d %H:%M:%S')
+        ls = [_date]
+        for i in range(1, 12):
+            self.generate_date_time()
+            a = self.generate_date_time(date=ls[-1], add=False, hours=1)
+            ls.append(a)

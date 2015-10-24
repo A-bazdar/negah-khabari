@@ -3,6 +3,7 @@
 
 from web_app.handlers.admin import admin
 from web_app.handlers.admin import management
+from web_app.handlers.admin.statistic import statistic
 
 __author__ = 'Morteza'
 
@@ -152,6 +153,8 @@ url_patterns = [
      "admin:settings:contact_us"),
 
     (r'^(?i)/Admin/Settings/AboutUs[/]?$', admin.AdminAboutUsHandler),
-    (r'^/Admin/Settings/AboutUs', admin.AdminAboutUsHandler, None,
-     "admin:settings:about_us"),
+    (r'^/Admin/Settings/AboutUs', admin.AdminAboutUsHandler, None, "admin:settings:about_us"),
+
+    (r'^(?i)/Admin/Statistics/News24Hours[/]?$', statistic.News24HoursHandler),
+    (r'^/Admin/Statistics/News24Hours', statistic.News24HoursHandler, None, "admin:statistic:news_24_hours")
 ]
