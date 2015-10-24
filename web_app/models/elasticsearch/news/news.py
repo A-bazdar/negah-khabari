@@ -286,3 +286,43 @@ class NewsModel:
         except:
             Debug.get_exception(sub_system='statistic_engine_feed', severity='critical_error', tags='get_agency_news_by_time')
             return self.result
+
+    def get_all(self):
+        try:
+            body = {
+                "from": 0, "size": 1000000,
+                "query": {
+                    "match_all": {}
+                }
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            for b in r['hits']['hits']:
+                self.get_news(b['_source'], b['_id'])
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='web', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
+    def update_read_date(self):
+        try:
+            body = {
+                "script": "ctx._source.read_date = __read_date",
+                "params": {
+                    "__read_date": self.date
+                }
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=self.id).update()
+            self.result['value'] = r
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='web', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
