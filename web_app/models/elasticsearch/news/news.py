@@ -67,8 +67,8 @@ class NewsModel:
             return self.result
 
     def get_news(self, _source, _id):
-        agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
         print _source['agency'], '##'
+        agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
         print agency
         self.value.append(dict(
             id=_id,
