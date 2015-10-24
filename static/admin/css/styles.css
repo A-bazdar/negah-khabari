@@ -1,6 +1,9 @@
 @charset "utf-8";
 /* CSS Document */
-
+.navbar-static-top{
+    position: fixed !important;
+    width: 100%;
+}
 .header{
     background: white;
     box-shadow: 0 0 10px #aaa;
