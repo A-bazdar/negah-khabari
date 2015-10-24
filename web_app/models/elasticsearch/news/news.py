@@ -68,6 +68,8 @@ class NewsModel:
 
     def get_news(self, _source, _id):
         agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
+        print _source['agency']
+        print agency
         self.value.append(dict(
             id=_id,
             link=_source['link'],
@@ -298,7 +300,6 @@ class NewsModel:
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
-                print b['_source']
                 self.get_news(b['_source'], b['_id'])
             self.result['value'] = self.value
             self.result['status'] = True
