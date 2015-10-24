@@ -71,6 +71,7 @@ class NewsModel:
             a = _source['agency'], '##'
         except:
             print _source
+            print _id
         agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
         self.value.append(dict(
             id=_id,
