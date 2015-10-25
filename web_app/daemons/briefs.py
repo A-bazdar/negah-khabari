@@ -48,7 +48,8 @@ def extract_briefs(document, a):
         try:
             title = i.select_one(a['brief_title']).text.encode('utf-8').strip()
         except:
-            Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_brief', data=i['link'].encode('utf-8'))
+            print i['link']
+            Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_brief', data=i['link'])
             title = None
         try:
             summary = i.select_one(a['brief_summary']).text.encode('utf-8').strip()
