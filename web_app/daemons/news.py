@@ -108,14 +108,9 @@ def extract_news(document, b):
         NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(b['agency']['id']), date=date).insert()
 
 
-def news():
-    briefs = BriefsModel().get_all()['value']
-    for b in briefs:
-        if not NewsModel(link=b['link']).is_exist():
-            data = get_url(b['link'], b['id'])
-            if data:
-                extract_news(data, b)
-
-
-if __name__ == '__main__':
-    news()
+def news(brief):
+    b = BriefsModel(_id=brief).get_one()['value']
+    if not NewsModel(link=b['link']).is_exist():
+        data = get_url(b['link'], b['id'])
+        if data:
+            extract_news(data, b)

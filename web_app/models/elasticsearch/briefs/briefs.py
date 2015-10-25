@@ -102,3 +102,16 @@ class BriefsModel:
             Debug.get_exception(sub_system='web', severity='error', tags='briefs > count_all',
                                 data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
             return self.result
+
+    def get_one(self):
+        try:
+            r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, _id=self.id).get_one()
+            self.get_brief(r['_source'], r['_id'])
+            self.result['value'] = self.value[0]
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='web', severity='error', tags='briefs > count_all',
+                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+            return self.result

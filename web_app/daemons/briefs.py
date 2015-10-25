@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from web_app.classes.debug import Debug
+from web_app.daemons.news import news
 
 sys.path.append("/root/projects/negah-khabari")
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
@@ -63,7 +64,8 @@ def extract_briefs(document, a):
             Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_brief', data=i['link'])
             thumbnail = None
         if link and title and summary and thumbnail:
-            BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(a['id'])).insert()
+            _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(a['id'])).insert()
+            news(_b['value']['_id'])
             counter += 1
     print counter
     print '-------------------------------------------------'
