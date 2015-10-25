@@ -15,8 +15,8 @@ class Debug:
 
         file_address = file_name
         file_name = file_name.split('/')[-1]
-        # if send:
-        #     SendError(sub_system=sub_system, severity=severity, tags=tags, file_name=file_name, file_address=file_address,
-        #               function=function, line_num=line_num, code=code, message=message, data=data)
+        if send:
+            SendError(sub_system=sub_system, severity=severity, tags=tags, file_name=file_name, file_address=file_address,
+                      function=function, line_num=line_num, code=code, message=message, data=data)
 
         print 'EXCEPTION IN ({}, LINE {} "{}"): {}'.format(file_name, line_num, code, message)
