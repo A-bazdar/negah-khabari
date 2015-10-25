@@ -65,7 +65,10 @@ def extract_briefs(document, a):
         if link and title and summary and thumbnail:
             _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail, agency=str(a['id'])).insert()
             print _b
-            news(_b['value']['_id'])
+            try:
+                news(_b['value']['_id'])
+            except:
+                pass
             counter += 1
     print counter
     print '-------------------------------------------------'
