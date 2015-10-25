@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
-from web_app.classes.debug import Debug
-from web_app.daemons.news import news
 
 sys.path.append("/root/projects/negah-khabari")
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
 from web_app.models.mongodb.agency.agency import AgencyModel
 import urllib2
 from bs4 import BeautifulSoup
-
+from web_app.classes.debug import Debug
+from web_app.daemons.news import news
 __author__ = 'Morteza'
 
 
