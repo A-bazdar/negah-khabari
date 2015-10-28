@@ -60,23 +60,77 @@ class CustomDateTime:
                 return 'چند لحظه پیش'
 
     @staticmethod
-    def generate_date_time(date=None, add=True, hours=None):
+    def generate_date_time(date=None, add=True, _type=None, value=0):
         try:
-            if hours:
+            if _type == 'hours':
                 if add:
-                    return date + datetime.timedelta(hours=hours)
+                    return date + datetime.timedelta(hours=value)
                 else:
-                    return date - datetime.timedelta(hours=hours)
+                    return date - datetime.timedelta(hours=value)
+            if _type == 'days':
+                if add:
+                    return date + datetime.timedelta(days=value)
+                else:
+                    return date - datetime.timedelta(days=value)
+            if _type == 'weeks':
+                if add:
+                    return date + datetime.timedelta(weeks=value)
+                else:
+                    return date - datetime.timedelta(weeks=value)
+            if _type == 'months':
+                if add:
+                    return date + datetime.timedelta(days=value * 30)
+                else:
+                    return date - datetime.timedelta(days=value * 30)
+            if _type == 'years':
+                if add:
+                    return date + datetime.timedelta(days=value * 365)
+                else:
+                    return date - datetime.timedelta(days=value * 365)
         except:
             return date
 
     def get_last_24_hour_time(self, _date=None):
-        _date = datetime.datetime.now()
         a = '0' + str(_date.hour) if _date.hour < 10 else str(_date.hour)
         c = str(_date.date()) + ' ' + a + ':00:00'
         _date = datetime.datetime.strptime(c, '%Y-%m-%d %H:%M:%S')
         ls = [_date]
-        for i in range(1, 12):
-            self.generate_date_time()
-            a = self.generate_date_time(date=ls[-1], add=False, hours=1)
+        for i in range(1, 25):
+            a = self.generate_date_time(date=ls[-1], add=False, _type='hours', value=1)
             ls.append(a)
+
+        return ls
+
+    def get_list_time(self, start_date=None, end_date=None):
+        ls = []
+        _type = ''
+        days = (end_date - start_date).days
+        if days == 0:
+            _type = 'hours'
+            while start_date <= end_date:
+                ls.append(start_date)
+                start_date = self.generate_date_time(date=start_date, add=True, _type='hours', value=1)
+        elif 1 <= days <= 14:
+            _type = 'days'
+            while start_date <= end_date:
+                ls.append(start_date)
+                start_date = self.generate_date_time(date=start_date, add=True, _type='days', value=1)
+        elif 14 < days <= 70:
+            _type = 'weeks'
+            while start_date <= end_date:
+                ls.append(start_date)
+                start_date = self.generate_date_time(date=start_date, add=True, _type='weeks', value=1)
+            ls.append(end_date)
+        elif 70 < days <= 365:
+            _type = 'month'
+            while start_date <= end_date:
+                ls.append(start_date)
+                start_date = self.generate_date_time(date=start_date, add=True, _type='days', value=30)
+            ls.append(end_date)
+        elif days > 365:
+            _type = 'years'
+            while start_date < end_date:
+                ls.append(start_date)
+                start_date = self.generate_date_time(date=start_date, add=True, _type='days', value=365)
+            ls.append(end_date)
+        return ls, _type

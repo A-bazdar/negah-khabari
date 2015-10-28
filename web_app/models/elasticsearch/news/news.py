@@ -207,11 +207,12 @@ class NewsModel:
     def get_news_by_time(self, start=None, end=None):
         try:
             body = {
-                "from": 0, "size": 10,
-                "range": {
-                    "date": {
-                        "lt": str(end.date()) + 'T' + str(end.time()),
-                        "gte": str(start.date()) + 'T' + str(start.time())
+                "filter": {
+                    "range": {
+                        "read_date": {
+                            "lt": str(end.date()) + 'T' + str(end.time()),
+                            "gte": str(start.date()) + 'T' + str(start.time())
+                        }
                     }
                 }
             }
@@ -239,13 +240,12 @@ class NewsModel:
         try:
             if start and end:
                 body = {
-                    "from": 0, "size": 10,
                     "filter": {
                         "and": {
                             "filters": [
                                 {
                                     "range": {
-                                        "date": {
+                                        "read_date": {
                                             "lt": str(end.date()) + 'T' + str(end.time()),
                                             "gte": str(start.date()) + 'T' + str(start.time())
                                         }
