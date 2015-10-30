@@ -117,7 +117,7 @@ def news(brief):
 
 
 import time
-a = NewsModel().get_all()
+a = NewsModel().get_all()['value']
 for i in a:
     x = i['read_date'].split('T')
     read_date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
