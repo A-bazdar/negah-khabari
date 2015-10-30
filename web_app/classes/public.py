@@ -29,7 +29,7 @@ class CreateID():
         return str(random.randint(100000000000, 999999999999) * random.randrange(100000, 999999))[4:13]
 
 
-class CreatePassword():
+class CreateHash():
     def __init__(self):
         pass
 
@@ -48,8 +48,9 @@ class CreatePassword():
 
 
 class UploadPic():
-    def __init__(self, name=None, handler=None, folder='avatars'):
+    def __init__(self, name=None, handler=None, folder='avatars', default='default.jpg'):
         self.name = name
+        self.default = default
         self.__handler = handler
         self.folder = folder
 
@@ -67,4 +68,4 @@ class UploadPic():
             return photo_name
 
         except:
-            return 'default.jpg'
+            return self.default

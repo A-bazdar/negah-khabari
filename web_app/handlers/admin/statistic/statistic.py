@@ -60,7 +60,7 @@ class AgencyNewsHandler(BaseHandler):
         self.data['this_agency'] = agency
         self.data['agencies'] = agencies
         self.data['time_type'] = 'hour'
-        self.data['time_value'] = 24
+        self.data['time_value'] = 23
         self.render('admin/statistic/agency_news.html', **self.data)
 
     @staticmethod
@@ -103,6 +103,9 @@ class AgencyNewsHandler(BaseHandler):
                 data.append(news['count_all'])
             value = {'dataProvider': data_provider, 'categories': categories,
                      'data': data}
-            self.write({'status': True, 'message': [], 'value': value})
+            self.status = True
+            self.value = value
+            self.write(self.result)
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='web', severity='error', tags='statistic_news')
+            self.write(self.error_result)

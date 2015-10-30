@@ -5,8 +5,9 @@ import datetime
 import khayyam
 from web_app.classes.date import CustomDateTime
 from web_app.classes.debug import Debug
-from web_app.classes.public import UploadPic, CreateID
+from web_app.classes.public import UploadPic, CreateID, CreateHash
 from config import Config
+from tornado import gen
 from web_app.handlers.base import BaseHandler
 from web_app.models.elasticsearch.briefs.briefs import BriefsModel
 from web_app.models.elasticsearch.news.news import NewsModel
@@ -17,7 +18,7 @@ from web_app.models.mongodb.direction.direction import DirectionModel
 from web_app.models.mongodb.geographic.geographic import GeographicModel
 from web_app.models.mongodb.group.group import GroupModel
 from web_app.models.mongodb.subject.subject import SubjectModel
-from web_app.models.mongodb.user.general_info.general_info import UserGeneralInfoModel
+from web_app.models.mongodb.user.general_info.general_info import UserModel
 from web_app.models.mongodb.user.group.group import UserGroupModel
 import os
 __author__ = 'Omid'
@@ -31,6 +32,21 @@ import tornado.web
 class AdminHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_base.html')
+        
+        
+class LogoutHandler(BaseHandler):
+    def get_post(self, *args, **kwargs):
+        for i in self.session.keys():
+            self.session.delete(i)
+        self.redirect(self.reverse_url('index'))
+
+    @gen.coroutine
+    def get(self, *args, **kwargs):
+        self.get_post(self, args, kwargs)
+
+    @gen.coroutine
+    def post(self, *args, **kwargs):
+        self.get_post(self, args, kwargs)
 
 
 class AdminSourceHandler(BaseHandler):
@@ -96,7 +112,7 @@ class AdminSourceHandler(BaseHandler):
 
 class AdminUserGeneralInfoHandler(BaseHandler):
     def get(self):
-        self.data['users'] = UserGeneralInfoModel().get_all()['value']
+        self.data['users'] = UserModel().get_all_user()['value']
         self.data['user_groups'] = UserGroupModel().get_all()['value']
         self.render('admin/user_management/general_info.html', **self.data)
 
@@ -109,6 +125,7 @@ class AdminUserGeneralInfoHandler(BaseHandler):
                 self.check_sent_value("name", user, "name", u"نام را وارد کنید.")
                 self.check_sent_value("family", user, "family", u"نام خانوادگی را وارد کنید.")
                 self.check_sent_value("organization", user, "organization", u"سازمان را وارد کنید.")
+                self.check_sent_value("username", user, "username", u"نام کاربری را وارد کنید.")
                 self.check_sent_value("password", user, "password", u"رمز عبور را وارد کنید.")
                 self.check_sent_value("phone", user, "phone", u"تلفن را وارد کنید.")
                 self.check_sent_value("mobile", user, "mobile", u"موبایل را وارد کنید.")
@@ -121,7 +138,7 @@ class AdminUserGeneralInfoHandler(BaseHandler):
                 self.check_sent_value("archive_start_date", user, "archive_start_date", u"دسترسی به آرشیو را وارد کنید.")
                 self.check_sent_value("archive_end_date", user, "archive_end_date", u"دسترسی به آرشیو را وارد کنید.")
                 self.check_sent_value("group", user, "group", u"گروه کاربری را وارد کنید.")
-
+                user['role'] = 'USER'
                 photo_name = UploadPic(handler=self, name='pic').upload()
 
                 if not len(self.errors):
@@ -131,7 +148,7 @@ class AdminUserGeneralInfoHandler(BaseHandler):
                     user['register_end_date'] = CustomDateTime(return_date=True, date_value=user['register_end_date']).to_gregorian()
                     user['archive_start_date'] = CustomDateTime(return_date=True, date_value=user['archive_start_date']).to_gregorian()
                     user['archive_end_date'] = CustomDateTime(return_date=True, date_value=user['archive_end_date']).to_gregorian()
-                    new_user = UserGeneralInfoModel(**user).save()
+                    new_user = UserModel(**user).save()
                     user['id'] = new_user['value']
                     self.value = dict(
                         id=user['id'],
@@ -148,7 +165,7 @@ class AdminUserGeneralInfoHandler(BaseHandler):
 
             elif action == 'delete':
                 user = self.get_argument('user', '')
-                UserGeneralInfoModel(_id=ObjectId(user)).delete()
+                UserModel(_id=ObjectId(user)).delete()
                 self.status = True
             else:
                 self.messages = [u"عملیا ت با خطا مواجه شد"]
@@ -163,7 +180,7 @@ class AdminUserGroupHandler(BaseHandler):
     def get(self):
         self.data['user_groups'] = UserGroupModel().get_all()['value']
         for g in self.data['user_groups']:
-            g['count_user'] = UserGeneralInfoModel(group=str(g['id'])).get_count_by_group()
+            g['count_user'] = UserModel(group=str(g['id'])).get_count_by_group()
 
         categories = CategoryModel().get_all()['value']
 
@@ -487,13 +504,69 @@ class AdminContactUsHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_settings/contact_us.html')
 
-class AdminLoginHandler(tornado.web.RequestHandler):
+
+class AdminLoginHandler(BaseHandler):
     def get(self):
+        if self.is_authenticated():
+            self.redirect(self.reverse_url('admin:dashboard'))
+            return
         self.render('admin/admin_login.html')
 
-class AdminProfileHandler(tornado.web.RequestHandler):
+    def post(self):
+        try:
+            d = dict()
+            self.check_sent_value("mobile", d, "username", u"شماره موبایل را وارد کنید.")
+            self.check_sent_value("password", d, "password", u"کلمه عبور را وارد کنید.")
+            if not len(self.errors):
+                u = UserModel(mobile=d['username'], email=d['username'], username=d['username']).count()
+                if u:
+                    u = UserModel(mobile=d['username'], email=d['username'], username=d['username']).get_one()['value']
+                    if u['role'] == 'ADMIN' and u['password'] == CreateHash().create(d['password']):
+                        u['id'] = str(u['id'])
+                        self.current_user = u['id']
+                        self.full_current_user = u
+                        self.status = True
+                    else:
+                        self.messages = [u"کلمه عبور اشتباه است."]
+                else:
+                    self.messages = [u"این حساب کاربری وجود ندارد."]
+            else:
+                self.messages = self.errors
+            self.write(self.result)
+        except:
+            Debug.get_exception(sub_system='web', severity='error', tags='statistic_news')
+            self.write(self.error_result)
+
+
+class AdminProfileHandler(BaseHandler):
     def get(self):
-        self.render('admin/admin_profile.html')
+        self.data['admin'] = UserModel().get_admin()['value']
+        self.render('admin/admin_profile.html', **self.data)
+
+    def post(self):
+        # try:
+            admin = UserModel().get_admin()['value']
+            user = dict()
+            self.check_sent_value("name", user, "name", u"نام را وارد کنید.")
+            self.check_sent_value("family", user, "family", u"نام خانوادگی را وارد کنید.")
+            self.check_sent_value("username", user, "username", u"نام کاربری را وارد کنید.")
+            self.check_sent_value("mobile", user, "mobile", u"موبایل را وارد کنید.")
+            self.check_sent_value("email", user, "email", u"ایمیل را وارد کنید.")
+            password = self.get_argument('password', None)
+            if password is not None and password != '':
+                user['password'] = password
+            photo_name = UploadPic(handler=self, name='pic', default=admin['pic']).upload()
+            if not len(self.errors):
+                user['pic'] = photo_name
+                UserModel(**user).update_admin()
+                self.status = True
+            else:
+                self.messages = self.errors
+
+            self.write(self.result)
+        # except:
+        #     Debug.get_exception(sub_system='web', severity='error', tags='user_management > general_info')
+        #     self.write(self.result)
 
 class AdminChangePasswordHandler(tornado.web.RequestHandler):
     def get(self):
@@ -506,19 +579,25 @@ class ValodationHandler(tornado.web.RequestHandler):
             _type = self.get_argument('type', None)
             if _type == 'phone':
                 phone = self.get_argument('phone', None)
-                if UserGeneralInfoModel(phone=phone).is_exist():
+                if UserModel(phone=phone).is_exist():
+                    self.write("false")
+                else:
+                    self.write("true")
+            if _type == 'username':
+                username = self.get_argument('username', None)
+                if UserModel(username=username).is_exist():
                     self.write("false")
                 else:
                     self.write("true")
             elif _type == 'mobile':
                 mobile = self.get_argument('mobile', None)
-                if UserGeneralInfoModel(mobile=mobile).is_exist():
+                if UserModel(mobile=mobile).is_exist():
                     self.write("false")
                 else:
                     self.write("true")
             elif _type == 'email':
                 email = self.get_argument('email', None)
-                if UserGeneralInfoModel(email=email).is_exist():
+                if UserModel(email=email).is_exist():
                     self.write("false")
                 else:
                     self.write("true")
@@ -630,4 +709,4 @@ class GetAgencyHandler(BaseHandler):
 
 class IndexHandler(BaseHandler):
     def get(self):
-        self.redirect(self.reverse_url('admin:dashboard'))
+        self.redirect(self.reverse_url('admin:login'))

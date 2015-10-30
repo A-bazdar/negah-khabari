@@ -27,7 +27,7 @@
                                 <table class="table table-bordered source_news_table users-table">
                                     <tr>
                                         <td>سازمان</td>
-                                        <td>نام خانوادگی</td>
+                                        <td>نام و نام خانوادگی</td>
                                         <td>نام کاربری</td>
                                         <td>ایمیل</td>
                                         <td>آخرین بازدید</td>
@@ -40,8 +40,8 @@
                                     {% for user in users %}
                                         <tr class="user-row">
                                             <td>{{ user['organization'] }}</td>
-                                            <td>{{ user['family'] }}</td>
-                                            <td>{{ user['name'] }}</td>
+                                            <td>{{ user['name'] + ' ' + user['family'] }}</td>
+                                            <td>{{ user['username'] }}</td>
                                             <td>{{ user['email'] }}</td>
                                             <td>93/06/02</td>
                                             <td>{{ user['mobile'] }}</td>
@@ -114,6 +114,14 @@
                                         </div>
                                         <div class="col-xs-9">
                                             <input type="text" name="family" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-xs-3">
+                                            <span class="form_label">نام کاربری</span>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <input type="text" name="username" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
@@ -659,7 +667,7 @@
                     url: "{{ reverse_url("validation") }}",
                     type: "post",
                     data: {
-                        phone: function () {
+                        mobile: function () {
                             return $("input[name=mobile]").val();
                         },
                         _xsrf: '{{ handler.xsrf_token }}',
@@ -680,6 +688,20 @@
                         },
                         _xsrf: '{{ handler.xsrf_token }}',
                         type: 'phone'
+                    }
+                }
+            },
+            username: {
+                required: false,
+                remote: {
+                    url: "{{ reverse_url("validation") }}",
+                    type: "post",
+                    data: {
+                        username: function () {
+                            return $("input[name=username]").val();
+                        },
+                        _xsrf: '{{ handler.xsrf_token }}',
+                        type: 'username'
                     }
                 }
             },

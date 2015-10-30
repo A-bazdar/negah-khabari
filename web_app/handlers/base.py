@@ -47,9 +47,21 @@ class BaseHandler(tornado.web.RequestHandler, SessionMixin, NotificationMixin):
         )
         self.errors = []
 
-    def get_current_user(self):
-        pass
-        # return self.session.get('current_user')
+    @property
+    def current_user(self):
+        return self.session.get('current_user')
+
+    @current_user.setter
+    def current_user(self, current_user):
+        self.session.set('current_user', current_user)
+
+    @property
+    def full_current_user(self):
+        return self.session.get('full_current_user')
+
+    @full_current_user.setter
+    def full_current_user(self, full_current_user):
+        self.session.set('full_current_user', full_current_user)
 
     def add_error(self, message):
         error_list = self.session.get('error_list')
@@ -70,7 +82,7 @@ class BaseHandler(tornado.web.RequestHandler, SessionMixin, NotificationMixin):
         return True if self.session.get('error_list') is not None else False
 
     def is_authenticated(self):
-        if self.get_current_user() is not None:
+        if self.current_user is not None:
             return True
         return False
 

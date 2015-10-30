@@ -14,6 +14,9 @@ url_patterns = [
     (r'^(?i)/Admin/Dashboard[/]?$', admin.AdminHandler),
     (r'^/Admin/Dashboard', admin.AdminHandler, None, "admin:dashboard"),
 
+    (r'^(?i)/Logout[/]?$', admin.LogoutHandler),
+    ("/Logout", admin.LogoutHandler, None, "logout"),
+
     (r'^(?i)/Admin/Login[/]?$', admin.AdminLoginHandler),
     (r'^/Admin/Login', admin.AdminLoginHandler, None, "admin:login"),
 

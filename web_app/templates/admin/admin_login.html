@@ -27,24 +27,28 @@
         <div class="col-md-4 col-md-offset-4 font-yekan">
             <div class="login-panel panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">لطفا وارد شوید</h3>
+                    <h3 class="panel-title text-center">لطفا وارد شوید</h3>
                 </div>
                 <div class="panel-body">
-                    <form role="form">
+                    <form id="admin_login">
+                        {% module xsrf_form_html() %}
                         <fieldset>
                             <div class="form-group">
-                                <input class="form-control" placeholder="نام کاربری" name="email" type="email" autofocus>
+                                <input class="form-control text-center" maxlength="11" placeholder="شماره موبایل" name="mobile" type="text" autofocus>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="کلمه عبور" name="password" type="password" value="">
+                                <input class="form-control text-center" placeholder="کلمه عبور" name="password" type="password" value="">
                             </div>
                             <div class="checkbox">
                                 <label>
                                     <input name="remember" type="checkbox" value="Remember Me">مرا به خاطر بسپار
                                 </label>
                             </div>
+                            <div class="row text-center errors" style="color: red">
+
+                            </div>
                             <!-- Change this to a button or input when using this as a form -->
-                            <a href="index.html" class="btn btn-lg btn-success btn-block">ورود</a>
+                            <button class="btn btn-lg btn-success btn-block admin-login-btn">ورود</button>
                         </fieldset>
                     </form>
                 </div>
@@ -61,6 +65,49 @@
 
 <script src="/static/admin/js/sb-admin-2.js"></script>
 
+<script>
+    var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+    var __a = true;
+    $('#admin_login').submit(function(e){
+        if(__a){
+            __a = false;
+            e.preventDefault();
+            var btn = $('.admin-login-btn') ;
+            btn.html(loader);
+            var postData = $("#admin_login").serializeArray();
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (!status) {
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'متاسفانه در سیستم خطایی به وجود آمده، لطفا دوباره امتحان کنید.';
+                            $('.errors').html(error);
+                            btn.html('ورود');
+                            __a = true;
+                        }else{
+                            location.href = '{{ reverse_url('admin:dashboard') }}';
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('ورود');
+                            __a = true;
+                        });
+                    }
+                });
+        }
+    });
+</script>
 </body>
 
 </html>
