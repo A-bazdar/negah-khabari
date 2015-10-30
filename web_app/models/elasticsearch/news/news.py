@@ -244,6 +244,7 @@ class NewsModel:
     def get_agency_news_by_time(self, start=None, end=None):
         try:
             if start and end:
+                print self.agency
                 if self.agency != "all":
                     start = int(time.mktime(start.timetuple()))
                     end = int(time.mktime(end.timetuple()))
