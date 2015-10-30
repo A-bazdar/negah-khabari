@@ -244,31 +244,43 @@ class NewsModel:
     def get_agency_news_by_time(self, start=None, end=None):
         try:
             if start and end:
-                start = int(time.mktime(start.timetuple()))
-                end = int(time.mktime(end.timetuple()))
-                body = {
-                    "filter": {
-                        "and": {
-                            "filters": [
-                                {
-                                    "range": {
-                                        "read_timestamp": {
-                                            "lt": end,
-                                            "gte": start
-                                        }
-                                    }
-                                },
-                                {
-                                    "query": {
-                                        "term": {
-                                            "agency": self.agency
+                if self.agency != "all":
+                    start = int(time.mktime(start.timetuple()))
+                    end = int(time.mktime(end.timetuple()))
+                    body = {
+                        "filter": {
+                            "and": {
+                                "filters": [
+                                    {
+                                        "range": {
+                                            "read_timestamp": {
+                                                "lt": end,
+                                                "gte": start
+                                            }
                                         }
                                     },
-                                }
-                            ]
+                                    {
+                                        "query": {
+                                            "term": {
+                                                "agency": self.agency
+                                            }
+                                        },
+                                    }
+                                ]
+                            }
                         }
                     }
-                }
+                else:
+                    body = {
+                        "filter": {
+                            "range": {
+                                "read_timestamp": {
+                                    "lt": end,
+                                    "gte": start
+                                }
+                            }
+                        }
+                    }
             else:
                 body = {
                     "from": 0, "size": 10,

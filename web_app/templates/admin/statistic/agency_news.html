@@ -39,6 +39,7 @@
                                             <div class="col-md-4">خبرگذاری : </div>
                                             <div class="col-md-8">
                                                 <select class="select" name="change-agency" style="width: 100%">
+                                                    <option value="all">همه خبرگذاری ها</option>
                                                     {% for a in agencies %}
                                                         <option {% if str(a['id']) == str(this_agency) %}selected{% end %} value="{{ a['id'] }}">{{ a['name'] }}</option>
                                                     {% end %}
