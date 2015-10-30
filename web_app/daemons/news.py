@@ -114,14 +114,3 @@ def news(brief):
         data = get_url(b['link'], b['id'])
         if data:
             extract_news(data, b)
-
-
-import time
-a = NewsModel().get_all()['value']
-for i in a:
-    x = i['read_date'].split('T')
-    read_date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
-    print read_date
-    print int(time.mktime(read_date.timetuple()))
-    time_stamp = int(time.mktime(read_date.timetuple()))
-    NewsModel(i['id']).update_read_date(time_stamp)

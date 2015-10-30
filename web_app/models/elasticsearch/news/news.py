@@ -209,12 +209,14 @@ class NewsModel:
 
     def get_news_by_time(self, start=None, end=None):
         try:
+            start = int(time.mktime(start.timetuple()))
+            end = int(time.mktime(end.timetuple()))
             body = {
                 "filter": {
                     "range": {
-                        "read_date": {
-                            "lt": str(end.date()) + 'T' + str(end.time()),
-                            "gte": str(start.date()) + 'T' + str(start.time())
+                        "read_timestamp": {
+                            "lt": end,
+                            "gte": start
                         }
                     }
                 }
@@ -242,15 +244,17 @@ class NewsModel:
     def get_agency_news_by_time(self, start=None, end=None):
         try:
             if start and end:
+                start = int(time.mktime(start.timetuple()))
+                end = int(time.mktime(end.timetuple()))
                 body = {
                     "filter": {
                         "and": {
                             "filters": [
                                 {
                                     "range": {
-                                        "read_date": {
-                                            "lt": str(end.date()) + 'T' + str(end.time()),
-                                            "gte": str(start.date()) + 'T' + str(start.time())
+                                        "read_timestamp": {
+                                            "lt": end,
+                                            "gte": start
                                         }
                                     }
                                 },
