@@ -7,7 +7,7 @@ from bson import ObjectId
 from web_app.classes.debug import Debug
 from web_app.models.elasticsearch.base_model import ElasticSearchModel
 from web_app.models.mongodb.agency.agency import AgencyModel
-
+import time
 __author__ = 'Morteza'
 
 
@@ -45,6 +45,7 @@ class NewsModel:
 
     def insert(self):
         try:
+            d = datetime.datetime.now()
             body = {
                 'link': self.link,
                 'hash_link': self.get_hash(self.link),
@@ -55,7 +56,8 @@ class NewsModel:
                 'thumbnail': self.thumbnail,
                 'agency': self.agency,
                 'date': self.date,
-                'read_date': datetime.datetime.now(),
+                'read_date': d,
+                'read_timestamp': int(time.mktime(d.timetuple())),
             }
             if not self.is_exist():
                 self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).insert()
@@ -78,7 +80,8 @@ class NewsModel:
                 summary=_source['summary'],
                 thumbnail=_source['thumbnail'],
                 agency=agency,
-                date=_source['date']
+                date=_source['date'],
+                read_date=_source['read_date'],
             ))
         except:
             pass
@@ -312,12 +315,12 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def update_read_date(self):
+    def update_read_date(self, time_stamp):
         try:
             body = {
-                "script": "ctx._source.read_date = __read_date",
+                "script": "ctx._source.read_timestamp = __read_date",
                 "params": {
-                    "__read_date": self.date
+                    "__read_date": time_stamp
                 }
             }
 
