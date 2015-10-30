@@ -119,6 +119,10 @@ def news(brief):
 import time
 a = NewsModel().get_all()
 for i in a:
-    print i['read_date']
-    time_stamp = int(time.mktime(i['read_date'].timetuple()))
-    NewsModel(i['id']).update_read_date(time_stamp)
+    x = i['read_date'].split('T')
+    read_date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+    print read_date
+    print int(time.mktime(read_date.timetuple()))
+    # a = '2015-10-30T19:10:32.358107'
+    # time_stamp = int(time.mktime(i['read_date'].timetuple()))
+    # NewsModel(i['id']).update_read_date(time_stamp)
