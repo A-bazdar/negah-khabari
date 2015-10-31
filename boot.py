@@ -5,10 +5,10 @@ import tornado.ioloop
 import tornado.web
 import tornado
 import os
-from web_app.ui_modules.modules import main_modules
-from web_app.urls.main_urls import url_patterns
+from admin_app.ui_modules.modules import main_modules
+from admin_app.urls.main_urls import url_patterns
 from tornado.options import options, define
-from config import Config
+from admin_config import Config
 
 __author__ = 'Morteza'
 
@@ -27,7 +27,7 @@ class WebSystemApplication(tornado.web.Application):
             xsrf_cookies=True,
             login_url=config.global_config['login_url'],
             logout_url=config.global_config['logout_url'],
-            template_path=os.path.join(os.path.dirname(__file__), "web_app/templates"),
+            template_path=os.path.join(os.path.dirname(__file__), "admin_app/templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             ui_modules=main_modules,
             **{
