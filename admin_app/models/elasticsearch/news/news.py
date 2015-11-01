@@ -77,6 +77,7 @@ class NewsModel:
                 link=_source['link'],
                 title=_source['title'],
                 ro_title=_source['ro_title'],
+                body=_source['body'],
                 summary=_source['summary'],
                 thumbnail=_source['thumbnail'],
                 agency=agency,
@@ -84,7 +85,7 @@ class NewsModel:
                 read_date=_source['read_date'],
             ))
         except:
-            pass
+            Debug.get_exception(send=False)
 
     def search(self, words=None, _page=0, _size=20, start=None, end=None, agency='all', category='all'):
         try:
@@ -309,13 +310,14 @@ class NewsModel:
             Debug.get_exception(sub_system='statistic_engine_feed', severity='critical_error', tags='get_agency_news_by_time')
             return self.result
 
-    def get_all(self):
+    def get_all(self, _page=0, _size=30):
         try:
             body = {
-                "from": 0, "size": 1000000,
+                "from": _page * _size, "size": _size,
                 "query": {
                     "match_all": {}
-                }
+                },
+                "sort": {"date": {"order": "desc"}}
             }
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
