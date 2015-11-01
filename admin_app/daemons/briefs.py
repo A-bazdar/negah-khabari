@@ -95,11 +95,11 @@ def briefs():
             data = get_url(a['link'])
             if data:
                 __counter += extract_briefs(data, a)
-        return True, 'Success', __counter
+        return False, 'Success', __counter
     except:
         error_message = Debug.get_exception(sub_system='engine_feed', severity='fatal_error', tags='get_briefs',
                                             data='get_briefs', return_error=True)
-        return False, error_message, __counter
+        return True, error_message, __counter
 
 
 if __name__ == '__main__':
