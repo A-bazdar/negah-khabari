@@ -334,6 +334,80 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def get_all_all(self):
+        try:
+            body = {
+                "from": 0, "size": 10000000,
+                "query": {
+                    "match_all": {}
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            for b in r['hits']['hits']:
+                self.get_news(b['_source'], b['_id'])
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
+    def get_all_similar(self):
+        try:
+            print self.agency
+            body = {
+                "from": 0, "size": 10000000,
+                "filter": {
+                    "and": {
+                        "filters": [
+                            {
+                                "query": {
+                                    "match_phrase": {
+                                        "title": self.title
+                                    }
+                                }
+                            },
+                            {
+                                "query": {
+                                    "term": {
+                                        "agency": self.agency,
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            ls = []
+            for b in r['hits']['hits']:
+                ls.append(b['_id'])
+            self.result['value'] = ls
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
+    def delete(self):
+        try:
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, _id=self.id).delete()
+            self.result['value'] = r
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
     def update_read_date(self, time_stamp):
         try:
             body = {
@@ -352,3 +426,8 @@ class NewsModel:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
+
+# news = NewsModel().get_all()['value']
+# for i in news:
+#     NewsModel(link=i['link'], title=i['title'], ro_title=i['ro_title'], summary=i['summary'], body=i['body'],
+#               thumbnail=i['thumbnail'], agency=str(i['agency']['id']), date=i['date']).insert()
