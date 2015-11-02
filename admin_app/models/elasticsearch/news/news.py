@@ -129,7 +129,8 @@ class NewsModel:
                             }
                         ]
                     }
-                }
+                },
+                "sort": {"date": {"order": "desc"}}
             }
 
             if _query != '':
