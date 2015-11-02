@@ -118,20 +118,21 @@ class NewsModel:
                 "from": _page * _size, "size": _size,
                 "filter": {
                     "and": {
-                        "filters": [
-                            {
-                                "range": {
-                                    "date": {
-                                        "lt": str(end.date()) + 'T' + str(end.time()),
-                                        "gte": str(start.date()) + 'T' + str(start.time())
-                                    }
-                                }
-                            }
-                        ]
+                        "filters": []
                     }
                 },
                 "sort": {"date": {"order": "desc"}}
             }
+
+            if start:
+                body['filter']['and']['filters'].append({
+                    "range": {
+                        "date": {
+                            "lt": str(end.date()) + 'T' + str(end.time()),
+                            "gte": str(start.date()) + 'T' + str(start.time())
+                        }
+                    }
+                })
 
             if _query != '':
                 body['filter']['and']['filters'].append({
