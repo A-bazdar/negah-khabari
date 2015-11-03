@@ -8,12 +8,15 @@ __author__ = 'Morteza'
 class delete_duplicate(BaseHandler):
     def get(self, *args, **kwargs):
         all_news = []
-        for i in range(10):
+        for i in range(130):
             all_news += NewsModel().get_all_all(_page=i)['value']
         a = []
         for i in all_news:
-            similar = NewsModel(title=i['title'], agency=str(i['agency']['id'])).get_all_similar()['value']
-            a.append({'t': i['title'], 'c': len(similar)})
+            try:
+                similar = NewsModel(title=i['title'], agency=str(i['agency']['id'])).get_all_similar()['value']
+                a.append({'t': i['title'], 'c': len(similar)})
+            except:
+                pass
             # if len(similar) > 1:
             #     for j in similar[:-1]:
             #         print NewsModel(_id=j).delete()
