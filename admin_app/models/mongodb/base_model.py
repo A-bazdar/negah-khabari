@@ -42,6 +42,8 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.user_search_pattern
         elif collection == 'feed_statistic':
             self.collection = self.db.feed_statistic
+        elif collection == 'elastic_statistic':
+            self.collection = self.db.elastic_statistic
 
     def insert(self):
         try:
