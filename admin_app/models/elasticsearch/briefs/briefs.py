@@ -62,7 +62,7 @@ class BriefsModel:
 
     def delete(self):
         try:
-            ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, _id=self.id).delete()
+            return ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, _id=self.id).delete()
         except:
             return False
 
