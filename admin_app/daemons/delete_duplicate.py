@@ -8,7 +8,7 @@ __author__ = 'Morteza'
 class delete_duplicate(BaseHandler):
     def get(self, *args, **kwargs):
         all_news = []
-        for i in range(130):
+        for i in range(10):
             all_news += NewsModel().get_all_all(_page=i)['value']
         a = []
         for i in all_news:
