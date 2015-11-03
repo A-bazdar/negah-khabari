@@ -5,7 +5,6 @@ import hashlib
 from bson import ObjectId
 from admin_app.classes.debug import Debug
 from admin_app.models.elasticsearch.base_model import ElasticSearchModel
-from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
 import time
 __author__ = 'Morteza'
@@ -36,7 +35,39 @@ class NewsModel:
     def is_exist(self):
         try:
             body = {
-                "query": {"term": {"hash_link": self.get_hash(self.link)}},
+                "filter": {
+                    "or": {
+                        "filters": [
+                            {
+                                "and": {
+                                    "filters": [
+                                        {
+                                            "query": {
+                                                "match_phrase": {
+                                                    "title": self.title
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "query": {
+                                                "term": {
+                                                    "agency": self.agency,
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "query": {
+                                    "term": {
+                                        "hash_link": self.get_hash(self.link)
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
             }
             if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
                 return True

@@ -15,10 +15,8 @@ class delete_duplicate(BaseHandler):
             try:
                 similar = NewsModel(title=i['title'], agency=str(i['agency']['id'])).get_all_similar()['value']
                 a.append({'t': i['title'], 'c': len(similar)})
+                if len(similar) > 1:
+                    for j in similar[:-1]:
+                        print NewsModel(_id=j).delete()
             except:
                 pass
-            # if len(similar) > 1:
-            #     for j in similar[:-1]:
-            #         print NewsModel(_id=j).delete()
-        newlist = sorted(a, key=lambda k: k['c'])
-        self.render('delete_duplicate.html', a=newlist)
