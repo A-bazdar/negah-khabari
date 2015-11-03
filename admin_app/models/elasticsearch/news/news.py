@@ -192,7 +192,7 @@ class NewsModel:
                 body['filter']['and']['filters'].append({
                     'term': {'agency': agency}
                 })
-
+            print body
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
