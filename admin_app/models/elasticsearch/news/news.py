@@ -335,10 +335,10 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def get_all_all(self, _page, _size):
+    def get_all_all(self):
         try:
             body = {
-                "from": _page, "size": _size,
+                "from": 0, "size": 13000,
                 "query": {
                     "match_all": {}
                 },
