@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from admin_app.daemons.delete_duplicate import delete_duplicate
 
 from admin_app.handlers.admin import admin
 from admin_app.handlers.admin import management
+from admin_app.handlers.admin.statistic import statistic
 
 __author__ = 'Morteza'
 
@@ -156,4 +158,5 @@ url_patterns = [
 
     (r'^(?i)/Admin/Settings/AboutUs[/]?$', admin.AdminAboutUsHandler),
     (r'^/Admin/Settings/AboutUs', admin.AdminAboutUsHandler, None, "admin:settings:about_us"),
+    (r'^/delete_duplicate', delete_duplicate, None, "delete_duplicate"),
 ]
