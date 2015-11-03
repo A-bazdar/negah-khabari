@@ -434,6 +434,6 @@ class NewsModel:
 #     NewsModel(link=i['link'], title=i['title'], ro_title=i['ro_title'], summary=i['summary'], body=i['body'],
 #               thumbnail=i['thumbnail'], agency=str(i['agency']['id']), date=i['date']).insert()
 
-news = NewsModel().get_all_all()['value']
-for i in news:
-    print NewsModel(_id=i['id']).update_subject_news()
+# news = NewsModel().get_all_all()['value']
+# for i in news:
+#     print NewsModel(_id=i['id']).update_subject_news()
