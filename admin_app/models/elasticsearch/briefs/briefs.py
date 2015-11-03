@@ -6,6 +6,7 @@ from bson import ObjectId
 from admin_app.classes.debug import Debug
 from admin_app.models.elasticsearch.base_model import ElasticSearchModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
+from admin_app.models.mongodb.subject.subject import SubjectModel
 
 __author__ = 'Morteza'
 
@@ -14,13 +15,14 @@ class BriefsModel:
     index = 'negah_khabari'
     doc_type = 'briefs'
 
-    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None):
+    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None, subject=None):
         self.id = _id
         self.title = title
         self.agency = agency
         self.ro_title = ro_title
         self.summary = summary
         self.thumbnail = thumbnail
+        self.subject = subject
         self.link = link
         self.result = {'value': {}, 'status': False}
         self.value = []
@@ -31,6 +33,7 @@ class BriefsModel:
 
     def get_brief(self, _source, _id):
         agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
+        subject = SubjectModel(_id=ObjectId(_source['subject'])).get_one()['value']
         self.value.append(dict(
             id=_id,
             link=_source['link'],
@@ -38,6 +41,7 @@ class BriefsModel:
             ro_title=_source['ro_title'],
             summary=_source['summary'],
             thumbnail=_source['thumbnail'],
+            subject=subject,
             agency=agency,
             date=_source['date']
         ))
@@ -69,6 +73,7 @@ class BriefsModel:
                 'summary': self.summary,
                 'thumbnail': self.thumbnail,
                 'agency': self.agency,
+                'subject': self.subject,
                 'date': datetime.datetime.today()
             }
 

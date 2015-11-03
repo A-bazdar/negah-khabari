@@ -20,16 +20,16 @@ def get_url(url):
         response = urllib2.urlopen(url)
         return response.read()
     except:
-        Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_url_brief', data=url)
+        Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_url_brief', data=url.encode('utf-8'))
         return False
 
 
-def extract_briefs(document, a):
+def extract_briefs(document, a, l):
     counter = 0
     try:
         soap = BeautifulSoup(document, "html.parser")
         list_briefs = soap.select(a['brief_container'])
-        print a['base_link']
+        print a['base_link'], ' ------->> ', l['link']
         for i in list_briefs:
             try:
                 if a['brief_link'] != '':
@@ -40,7 +40,7 @@ def extract_briefs(document, a):
                     link = a['base_link'].encode('utf-8') + link
             except:
                 Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_link_brief',
-                                    data=a['base_link'])
+                                    data=a['base_link'].encode('utf-8'))
                 link = None
             try:
                 if a['brief_ro_title']:
@@ -49,19 +49,19 @@ def extract_briefs(document, a):
                     ro_title = None
             except:
                 Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_ro_title_brief',
-                                    data=a['base_link'])
+                                    data=a['base_link'].encode('utf-8'))
                 ro_title = None
             try:
                 title = i.select_one(a['brief_title']).text.encode('utf-8').strip()
             except:
                 Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_brief',
-                                    data=a['base_link'])
+                                    data=a['base_link'].encode('utf-8'))
                 title = None
             try:
                 summary = i.select_one(a['brief_summary']).text.encode('utf-8').strip()
             except:
                 Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_summary_brief',
-                                    data=a['base_link'])
+                                    data=a['base_link'].encode('utf-8'))
                 summary = None
             try:
                 thumbnail = i.select_one(a['brief_thumbnail']).find('img')['src'].encode('utf-8')
@@ -69,11 +69,11 @@ def extract_briefs(document, a):
                     thumbnail = a['base_link'].encode('utf-8') + thumbnail
             except:
                 Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_brief',
-                                    data=a['base_link'])
+                                    data=a['base_link'].encode('utf-8'))
                 thumbnail = None
             if link and title and summary and thumbnail:
                 _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
-                                 agency=str(a['id'])).insert()
+                                 agency=str(a['id']), subject=str(l['subject'])).insert()
                 print _b
                 try:
                     if news(_b['value']['_id']):
@@ -92,9 +92,10 @@ def briefs():
     try:
         agencies = AgencyModel().get_all()['value']
         for a in agencies:
-            data = get_url(a['link'])
-            if data:
-                __counter += extract_briefs(data, a)
+            for l in a['links']:
+                data = get_url(l['link'])
+                if data:
+                    __counter += extract_briefs(data, a, l)
         return False, 'Success', __counter
     except:
         error_message = Debug.get_exception(sub_system='engine_feed', severity='fatal_error', tags='get_briefs',

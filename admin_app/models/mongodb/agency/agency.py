@@ -36,6 +36,7 @@ class AgencyModel():
                 status=agency['status'],
                 pic=agency['pic'],
                 base_link=agency['base_link'],
+                links=agency['links'],
                 brief_link=agency['brief_link'],
                 brief_title=agency['brief_title'],
                 brief_ro_title=agency['brief_ro_title'],

@@ -15,13 +15,14 @@ class NewsModel:
     index = 'negah_khabari'
     doc_type = 'news'
 
-    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None, body=None, date=None):
+    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None, subject=None, body=None, date=None):
         self.id = _id
         self.title = title
         self.agency = agency
         self.ro_title = ro_title
         self.summary = summary
         self.body = body
+        self.subject = subject
         self.date = date
         self.thumbnail = thumbnail
         self.link = link
@@ -55,6 +56,7 @@ class NewsModel:
                 'body': self.body,
                 'thumbnail': self.thumbnail,
                 'agency': self.agency,
+                'subject': self.subject,
                 'date': self.date,
                 'read_date': d,
                 'read_timestamp': int(time.mktime(d.timetuple())),
@@ -408,12 +410,12 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def update_read_date(self, time_stamp):
+    def update_subject_news(self):
         try:
             body = {
-                "script": "ctx._source.read_timestamp = __read_date",
+                "script": "ctx._source.subject = __read_date",
                 "params": {
-                    "__read_date": time_stamp
+                    "__read_date": "5637944446b9a0342e9bb253"
                 }
             }
 
@@ -431,3 +433,7 @@ class NewsModel:
 # for i in news:
 #     NewsModel(link=i['link'], title=i['title'], ro_title=i['ro_title'], summary=i['summary'], body=i['body'],
 #               thumbnail=i['thumbnail'], agency=str(i['agency']['id']), date=i['date']).insert()
+
+news = NewsModel().get_all_all()['value']
+for i in news:
+    print NewsModel(_id=i['id']).update_subject_news()
