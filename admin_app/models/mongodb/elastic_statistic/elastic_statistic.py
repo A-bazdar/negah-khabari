@@ -18,22 +18,31 @@ class ElasticStatisticModel(BaseModel):
         self.item_id = item_id
         self.result = result
         self.function = function
-        self.result = {'value': {}, 'status': False}
+
+    def get_result(self):
+        try:
+            self.result['hits']['hits'] = self.result['hits']['hits'][:5]
+        except:
+            pass
 
     def insert(self):
         try:
-            # get_result()
+            if self.function == 'search':
+                self.get_result()
+
             __body = {
                 'index': self.index,
                 'doc_type': self.doc_type,
                 'body': self.body,
                 'item_id': self.item_id,
+                'result': self.result,
+                'function': self.function,
                 'date': self.date,
             }
 
-            self.result['value'] = str(MongodbModel(collection='feed_statistic', body=__body).insert())
+            self.result['value'] = str(MongodbModel(collection='elastic_statistic', body=__body).insert())
             self.result['status'] = True
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > group')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > elastic_statistic')
             return self.result
