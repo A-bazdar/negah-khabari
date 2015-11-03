@@ -1,4 +1,5 @@
 import json
+from admin_app.models.mongodb.elastic_statistic.elastic_statistic import ElasticStatisticModel
 from admin_config import Config
 from elasticsearch import Elasticsearch
 from admin_app.classes.debug import Debug
@@ -22,7 +23,9 @@ class ElasticSearchModel(ElasticSearchBaseModel):
 
     def search(self):
         try:
-            return self.db.search(index=self.index, doc_type=self.doc_type, body=self.body)
+            result = self.db.search(index=self.index, doc_type=self.doc_type, body=self.body)
+            # ElasticStatisticModel(index=self.index, doc_type=self.doc_type, body=self.body, result=result, function='search').insert()
+            return result
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='elastic_search > search',
                                 data='index: ' + self.index + ' doc_type: ' + self.doc_type + ' body: ' + str(self.body))
