@@ -438,16 +438,16 @@ class NewsModel:
 # for i in news:
 #     print NewsModel(_id=i['id']).update_subject_news()
 
-import datetime
-import time
-__date = datetime.datetime.strptime("2015/11/03 01:00:00", "%Y/%m/%d %H:%M:%S")
-__time_stamp = int(time.mktime(__date.timetuple()))
-a = BriefsModel().get_all()['value']
-for i in a:
-    x = i['date'].split('T')
-    read_date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
-    if int(time.mktime(read_date.timetuple())) >= __time_stamp:
-        BriefsModel(_id=i['id']).delete()
+# import datetime
+# import time
+# __date = datetime.datetime.strptime("2015/11/03 01:00:00", "%Y/%m/%d %H:%M:%S")
+# __time_stamp = int(time.mktime(__date.timetuple()))
+# a = BriefsModel().get_all()['value']
+# for i in a:
+#     x = i['date'].split('T')
+#     read_date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+#     if int(time.mktime(read_date.timetuple())) >= __time_stamp:
+#         BriefsModel(_id=i['id']).delete()
     # a = '2015-10-30T19:10:32.358107'
     # time_stamp = int(time.mktime(i['read_date'].timetuple()))
     # NewsModel(i['id']).update_read_date(time_stamp)
