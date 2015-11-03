@@ -122,3 +122,22 @@ class BriefsModel:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > count_all',
                                 data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
             return self.result
+
+    def update_subject_briefs(self):
+        try:
+            body = {
+                "script": "ctx._source.subject = __read_date",
+                "params": {
+                    "__read_date": "5637944446b9a0342e9bb253"
+                }
+            }
+
+            r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body, _id=self.id).update()
+            self.result['value'] = r
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+            return self.result
