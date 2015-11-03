@@ -122,7 +122,8 @@ class NewsModel:
                     "and": {
                         "filters": []
                     }
-                }
+                },
+                "sort": {"date": {"order": "desc"}}
             }
 
             if start:
