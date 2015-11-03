@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import datetime
 import hashlib
-import json
 from bson import ObjectId
 from admin_app.classes.debug import Debug
 from admin_app.models.elasticsearch.base_model import ElasticSearchModel

@@ -33,7 +33,10 @@ class BriefsModel:
 
     def get_brief(self, _source, _id):
         agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
-        # subject = SubjectModel(_id=ObjectId(_source['subject'])).get_one()['value']
+        try:
+            subject = SubjectModel(_id=ObjectId(_source['subject'])).get_one()['value']
+        except:
+            subject = None
         self.value.append(dict(
             id=_id,
             link=_source['link'],
@@ -41,7 +44,7 @@ class BriefsModel:
             ro_title=_source['ro_title'],
             summary=_source['summary'],
             thumbnail=_source['thumbnail'],
-            # subject=subject,
+            subject=subject,
             agency=agency,
             date=_source['date']
         ))
