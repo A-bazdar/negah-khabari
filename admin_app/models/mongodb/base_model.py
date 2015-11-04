@@ -14,9 +14,13 @@ class MongodbBaseModel():
 
 
 class MongodbModel(MongodbBaseModel):
-    def __init__(self, collection=None, body=None, condition=None):
+    def __init__(self, collection=None, body=None, condition=None, size=20, page=1, sort="date"):
         MongodbBaseModel.__init__(self)
         self.__body = body
+        self.__size = size
+        self.__page = page
+        self.__sort = sort
+
         self.__condition = condition
         if collection == 'agency':
             self.collection = self.db.agency
@@ -61,6 +65,14 @@ class MongodbModel(MongodbBaseModel):
                                 data='collection: ' + self.__condition + ' body: ' + str(self.__body))
             return False
 
+    def get_all_pagination(self):
+        try:
+            return self.collection.find(self.__body).sort([(self.__sort, -1)]).skip(self.__size * (self.__page - 1)).limit(self.__size)
+        except:
+            Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > get_all_pagination',
+                                data='body: ' + str(self.__body))
+            return False
+
     def get_one(self):
         try:
             return self.collection.find_one(self.__body)
@@ -90,7 +102,8 @@ class MongodbModel(MongodbBaseModel):
             return self.collection.update(self.__condition, self.__body)
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > update',
-                                data='collection: ' + self.__condition + ' body: ' + str(self.__body) + ' condition: ' + str(self.__condition))
+                                data='collection: ' + self.__condition + ' body: ' + str(
+                                    self.__body) + ' condition: ' + str(self.__condition))
             return False
 
 
