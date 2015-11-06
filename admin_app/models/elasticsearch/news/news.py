@@ -390,7 +390,6 @@ class NewsModel:
 
     def get_all_similar(self):
         try:
-            print self.agency
             body = {
                 "from": 0, "size": 10000000,
                 "filter": {
