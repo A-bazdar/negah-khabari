@@ -63,7 +63,7 @@ class FeedStatisticModel(BaseModel):
     def get_all(self, _page=1, _size=20):
         try:
             __body = {}
-            r = MongodbModel(collection='feed_statistic', body=__body, page=_page, size=_size).get_all_pagination()
+            r = MongodbModel(collection='feed_statistic', body=__body, page=_page, size=_size, sort="start_time").get_all_pagination()
             for i in r:
                 self.get_statistic(i)
             self.result['value'] = self.value
