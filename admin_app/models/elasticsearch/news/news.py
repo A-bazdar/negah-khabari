@@ -379,6 +379,19 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def count_all(self):
+        try:
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type).count_all()
+
+            self.result['value'] = r
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
     def get_all_all(self, _page, _size=100):
         try:
             body = {
