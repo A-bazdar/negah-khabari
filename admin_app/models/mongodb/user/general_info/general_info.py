@@ -152,7 +152,7 @@ class UserModel(BaseModel):
             if self.id:
                 body = {"_id": self.id}
             else:
-                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'username': self.username}, {'email': self.email}]}
+                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'username': {'$regex': '(?i)' + self.username + '$'}}, {'email': self.email}]}
             r = MongodbModel(collection='user', body=body).get_one()
             if r:
                 group = UserGroupModel(_id=r['group']).get_one()

@@ -5,7 +5,7 @@ import datetime
 import khayyam
 from admin_app.classes.date import CustomDateTime
 from admin_app.classes.debug import Debug
-from admin_app.classes.public import UploadPic, CreateID, CreateHash
+from admin_app.classes.public import UploadPic, CreateHash
 from admin_config import Config
 from tornado import gen
 from admin_app.handlers.base import BaseHandler

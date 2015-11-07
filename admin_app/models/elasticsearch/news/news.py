@@ -4,6 +4,7 @@ import datetime
 import hashlib
 from bson import ObjectId
 from admin_app.classes.debug import Debug
+from admin_app.classes.public import CreateId
 from admin_app.models.elasticsearch.base_model import ElasticSearchModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
 import time
@@ -75,6 +76,14 @@ class NewsModel:
         except:
             return False
 
+    @staticmethod
+    def get_news_id():
+        __id = CreateId().create_object_id()
+        body = {"query": {"term": {"_id": __id}}}
+        while ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
+            __id = CreateId().create_object_id()
+        return __id
+
     def insert(self):
         try:
             d = datetime.datetime.now()
@@ -93,7 +102,8 @@ class NewsModel:
                 'read_timestamp': int(time.mktime(d.timetuple())),
             }
             if not self.is_exist():
-                self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).insert()
+                news = self.get_news_id()
+                self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=news).insert()
                 self.result['status'] = True
 
             return self.result
@@ -439,17 +449,63 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def update_subject_news(self):
+    def update_news_id(self, __id):
         try:
             body = {
-                "script": "ctx._source.subject = __read_date",
+                "script": "ctx._source._id = __read_date",
                 "params": {
-                    "__read_date": "5637944446b9a0342e9bb253"
+                    "__read_date": __id
                 }
             }
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=self.id).update()
             self.result['value'] = r
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
+    def get_news_by_subject(self, _page=0, _size=30):
+        try:
+            body = {
+                "from": _page * _size, "size": _size,
+                "query": {
+                    "term": {
+                        "subject": self.subject
+                    }
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            try:
+                count_all = r['hits']['total']
+            except:
+                count_all = 0
+            try:
+                for b in r['hits']['hits']:
+                    self.get_news(b['_source'], b['_id'])
+            except:
+                pass
+            self.result['value'] = {'news': self.value, 'count_all': count_all, 'count': len(r['hits']['hits'])}
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
+    def get_one(self):
+        try:
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, _id=self.id).get_one()
+            self.get_news(r['_source'], r['_id'])
+            self.result['value'] = self.value[0]
+            self.result['value'] = self.value[0]
             self.result['status'] = True
             return self.result
 
