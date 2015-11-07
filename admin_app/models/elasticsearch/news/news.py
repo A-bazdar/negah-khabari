@@ -3,6 +3,7 @@
 import datetime
 import hashlib
 from bson import ObjectId
+import khayyam
 from admin_app.classes.debug import Debug
 from admin_app.classes.public import CreateId
 from admin_app.models.elasticsearch.base_model import ElasticSearchModel
@@ -115,6 +116,8 @@ class NewsModel:
     def get_news(self, _source, _id):
         try:
             agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
+            x = _source['date'].split('T')
+            _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
             self.value.append(dict(
                 id=_id,
                 link=_source['link'],
@@ -124,7 +127,7 @@ class NewsModel:
                 summary=_source['summary'],
                 thumbnail=_source['thumbnail'],
                 agency=agency,
-                date=_source['date'],
+                date=khayyam.JalaliDatetime(_date).strftime('%Y %B %d %H:%M:%S'),
                 read_date=_source['read_date'],
             ))
         except:

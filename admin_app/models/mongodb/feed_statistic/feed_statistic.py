@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import khayyam
+from admin_app.classes.date import CustomDateTime
 from admin_app.classes.debug import Debug
 from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
 
@@ -52,7 +53,7 @@ class FeedStatisticModel(BaseModel):
             dict(
                 id=q['_id'],
                 count=q['count'],
-                start_time=khayyam.JalaliDatetime(q['start_time']).strftime('%Y/%m/%d %H:%M:%S'),
+                start_time=CustomDateTime().get_time_difference(q['start_time']),
                 end_time=khayyam.JalaliDatetime(q['end_time']).strftime('%Y/%m/%d %H:%M:%S'),
                 different=different,
                 error=q['error'],
