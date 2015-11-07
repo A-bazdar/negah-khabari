@@ -78,6 +78,17 @@ class ElasticStatisticModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > elastic_statistic')
             return self.result
 
+    def count_all(self):
+        try:
+            __body = {}
+            r = MongodbModel(collection='elastic_statistic', body=__body).count()
+            self.result['value'] = r
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > count_all', data='collection > feed_statistic')
+            return self.result
+
     def get_one(self):
         try:
             __body = {'_id': self.id}
