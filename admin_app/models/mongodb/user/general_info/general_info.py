@@ -318,7 +318,8 @@ class UserModel(BaseModel):
             if self.id:
                 body = {"_id": self.id}
             else:
-                body = {"$or": [{'mobile': self.mobile}, {'username': self.username}, {'email': self.email}]}
+                body = {"$or": [{'mobile': self.mobile}, {'username': {'$regex': '(?i)' + self.username + '$'}}, {'email': self.email}]}
+            print body
             return MongodbModel(collection='user', body=body).count()
 
         except:
