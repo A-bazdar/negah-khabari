@@ -7,14 +7,14 @@ __author__ = 'Morteza'
 
 
 class FeedStatisticModel(BaseModel):
-    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, end_date=None):
+    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, end_time=None):
         BaseModel.__init__(self)
         self.id = _id
         self.start_time = start_time
         self.error = error
         self.message = message
         self.count = count
-        self.end_date = end_date
+        self.end_time = end_time
         self.result = {'value': {}, 'status': False}
 
     def insert(self):
@@ -24,7 +24,7 @@ class FeedStatisticModel(BaseModel):
                 'error': self.error,
                 'message': self.message,
                 'count': self.count,
-                'end_date': self.end_date,
+                'end_time': self.end_time,
             }
 
             self.result['value'] = str(MongodbModel(collection='feed_statistic', body=__body).insert())
