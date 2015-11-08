@@ -14,7 +14,7 @@ h1, h2, h3, h4, h5, h6{
     background: -moz-linear-gradient(#4E68A1, #415E9A); /* For Firefox 3.6 to 15 */
     background: linear-gradient(#4E68A1, #415E9A); /* Standard syntax */
     /*background: #405D99;*/
-    padding: 10px;
+    padding: 10px 0 10px 10px !important;
     color: white;
 }
 
@@ -70,7 +70,7 @@ h1, h2, h3, h4, h5, h6{
 .right_menu{
     background: #E9EAEE;
     min-height: 610px;
-    padding: 15px 10px;
+    padding: 15px 10px !important;
 }
 
 .right_tabs_title{
