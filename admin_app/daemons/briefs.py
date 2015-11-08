@@ -107,4 +107,4 @@ if __name__ == '__main__':
     start_time = datetime.datetime.now()
     r, m, c = briefs()
     end_time = datetime.datetime.now()
-    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_date=end_time).insert()
+    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time).insert()

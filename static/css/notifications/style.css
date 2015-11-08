@@ -1,0 +1,68 @@
+body {
+    background-color: #f7f7f7;
+    color: #333333;
+    font-family: Yekan, serif;
+    direction: rtl;
+    overflow-x: hidden;
+}
+
+a:link {
+    text-decoration: none;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+a:hover {
+    text-decoration: none;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+._note_container {
+    height: 100vh;
+    display: table;
+    width: 100%;
+}
+._note_container .cont{
+    display: table-cell;
+    background: #eaeaea;
+    vertical-align: middle;
+}
+
+._note_container .cont .emo{
+    position: absolute;
+    left: -160px;
+    top: -20px;
+    font-size: 400pt;
+    color: #A2A2A2;
+    z-index: 1;
+}
+
+._note_container .cont .cnt2{
+    display: block;
+    padding: 100px 10px;
+    text-align: center;
+    /*height: 400px;*/
+    vertical-align: middle;
+    background: #cecece;
+}
+._note_container .cont .cnt2 ._txt{
+    z-index: 22 !important;
+    position: relative;
+}
+
+
+footer{
+    background: #c4c4c4;
+    box-shadow: -1px 0 2px gray;
+    padding: 20px;
+    color: #ffffff;
+    font-size: 12pt;
+    border-radius: 0;
+}

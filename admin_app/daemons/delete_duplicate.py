@@ -25,3 +25,12 @@ class delete_duplicate(BaseHandler):
                     pass
         except:
             Debug.get_exception(send=False)
+
+
+# __all_news = []
+# for __i in range(130):
+#     __all_news += NewsModel().get_all_all(_page=__i)['value']
+#
+# for __i in __all_news:
+#     __new_id = NewsModel().get_news_id()
+#     print NewsModel(_id=__i['id']).update_news_id(__new_id)

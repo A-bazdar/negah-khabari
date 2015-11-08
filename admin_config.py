@@ -10,7 +10,7 @@ class Config:
         self.applications_root = os.path.join(os.path.dirname(__file__), "")
         self.domain = '.localhost'
 
-        self.SESSION_TIME = 86400
+        self.SESSION_TIME = 31
 
         self.web = {
             'port': 8001,

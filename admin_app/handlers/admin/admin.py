@@ -5,7 +5,7 @@ import datetime
 import khayyam
 from admin_app.classes.date import CustomDateTime
 from admin_app.classes.debug import Debug
-from admin_app.classes.public import UploadPic, CreateID, CreateHash
+from admin_app.classes.public import UploadPic, CreateHash
 from admin_config import Config
 from tornado import gen
 from admin_app.handlers.base import BaseHandler
@@ -54,6 +54,7 @@ class AdminSourceHandler(BaseHandler):
         self.data['agencies'] = AgencyModel().get_all()['value']
         self.data['categories'] = CategoryModel().get_all()['value']
         self.data['directions'] = DirectionModel().get_all('source')['value']
+        self.data['subjects'] = SubjectModel().get_all()['value']
         self.render('admin/source_management.html', **self.data)
 
     def post(self):
@@ -63,39 +64,60 @@ class AdminSourceHandler(BaseHandler):
             if action == 'add':
                 agency = dict()
                 self.check_sent_value("name", agency, "name", u"نام را وارد کنید.")
-                self.check_sent_value("link", agency, "link", u"لینک را وارد کنید.")
+                self.check_sent_value("base_link", agency, "link", u"لینک را وارد کنید.")
                 self.check_sent_value("color", agency, "color", u"رنگ را وارد کنید.")
                 self.check_sent_value("category", agency, "category", u"رده عبور را وارد کنید.")
                 self.check_sent_value("direction", agency, "direction", u"جهت گیری را وارد کنید.")
                 self.check_sent_value("status", agency, "status", u"وضعیت را وارد کنید.")
-                agency['pic'] = UploadPic(handler=self, name='pic', folder='agency').upload()
 
-                key_words = self.request.arguments['key_word']
-                if not len(key_words) and '' in key_words:
-                    self.errors.append(u"کلید واژه ها را وارد کنید.")
+                link = self.request.arguments['link']
+                subject = self.request.arguments['subject']
 
-                agency['category'] = ObjectId(agency['category'])
-                agency['direction'] = ObjectId(agency['direction'])
+                if not len(link) or not len(subject) or '' in link or '' in subject:
+                    self.errors.append(u"لینک ها را وارد کنید.")
 
-                new_agency = AgencyModel(**agency).save()
-                agency['id'] = new_agency['value']
+                if not len(self.errors):
+                    links = []
+                    for i in range(len(link)):
+                        links.append(
+                            dict(
+                                link=link[i],
+                                subject=subject[i]
+                            )
+                        )
 
-                category = CategoryModel(_id=agency['category']).get_one()['value']
-                direction = DirectionModel(_id=agency['direction']).get_one()['value']
+                    agency['pic'] = UploadPic(handler=self, name='pic', folder='agency').upload()
 
-                self.value = dict(
-                    id=agency['id'],
-                    name=agency['name'],
-                    link=agency['link'],
-                    color=agency['color'],
-                    category=category['name'],
-                    direction=direction['name'],
-                    status=agency['status'],
-                    pic=agency['pic'],
-                    add_to_confirm=True,
-                    extract_image=True
-                )
-                self.status = True
+                    key_words = self.request.arguments['key_word']
+                    if not len(key_words) and '' in key_words:
+                        self.errors.append(u"کلید واژه ها را وارد کنید.")
+
+                    agency['category'] = ObjectId(agency['category'])
+                    agency['category'] = ObjectId(agency['category'])
+                    agency['links'] = links
+
+                    new_agency = AgencyModel(**agency).save()
+                    agency['id'] = new_agency['value']
+
+                    category = CategoryModel(_id=ObjectId(agency['category'])).get_one()['value']
+                    direction = DirectionModel(_id=ObjectId(agency['direction'])).get_one()['value']
+                    self.value = dict(
+                        id=agency['id'],
+                        name=agency['name'],
+                        base_link=agency['link'],
+                        link=agency['link'],
+                        color=agency['color'],
+                        category=category['name'],
+                        direction=direction['name'],
+                        status=agency['status'],
+                        pic=agency['pic'],
+                        links=links,
+                        add_to_confirm=True,
+                        extract_image=True
+                    )
+                    self.status = True
+                else:
+                    self.messages = self.errors
 
             elif action == 'delete':
                 agency = self.get_argument('agency', '')

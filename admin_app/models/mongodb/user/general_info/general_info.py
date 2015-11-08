@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import datetime
 from admin_app.classes.debug import Debug
 from admin_app.classes.public import CreateHash
 from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
@@ -12,7 +13,7 @@ class UserModel(BaseModel):
     def __init__(self, _id=None, name=None, family=None, username=None, organization=None, password=None, phone=None,
                  mobile=None, address=None,
                  fax=None, email=None, status=None, welcome=None, register_start_date=None, register_end_date=None,
-                 archive_start_date=None, archive_end_date=None, group=None, pic=None, role=None):
+                 archive_start_date=None, archive_end_date=None, group=None, pic=None, role=None, last_activity=None):
         BaseModel.__init__(self)
         self.id = _id
         self.name = name
@@ -34,6 +35,7 @@ class UserModel(BaseModel):
         self.pic = pic
         self.role = role
         self.address = address
+        self.last_activity = last_activity
         self.result = {'value': {}, 'status': False}
 
     def save(self):
@@ -56,7 +58,8 @@ class UserModel(BaseModel):
                 'archive_end_date': str(self.archive_end_date),
                 'group': self.group,
                 'pic': self.pic,
-                'role': self.role
+                'role': self.role,
+                'last_activity': datetime.datetime.now()
             }
 
             self.result['value'] = str(MongodbModel(collection='user', body=__body).insert())
@@ -93,7 +96,8 @@ class UserModel(BaseModel):
                         archive_start_date=i['archive_start_date'],
                         archive_end_date=i['archive_end_date'],
                         group=group['value'],
-                        pic=i['pic']
+                        pic=i['pic'],
+                        last_activity=i['last_activity']
 
                     ))
             self.result['value'] = l
@@ -131,7 +135,8 @@ class UserModel(BaseModel):
                         archive_start_date=i['archive_start_date'],
                         archive_end_date=i['archive_end_date'],
                         group=group['value'],
-                        pic=i['pic']
+                        pic=i['pic'],
+                        last_activity=i['last_activity']
 
                     ))
             self.result['value'] = l
@@ -147,7 +152,7 @@ class UserModel(BaseModel):
             if self.id:
                 body = {"_id": self.id}
             else:
-                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'username': self.username}, {'email': self.email}]}
+                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'username': {'$regex': '(?i)' + self.username + '$'}}, {'email': self.email}]}
             r = MongodbModel(collection='user', body=body).get_one()
             if r:
                 group = UserGroupModel(_id=r['group']).get_one()
@@ -172,7 +177,8 @@ class UserModel(BaseModel):
                     role=r['role'],
                     group=group['value'],
                     address=r['address'] if 'address' in r.keys() else '',
-                    pic=r['pic']
+                    pic=r['pic'],
+                    last_activity=r['last_activity']
 
                 )
                 self.result['value'] = v
@@ -202,7 +208,8 @@ class UserModel(BaseModel):
                     email=r['email'],
                     status=r['status'],
                     role=r['role'],
-                    pic=r['pic']
+                    pic=r['pic'],
+                    last_activity=r['last_activity'],
 
                 )
                 self.result['value'] = v
@@ -278,12 +285,41 @@ class UserModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin', data='collection > user')
             return self.result
 
+    def update_pic(self, pic):
+        try:
+            condition = {'_id': self.id}
+            body = {'$set': {
+                'pic': pic
+            }}
+            self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin', data='collection > user')
+            return self.result
+
+    def set_last_activity(self):
+        try:
+            condition = {'_id': self.id}
+            body = {'$set': {
+                'last_activity': datetime.datetime.now()
+            }}
+            self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin', data='collection > user')
+            return self.result
+
     def count(self):
         try:
             if self.id:
                 body = {"_id": self.id}
             else:
-                body = {"$or": [{'mobile': self.mobile}, {'username': self.username}, {'email': self.email}]}
+                body = {"$or": [{'mobile': self.mobile}, {'username': {'$regex': '(?i)' + self.username + '$'}}, {'email': self.email}]}
+            print body
             return MongodbModel(collection='user', body=body).count()
 
         except:

@@ -4,7 +4,6 @@ from admin_app.daemons.delete_duplicate import delete_duplicate
 
 from admin_app.handlers.admin import admin
 from admin_app.handlers.admin import management
-from admin_app.handlers.admin.statistic import statistic
 
 __author__ = 'Morteza'
 

@@ -1753,3 +1753,11 @@
 textarea{
     resize: none;
 }
+
+span.select2-arrow {
+    padding: 4px 5px;
+}
+
+span.select2-chosen {
+    padding: inherit;
+}

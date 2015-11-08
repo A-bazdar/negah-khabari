@@ -5,6 +5,7 @@ import datetime
 import hashlib
 import os
 import random
+from bson import ObjectId
 import khayyam
 from admin_app.classes.debug import Debug
 from admin_config import Config
@@ -20,16 +21,20 @@ class RenderToNotificationHtml():
         self.handler.render("base/notifications/error_page.html")
 
 
-class CreateID():
+class CreateId:
     def __init__(self):
         pass
 
     @staticmethod
-    def create():
-        return str(random.randint(100000000000, 999999999999) * random.randrange(100000, 999999))[4:13]
+    def create_int():
+        return str(random.randint(100000000000, 999999999999) * random.randrange(100000, 999999))
+
+    @staticmethod
+    def create_object_id():
+        return str(ObjectId())
 
 
-class CreateHash():
+class CreateHash:
     def __init__(self):
         pass
 
@@ -56,7 +61,7 @@ class UploadPic():
 
     def upload(self):
         try:
-            pic_name = CreateID().create()
+            pic_name = CreateId().create_int()
             pic = self.__handler.request.files[self.name][0]
             extension = os.path.splitext(pic['filename'])[1].lower()
             upload_folder = os.path.join(Config().applications_root, 'static', 'images', self.folder)

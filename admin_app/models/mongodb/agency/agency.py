@@ -10,13 +10,14 @@ __author__ = 'Morteza'
 
 
 class AgencyModel():
-    def __init__(self, _id=None, name=None, link=None, color=None, category=None, direction=None, status=None, pic=None):
+    def __init__(self, _id=None, name=None, link=None, color=None, category=None, direction=None, status=None, pic=None, links=None):
         self.id = _id
         self.name = name
         self.link = link
         self.color = color
         self.category = category
         self.direction = direction
+        self.links = links
         self.status = status
         self.pic = pic
         self.result = {'value': {}, 'status': False}
@@ -66,6 +67,7 @@ class AgencyModel():
                 'status': self.status,
                 'pic': self.pic,
                 'link': self.link,
+                'links': self.links,
                 'brief_link': '',
                 'brief_title': '',
                 'brief_ro_title': '',

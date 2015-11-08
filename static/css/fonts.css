@@ -8,3 +8,8 @@
   src: url('../fonts/Zar.otf?#'),  /* IE6–8 */
        url('../fonts/Zar.ttf') format('truetype');  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
 }
+@font-face {
+  font-family: 'Mitra';
+  src: url('../fonts/BMitra.eot?#'),  /* IE6–8 */
+       url('../fonts/BMitra.ttf') format('truetype');  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+}
