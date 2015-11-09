@@ -29,7 +29,6 @@ class delete_duplicate(BaseHandler):
             for i in range(16):
                 all_news += NewsModel().get_all_all(_page=i)['value']
             for __i in all_news:
-                print __i
                 print NewsModel(_id=__i['id']).update_news_hash_title(__i['title']), __i['id']
             print len(all_news)
         except:

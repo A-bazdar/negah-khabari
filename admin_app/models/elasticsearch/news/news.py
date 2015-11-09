@@ -420,7 +420,10 @@ class NewsModel:
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
-                self.value.append({'id': b['_id'], 'title': b['_source']['title']})
+                try:
+                    self.value.append({'id': b['_id'], 'title': b['_source']['title']})
+                except:
+                    print b['_id'], 'ERROR'
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
