@@ -17,6 +17,8 @@ h1, h2, h3, h4, h5, h6{
     /*background: #405D99;*/
     padding: 10px 0 10px 10px !important;
     color: white;
+    position: fixed !important;
+    z-index: 1000;
 }
 
 .body_header_searchbox .dropdown-menu li .drp_menu_item{
@@ -581,6 +583,9 @@ div#nav_search{position: relative}
     display: block;
     background: #ffffff;
     min-height: 1000px;
+    position: absolute;
+    top: 55px;
+    padding: 50px 15px;
 }
 
 .header_logo {
