@@ -75,7 +75,7 @@ class NewsModel:
                     }
                 }
             }
-            print ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            print ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()['hints']['total']
             if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
                 return True
             return True
