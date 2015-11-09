@@ -75,10 +75,9 @@ class NewsModel:
                     }
                 }
             }
-            print ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count(), '###########'
             if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
                 return True
-            return False
+            return True
         except:
             return False
 
