@@ -76,10 +76,10 @@ def extract_titr1(document, a):
             print title
             print summary
             print thumbnail
-            # if link and title and summary and thumbnail:
-            #     _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
-            #                      agency=str(a['id']), subject="", content="563fd1d246b9a04522af4a76").insert()
-            #     print _b
+            if link and title and summary and thumbnail:
+                _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
+                                 agency=str(a['id']), subject="", content="563fd1d246b9a04522af4a76").insert()
+                print _b
             #     try:
             #         if news(_b['value']['_id']):
             #             counter += 1
