@@ -32,7 +32,10 @@ class BriefsModel:
 
     @staticmethod
     def get_hash(__key):
-        return hashlib.md5(__key.encode('utf-8')).hexdigest()
+        try:
+            return hashlib.md5(__key.encode('utf-8')).hexdigest()
+        except:
+            return hashlib.md5(__key).hexdigest()
 
     def get_brief(self, _source, _id):
         agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
