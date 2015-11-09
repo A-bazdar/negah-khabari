@@ -6,6 +6,7 @@ from bson import ObjectId
 from admin_app.classes.debug import Debug
 from admin_app.models.elasticsearch.base_model import ElasticSearchModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
+from admin_app.models.mongodb.content.content import ContentModel
 from admin_app.models.mongodb.subject.subject import SubjectModel
 
 __author__ = 'Morteza'
@@ -15,7 +16,8 @@ class BriefsModel:
     index = 'negah_khabari'
     doc_type = 'briefs'
 
-    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None, subject=None):
+    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
+                 subject=None, content=None):
         self.id = _id
         self.title = title
         self.agency = agency
@@ -24,6 +26,7 @@ class BriefsModel:
         self.thumbnail = thumbnail
         self.subject = subject
         self.link = link
+        self.content = content
         self.result = {'value': {}, 'status': False}
         self.value = []
 
@@ -37,6 +40,10 @@ class BriefsModel:
             subject = SubjectModel(_id=ObjectId(_source['subject'])).get_one()['value']
         except:
             subject = None
+        try:
+            content = ContentModel(_id=ObjectId(_source['content'])).get_one()['value']
+        except:
+            content = None
         self.value.append(dict(
             id=_id,
             link=_source['link'],
@@ -45,6 +52,7 @@ class BriefsModel:
             summary=_source['summary'],
             thumbnail=_source['thumbnail'],
             subject=subject,
+            content=content,
             agency=agency,
             date=_source['date']
         ))
@@ -54,6 +62,7 @@ class BriefsModel:
             body = {
                 "query": {"term": {"hash_link": self.get_hash(self.link)}},
             }
+            # print ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
             if ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).count():
                 return False
             return True
@@ -77,6 +86,7 @@ class BriefsModel:
                 'thumbnail': self.thumbnail,
                 'agency': self.agency,
                 'subject': self.subject,
+                'content': self.content,
                 'date': datetime.datetime.today()
             }
 

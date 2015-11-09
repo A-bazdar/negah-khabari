@@ -10,7 +10,7 @@ c = Config()
 
 class ElasticSearchBaseModel():
     def __init__(self):
-        self.db = Elasticsearch(host=c.web['elasticsearch']['host'], port=c.web['elasticsearch']['port'])
+        self.db = Elasticsearch(host=c.web['elasticsearch']['host'], port=c.web['elasticsearch']['port'], timeout=3600)
 
 
 class ElasticSearchModel(ElasticSearchBaseModel):
@@ -77,8 +77,8 @@ class ElasticSearchModel(ElasticSearchBaseModel):
             ElasticStatisticModel(index=self.index, doc_type=self.doc_type, body=self.body, result=result, function='count').insert()
             return result['count']
         except:
-            Debug.get_exception(sub_system='admin', severity='critical_error', tags='elastic_search > count',
-                                data='index: ' + self.index + ' doc_type: ' + self.doc_type + ' body: ' + str(self.body))
+            # Debug.get_exception(sub_system='admin', severity='critical_error', tags='elastic_search > count',
+            #                     data='index: ' + self.index + ' doc_type: ' + self.doc_type + ' body: ' + str(self.body))
             return 0
 
     def get_one(self):

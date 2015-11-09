@@ -21,6 +21,7 @@ class MongodbModel(MongodbBaseModel):
         self.__page = page
         self.__sort = sort
 
+        self.__collection = collection
         self.__condition = condition
         if collection == 'agency':
             self.collection = self.db.agency
@@ -54,7 +55,7 @@ class MongodbModel(MongodbBaseModel):
             return self.collection.insert(self.__body)
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > insert',
-                                data='collection: ' + self.__condition + ' body: ' + str(self.__body))
+                                data='collection: ' + self.__collection + ' body: ' + str(self.__body))
             return False
 
     def get_all(self):
@@ -62,7 +63,7 @@ class MongodbModel(MongodbBaseModel):
             return self.collection.find(self.__body)
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > get_all',
-                                data='collection: ' + self.__condition + ' body: ' + str(self.__body))
+                                data='collection: ' + self.__collection + ' body: ' + str(self.__body))
             return False
 
     def get_all_pagination(self):
@@ -78,7 +79,7 @@ class MongodbModel(MongodbBaseModel):
             return self.collection.find_one(self.__body)
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > get_one',
-                                data='collection: ' + self.__condition + ' body: ' + str(self.__body))
+                                data='collection: ' + self.__collection + ' body: ' + str(self.__body))
             return False
 
     def delete(self):
@@ -86,7 +87,7 @@ class MongodbModel(MongodbBaseModel):
             return self.collection.remove(self.__body)
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > delete',
-                                data='collection: ' + self.__condition + ' body: ' + str(self.__body))
+                                data='collection: ' + self.__collection + ' body: ' + str(self.__body))
             return False
 
     def count(self):
@@ -94,7 +95,7 @@ class MongodbModel(MongodbBaseModel):
             return self.collection.find(self.__body).count()
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > count',
-                                data='collection: ' + self.__condition + ' body: ' + str(self.__body))
+                                data='collection: ' + self.__collection + ' body: ' + str(self.__body))
             return 0
 
     def update(self):
@@ -102,7 +103,7 @@ class MongodbModel(MongodbBaseModel):
             return self.collection.update(self.__condition, self.__body)
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > update',
-                                data='collection: ' + self.__condition + ' body: ' + str(
+                                data='collection: ' + self.__collection + ' body: ' + str(
                                     self.__body) + ' condition: ' + str(self.__condition))
             return False
 

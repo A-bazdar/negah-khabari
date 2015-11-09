@@ -9,6 +9,9 @@ from admin_app.classes.public import CreateId
 from admin_app.models.elasticsearch.base_model import ElasticSearchModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
 import time
+from admin_app.models.mongodb.content.content import ContentModel
+from admin_app.models.mongodb.subject.subject import SubjectModel
+
 __author__ = 'Morteza'
 
 
@@ -16,7 +19,7 @@ class NewsModel:
     index = 'negah_khabari'
     doc_type = 'news'
 
-    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None, subject=None, body=None, date=None):
+    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None, subject=None, body=None, date=None, content=None):
         self.id = _id
         self.title = title
         self.agency = agency
@@ -27,6 +30,7 @@ class NewsModel:
         self.date = date
         self.thumbnail = thumbnail
         self.link = link
+        self.content = content
         self.result = {'value': {}, 'status': False}
         self.value = []
 
@@ -71,9 +75,10 @@ class NewsModel:
                     }
                 }
             }
+            print body
             if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
                 return True
-            return False
+            return True
         except:
             return False
 
@@ -99,6 +104,7 @@ class NewsModel:
                 'agency': self.agency,
                 'subject': self.subject,
                 'date': self.date,
+                'content': self.content,
                 'read_date': d,
                 'read_timestamp': int(time.mktime(d.timetuple())),
             }
@@ -118,6 +124,14 @@ class NewsModel:
             agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
             x = _source['date'].split('T')
             _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+            try:
+                subject = SubjectModel(_id=ObjectId(_source['subject'])).get_one()['value']
+            except:
+                subject = None
+            try:
+                content = ContentModel(_id=ObjectId(_source['content'])).get_one()['value']
+            except:
+                content = None
             self.value.append(dict(
                 id=_id,
                 link=_source['link'],
@@ -127,6 +141,8 @@ class NewsModel:
                 summary=_source['summary'],
                 thumbnail=_source['thumbnail'],
                 agency=agency,
+                content=content,
+                subject=subject,
                 date=khayyam.JalaliDatetime(_date).strftime('%Y %B %d %H:%M:%S'),
                 read_date=_source['read_date'],
             ))
@@ -392,7 +408,7 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def get_all_all(self, _page, _size=100):
+    def get_all_all(self, _page, _size=1000):
         try:
             body = {
                 "from": _page * _size, "size": _size,
@@ -404,7 +420,7 @@ class NewsModel:
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
-                self.get_news(b['_source'], b['_id'])
+                self.value.append(b['_id'])
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
@@ -468,16 +484,13 @@ class NewsModel:
     def update_news_id(self, __id):
         try:
             body = {
-                "script": "ctx._source._id = __read_date",
+                "script": "ctx._source.content = __read_date",
                 "params": {
                     "__read_date": __id
                 }
             }
 
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=self.id).update()
-            self.result['value'] = r
-            self.result['status'] = True
-            return self.result
+            return ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=self.id).update()
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
@@ -520,7 +533,6 @@ class NewsModel:
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, _id=self.id).get_one()
             self.get_news(r['_source'], r['_id'])
-            self.result['value'] = self.value[0]
             self.result['value'] = self.value[0]
             self.result['status'] = True
             return self.result

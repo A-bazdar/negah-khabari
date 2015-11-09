@@ -44,6 +44,23 @@ class ContentModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > content')
             return self.result
 
+    def get_one(self):
+        try:
+            r = MongodbModel(collection='content', body={'_id': self.id}).get_one()
+            if r:
+                self.result['value'] = dict(
+                    id=r['_id'],
+                    name=r['name'],
+                    main_page=r['main_page']
+                )
+
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_one', data='collection > content')
+            return self.result
+
     def delete(self):
         try:
             self.result['value'] = MongodbModel(collection='content', body={'_id': self.id}).delete()
