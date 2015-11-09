@@ -423,7 +423,7 @@ class NewsModel:
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
                 try:
-                    self.value.append({'id': b['_id'], 'title': b['_source']['title']})
+                    self.value.append({'id': b['_id'], 'agency': b['_source']['agency']})
                 except:
                     print b['_id'], 'ERROR'
             self.result['value'] = self.value
@@ -463,10 +463,23 @@ class NewsModel:
                                 }
                             },
                             {
-                                "query": {
-                                    "term": {
-                                        "hash_title": self.get_hash(self.title)
-                                    }
+                                "and": {
+                                    "filters": [
+                                        {
+                                            "query": {
+                                                "term": {
+                                                    "hash_title": self.get_hash(self.title)
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "query": {
+                                                "term": {
+                                                    "agency": self.agency,
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
                             }
                         ]

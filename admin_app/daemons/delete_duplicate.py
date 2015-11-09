@@ -16,7 +16,7 @@ class delete_duplicate(BaseHandler):
             a = []
             for i in all_news:
                 try:
-                    similar = NewsModel(title=i['title'], agency=str(i['agency']['id'])).get_all_similar()['value']
+                    similar = NewsModel(title=i['title'], agency=i['agency']).get_all_similar()['value']
                     a.append({'t': i['title'], 'c': len(similar)})
                     if len(similar) > 1:
                         for j in similar[:-1]:

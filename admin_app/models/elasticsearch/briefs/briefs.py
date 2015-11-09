@@ -60,14 +60,45 @@ class BriefsModel:
     def is_exist(self):
         try:
             body = {
-                "query": {"term": {"hash_link": self.get_hash(self.link)}},
+                "filter": {
+                    "or": {
+                        "filters": [
+                            {
+                                "and": {
+                                    "filters": [
+                                        {
+                                            "query": {
+                                                "term": {
+                                                    "hash_title": self.get_hash(self.title)
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "query": {
+                                                "term": {
+                                                    "agency": self.agency,
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "query": {
+                                    "term": {
+                                        "hash_link": self.get_hash(self.link)
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
             }
-            # print ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
-            if ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).count():
-                return False
-            return True
-        except:
+            if ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()['hits']['total']:
+                return True
             return False
+        except:
+            return True
 
     def delete(self):
         try:
@@ -81,6 +112,7 @@ class BriefsModel:
                 'link': self.link,
                 'hash_link': self.get_hash(self.link),
                 'title': self.title,
+                'hash_title': self.get_hash(self.title),
                 'ro_title': self.ro_title,
                 'summary': self.summary,
                 'thumbnail': self.thumbnail,
@@ -90,7 +122,7 @@ class BriefsModel:
                 'date': datetime.datetime.today()
             }
 
-            if self.is_exist():
+            if not self.is_exist():
                 self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).insert()
                 self.result['status'] = True
             else:
