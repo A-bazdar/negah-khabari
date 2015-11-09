@@ -71,15 +71,20 @@ def extract_titr1(document, a):
                 Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_titr1',
                                     data=a['base_link'].encode('utf-8'))
                 thumbnail = None
-            if link and title and summary and thumbnail:
-                _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
-                                 agency=str(a['id']), subject="", content="563fd1d246b9a04522af4a75").insert()
-                print _b
-                try:
-                    if news(_b['value']['_id']):
-                        counter += 1
-                except:
-                    pass
+            print link
+            print ro_title
+            print title
+            print summary
+            print thumbnail
+            # if link and title and summary and thumbnail:
+            #     _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
+            #                      agency=str(a['id']), subject="", content="563fd1d246b9a04522af4a76").insert()
+            #     print _b
+            #     try:
+            #         if news(_b['value']['_id']):
+            #             counter += 1
+            #     except:
+            #         pass
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_titr1s',
@@ -92,10 +97,10 @@ def titr1():
     try:
         agencies = AgencyModel().get_all_titr_1()['value']
         for a in agencies:
-            print a['titr1']
-            data = get_url(a['base_link'])
-            if data:
-                __counter += extract_titr1(data, a)
+            if a['base_link'] == 'http://aftabnews.ir':
+                data = get_url(a['base_link'])
+                if data:
+                    __counter += extract_titr1(data, a)
         return False, 'Success', __counter
     except:
         error_message = Debug.get_exception(sub_system='engine_feed', severity='fatal_error', tags='get_briefs',
@@ -107,4 +112,4 @@ if __name__ == '__main__':
     start_time = datetime.datetime.now()
     r, m, c = titr1()
     end_time = datetime.datetime.now()
-    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a75")).insert()
+    # FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a76")).insert()
