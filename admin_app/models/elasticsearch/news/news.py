@@ -50,7 +50,7 @@ class NewsModel:
                                         {
                                             "query": {
                                                 "match_phrase": {
-                                                    "title": self.title
+                                                    "hash_title": self.get_hash(self.title)
                                                 }
                                             }
                                         },
@@ -75,7 +75,6 @@ class NewsModel:
                     }
                 }
             }
-            print body
             if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
                 return True
             return True
@@ -97,6 +96,7 @@ class NewsModel:
                 'link': self.link,
                 'hash_link': self.get_hash(self.link),
                 'title': self.title,
+                'hash_title': self.get_hash(self.title),
                 'ro_title': self.ro_title,
                 'summary': self.summary,
                 'body': self.body,
@@ -420,7 +420,7 @@ class NewsModel:
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
-                self.value.append(b['_id'])
+                self.value.append({'id': b['_id'], 'title': b['title']})
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
@@ -481,12 +481,12 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def update_news_id(self, __id):
+    def update_news_hash_title(self, __title):
         try:
             body = {
-                "script": "ctx._source.content = __read_date",
+                "script": "ctx._source.hash_title = __read_date",
                 "params": {
-                    "__read_date": __id
+                    "__read_date": self.get_hash(__title)
                 }
             }
 
