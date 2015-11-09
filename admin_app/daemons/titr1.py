@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
+
 import datetime
 from bson import ObjectId
-
-sys.path.append("/root/projects/negah-khabari")
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
 import urllib2
@@ -31,57 +29,57 @@ def extract_titr1(document, a):
         print a['base_link']
         soap = BeautifulSoup(document, "html.parser")
         list_titr1s = soap.select(a['titr1_container'])
-        for i in list_titr1s:
-            try:
-                if a['titr1_link'] != '':
-                    link = i.select_one(a['titr1_link']).find('a')['href'].encode('utf-8')
-                else:
-                    link = i.find('a')['href'].encode('utf-8')
-                if 'http' not in link and 'www' not in link:
-                    link = a['base_link'].encode('utf-8') + link
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_link_titr1',
-                                    data=a['base_link'].encode('utf-8'))
-                link = None
-            try:
-                if a['titr1_ro_title']:
-                    ro_title = i.select_one(a['titr1_ro_title']).text.encode('utf-8').strip()
-                else:
-                    ro_title = None
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_ro_title_titr1',
-                                    data=a['base_link'].encode('utf-8'))
-                ro_title = None
-
-            try:
-                title = i.select_one(a['titr1_title']).text.encode('utf-8').strip()
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_titr1',
-                                    data=a['base_link'].encode('utf-8'))
-                title = None
-            try:
-                summary = i.select_one(a['titr1_summary']).text.encode('utf-8').strip()
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_summary_titr1',
-                                    data=a['base_link'].encode('utf-8'))
-                summary = None
-            try:
-                thumbnail = i.select_one(a['titr1_thumbnail']).find('img')['src'].encode('utf-8')
-                if 'http' not in thumbnail and 'www' not in thumbnail:
-                    thumbnail = a['base_link'].encode('utf-8') + thumbnail
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_titr1',
-                                    data=a['base_link'].encode('utf-8'))
-                thumbnail = None
-            if link and title and summary and thumbnail:
-                _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
-                                 agency=str(a['id']), subject="", content="563fd1d246b9a04522af4a75").insert()
-                print _b
-                try:
-                    if news(_b['value']['_id']):
-                        counter += 1
-                except:
-                    pass
+        # for i in list_titr1s:
+        #     try:
+        #         if a['titr1_link'] != '':
+        #             link = i.select_one(a['titr1_link']).find('a')['href'].encode('utf-8')
+        #         else:
+        #             link = i.find('a')['href'].encode('utf-8')
+        #         if 'http' not in link and 'www' not in link:
+        #             link = a['base_link'].encode('utf-8') + link
+        #     except:
+        #         Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_link_titr1',
+        #                             data=a['base_link'].encode('utf-8'))
+        #         link = None
+        #     try:
+        #         if a['titr1_ro_title']:
+        #             ro_title = i.select_one(a['titr1_ro_title']).text.encode('utf-8').strip()
+        #         else:
+        #             ro_title = None
+        #     except:
+        #         Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_ro_title_titr1',
+        #                             data=a['base_link'].encode('utf-8'))
+        #         ro_title = None
+        #
+        #     try:
+        #         title = i.select_one(a['titr1_title']).text.encode('utf-8').strip()
+        #     except:
+        #         Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_titr1',
+        #                             data=a['base_link'].encode('utf-8'))
+        #         title = None
+        #     try:
+        #         summary = i.select_one(a['titr1_summary']).text.encode('utf-8').strip()
+        #     except:
+        #         Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_summary_titr1',
+        #                             data=a['base_link'].encode('utf-8'))
+        #         summary = None
+        #     try:
+        #         thumbnail = i.select_one(a['titr1_thumbnail']).find('img')['src'].encode('utf-8')
+        #         if 'http' not in thumbnail and 'www' not in thumbnail:
+        #             thumbnail = a['base_link'].encode('utf-8') + thumbnail
+        #     except:
+        #         Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_titr1',
+        #                             data=a['base_link'].encode('utf-8'))
+        #         thumbnail = None
+        #     if link and title and summary and thumbnail:
+        #         _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
+        #                          agency=str(a['id']), subject="", content="563fd1d246b9a04522af4a75").insert()
+        #         print _b
+        #         try:
+        #             if news(_b['value']['_id']):
+        #                 counter += 1
+        #         except:
+        #             pass
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_titr1s',
@@ -94,11 +92,9 @@ def titr1():
     try:
         agencies = AgencyModel().get_all_titr_1()['value']
         for a in agencies:
-            # if a['base_link'] not in ['http://aftabnews.ir', 'http://www.baharnews.ir', 'http://alef.ir', 'http://www.598.ir', 'http://khabareno.com', 'http://farsnews.com', 'http://www.mashreghnews.ir']:
-            # if a['base_link'] == 'http://www.yjc.ir':
-                data = get_url(a['base_link'])
-                if data:
-                    __counter += extract_titr1(data, a)
+            data = get_url(a['base_link'])
+            if data:
+                __counter += extract_titr1(data, a)
         return False, 'Success', __counter
     except:
         error_message = Debug.get_exception(sub_system='engine_feed', severity='fatal_error', tags='get_briefs',
