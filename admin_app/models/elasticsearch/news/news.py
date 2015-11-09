@@ -76,7 +76,7 @@ class NewsModel:
                 }
             }
             print 111111111111111
-            print ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            print ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()['hits']['total']
             if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
                 return True
             return True
