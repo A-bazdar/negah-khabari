@@ -483,16 +483,13 @@ class NewsModel:
     def update_news_id(self, __id):
         try:
             body = {
-                "script": "ctx._source._id = __read_date",
+                "script": "ctx._source.content = __read_date",
                 "params": {
                     "__read_date": __id
                 }
             }
 
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=self.id).update()
-            self.result['value'] = r
-            self.result['status'] = True
-            return self.result
+            return ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=self.id).update()
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
