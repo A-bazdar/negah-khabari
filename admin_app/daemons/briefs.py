@@ -71,7 +71,7 @@ def extract_briefs(document, a, l):
                 thumbnail = None
             if link and title and summary and thumbnail:
                 _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
-                                 agency=str(a['id']), subject=str(l['subject']), content="563fd1e046b9a04522af4a76").insert()
+                                 agency=str(a['id']), subject=str(l['subject']), content="563fd1d246b9a04522af4a76").insert()
                 print _b
                 try:
                     if news(_b['value']['_id']):
@@ -105,4 +105,4 @@ if __name__ == '__main__':
     start_time = datetime.datetime.now()
     r, m, c = briefs()
     end_time = datetime.datetime.now()
-    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a75")).insert()
+    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a76")).insert()
