@@ -26,10 +26,11 @@ class delete_duplicate(BaseHandler):
         # except:
         #     Debug.get_exception(send=False)
             all_news = []
-            for i in range(16):
+            for i in range(1):
                 all_news += NewsModel().get_all_all(_page=i)['value']
-            for i in all_news:
-                print NewsModel(_id=i['id']).update_news_hash_title(i['title']), i['id']
+            for __i in all_news:
+                print __i
+                print NewsModel(_id=__i['id']).update_news_hash_title(__i['title']), __i['id']
             print len(all_news)
         except:
             Debug.get_exception(send=False)
