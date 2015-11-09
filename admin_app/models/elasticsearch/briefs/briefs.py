@@ -41,7 +41,7 @@ class BriefsModel:
         except:
             subject = None
         try:
-            content = ContentModel(_id=ObjectId(_source['subject'])).get_one()['value']
+            content = ContentModel(_id=ObjectId(_source['content'])).get_one()['value']
         except:
             content = None
         self.value.append(dict(

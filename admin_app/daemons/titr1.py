@@ -71,20 +71,15 @@ def extract_titr1(document, a):
                 Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_titr1',
                                     data=a['base_link'].encode('utf-8'))
                 thumbnail = None
-            print link
-            print ro_title
-            print title
-            print summary
-            print thumbnail
             if link and title and summary and thumbnail:
                 _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
                                  agency=str(a['id']), subject="", content="563fd1d246b9a04522af4a76").insert()
                 print _b
-            #     try:
-            #         if news(_b['value']['_id']):
-            #             counter += 1
-            #     except:
-            #         pass
+                try:
+                    if news(_b['value']['_id']):
+                        counter += 1
+                except:
+                    pass
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_titr1s',
