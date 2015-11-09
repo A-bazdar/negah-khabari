@@ -49,7 +49,7 @@ class NewsModel:
                                     "filters": [
                                         {
                                             "query": {
-                                                "match_phrase": {
+                                                "term": {
                                                     "hash_title": self.get_hash(self.title)
                                                 }
                                             }
@@ -440,19 +440,32 @@ class NewsModel:
             body = {
                 "from": 0, "size": 10000000,
                 "filter": {
-                    "and": {
+                    "or": {
                         "filters": [
                             {
-                                "query": {
-                                    "match_phrase": {
-                                        "title": self.title
-                                    }
+                                "and": {
+                                    "filters": [
+                                        {
+                                            "query": {
+                                                "match_phrase": {
+                                                    "title": self.title
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "query": {
+                                                "term": {
+                                                    "agency": self.agency,
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
                             },
                             {
                                 "query": {
                                     "term": {
-                                        "agency": self.agency,
+                                        "hash_title": self.get_hash(self.title)
                                     }
                                 }
                             }
