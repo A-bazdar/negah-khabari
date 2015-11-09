@@ -27,7 +27,7 @@ class delete_duplicate(BaseHandler):
         # except:
         #     Debug.get_exception(send=False)
             all_news = []
-            for i in range(16):
+            for i in range(24):
                 all_news += BriefsModel().get_all_all(_page=i)['value']
             for __i in all_news:
                 print BriefsModel(_id=__i['id']).update_news_hash_title(__i['title']), __i['id']
