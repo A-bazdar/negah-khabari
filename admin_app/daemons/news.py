@@ -120,6 +120,5 @@ def news(brief):
     if not NewsModel(link=b['link']).is_exist():
         data = get_url(b['link'], b['id'])
         if data:
-            print b['link']
             return extract_news(data, b)
     return False

@@ -107,6 +107,7 @@ class NewsModel:
                 'read_date': d,
                 'read_timestamp': int(time.mktime(d.timetuple())),
             }
+            print body
             if not self.is_exist():
                 news = self.get_news_id()
                 self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=news).insert()

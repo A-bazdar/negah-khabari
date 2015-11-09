@@ -90,8 +90,6 @@ class BriefsModel:
                 'date': datetime.datetime.today()
             }
 
-            print body
-
             if self.is_exist():
                 self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).insert()
                 self.result['status'] = True
