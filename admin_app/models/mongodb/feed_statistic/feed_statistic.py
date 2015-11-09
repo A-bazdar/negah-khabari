@@ -54,7 +54,7 @@ class FeedStatisticModel(BaseModel):
         except:
             different = {'minute': '00', 'second': '00'}
         try:
-            content = ContentModel(_id=ObjectId(q['subject'])).get_one()['value']
+            content = ContentModel(_id=ObjectId(q['content'])).get_one()['value']
         except:
             content = None
         self.value.append(

@@ -99,7 +99,7 @@ class MongodbModel(MongodbBaseModel):
 
     def update(self):
         try:
-            return self.collection.update(self.__condition, self.__body)
+            return self.collection.update(self.__condition, self.__body, {"multi": True})
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > update',
                                 data='collection: ' + self.__condition + ' body: ' + str(
