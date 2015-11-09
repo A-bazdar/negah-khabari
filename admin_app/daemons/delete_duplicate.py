@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from admin_app.classes.debug import Debug
 from admin_app.handlers.base import BaseHandler
+from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.elasticsearch.news.news import NewsModel
 
 __author__ = 'Morteza'
@@ -27,9 +28,9 @@ class delete_duplicate(BaseHandler):
         #     Debug.get_exception(send=False)
             all_news = []
             for i in range(16):
-                all_news += NewsModel().get_all_all(_page=i)['value']
+                all_news += BriefsModel().get_all_all(_page=i)['value']
             for __i in all_news:
-                print NewsModel(_id=__i['id']).update_news_hash_title(__i['title']), __i['id']
+                print BriefsModel(_id=__i['id']).update_news_hash_title(__i['title']), __i['id']
             print len(all_news)
         except:
             Debug.get_exception(send=False)

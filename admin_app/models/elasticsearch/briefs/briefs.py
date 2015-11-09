@@ -154,3 +154,45 @@ class BriefsModel:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
                                 data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
             return self.result
+
+    def get_all_all(self, _page, _size=1000):
+        try:
+            body = {
+                "from": _page * _size, "size": _size,
+                "query": {
+                    "match_all": {}
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+
+            r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
+            for b in r['hits']['hits']:
+                try:
+                    self.value.append({'id': b['_id'], 'title': b['_source']['title']})
+                except:
+                    print b['_id'], 'ERROR'
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+            return self.result
+
+    def update_news_hash_title(self, __title):
+        try:
+            body = {
+                "script": "ctx._source.hash_title = __read_date;ctx._source.content = __content",
+                "params": {
+                    "__read_date": self.get_hash(__title),
+                    "__content": "563fd1d246b9a04522af4a75"
+                }
+            }
+
+            return ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body, _id=self.id).update()
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+            return self.result
