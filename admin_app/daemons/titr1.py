@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
 import datetime
+
+sys.path.append("/root/projects/negah-khabari")
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
 import urllib2
@@ -21,56 +24,57 @@ def get_url(url):
         return False
 
 
-def extract_briefs(document, a, l):
+def extract_titr1(document, a):
     counter = 0
     try:
+        print a['base_link']
         soap = BeautifulSoup(document, "html.parser")
-        list_briefs = soap.select(a['brief_container'])
-        print a['base_link'], ' ------->> ', l['link']
-        for i in list_briefs:
+        list_titr1s = soap.select(a['titr1_container'])
+        for i in list_titr1s:
             try:
-                if a['brief_link'] != '':
-                    link = i.select_one(a['brief_link']).find('a')['href'].encode('utf-8')
+                if a['titr1_link'] != '':
+                    link = i.select_one(a['titr1_link']).find('a')['href'].encode('utf-8')
                 else:
                     link = i.find('a')['href'].encode('utf-8')
                 if 'http' not in link and 'www' not in link:
                     link = a['base_link'].encode('utf-8') + link
             except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_link_brief',
+                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_link_titr1',
                                     data=a['base_link'].encode('utf-8'))
                 link = None
             try:
-                if a['brief_ro_title']:
-                    ro_title = i.select_one(a['brief_ro_title']).text.encode('utf-8').strip()
+                if a['titr1_ro_title']:
+                    ro_title = i.select_one(a['titr1_ro_title']).text.encode('utf-8').strip()
                 else:
                     ro_title = None
             except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_ro_title_brief',
+                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_ro_title_titr1',
                                     data=a['base_link'].encode('utf-8'))
                 ro_title = None
+
             try:
-                title = i.select_one(a['brief_title']).text.encode('utf-8').strip()
+                title = i.select_one(a['titr1_title']).text.encode('utf-8').strip()
             except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_brief',
+                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_titr1',
                                     data=a['base_link'].encode('utf-8'))
                 title = None
             try:
-                summary = i.select_one(a['brief_summary']).text.encode('utf-8').strip()
+                summary = i.select_one(a['titr1_summary']).text.encode('utf-8').strip()
             except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_summary_brief',
+                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_summary_titr1',
                                     data=a['base_link'].encode('utf-8'))
                 summary = None
             try:
-                thumbnail = i.select_one(a['brief_thumbnail']).find('img')['src'].encode('utf-8')
+                thumbnail = i.select_one(a['titr1_thumbnail']).find('img')['src'].encode('utf-8')
                 if 'http' not in thumbnail and 'www' not in thumbnail:
                     thumbnail = a['base_link'].encode('utf-8') + thumbnail
             except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_brief',
+                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_titr1',
                                     data=a['base_link'].encode('utf-8'))
                 thumbnail = None
             if link and title and summary and thumbnail:
                 _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
-                                 agency=str(a['id']), subject=str(l['subject']), content="563fd1e046b9a04522af4a76").insert()
+                                 agency=str(a['id']), subject="", content="563fd1d246b9a04522af4a75").insert()
                 print _b
                 try:
                     if news(_b['value']['_id']):
@@ -79,20 +83,21 @@ def extract_briefs(document, a, l):
                     pass
         return counter
     except:
-        Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_briefs',
-                            data='extract_briefs')
+        Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_titr1s',
+                            data='extract_titr1s')
         return counter
 
 
-def briefs():
+def titr1():
     __counter = 0
     try:
-        agencies = AgencyModel().get_all()['value']
+        agencies = AgencyModel().get_all_titr_1()['value']
         for a in agencies:
-            for l in a['links']:
-                data = get_url(l['link'])
+            # if a['base_link'] not in ['http://aftabnews.ir', 'http://www.baharnews.ir', 'http://alef.ir', 'http://www.598.ir', 'http://khabareno.com', 'http://farsnews.com', 'http://www.mashreghnews.ir']:
+            # if a['base_link'] == 'http://www.yjc.ir':
+                data = get_url(a['base_link'])
                 if data:
-                    __counter += extract_briefs(data, a, l)
+                    __counter += extract_titr1(data, a)
         return False, 'Success', __counter
     except:
         error_message = Debug.get_exception(sub_system='engine_feed', severity='fatal_error', tags='get_briefs',
@@ -102,6 +107,6 @@ def briefs():
 
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
-    r, m, c = briefs()
+    r, m, c = titr1()
     end_time = datetime.datetime.now()
     FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content="563fd1d246b9a04522af4a75").insert()

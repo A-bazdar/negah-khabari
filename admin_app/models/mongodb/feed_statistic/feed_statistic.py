@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+from bson import ObjectId
 import khayyam
 from admin_app.classes.date import CustomDateTime
 from admin_app.classes.debug import Debug
 from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
+from admin_app.models.mongodb.content.content import ContentModel
 
 __author__ = 'Morteza'
 
 
 class FeedStatisticModel(BaseModel):
-    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, end_time=None):
+    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, end_time=None, content=None):
         BaseModel.__init__(self)
         self.id = _id
         self.start_time = start_time
@@ -18,6 +20,7 @@ class FeedStatisticModel(BaseModel):
         self.message = message
         self.count = count
         self.end_time = end_time
+        self.content = content
         self.value = []
         self.result = {'value': {}, 'status': False}
 
@@ -27,6 +30,7 @@ class FeedStatisticModel(BaseModel):
                 'start_time': self.start_time,
                 'error': self.error,
                 'message': self.message,
+                'content': self.content,
                 'count': self.count,
                 'end_time': self.end_time,
             }
@@ -49,6 +53,10 @@ class FeedStatisticModel(BaseModel):
             }
         except:
             different = {'minute': '00', 'second': '00'}
+        try:
+            content = ContentModel(_id=ObjectId(q['subject'])).get_one()['value']
+        except:
+            content = None
         self.value.append(
             dict(
                 id=q['_id'],
@@ -58,6 +66,7 @@ class FeedStatisticModel(BaseModel):
                 different=different,
                 error=q['error'],
                 message=q['message'],
+                content=content,
             )
         )
 

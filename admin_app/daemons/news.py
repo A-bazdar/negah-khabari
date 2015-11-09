@@ -1,10 +1,8 @@
 # #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
-import sys
+
 import datetime
 import khayyam
-
-sys.path.append("/root/projects/negah-khabari")
 from admin_app.classes.debug import Debug
 import urllib2
 import re, urlparse
@@ -107,7 +105,7 @@ def extract_news(document, b):
             thumbnail = b['thumbnail']
         if title and body:
             r = NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary,
-                          thumbnail=thumbnail, agency=str(b['agency']['id']), subject=str(b['subject']['id']), date=date).insert()
+                          thumbnail=thumbnail, agency=str(b['agency']['id']), subject=str(b['subject']['id']), content=str(b['content']['id']), date=date).insert()
             print r
             return r['status']
         return False

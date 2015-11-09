@@ -51,6 +51,13 @@ class AgencyModel():
                 news_summary=agency['news_summary'],
                 news_body=agency['news_body'],
                 news_thumbnail=agency['news_thumbnail'],
+                titr1=agency['titr1'],
+                titr1_link=agency['titr1_link'],
+                titr1_container=agency['titr1_container'],
+                titr1_ro_title=agency['titr1_ro_title'],
+                titr1_title=agency['titr1_title'],
+                titr1_summary=agency['titr1_summary'],
+                titr1_thumbnail=agency['titr1_thumbnail']
             )
         except:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_agency')
@@ -91,6 +98,22 @@ class AgencyModel():
     def get_all(self):
         try:
             r = MongodbModel(collection='agency', body={}).get_all()
+            if r:
+                l = []
+                for i in r:
+                    a = self.get_agency(i)
+                    if a:
+                        l.append(a)
+                self.result['value'] = l
+                self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
+            return self.result
+
+    def get_all_titr_1(self):
+        try:
+            r = MongodbModel(collection='agency', body={"titr1": True}).get_all()
             if r:
                 l = []
                 for i in r:
