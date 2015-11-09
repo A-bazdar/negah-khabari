@@ -578,7 +578,7 @@ div#nav_search{position: relative}
 .main {
     margin: 0;
     width: 100%;
-    display: table-cell;
+    display: block;
     background: #ffffff;
     min-height: 1000px;
 }
@@ -615,14 +615,14 @@ div#nav_search{position: relative}
 
 .side_toggler {
     /*text-align: right;*/
-    vertical-align: -11px;
+    vertical-align: -9px;
     font-size: 15pt;
     color: #cdcdcd;
     border: solid 2px #cdcdcd;
     margin-left: 15px;
     margin-right: -10px;
     cursor: pointer;
-    padding: 3px;
+    padding: 3px 5px;
     border-radius: 5px;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
@@ -909,4 +909,49 @@ div#nav_search{position: relative}
         display: block;
     }
 
+}
+
+.custom-menu {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    overflow: hidden;
+    width: 250px;
+    border: 1px solid #CCC;
+    white-space: nowrap;
+    background: #F5F7F9;
+    color: #333;
+    padding: 10px 0 !important;
+    box-shadow: 0 0 2px #aaa;
+}
+
+.custom-menu li {
+    list-style-type: none;
+}
+
+.custom-menu li a {
+    color: #4d4d4d !important;
+    width: 100%;
+    padding: 5px;
+    position: relative;
+    font-size: 11pt !important;
+    display: block;
+}
+
+.custom-menu li a:hover {
+    background: #CCD1E4 !important;
+    color: #4d4d4d !important;
+    text-decoration: none;
+}
+
+.custom-menu hr {
+    margin: 2px 0 !important;
+    border-color: #d7d7d7;
+}
+
+.custom-menu a span.news_dropdown_count {
+    position: absolute;
+    left: 15px;
+    top: 4px;
+    font-size: 10pt;
 }
