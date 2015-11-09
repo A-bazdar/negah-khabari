@@ -62,7 +62,7 @@ class BriefsModel:
             body = {
                 "query": {"term": {"hash_link": self.get_hash(self.link)}},
             }
-            # print ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
+            print ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
             if ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).count():
                 return False
             return True
