@@ -76,12 +76,12 @@ class NewsModel:
                 }
             }
             print 111111111111111
-            print ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()['hints']['total']
+            print ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
                 return True
             return True
         except:
-            return False
+            return True
 
     @staticmethod
     def get_news_id():
