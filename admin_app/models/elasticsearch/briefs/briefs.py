@@ -97,7 +97,7 @@ class BriefsModel:
                     }
                 }
             }
-            print ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
+            # print ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
             if ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()['hits']['total']:
                 return True
             return False
