@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import datetime
+from bson import ObjectId
 
 sys.path.append("/root/projects/negah-khabari")
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
@@ -109,4 +110,4 @@ if __name__ == '__main__':
     start_time = datetime.datetime.now()
     r, m, c = titr1()
     end_time = datetime.datetime.now()
-    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content="563fd1d246b9a04522af4a75").insert()
+    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a75")).insert()

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+from bson import ObjectId
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
 import urllib2
@@ -104,4 +105,4 @@ if __name__ == '__main__':
     start_time = datetime.datetime.now()
     r, m, c = briefs()
     end_time = datetime.datetime.now()
-    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content="563fd1d246b9a04522af4a75").insert()
+    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a75")).insert()
