@@ -490,8 +490,8 @@ class NewsModel:
                 }
             }
 
-            # return ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=self.id).update()
-            return 0
+            return ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=self.id).update()
+
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
