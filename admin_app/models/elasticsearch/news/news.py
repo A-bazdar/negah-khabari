@@ -75,6 +75,7 @@ class NewsModel:
                     }
                 }
             }
+            print body
             if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
                 return True
             return True
