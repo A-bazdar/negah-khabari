@@ -26,7 +26,7 @@ def get_url(url):
 def extract_titr1(document, a):
     counter = 0
     try:
-        print a['base_link']
+        print a['base_link'], '########'
         soap = BeautifulSoup(document, "html.parser")
         list_titr1s = soap.select(a['titr1_container'])
         for i in list_titr1s:
@@ -71,16 +71,9 @@ def extract_titr1(document, a):
                 Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_titr1',
                                     data=a['base_link'].encode('utf-8'))
                 thumbnail = None
-            print link
-            print ro_title
-            print title
-            print summary
-            print thumbnail
             if link and title and summary and thumbnail:
-                print 111111111
                 _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
                                  agency=str(a['id']), subject="5640dfe846b9a036ebd86e49", content="563fd1d246b9a04522af4a76").insert()
-                print 2222222
                 print _b
                 try:
                     if news(_b['value']['_id']):
