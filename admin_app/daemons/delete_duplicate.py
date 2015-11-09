@@ -26,7 +26,7 @@ class delete_duplicate(BaseHandler):
         # except:
         #     Debug.get_exception(send=False)
             all_news = []
-            for i in range(160):
+            for i in range(16):
                 all_news += NewsModel().get_all_all(_page=i)['value']
             print len(all_news)
         except:
