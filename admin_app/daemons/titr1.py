@@ -92,7 +92,7 @@ def titr1():
     try:
         agencies = AgencyModel().get_all_titr_1()['value']
         for a in agencies:
-            if a['base_list'] == 'http://aftabnews.ir':
+            if a['base_link'] == 'http://aftabnews.ir':
                 data = get_url(a['base_link'])
                 if data:
                     __counter += extract_titr1(data, a)
