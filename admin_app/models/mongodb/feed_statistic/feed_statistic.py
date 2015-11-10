@@ -12,13 +12,14 @@ __author__ = 'Morteza'
 
 
 class FeedStatisticModel(BaseModel):
-    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, end_time=None, content=None):
+    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, count_link=None, end_time=None, content=None):
         BaseModel.__init__(self)
         self.id = _id
         self.start_time = start_time
         self.error = error
         self.message = message
         self.count = count
+        self.count_link = count_link
         self.end_time = end_time
         self.content = content
         self.value = []
@@ -32,6 +33,7 @@ class FeedStatisticModel(BaseModel):
                 'message': self.message,
                 'content': self.content,
                 'count': self.count,
+                'count_link': self.count_link,
                 'end_time': self.end_time,
             }
 

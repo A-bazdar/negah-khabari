@@ -89,22 +89,26 @@ def extract_briefs(document, a, l):
 
 def briefs():
     __counter = 0
+    __link__counter = 0
     try:
         agencies = AgencyModel().get_all()['value']
         for a in agencies:
             for l in a['links']:
                 data = get_url(l['link'])
                 if data:
-                    __counter += extract_briefs(data, a, l)
-        return False, 'Success', __counter
+                    __c = extract_briefs(data, a, l)
+                    if __c > 0:
+                        __link__counter += 1
+                    __counter += __c
+        return False, 'Success', __counter, __link__counter
     except:
         error_message = Debug.get_exception(sub_system='engine_feed', severity='fatal_error', tags='get_briefs',
                                             data='get_briefs', return_error=True)
-        return True, error_message, __counter
+        return True, error_message, __counter, __link__counter
 
 
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
-    r, m, c = briefs()
+    r, m, c, l = briefs()
     end_time = datetime.datetime.now()
-    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a75")).insert()
+    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, count_link=l, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a75")).insert()
