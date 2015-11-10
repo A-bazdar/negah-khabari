@@ -94,6 +94,7 @@ def titr1():
         for a in agencies:
             data = get_url(a['base_link'])
             if data:
+                print a['base_link'], '@@@@@@@@@@'
                 __counter += extract_titr1(data, a)
         return False, 'Success', __counter
     except:
