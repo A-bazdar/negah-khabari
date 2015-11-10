@@ -100,11 +100,18 @@ class MongodbModel(MongodbBaseModel):
 
     def update(self):
         try:
-            return self.collection.update(self.__condition, self.__body)
+            return self.collection.update(self.__condition, self.__body, {})
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > update',
                                 data='collection: ' + self.__collection + ' body: ' + str(
                                     self.__body) + ' condition: ' + str(self.__condition))
+            return False
+
+    def aggregate(self):
+        try:
+            return self.collection.aggregate(self.__body)
+        except:
+            Debug.get_exception()
             return False
 
 
