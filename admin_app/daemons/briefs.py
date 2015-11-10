@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from tendo import singleton
+singleton.SingleInstance()
 import datetime
 from bson import ObjectId
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
