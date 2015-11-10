@@ -78,8 +78,18 @@ class NewsModel:
                     }
                 }
             }
-            if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()['hits']['total']:
-                return True
+            e = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            if e['hits']['total']:
+                _id = e['hits']['hits'][0]['_id']
+                if self.content == "563fd1d246b9a04522af4a76":
+                    _body = {
+                        "script": "ctx._source.content = __content",
+                        "params": {
+                            "__content": "563fd1d246b9a04522af4a76"
+                        }
+                    }
+                    ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=_body, _id=_id).update()
+                return _id
             return False
         except:
             return False
@@ -111,12 +121,13 @@ class NewsModel:
                 'read_date': d,
                 'read_timestamp': int(time.mktime(d.timetuple())),
             }
-            if not self.is_exist():
+            e = self.is_exist()
+            if e is False:
                 news = self.get_news_id()
                 self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=news).insert()
                 self.result['status'] = True
             else:
-                self.result['value'] = "Exist"
+                self.result['value'] = {'_id': e}
 
             return self.result
 

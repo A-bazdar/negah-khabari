@@ -117,7 +117,7 @@ def extract_news(document, b):
 
 def news(brief):
     b = BriefsModel(_id=brief).get_one()['value']
-    if not NewsModel(link=b['link'], title=b['title'], agency=str(b['agency']['id'])).is_exist():
+    if NewsModel(link=b['link'], title=b['title'], agency=str(b['agency']['id'])).is_exist() is False:
         data = get_url(b['link'], b['id'])
         if data:
             return extract_news(data, b)

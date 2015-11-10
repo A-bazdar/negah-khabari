@@ -92,10 +92,9 @@ def titr1():
     try:
         agencies = AgencyModel().get_all_titr_1()['value']
         for a in agencies:
-            if a['base_link'] == 'http://alef.ir':
-                data = get_url(a['base_link'])
-                if data:
-                    __counter += extract_titr1(data, a)
+            data = get_url(a['base_link'])
+            if data:
+                __counter += extract_titr1(data, a)
         return False, 'Success', __counter
     except:
         error_message = Debug.get_exception(sub_system='engine_feed', severity='fatal_error', tags='get_briefs',

@@ -97,9 +97,18 @@ class BriefsModel:
                     }
                 }
             }
-            print ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
-            if ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()['hits']['total']:
-                return True
+            e = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
+            if e['hits']['total']:
+                _id = e['hits']['hits'][0]['_id']
+                if self.content == "563fd1d246b9a04522af4a76":
+                    _body = {
+                        "script": "ctx._source.content = __content",
+                        "params": {
+                            "__content": "563fd1d246b9a04522af4a76"
+                        }
+                    }
+                    ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=_body, _id=_id).update()
+                return _id
             return False
         except:
             return True
@@ -125,12 +134,13 @@ class BriefsModel:
                 'content': self.content,
                 'date': datetime.datetime.today()
             }
-
-            if not self.is_exist():
+            e = self.is_exist()
+            if e is False:
                 self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).insert()
                 self.result['status'] = True
             else:
-                self.result['value'] = "Exist"
+                self.result['status'] = "Exist"
+                self.result['value'] = {'_id': e}
 
             return self.result
 
