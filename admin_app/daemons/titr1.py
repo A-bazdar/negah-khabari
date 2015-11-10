@@ -106,4 +106,4 @@ if __name__ == '__main__':
     start_time = datetime.datetime.now()
     r, m, c = titr1()
     end_time = datetime.datetime.now()
-    # FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a76")).insert()
+    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a76")).insert()
