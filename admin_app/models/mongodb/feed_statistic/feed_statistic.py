@@ -99,7 +99,7 @@ class FeedStatisticModel(BaseModel):
 
     def get_activity_time(self):
         try:
-            __body = {}
+            __body = {"content": self.content}
             r = MongodbModel(collection='feed_statistic', body=__body).get_all()
             import time
             s = 0
@@ -118,7 +118,7 @@ class FeedStatisticModel(BaseModel):
 
     def get_last_activity(self):
         try:
-            __body = {}
+            __body = {"content": self.content}
             r = MongodbModel(collection='feed_statistic', body=__body, page=1, size=1, sort="start_time").get_all_pagination()
             a = datetime.datetime.now()
             for i in r:
