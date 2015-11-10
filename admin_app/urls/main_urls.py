@@ -119,13 +119,13 @@ url_patterns = [
     (r'^/Admin/LogAndCharts/ReadNewsStatistic', admin.AdminReadNewsStatisticHandler, None,
      "admin:log_and_charts:read_news_statistic"),
 
-    (r'^(?i)/Admin/LogAndCharts/ProblemNewsLog[/]?$', admin.AdminProblemNewsLogHandler),
-    (r'^/Admin/LogAndCharts/ProblemNewsLog', admin.AdminProblemNewsLogHandler, None,
-     "admin:log_and_charts:problem_news_log"),
+    (r'^(?i)/Admin/LogAndCharts/ProblemNewsLog/(chart|statistic)/(hour|day|week|month)/([\d^/]+)[/]?$', admin.AdminProblemNewsLogHandler),
+    (r'/Admin/LogAndCharts/ProblemNewsLog', admin.AdminProblemNewsLogHandler, None, 'admin:log_and_charts:problem_news_log'),
+    (r'/Admin/LogAndCharts/ProblemNewsLog/(show)/(time)/(page)', admin.AdminProblemNewsLogHandler, None, 'admin:log_and_charts:problem_news_log_by_page'),
 
-    (r'^(?i)/Admin/LogAndCharts/ProblemNewsInContinueLog[/]?$', admin.AdminProblemNewsInContinueLogHandler),
-    (r'^/Admin/LogAndCharts/ProblemNewsInContinueLog', admin.AdminProblemNewsInContinueLogHandler, None,
-     "admin:log_and_charts:problem_news_in_continue_log"),
+    (r'^(?i)/Admin/LogAndCharts/ProblemNewsInContinueLog/(chart|statistic)/(hour|day|week|month)/([\d^/]+)[/]?$', admin.AdminProblemNewsInContinueLogHandler),
+    (r'/Admin/LogAndCharts/ProblemNewsInContinueLog', admin.AdminProblemNewsInContinueLogHandler, None, 'admin:log_and_charts:problem_news_in_continue_log'),
+    (r'/Admin/LogAndCharts/ProblemNewsInContinueLog/(show)/(time)/(page)', admin.AdminProblemNewsInContinueLogHandler, None, 'admin:log_and_charts:problem_news_in_continue_log_by_page'),
 
     (r'^(?i)/Admin/LogAndCharts/UsersLog[/]?$', admin.AdminUsersLogHandler),
     (r'^/Admin/LogAndCharts/UsersLog', admin.AdminUsersLogHandler, None,

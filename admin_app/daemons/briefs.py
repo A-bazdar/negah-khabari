@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from tendo import singleton
+from admin_app.models.mongodb.failed_brief.failed_brief import FailedBriefModel
+
 singleton.SingleInstance()
 import datetime
 from bson import ObjectId
@@ -80,6 +82,8 @@ def extract_briefs(document, a, l):
                         counter += 1
                 except:
                     pass
+            else:
+                FailedBriefModel(agency=a['id'], subject=l['subject'], content=ObjectId("563fd1d246b9a04522af4a76"), title=title, link=link).save()
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_briefs',

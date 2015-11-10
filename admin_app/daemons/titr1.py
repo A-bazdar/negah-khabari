@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from tendo import singleton
+from admin_app.models.mongodb.failed_brief.failed_brief import FailedBriefModel
+
 singleton.SingleInstance()
 import datetime
 from bson import ObjectId
@@ -75,12 +77,13 @@ def extract_titr1(document, a):
             if link is not None and title is not None and summary is not None and thumbnail is not None:
                 _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
                                  agency=str(a['id']), subject="5640dfe846b9a036ebd86e49", content="563fd1d246b9a04522af4a76").insert()
-                print _b
                 try:
                     if news(_b['value']['_id']):
                         counter += 1
                 except:
                     pass
+            else:
+                FailedBriefModel(agency=a['id'], subject=l['subject'], content=ObjectId("563fd1d246b9a04522af4a76"), title=title, link=link).save()
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_titr1s',

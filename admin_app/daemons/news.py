@@ -9,6 +9,7 @@ import re, urlparse
 from bs4 import BeautifulSoup
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.elasticsearch.news.news import NewsModel
+from admin_app.models.mongodb.failed_news.failed_news import FailedNewsModel
 
 __author__ = 'Morteza'
 
@@ -108,7 +109,9 @@ def extract_news(document, b):
                           thumbnail=thumbnail, agency=str(b['agency']['id']), subject=str(b['subject']['id']), content=str(b['content']['id']), date=date).insert()
             print r
             return r['status']
-        return False
+
+        else:
+            FailedNewsModel(agency=b['agency']['id'], subject=b['subject']['id'], content=b['content']['id'], title=title, link=b['link']).save()
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_news',
                             data='extract_news')

@@ -49,6 +49,10 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.feed_statistic
         elif collection == 'elastic_statistic':
             self.collection = self.db.elastic_statistic
+        elif collection == 'failed_brief':
+            self.collection = self.db.failed_brief
+        elif collection == 'failed_news':
+            self.collection = self.db.failed_news
 
     def insert(self):
         try:
