@@ -92,6 +92,7 @@ def titr1():
     try:
         agencies = AgencyModel().get_all_titr_1()['value']
         for a in agencies:
+            print a['base_link'], '!!!!!!!!!!!!!!!!!!!'
             data = get_url(a['base_link'])
             if data:
                 print a['base_link'], '@@@@@@@@@@'
