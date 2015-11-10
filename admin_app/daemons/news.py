@@ -54,7 +54,7 @@ def extract_news(document, b):
     try:
         soap = BeautifulSoup(document, "html.parser")
         try:
-            body = soap.select_one(b['agency']['news_body']).text.encode('utf-8').strip()
+            body = soap.select_one(b['agency']['news_body']).encode('utf-8').strip()
         except:
             Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=b['link'].encode('utf-8'))
             body = None
