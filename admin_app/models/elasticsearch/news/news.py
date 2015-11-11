@@ -629,6 +629,41 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def get_top_agency(self, b):
+        try:
+            agency = AgencyModel(_id=ObjectId(b['key'])).get_one()
+            self.value.append({'agency': agency, 'count': b['doc_count']})
+        except:
+            pass
+
+    def get_top_agencies(self):
+        try:
+            body = {
+                "size": 0,
+                "aggs": {
+                    "group_by_agency": {
+                        "terms": {
+                            "field": "agency"
+                        }
+                    }
+                }
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            try:
+                for b in r['aggregations']['group_by_agency']['buckets']:
+                    self.get_top_agency(b)
+            except:
+                pass
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
     def get_one(self):
         try:
 
