@@ -81,11 +81,11 @@ class NewsModel:
             e = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             if e['hits']['total']:
                 _id = e['hits']['hits'][0]['_id']
-                if self.content == "563fd1d246b9a04522af4a76":
+                if self.content == str(ContentModel().titr1):
                     _body = {
                         "script": "ctx._source.content = __content",
                         "params": {
-                            "__content": "563fd1d246b9a04522af4a76"
+                            "__content": str(ContentModel().titr1)
                         }
                     }
                     ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=_body, _id=_id).update()
@@ -411,6 +411,35 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def get_all_by_subject(self, subjects=None, _page=0, _size=30):
+
+        def get_subjects(__subjects):
+            ls = __subjects
+            for sub in __subjects:
+                ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child()]
+            return ls
+
+        try:
+            body = {
+                "from": _page * _size, "size": _size,
+                "terms": {
+                    "subject": get_subjects(subjects),
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            for b in r['hits']['hits']:
+                self.get_news(b['_source'], b['_id'])
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all_by_subject',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
     def count_all(self):
         try:
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type).count_all()
@@ -565,6 +594,33 @@ class NewsModel:
             except:
                 pass
             self.result['value'] = {'news': self.value, 'count_all': count_all, 'count': len(r['hits']['hits'])}
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
+    def get_all_titr_1(self, _page=0, _size=15):
+        try:
+            body = {
+                "from": _page * _size, "size": _size,
+                "query": {
+                    "term": {
+                        "content": str(ContentModel().titr1)
+                    }
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            try:
+                for b in r['hits']['hits']:
+                    self.get_news(b['_source'], b['_id'])
+            except:
+                pass
+            self.result['value'] = self.value
             self.result['status'] = True
             return self.result
 

@@ -90,6 +90,23 @@ class SubjectModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all_parent', data='collection > subject')
             return self.result
 
+    def get_all_child(self):
+        try:
+            r = MongodbModel(collection='subject', body={"parent": self.parent}).get_all()
+            if r:
+                l = [dict(
+                    id=i['_id'],
+                    name=i['name'],
+                    parent=i['parent'],
+                ) for i in r]
+                self.result['value'] = l
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all_parent', data='collection > subject')
+            return self.result
+
     def delete(self):
         try:
             subject = self.get_one()['value']

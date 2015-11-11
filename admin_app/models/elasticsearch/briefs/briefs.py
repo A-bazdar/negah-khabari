@@ -100,11 +100,11 @@ class BriefsModel:
             e = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
             if e['hits']['total']:
                 _id = e['hits']['hits'][0]['_id']
-                if self.content == "563fd1d246b9a04522af4a76":
+                if self.content == str(ContentModel().titr1):
                     _body = {
                         "script": "ctx._source.content = __content",
                         "params": {
-                            "__content": "563fd1d246b9a04522af4a76"
+                            "__content": str(ContentModel().titr1)
                         }
                     }
                     ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=_body, _id=_id).update()
@@ -232,7 +232,7 @@ class BriefsModel:
                 "script": "ctx._source.hash_title = __read_date;ctx._source.content = __content",
                 "params": {
                     "__read_date": self.get_hash(__title),
-                    "__content": "563fd1d246b9a04522af4a75"
+                    "__content": str(ContentModel().news)
                 }
             }
 

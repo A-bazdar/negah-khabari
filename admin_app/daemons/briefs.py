@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from tendo import singleton
+from admin_app.models.mongodb.content.content import ContentModel
+
 singleton.SingleInstance()
 from admin_app.models.mongodb.failed_brief.failed_brief import FailedBriefModel
 import datetime
@@ -74,7 +76,7 @@ def extract_briefs(document, a, l):
                 thumbnail = None
             if link is not None and title is not None and summary is not None and thumbnail is not None:
                 _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
-                                 agency=str(a['id']), subject=str(l['subject']), content="563fd1d246b9a04522af4a75").insert()
+                                 agency=str(a['id']), subject=str(l['subject']), content=str(ContentModel().news)).insert()
                 print _b
                 try:
                     if news(_b['value']['_id']):
@@ -82,7 +84,7 @@ def extract_briefs(document, a, l):
                 except:
                     pass
             else:
-                FailedBriefModel(agency=a['id'], subject=l['subject'], content=ObjectId("563fd1d246b9a04522af4a76"), title=title, link=link).save()
+                FailedBriefModel(agency=a['id'], subject=l['subject'], content=ContentModel().news, title=title, link=link).save()
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_briefs',
@@ -114,4 +116,4 @@ if __name__ == '__main__':
     start_time = datetime.datetime.now()
     r, m, c, l = briefs()
     end_time = datetime.datetime.now()
-    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, count_link=l, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a75")).insert()
+    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, count_link=l, end_time=end_time, content=ContentModel().news).insert()

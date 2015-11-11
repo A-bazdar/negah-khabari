@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from bson import ObjectId
 from admin_app.classes.debug import Debug
 from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
 
 __author__ = 'Morteza'
 
-
 class ContentModel(BaseModel):
     def __init__(self, _id=None, name=None, main_page=0):
         BaseModel.__init__(self)
+        self.titr1 = ObjectId("563fd1d246b9a04522af4a76")
+        self.news = ObjectId("563fd1d246b9a04522af4a75")
         self.id = _id
         self.name = name
         self.main_page = main_page
