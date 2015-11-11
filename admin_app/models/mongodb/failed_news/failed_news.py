@@ -66,6 +66,7 @@ class FailedNewsModel(BaseModel):
                     "$lt": end
                 }
             }
+            print __body
             r = MongodbModel(collection='failed_news', body=__body).get_all()
 
             for i in r:
