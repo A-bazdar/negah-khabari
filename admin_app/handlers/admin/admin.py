@@ -810,19 +810,13 @@ class AdminProblemNewsLogHandler(BaseHandler):
                 start = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
         if type_report_show == 'statistic':
             result = []
-            ls.reverse()
             for i in range(len(ls) - 1):
-                news = FailedNewsModel().get_all(start=ls[i], end=ls[i + 1])['value']
-                agency = []
-                subject = []
-                content = []
-                for n in news:
-                    if n['agency_id'] not in agency:
-                        agency.append(n['agency_id'])
-                    if n['subject_id'] not in subject:
-                        subject.append(n['subject_id'])
-                    if n['content_id'] not in content:
-                        content.append(n['content_id'])
+                f = FailedBriefModel()
+                news = f.get_all(start=ls[i], end=ls[i + 1])['value']
+                agency = f.group_by(col='agency', start=ls[i], end=ls[i + 1])
+                subject = f.group_by(col='subject', start=ls[i], end=ls[i + 1])
+                content = f.group_by(col='content', start=ls[i], end=ls[i + 1])
+
                 if type_report_time == 'hour':
                     _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d ساعت %H') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d ساعت %H')
                 else:
@@ -830,7 +824,7 @@ class AdminProblemNewsLogHandler(BaseHandler):
                 result.append(
                     dict(
                         _key=_key,
-                        count_all=len(news),
+                        count_all=news,
                         count_agency=len(agency),
                         count_subject=len(subject),
                         count_content=len(content),
@@ -838,7 +832,6 @@ class AdminProblemNewsLogHandler(BaseHandler):
                 )
         elif type_report_show == 'chart':
             result = []
-            ls.reverse()
             count_all = 0
             count_agency = 0
             count_subject = 0
@@ -848,28 +841,22 @@ class AdminProblemNewsLogHandler(BaseHandler):
             all_subject = []
             all_content = []
             for i in range(len(ls) - 1):
-                news = FailedNewsModel().get_all(start=ls[i], end=ls[i + 1])['value']
-                agency = []
-                subject = []
-                content = []
-                for n in news:
-                    if n['agency_id'] not in agency:
-                        agency.append(n['agency_id'])
-                    if n['subject_id'] not in subject:
-                        subject.append(n['subject_id'])
-                    if n['content_id'] not in content:
-                        content.append(n['content_id'])
+                f = FailedBriefModel()
+                news = f.get_all(start=ls[i], end=ls[i + 1])['value']
+                agency = f.group_by(col='agency', start=ls[i], end=ls[i + 1])
+                subject = f.group_by(col='subject', start=ls[i], end=ls[i + 1])
+                content = f.group_by(col='content', start=ls[i], end=ls[i + 1])
                 if type_report_time == 'hour':
                     _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d ساعت %H') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d ساعت %H')
                 else:
                     _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d')
 
-                count_all += len(news)
+                count_all += news
                 count_agency += len(agency)
                 count_subject += len(subject)
                 count_content += len(content)
                 categories.append(_key)
-                all_news.append(len(news))
+                all_news.append(news)
                 all_agency.append(len(agency))
                 all_subject.append(len(subject))
                 all_content.append(len(content))
@@ -911,7 +898,7 @@ class AdminProblemNewsLogHandler(BaseHandler):
                     data=all_content,
                 )
             ]
-
+        result.reverse()
         self.data['dataProvider'] = json.dumps(data_provider)
         self.data['categories'] = json.dumps(categories)
         self.data['series'] = json.dumps(series)
@@ -999,19 +986,12 @@ class AdminProblemNewsInContinueLogHandler(BaseHandler):
                 start = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
         if type_report_show == 'statistic':
             result = []
-            ls.reverse()
             for i in range(len(ls) - 1):
-                news = FailedBriefModel().get_all(start=ls[i], end=ls[i + 1])['value']
-                agency = []
-                subject = []
-                content = []
-                for n in news:
-                    if n['agency_id'] not in agency:
-                        agency.append(n['agency_id'])
-                    if n['subject_id'] not in subject:
-                        subject.append(n['subject_id'])
-                    if n['content_id'] not in content:
-                        content.append(n['content_id'])
+                f = FailedNewsModel()
+                news = f.get_all(start=ls[i], end=ls[i + 1])['value']
+                agency = f.group_by(col='agency', start=ls[i], end=ls[i + 1])
+                subject = f.group_by(col='subject', start=ls[i], end=ls[i + 1])
+                content = f.group_by(col='content', start=ls[i], end=ls[i + 1])
                 if type_report_time == 'hour':
                     _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d ساعت %H') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d ساعت %H')
                 else:
@@ -1019,7 +999,7 @@ class AdminProblemNewsInContinueLogHandler(BaseHandler):
                 result.append(
                     dict(
                         _key=_key,
-                        count_all=len(news),
+                        count_all=news,
                         count_agency=len(agency),
                         count_subject=len(subject),
                         count_content=len(content),
@@ -1027,7 +1007,6 @@ class AdminProblemNewsInContinueLogHandler(BaseHandler):
                 )
         elif type_report_show == 'chart':
             result = []
-            ls.reverse()
             count_all = 0
             count_agency = 0
             count_subject = 0
@@ -1037,28 +1016,22 @@ class AdminProblemNewsInContinueLogHandler(BaseHandler):
             all_subject = []
             all_content = []
             for i in range(len(ls) - 1):
-                news = FailedBriefModel().get_all(start=ls[i], end=ls[i + 1])['value']
-                agency = []
-                subject = []
-                content = []
-                for n in news:
-                    if n['agency_id'] not in agency:
-                        agency.append(n['agency_id'])
-                    if n['subject_id'] not in subject:
-                        subject.append(n['subject_id'])
-                    if n['content_id'] not in content:
-                        content.append(n['content_id'])
+                f = FailedNewsModel()
+                news = f.get_all(start=ls[i], end=ls[i + 1])['value']
+                agency = f.group_by(col='agency', start=ls[i], end=ls[i + 1])
+                subject = f.group_by(col='subject', start=ls[i], end=ls[i + 1])
+                content = f.group_by(col='content', start=ls[i], end=ls[i + 1])
                 if type_report_time == 'hour':
                     _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d ساعت %H') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d ساعت %H')
                 else:
                     _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d')
 
-                count_all += len(news)
+                count_all += news
                 count_agency += len(agency)
                 count_subject += len(subject)
                 count_content += len(content)
                 categories.append(_key)
-                all_news.append(len(news))
+                all_news.append(news)
                 all_agency.append(len(agency))
                 all_subject.append(len(subject))
                 all_content.append(len(content))
@@ -1100,6 +1073,7 @@ class AdminProblemNewsInContinueLogHandler(BaseHandler):
                     data=all_content,
                 )
             ]
+        result.reverse()
 
         self.data['dataProvider'] = json.dumps(data_provider)
         self.data['categories'] = json.dumps(categories)

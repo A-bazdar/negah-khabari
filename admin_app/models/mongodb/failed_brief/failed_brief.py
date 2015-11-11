@@ -19,21 +19,30 @@ class FailedBriefModel(BaseModel):
         self.content = content
         self.title = title
         self.link = link
+        self.value = []
         self.result = {'value': {}, 'status': False}
+
+    def is_exist(self):
+        if self.title is not None:
+            __body = {
+                'title': self.title,
+            }
+            if MongodbModel(collection='failed_brief', body=__body).count():
+                return True
+        return False
 
     def save(self):
         try:
+
             __body = {
-                'agency': self.agency,
-                'subject': self.subject,
                 'content': self.content,
                 'title': self.title,
                 'link': self.link,
                 'date': datetime.datetime.now(),
             }
-
-            self.result['value'] = MongodbModel(collection='failed_brief', body=__body).insert()
-            self.result['status'] = True
+            if not self.is_exist():
+                self.result['value'] = MongodbModel(collection='failed_brief', body=__body).insert()
+                self.result['status'] = True
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > failed_brief')
@@ -65,14 +74,34 @@ class FailedBriefModel(BaseModel):
                     "$lt": end
                 }
             }
-            r = MongodbModel(collection='failed_brief', body=__body).get_all()
+            r = MongodbModel(collection='failed_brief', body=__body).count()
 
-            for i in r:
-                self.get_failed_brief(i)
-
-            self.result['value'] = self.value
+            self.result['value'] = r
             self.result['status'] = True
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > failed_brief')
             return self.result
+
+    @staticmethod
+    def group_by(col=None, start=None, end=None):
+        try:
+            body = [
+                {
+                    "$match": {
+                        "date": {
+                            "$gte": start,
+                            "$lt": end
+                        }
+                    }
+                },
+                {
+                    "$group": {"_id": "$" + col, "total": {"$sum": 1}}
+                }
+            ]
+
+            r = MongodbModel(collection='failed_brief', body=body).aggregate()['result']
+            return [{col: i['_id'], 'total': i['total']} for i in r]
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > group_by', data='collection > feed_statistic')
+            return []

@@ -140,4 +140,5 @@ class FeedStatisticModel(BaseModel):
             r = MongodbModel(collection='feed_statistic', body=body).aggregate()['result']
             return [{col: i['_id'], 'total': i['total']} for i in r]
         except:
-            Debug.get_exception()
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > group_by', data='collection > feed_statistic')
+            return []
