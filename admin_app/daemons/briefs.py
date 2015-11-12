@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from tendo import singleton
+from admin_app.models.mongodb.content.content import ContentModel
+
+singleton.SingleInstance()
+from admin_app.models.mongodb.failed_brief.failed_brief import FailedBriefModel
 import datetime
 from bson import ObjectId
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
@@ -69,15 +74,17 @@ def extract_briefs(document, a, l):
                 Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_brief',
                                     data=a['base_link'].encode('utf-8'))
                 thumbnail = None
-            if link and title and summary and thumbnail:
+            if link is not None and title is not None and summary is not None and thumbnail is not None:
                 _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
-                                 agency=str(a['id']), subject=str(l['subject']), content="563fd1d246b9a04522af4a76").insert()
+                                 agency=str(a['id']), subject=str(l['subject']), content=str(ContentModel().news)).insert()
                 print _b
                 try:
                     if news(_b['value']['_id']):
                         counter += 1
                 except:
                     pass
+            else:
+                FailedBriefModel(agency=a['id'], subject=l['subject'], content=ContentModel().news, title=title, link=link).save()
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_briefs',
@@ -87,22 +94,26 @@ def extract_briefs(document, a, l):
 
 def briefs():
     __counter = 0
+    __link__counter = 0
     try:
         agencies = AgencyModel().get_all()['value']
         for a in agencies:
             for l in a['links']:
                 data = get_url(l['link'])
                 if data:
-                    __counter += extract_briefs(data, a, l)
-        return False, 'Success', __counter
+                    __c = extract_briefs(data, a, l)
+                    if __c > 0:
+                        __link__counter += 1
+                    __counter += __c
+        return False, 'Success', __counter, __link__counter
     except:
         error_message = Debug.get_exception(sub_system='engine_feed', severity='fatal_error', tags='get_briefs',
                                             data='get_briefs', return_error=True)
-        return True, error_message, __counter
+        return True, error_message, __counter, __link__counter
 
 
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
-    r, m, c = briefs()
+    r, m, c, l = briefs()
     end_time = datetime.datetime.now()
-    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, end_time=end_time, content=ObjectId("563fd1d246b9a04522af4a76")).insert()
+    FeedStatisticModel(start_time=start_time, error=r, message=m, count=c, count_link=l, end_time=end_time, content=ContentModel().news).insert()

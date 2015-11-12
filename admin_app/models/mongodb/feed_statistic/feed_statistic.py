@@ -12,13 +12,14 @@ __author__ = 'Morteza'
 
 
 class FeedStatisticModel(BaseModel):
-    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, end_time=None, content=None):
+    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, count_link=None, end_time=None, content=None):
         BaseModel.__init__(self)
         self.id = _id
         self.start_time = start_time
         self.error = error
         self.message = message
         self.count = count
+        self.count_link = count_link
         self.end_time = end_time
         self.content = content
         self.value = []
@@ -32,6 +33,7 @@ class FeedStatisticModel(BaseModel):
                 'message': self.message,
                 'content': self.content,
                 'count': self.count,
+                'count_link': self.count_link,
                 'end_time': self.end_time,
             }
 
@@ -67,12 +69,13 @@ class FeedStatisticModel(BaseModel):
                 error=q['error'],
                 message=q['message'],
                 content=content,
+                count_link=q['count_link'],
             )
         )
 
     def get_all(self, _page=1, _size=20):
         try:
-            __body = {}
+            __body = {"content": self.content}
             r = MongodbModel(collection='feed_statistic', body=__body, page=_page, size=_size, sort="start_time").get_all_pagination()
             for i in r:
                 self.get_statistic(i)
@@ -85,7 +88,7 @@ class FeedStatisticModel(BaseModel):
 
     def count_all(self):
         try:
-            __body = {}
+            __body = {"content": self.content}
             r = MongodbModel(collection='feed_statistic', body=__body).count()
             self.result['value'] = r
             self.result['status'] = True
@@ -96,7 +99,7 @@ class FeedStatisticModel(BaseModel):
 
     def get_activity_time(self):
         try:
-            __body = {}
+            __body = {"content": self.content}
             r = MongodbModel(collection='feed_statistic', body=__body).get_all()
             import time
             s = 0
@@ -115,7 +118,7 @@ class FeedStatisticModel(BaseModel):
 
     def get_last_activity(self):
         try:
-            __body = {}
+            __body = {"content": self.content}
             r = MongodbModel(collection='feed_statistic', body=__body, page=1, size=1, sort="start_time").get_all_pagination()
             a = datetime.datetime.now()
             for i in r:
@@ -126,3 +129,16 @@ class FeedStatisticModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_activity_time', data='collection > feed_statistic')
             return self.result
+
+    @staticmethod
+    def group_by(col):
+        try:
+            body = {
+                "$group": {"_id": "$" + col, "total": {"$sum": 1}}
+            }
+
+            r = MongodbModel(collection='feed_statistic', body=body).aggregate()['result']
+            return [{col: i['_id'], 'total': i['total']} for i in r]
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > group_by', data='collection > feed_statistic')
+            return []

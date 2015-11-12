@@ -32,24 +32,27 @@ class SendError:
         # self.parse_response()
 
     def __send(self):
-        xx = {
-            'project': self.project,
-            'sub_system': self.sub_system,
-            'severity': self.severity,
-            'tags': self.tags,
-            'file_name': self.file_name,
-            'file_address': self.file_address,
-            'function': self.function,
-            'line_num': self.line_num,
-            'code': self.code,
-            'message': self.message,
-            'date': self.date,
-            'data': self.data,
-        }
-        xx = urllib.urlencode(xx)
-        req = urllib2.Request(self.url, data=xx)
-        page = urllib2.urlopen(req)
-        self.__resp = page.read()
+        try:
+            xx = {
+                'project': self.project,
+                'sub_system': self.sub_system,
+                'severity': self.severity,
+                'tags': self.tags,
+                'file_name': self.file_name,
+                'file_address': self.file_address,
+                'function': self.function,
+                'line_num': self.line_num,
+                'code': self.code,
+                'message': self.message,
+                'date': self.date,
+                'data': self.data,
+            }
+            xx = urllib.urlencode(xx)
+            req = urllib2.Request(self.url, data=xx)
+            page = urllib2.urlopen(req)
+            self.__resp = page.read()
+        except:
+            pass
 
     def parse_response(self):
         if self.__resp['status']:

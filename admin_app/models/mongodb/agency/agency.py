@@ -163,3 +163,17 @@ class AgencyModel():
         except:
             Debug.get_exception(sub_system='agency', severity='error', tags='delete')
             return self.result
+
+    def count_links(self):
+        try:
+            body = {}
+            r = MongodbModel(collection='agency', body=body).get_all()
+            c = 0
+            for i in r:
+                c += len(i['links'])
+            self.result['value'] = c
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='delete')
+            return self.result

@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import json
 from bson import ObjectId
 import datetime
 import khayyam
 from admin_app.classes.date import CustomDateTime
 from admin_app.classes.debug import Debug
 from admin_app.classes.public import UploadPic, CreateHash
+from admin_app.models.mongodb.failed_brief.failed_brief import FailedBriefModel
+from admin_app.models.mongodb.failed_news.failed_news import FailedNewsModel
 from admin_config import Config
 from tornado import gen
 from admin_app.handlers.base import BaseHandler
@@ -27,6 +30,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
+c_datetime = CustomDateTime()
 
 
 class AdminHandler(tornado.web.RequestHandler):
@@ -494,14 +498,6 @@ class AdminReadNewsStatisticHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_log_charts/read_news_statistic.html')
 
-class AdminProblemNewsLogHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render('admin/admin_log_charts/problem_news_log.html')
-
-class AdminProblemNewsInContinueLogHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render('admin/admin_log_charts/problem_news_in_continue.html')
-
 class AdminUsersLogHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_log_charts/users_log.html')
@@ -735,3 +731,355 @@ class GetAgencyHandler(BaseHandler):
 class IndexHandler(BaseHandler):
     def get(self):
         self.redirect(self.reverse_url('admin:login'))
+
+
+class AdminProblemNewsLogHandler(BaseHandler):
+    def get(self, *args):
+        try:
+            type_report_show = args[0]
+        except:
+            type_report_show = 'statistic'
+
+        try:
+            type_report_time = args[1]
+        except:
+            type_report_time = 'hour'
+
+        try:
+            page = int(args[2])
+        except:
+            page = 1
+        ls = []
+        data_provider = []
+        result = []
+        categories = []
+        series = []
+        if type_report_time == 'hour':
+            end = datetime.datetime.now() - datetime.timedelta(days=(page - 1)) + datetime.timedelta(hours=1)
+            end = datetime.datetime.strptime(str(end.date()) + ' ' + str(end.hour) + ':00:00', '%Y-%m-%d %H:%M:%S')
+            start = c_datetime.generate_date_time(date=end, add=False, _type='hours', value=24)
+            while start <= end:
+                ls.append(start)
+                start = c_datetime.generate_date_time(date=start, add=True, _type='hours', value=1)
+
+        elif type_report_time == 'day':
+            end = datetime.datetime.now() - datetime.timedelta(days=((page - 1) * 10))
+            end = datetime.datetime.strptime(str(end.date()) + ' 23:00:00', '%Y-%m-%d %H:%M:%S') + datetime.timedelta(hours=1)
+
+            start = c_datetime.generate_date_time(date=end, add=False, _type='days', value=10)
+
+            while start <= end:
+                ls.append(start)
+                start = c_datetime.generate_date_time(date=start, add=True, _type='days', value=1)
+
+        elif type_report_time == 'week':
+            end = datetime.datetime.now()
+            num_day = khayyam.JalaliDatetime(end).weekday()
+            end = end + datetime.timedelta(days=(6 - num_day)) - datetime.timedelta(weeks=((page - 1) * 10))
+            end = datetime.datetime.strptime(str(end.date()) + ' 23:00:00', '%Y-%m-%d %H:%M:%S') + datetime.timedelta(hours=1)
+
+            start = c_datetime.generate_date_time(date=end, add=False, _type='weeks', value=10)
+
+            while start <= end:
+                ls.append(start)
+                start = c_datetime.generate_date_time(date=start, add=True, _type='weeks', value=1)
+
+        elif type_report_time == 'month':
+            end = datetime.datetime.now()
+            y = end.year
+            m = (end.month + 1) - ((page - 1) * 10)
+            if m > 12:
+                m = 1
+                y += 1
+            end = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+
+            y = end.year
+            m = end.month - 10
+            if m <= 0:
+                m = 12 - abs(m)
+                y -= 1
+
+            start = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+            while start <= end:
+                ls.append(start)
+                y = start.year
+                m = start.month + 1
+                if m > 12:
+                    m = 1
+                    y += 1
+                start = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+        if type_report_show == 'statistic':
+            result = []
+            for i in range(len(ls) - 1):
+                f = FailedBriefModel()
+                news = f.get_all(start=ls[i], end=ls[i + 1])['value']
+                agency = f.group_by(col='agency', start=ls[i], end=ls[i + 1])
+                subject = f.group_by(col='subject', start=ls[i], end=ls[i + 1])
+                content = f.group_by(col='content', start=ls[i], end=ls[i + 1])
+
+                if type_report_time == 'hour':
+                    _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d ساعت %H') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d ساعت %H')
+                else:
+                    _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d')
+                result.append(
+                    dict(
+                        _key=_key,
+                        count_all=news,
+                        count_agency=len(agency),
+                        count_subject=len(subject),
+                        count_content=len(content),
+                    )
+                )
+        elif type_report_show == 'chart':
+            result = []
+            count_all = 0
+            count_agency = 0
+            count_subject = 0
+            count_content = 0
+            all_news = []
+            all_agency = []
+            all_subject = []
+            all_content = []
+            for i in range(len(ls) - 1):
+                f = FailedBriefModel()
+                news = f.get_all(start=ls[i], end=ls[i + 1])['value']
+                agency = f.group_by(col='agency', start=ls[i], end=ls[i + 1])
+                subject = f.group_by(col='subject', start=ls[i], end=ls[i + 1])
+                content = f.group_by(col='content', start=ls[i], end=ls[i + 1])
+                if type_report_time == 'hour':
+                    _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d ساعت %H') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d ساعت %H')
+                else:
+                    _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d')
+
+                count_all += news
+                count_agency += len(agency)
+                count_subject += len(subject)
+                count_content += len(content)
+                categories.append(_key)
+                all_news.append(news)
+                all_agency.append(len(agency))
+                all_subject.append(len(subject))
+                all_content.append(len(content))
+
+            data_provider = [
+                dict(
+                    title="کل اخبار مشکل دار",
+                    value=count_all,
+                ),
+                dict(
+                    title="سایت",
+                    value=count_agency,
+                ),
+                dict(
+                    title="گروه",
+                    value=count_subject,
+                ),
+                dict(
+                    title="موضوع",
+                    value=count_content,
+                )
+            ]
+
+            series = [
+                dict(
+                    name="کل اخبار مشکل دار",
+                    data=all_news,
+                ),
+                dict(
+                    name="سایت",
+                    data=all_agency,
+                ),
+                dict(
+                    name="گروه",
+                    data=all_subject,
+                ),
+                dict(
+                    name="موضوع",
+                    data=all_content,
+                )
+            ]
+        result.reverse()
+        self.data['dataProvider'] = json.dumps(data_provider)
+        self.data['categories'] = json.dumps(categories)
+        self.data['series'] = json.dumps(series)
+        self.data['result'] = result
+        self.data['page'] = page
+        self.data['show'] = type_report_show
+        self.data['time'] = type_report_time
+        self.render('admin/admin_log_charts/problem_news_log.html', **self.data)
+
+
+class AdminProblemNewsInContinueLogHandler(BaseHandler):
+    def get(self, *args):
+        try:
+            type_report_show = args[0]
+        except:
+            type_report_show = 'statistic'
+
+        try:
+            type_report_time = args[1]
+        except:
+            type_report_time = 'hour'
+
+        try:
+            page = int(args[2])
+        except:
+            page = 1
+        ls = []
+        data_provider = []
+        result = []
+        categories = []
+        series = []
+        if type_report_time == 'hour':
+            end = datetime.datetime.now() - datetime.timedelta(days=(page - 1)) + datetime.timedelta(hours=1)
+            end = datetime.datetime.strptime(str(end.date()) + ' ' + str(end.hour) + ':00:00', '%Y-%m-%d %H:%M:%S')
+            start = c_datetime.generate_date_time(date=end, add=False, _type='hours', value=24)
+            while start <= end:
+                ls.append(start)
+                start = c_datetime.generate_date_time(date=start, add=True, _type='hours', value=1)
+
+        elif type_report_time == 'day':
+            end = datetime.datetime.now() - datetime.timedelta(days=((page - 1) * 10))
+            end = datetime.datetime.strptime(str(end.date()) + ' 23:00:00', '%Y-%m-%d %H:%M:%S') + datetime.timedelta(hours=1)
+
+            start = c_datetime.generate_date_time(date=end, add=False, _type='days', value=10)
+
+            while start <= end:
+                ls.append(start)
+                start = c_datetime.generate_date_time(date=start, add=True, _type='days', value=1)
+
+        elif type_report_time == 'week':
+            end = datetime.datetime.now()
+            num_day = khayyam.JalaliDatetime(end).weekday()
+            end = end + datetime.timedelta(days=(6 - num_day)) - datetime.timedelta(weeks=((page - 1) * 10))
+            end = datetime.datetime.strptime(str(end.date()) + ' 23:00:00', '%Y-%m-%d %H:%M:%S') + datetime.timedelta(hours=1)
+
+            start = c_datetime.generate_date_time(date=end, add=False, _type='weeks', value=10)
+
+            while start <= end:
+                ls.append(start)
+                start = c_datetime.generate_date_time(date=start, add=True, _type='weeks', value=1)
+
+        elif type_report_time == 'month':
+            end = datetime.datetime.now()
+            y = end.year
+            m = (end.month + 1) - ((page - 1) * 10)
+            if m > 12:
+                m = 1
+                y += 1
+            end = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+
+            y = end.year
+            m = end.month - 10
+            if m <= 0:
+                m = 12 - abs(m)
+                y -= 1
+
+            start = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+            while start <= end:
+                ls.append(start)
+                y = start.year
+                m = start.month + 1
+                if m > 12:
+                    m = 1
+                    y += 1
+                start = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+        if type_report_show == 'statistic':
+            result = []
+            for i in range(len(ls) - 1):
+                f = FailedNewsModel()
+                news = f.get_all(start=ls[i], end=ls[i + 1])['value']
+                agency = f.group_by(col='agency', start=ls[i], end=ls[i + 1])
+                subject = f.group_by(col='subject', start=ls[i], end=ls[i + 1])
+                content = f.group_by(col='content', start=ls[i], end=ls[i + 1])
+                if type_report_time == 'hour':
+                    _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d ساعت %H') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d ساعت %H')
+                else:
+                    _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d')
+                result.append(
+                    dict(
+                        _key=_key,
+                        count_all=news,
+                        count_agency=len(agency),
+                        count_subject=len(subject),
+                        count_content=len(content),
+                    )
+                )
+        elif type_report_show == 'chart':
+            result = []
+            count_all = 0
+            count_agency = 0
+            count_subject = 0
+            count_content = 0
+            all_news = []
+            all_agency = []
+            all_subject = []
+            all_content = []
+            for i in range(len(ls) - 1):
+                f = FailedNewsModel()
+                news = f.get_all(start=ls[i], end=ls[i + 1])['value']
+                agency = f.group_by(col='agency', start=ls[i], end=ls[i + 1])
+                subject = f.group_by(col='subject', start=ls[i], end=ls[i + 1])
+                content = f.group_by(col='content', start=ls[i], end=ls[i + 1])
+                if type_report_time == 'hour':
+                    _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d ساعت %H') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d ساعت %H')
+                else:
+                    _key = khayyam.JalaliDatetime(ls[i]).strftime(u'%Y/%m/%d') + ' - ' + khayyam.JalaliDatetime(ls[i + 1]).strftime(u'%Y/%m/%d')
+
+                count_all += news
+                count_agency += len(agency)
+                count_subject += len(subject)
+                count_content += len(content)
+                categories.append(_key)
+                all_news.append(news)
+                all_agency.append(len(agency))
+                all_subject.append(len(subject))
+                all_content.append(len(content))
+
+            data_provider = [
+                dict(
+                    title="کل اخبار مشکل دار",
+                    value=count_all,
+                ),
+                dict(
+                    title="سایت",
+                    value=count_agency,
+                ),
+                dict(
+                    title="گروه",
+                    value=count_subject,
+                ),
+                dict(
+                    title="موضوع",
+                    value=count_content,
+                )
+            ]
+
+            series = [
+                dict(
+                    name="کل اخبار مشکل دار",
+                    data=all_news,
+                ),
+                dict(
+                    name="سایت",
+                    data=all_agency,
+                ),
+                dict(
+                    name="گروه",
+                    data=all_subject,
+                ),
+                dict(
+                    name="موضوع",
+                    data=all_content,
+                )
+            ]
+        result.reverse()
+
+        self.data['dataProvider'] = json.dumps(data_provider)
+        self.data['categories'] = json.dumps(categories)
+        self.data['series'] = json.dumps(series)
+        self.data['result'] = result
+        self.data['page'] = page
+        self.data['show'] = type_report_show
+        self.data['time'] = type_report_time
+        self.render('admin/admin_log_charts/problem_news_in_continue.html', **self.data)

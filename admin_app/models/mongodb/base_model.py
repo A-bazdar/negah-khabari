@@ -49,6 +49,10 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.feed_statistic
         elif collection == 'elastic_statistic':
             self.collection = self.db.elastic_statistic
+        elif collection == 'failed_brief':
+            self.collection = self.db.failed_brief
+        elif collection == 'failed_news':
+            self.collection = self.db.failed_news
 
     def insert(self):
         try:
@@ -105,6 +109,13 @@ class MongodbModel(MongodbBaseModel):
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > update',
                                 data='collection: ' + self.__collection + ' body: ' + str(
                                     self.__body) + ' condition: ' + str(self.__condition))
+            return False
+
+    def aggregate(self):
+        try:
+            return self.collection.aggregate(self.__body)
+        except:
+            Debug.get_exception()
             return False
 
 

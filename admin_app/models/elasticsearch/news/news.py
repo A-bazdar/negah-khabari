@@ -36,7 +36,10 @@ class NewsModel:
 
     @staticmethod
     def get_hash(__key):
-        return hashlib.md5(__key.encode('utf-8')).hexdigest()
+        try:
+            return hashlib.md5(__key.encode('utf-8')).hexdigest()
+        except:
+            return hashlib.md5(__key).hexdigest()
 
     def is_exist(self):
         try:
@@ -49,7 +52,7 @@ class NewsModel:
                                     "filters": [
                                         {
                                             "query": {
-                                                "match_phrase": {
+                                                "term": {
                                                     "hash_title": self.get_hash(self.title)
                                                 }
                                             }
@@ -75,9 +78,19 @@ class NewsModel:
                     }
                 }
             }
-            if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
-                return True
-            return True
+            e = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            if e['hits']['total']:
+                _id = e['hits']['hits'][0]['_id']
+                if self.content == str(ContentModel().titr1):
+                    _body = {
+                        "script": "ctx._source.content = __content",
+                        "params": {
+                            "__content": str(ContentModel().titr1)
+                        }
+                    }
+                    ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=_body, _id=_id).update()
+                return _id
+            return False
         except:
             return False
 
@@ -108,10 +121,13 @@ class NewsModel:
                 'read_date': d,
                 'read_timestamp': int(time.mktime(d.timetuple())),
             }
-            if not self.is_exist():
+            e = self.is_exist()
+            if e is False:
                 news = self.get_news_id()
                 self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=news).insert()
                 self.result['status'] = True
+            else:
+                self.result['value'] = {'_id': e}
 
             return self.result
 
@@ -395,6 +411,35 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def get_all_by_subject(self, subjects=None, _page=0, _size=30):
+
+        def get_subjects(__subjects):
+            ls = __subjects
+            for sub in __subjects:
+                ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child()]
+            return ls
+
+        try:
+            body = {
+                "from": _page * _size, "size": _size,
+                "terms": {
+                    "subject": get_subjects(subjects),
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            for b in r['hits']['hits']:
+                self.get_news(b['_source'], b['_id'])
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all_by_subject',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
     def count_all(self):
         try:
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type).count_all()
@@ -420,7 +465,10 @@ class NewsModel:
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
-                self.value.append({'id': b['_id'], 'title': b['title']})
+                try:
+                    self.value.append({'id': b['_id'], 'agency': b['_source']['agency'], 'title': b['_source']['title']})
+                except:
+                    print b['_id'], 'ERROR'
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
@@ -435,20 +483,46 @@ class NewsModel:
             body = {
                 "from": 0, "size": 10000000,
                 "filter": {
-                    "and": {
+                    "or": {
                         "filters": [
                             {
-                                "query": {
-                                    "match_phrase": {
-                                        "title": self.title
-                                    }
+                                "and": {
+                                    "filters": [
+                                        {
+                                            "query": {
+                                                "match_phrase": {
+                                                    "title": self.title
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "query": {
+                                                "term": {
+                                                    "agency": self.agency,
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
                             },
                             {
-                                "query": {
-                                    "term": {
-                                        "agency": self.agency,
-                                    }
+                                "and": {
+                                    "filters": [
+                                        {
+                                            "query": {
+                                                "term": {
+                                                    "hash_title": self.get_hash(self.title)
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "query": {
+                                                "term": {
+                                                    "agency": self.agency,
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
                             }
                         ]
@@ -520,6 +594,68 @@ class NewsModel:
             except:
                 pass
             self.result['value'] = {'news': self.value, 'count_all': count_all, 'count': len(r['hits']['hits'])}
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
+    def get_all_titr_1(self, _page=0, _size=15):
+        try:
+            body = {
+                "from": _page * _size, "size": _size,
+                "query": {
+                    "term": {
+                        "content": str(ContentModel().titr1)
+                    }
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            try:
+                for b in r['hits']['hits']:
+                    self.get_news(b['_source'], b['_id'])
+            except:
+                pass
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
+    def get_top_agency(self, b):
+        try:
+            agency = AgencyModel(_id=ObjectId(b['key'])).get_one()
+            self.value.append({'agency': agency, 'count': b['doc_count']})
+        except:
+            pass
+
+    def get_top_agencies(self):
+        try:
+            body = {
+                "size": 0,
+                "aggs": {
+                    "group_by_agency": {
+                        "terms": {
+                            "field": "agency"
+                        }
+                    }
+                }
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            try:
+                for b in r['aggregations']['group_by_agency']['buckets']:
+                    self.get_top_agency(b)
+            except:
+                pass
+            self.result['value'] = self.value
             self.result['status'] = True
             return self.result
 

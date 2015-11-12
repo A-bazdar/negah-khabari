@@ -9,6 +9,7 @@ import re, urlparse
 from bs4 import BeautifulSoup
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.elasticsearch.news.news import NewsModel
+from admin_app.models.mongodb.failed_news.failed_news import FailedNewsModel
 
 __author__ = 'Morteza'
 
@@ -54,7 +55,7 @@ def extract_news(document, b):
     try:
         soap = BeautifulSoup(document, "html.parser")
         try:
-            body = soap.select_one(b['agency']['news_body']).text.encode('utf-8').strip()
+            body = soap.select_one(b['agency']['news_body']).encode('utf-8').strip()
         except:
             Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=b['link'].encode('utf-8'))
             body = None
@@ -108,7 +109,9 @@ def extract_news(document, b):
                           thumbnail=thumbnail, agency=str(b['agency']['id']), subject=str(b['subject']['id']), content=str(b['content']['id']), date=date).insert()
             print r
             return r['status']
-        return False
+
+        else:
+            FailedNewsModel(agency=b['agency']['id'], subject=b['subject']['id'], content=b['content']['id'], title=title, link=b['link']).save()
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_news',
                             data='extract_news')
@@ -117,11 +120,11 @@ def extract_news(document, b):
 
 def news(brief):
     b = BriefsModel(_id=brief).get_one()['value']
-    print b['link']
-    print b['title']
-    print str(b['agency']['id'])
-    if not NewsModel(link=b['link'], title=b['title'], agency=str(b['agency']['id'])).is_exist():
+    e = NewsModel(link=b['link'], title=b['title'], agency=str(b['agency']['id'])).is_exist()
+    if e is False:
         data = get_url(b['link'], b['id'])
         if data:
             return extract_news(data, b)
+    else:
+        print 'ReedNews: ' + e
     return False
