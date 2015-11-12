@@ -632,6 +632,7 @@ class NewsModel:
     def get_top_agency(self, b):
         try:
             agency = AgencyModel(_id=ObjectId(b['key'])).get_one()
+            print agency, '#################'
             self.value.append({'agency': agency, 'count': b['doc_count']})
         except:
             pass
