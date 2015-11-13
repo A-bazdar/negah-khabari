@@ -165,6 +165,21 @@ class NewsModel:
         except:
             Debug.get_exception(send=False)
 
+    def get_news_module(self, _source, _id):
+        try:
+            self.value.append(dict(
+                id=_id,
+                link=_source['link'],
+                title=_source['title'],
+                ro_title=_source['ro_title'],
+                body=_source['body'],
+                summary=_source['summary'],
+                thumbnail=_source['thumbnail'],
+                read_date=_source['read_date']
+            ))
+        except:
+            Debug.get_exception(send=False)
+
     def search(self, words=None, _page=0, _size=20, start=None, end=None, agency='all', category='all'):
         try:
             all_words = words['all_words']
@@ -398,13 +413,10 @@ class NewsModel:
                 },
                 "sort": {_sort: {"order": "desc"}}
             }
-            print body
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
-            print 333333333333
             for b in r['hits']['hits']:
-                self.get_news(b['_source'], b['_id'])
-            print 444444444444444
+                self.get_news_module(b['_source'], b['_id'])
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
