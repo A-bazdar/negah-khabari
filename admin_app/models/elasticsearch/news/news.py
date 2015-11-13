@@ -398,10 +398,13 @@ class NewsModel:
                 },
                 "sort": {_sort: {"order": "desc"}}
             }
+            print body
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            print 333333333333
             for b in r['hits']['hits']:
                 self.get_news(b['_source'], b['_id'])
+            print 444444444444444
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
