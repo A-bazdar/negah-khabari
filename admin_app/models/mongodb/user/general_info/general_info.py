@@ -454,11 +454,12 @@ class UserModel(BaseModel):
     def update_note(self):
         try:
             __body = {"$set": {
-                'note.$.note': self.note,
-                'note.$.date': datetime.datetime.now(),
+                'note.$.note': self.note
             }}
 
             __condition = {'_id': self.id, 'note.news': self.news}
+            print __body
+            print __condition
             MongodbModel(collection='user', condition=__condition, body=__body).update()
             self.result['value'] = self.get_note()['value']
             self.result['status'] = True

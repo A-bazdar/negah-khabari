@@ -59,10 +59,10 @@ $(document).on('click', '.option-news.note', function (e) {
 //});
 
 
-$(document).on('click', '.send-comment', function(){
-    var news = $(this).attr('data-news');
+$(document).on('click', '.send-comment', function(e){
+    var elm = $(e.target);
+    var news = elm.attr('data-news');
     var note = $('.comment-text[data-news='+ news +']').val();
-    alert(note);
     if(note != ''){
         var postData = [
             {name: 'news_id', value: news},
@@ -79,7 +79,10 @@ $(document).on('click', '.send-comment', function(){
                 var status = response['status'];
                 var value = response['value'];
                 if (status) {
-                    $('.option-news-note-success[data-news=' + news + ']').fadeIn().fadeOut();
+                    elm.removeClass('fa-paper-plane-o colorBlue').addClass('fa-check-circle-o colorGreen');
+                    setTimeout(function () {
+                        elm.removeClass('fa-check-circle-o colorGreen').addClass('fa-paper-plane-o colorBlue');
+                    }, 400);
                 }
             }
         });
@@ -178,9 +181,11 @@ $(document).on('click', '.option-news.read', function (e) {
             var value = response['value'];
             if (status) {
                 if(value == 'read'){
-                    elm.addClass('colorGreen');
+                    elm.removeClass('fa-circle-o');
+                    elm.addClass('colorGreen fa-circle');
                 }else{
-                    elm.removeClass('colorGreen');
+                    elm.removeClass('colorGreen fa-circle');
+                    elm.addClass('fa-circle-o');
                 }
             }
         }
@@ -217,7 +222,10 @@ $(document).on('click', '.option-news.news-report-broken', function (e) {
             var value = response['value'];
             if (status) {
                 if(value == 'add'){
-                    $('.option-news-success[data-news=' + news + ']').fadeIn().fadeOut();
+                    elm.removeClass('fa-warning').addClass('fa-check-circle-o colorGreen');
+                    setTimeout(function () {
+                        elm.removeClass('fa-check-circle-o colorGreen').addClass('fa-warning');
+                    }, 400);
                 }
             }
         }
