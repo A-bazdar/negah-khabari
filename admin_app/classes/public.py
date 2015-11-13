@@ -9,6 +9,7 @@ from bson import ObjectId
 import khayyam
 from admin_app.classes.debug import Debug
 from admin_config import Config
+import re
 
 __author__ = 'Morteza'
 
@@ -52,7 +53,50 @@ class CreateHash:
         return ps.hexdigest()[3:40]
 
 
-class UploadPic():
+class CheckStrengthPassword:
+    def __init__(self, current=None, old=None, new=None, repeat=None):
+        self.current = current
+        self.old = old
+        self.new = new
+        self.repeat = repeat
+        self.message = ''
+        self.result = {"message": '', "status": False, "score": -1}
+
+    def check(self):
+        if self.old is '':
+            self.result['message'] = 'رمز عبور قبلی وارد نشده است'
+            return self.result
+
+        if self.new is '':
+            self.result['message'] = 'رمز عبور جدید وارد نشده است'
+            return self.result
+
+        if self.new != self.old:
+            self.result['message'] = 'رمز عبور جدید با تکرار آن مطابقت ندارد'
+            return self.result
+
+        if self.current != CreateHash().create(self.old):
+            self.result['message'] = 'رمز عبور قبلی نادرست است'
+            return self.result
+
+        password_strength = dict.fromkeys(['has_upper', 'has_lower', 'has_num'], False)
+        if re.search(r'[A-Z]', password):
+            password_strength['has_upper'] = True
+
+        if re.search(r'[a-z]', password):
+            password_strength['has_lower'] = True
+
+        if re.search(r'[0-9]', password):
+            password_strength['has_num'] = True
+
+        self.result['score'] = len([b for b in password_strength.values() if b])
+        if self.result['score'] == 3:
+            self.result['status'] = True
+
+        return self.result
+
+
+class UploadPic:
     def __init__(self, name=None, handler=None, folder='avatars', default='default.jpg'):
         self.name = name
         self.default = default
