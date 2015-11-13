@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from tendo import singleton
-from admin_app.models.mongodb.content.content import ContentModel
-
 singleton.SingleInstance()
+from admin_app.models.mongodb.content.content import ContentModel
 from admin_app.models.mongodb.failed_brief.failed_brief import FailedBriefModel
 import datetime
-from bson import ObjectId
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
 import urllib2
