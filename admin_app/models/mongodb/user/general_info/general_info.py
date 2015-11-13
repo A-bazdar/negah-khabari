@@ -185,6 +185,10 @@ class UserModel(BaseModel):
                     group=group['value'],
                     address=r['address'] if 'address' in r.keys() else '',
                     pic=r['pic'],
+                    important=r['important'] if 'important' in r.keys() else [],
+                    read=r['read'] if 'read' in r.keys() else [],
+                    note=r['note'] if 'note' in r.keys() else [],
+                    star=r['star'] if 'star' in r.keys() else [],
                     last_activity=r['last_activity']
 
                 )
@@ -390,19 +394,34 @@ class UserModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return False
 
+    def get_note(self):
+        try:
+            __body = {'_id': self.id, 'note.news': self.news}
+            __key = {"note.$": 1}
+            a = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
+            self.result['value'] = a['note'][0]
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
     def add_note(self):
         try:
             note = ObjectId()
+            doc = {
+                "_id": note,
+                "note": self.note,
+                "news": self.news,
+                "date": datetime.datetime.now(),
+            }
             __body = {"$push": {
-                "note": {
-                    "_id": note,
-                    "note": self.note,
-                    "news": self.news,
-                }
+                "note": doc
             }}
             __condition = {'_id': self.id}
             MongodbModel(collection='user', condition=__condition, body=__body).update()
-            self.result['value'] = note
+            self.result['value'] = doc
             self.result['status'] = True
 
             return self.result
@@ -422,7 +441,8 @@ class UserModel(BaseModel):
             }
 
             __condition = {'_id': self.id}
-            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = self.get_note()
             self.result['status'] = True
 
             return self.result
@@ -434,10 +454,12 @@ class UserModel(BaseModel):
         try:
             __body = {"$set": {
                 'note.$.note': self.note,
+                'note.$.date': datetime.datetime.now(),
             }}
 
             __condition = {'_id': self.id, 'note.news': self.news}
-            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = self.get_note()['value']
             self.result['status'] = True
 
             return self.result
@@ -505,15 +527,17 @@ class UserModel(BaseModel):
 
     def add_important(self):
         try:
+            imp = {
+                "important": self.important,
+                "news": self.news,
+            }
             __body = {"$push": {
-                "important": {
-                    "important": self.important,
-                    "news": self.news,
-                }
+                "important": imp
             }}
 
             __condition = {'_id': self.id}
-            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = imp
             self.result['status'] = True
 
             return self.result
@@ -523,17 +547,19 @@ class UserModel(BaseModel):
 
     def delete_important(self):
         try:
+            imp = {
+                "important": self.important,
+                "news": self.news
+            }
             __body = {
                 "$pull": {
-                    "important": {
-                        "important": self.important,
-                        "news": self.news
-                    }
+                    "important": imp
                 }
             }
 
             __condition = {'_id': self.id}
-            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = imp
             self.result['status'] = True
 
             return self.result
@@ -548,7 +574,8 @@ class UserModel(BaseModel):
             }}
 
             __condition = {'_id': self.id, 'important.news': self.news}
-            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = {'news': self.news, 'important': self.important}
             self.result['status'] = True
 
             return self.result

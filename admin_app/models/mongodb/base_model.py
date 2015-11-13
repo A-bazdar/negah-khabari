@@ -14,12 +14,13 @@ class MongodbBaseModel():
 
 
 class MongodbModel(MongodbBaseModel):
-    def __init__(self, collection=None, body=None, condition=None, size=20, page=1, sort="date"):
+    def __init__(self, collection=None, body=None, condition=None, key=None, size=20, page=1, sort="date"):
         MongodbBaseModel.__init__(self)
         self.__body = body
         self.__size = size
         self.__page = page
         self.__sort = sort
+        self.__key = key
 
         self.__collection = collection
         self.__condition = condition
@@ -83,6 +84,14 @@ class MongodbModel(MongodbBaseModel):
     def get_one(self):
         try:
             return self.collection.find_one(self.__body)
+        except:
+            Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > get_one',
+                                data='collection: ' + self.__collection + ' body: ' + str(self.__body))
+            return False
+
+    def get_one_key(self):
+        try:
+            return self.collection.find_one(self.__body, self.__key)
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > get_one',
                                 data='collection: ' + self.__collection + ' body: ' + str(self.__body))
