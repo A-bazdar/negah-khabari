@@ -149,10 +149,10 @@ class AgencyModel():
             r = MongodbModel(collection='agency', body=body).get_one()
             if r:
                 return self.get_agency(r)
-            return {}
+            return False
         except:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_one')
-            return {}
+            return False
 
     def delete(self):
         try:

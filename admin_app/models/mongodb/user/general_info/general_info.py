@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+from bson import ObjectId
 from admin_app.classes.debug import Debug
 from admin_app.classes.public import CreateHash
 from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
@@ -11,9 +12,9 @@ __author__ = 'Morteza'
 
 class UserModel(BaseModel):
     def __init__(self, _id=None, name=None, family=None, username=None, organization=None, password=None, phone=None,
-                 mobile=None, address=None,
-                 fax=None, email=None, status=None, welcome=None, register_start_date=None, register_end_date=None,
-                 archive_start_date=None, archive_end_date=None, group=None, pic=None, role=None, last_activity=None):
+                 mobile=None, address=None, fax=None, email=None, status=None, welcome=None, register_start_date=None,
+                 register_end_date=None, archive_start_date=None, archive_end_date=None, group=None, pic=None,
+                 role=None, last_activity=None, news=None, note=None, important=None):
         BaseModel.__init__(self)
         self.id = _id
         self.name = name
@@ -36,6 +37,9 @@ class UserModel(BaseModel):
         self.role = role
         self.address = address
         self.last_activity = last_activity
+        self.news = news
+        self.note = note
+        self.important = important
         self.result = {'value': {}, 'status': False}
 
     def save(self):
@@ -105,7 +109,8 @@ class UserModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all',
+                                data='collection > user')
             return self.result
 
     def get_all_user(self):
@@ -144,7 +149,8 @@ class UserModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all',
+                                data='collection > user')
             return self.result
 
     def get_one(self):
@@ -152,7 +158,8 @@ class UserModel(BaseModel):
             if self.id:
                 body = {"_id": self.id}
             else:
-                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'username': {'$regex': '(?i)' + self.username + '$'}}, {'email': self.email}]}
+                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone},
+                                {'username': {'$regex': '(?i)' + self.username + '$'}}, {'email': self.email}]}
             r = MongodbModel(collection='user', body=body).get_one()
             if r:
                 group = UserGroupModel(_id=r['group']).get_one()
@@ -186,7 +193,8 @@ class UserModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all',
+                                data='collection > user')
             return self.result
 
     def get_admin(self):
@@ -217,7 +225,8 @@ class UserModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all',
+                                data='collection > user')
             return self.result
 
     def update_admin(self):
@@ -247,7 +256,8 @@ class UserModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin',
+                                data='collection > user')
             return self.result
 
     def update(self):
@@ -268,7 +278,8 @@ class UserModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin',
+                                data='collection > user')
             return self.result
 
     def update_password(self, new_pass):
@@ -282,7 +293,8 @@ class UserModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin',
+                                data='collection > user')
             return self.result
 
     def update_pic(self, pic):
@@ -296,7 +308,8 @@ class UserModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin',
+                                data='collection > user')
             return self.result
 
     def set_last_activity(self):
@@ -310,7 +323,8 @@ class UserModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin',
+                                data='collection > user')
             return self.result
 
     def count(self):
@@ -318,7 +332,8 @@ class UserModel(BaseModel):
             if self.id:
                 body = {"_id": self.id}
             else:
-                body = {"$or": [{'mobile': self.mobile}, {'username': {'$regex': '(?i)' + self.username + '$'}}, {'email': self.email}]}
+                body = {"$or": [{'mobile': self.mobile}, {'username': {'$regex': '(?i)' + self.username + '$'}},
+                                {'email': self.email}]}
             print body
             return MongodbModel(collection='user', body=body).count()
 
@@ -342,7 +357,8 @@ class UserModel(BaseModel):
                 return True
             return False
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > is_exist', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > is_exist',
+                                data='collection > user')
             return False
 
     def get_count_by_group(self):
@@ -356,6 +372,227 @@ class UserModel(BaseModel):
     def delete(self):
         try:
             self.result['value'] = MongodbModel(collection='user', body={'_id': self.id}).delete()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def is_exist_note(self):
+        try:
+            __body = {'_id': self.id, 'note.news': self.news}
+            if MongodbModel(collection='user', body=__body).count():
+                return True
+            return False
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return False
+
+    def add_note(self):
+        try:
+            note = ObjectId()
+            __body = {"$push": {
+                "note": {
+                    "_id": note,
+                    "note": self.note,
+                    "news": self.news,
+                }
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = note
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def delete_note(self):
+        try:
+            __body = {
+                "$pull": {
+                    "note": {
+                        "_id": self.note,
+                        "news": self.news
+                    }
+                }
+            }
+
+            __condition = {'_id': self.id}
+            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def update_note(self):
+        try:
+            __body = {"$set": {
+                'note.$.note': self.note,
+            }}
+
+            __condition = {'_id': self.id, 'note.news': self.news}
+            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def is_exist_star(self):
+        try:
+            __body = {'_id': self.id, 'star': {"$in": [self.news]}}
+            if MongodbModel(collection='user', body=__body).count():
+                return True
+            return False
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return False
+
+    def add_star(self):
+        try:
+            note = ObjectId()
+            __body = {"$push": {
+                "star": self.news
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = note
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def delete_star(self):
+        try:
+            __body = {
+                "$pull": {
+                    "star": self.news
+                }
+            }
+
+            __condition = {'_id': self.id}
+            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def is_exist_important(self, same=False):
+        try:
+            if not same:
+                __body = {'_id': self.id, 'important.news': self.news}
+            else:
+                __body = {'_id': self.id, 'important.news': self.news, 'important.important': self.important}
+            if MongodbModel(collection='user', body=__body).count():
+                return True
+            return False
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return False
+
+    def add_important(self):
+        try:
+            __body = {"$push": {
+                "important": {
+                    "important": self.important,
+                    "news": self.news,
+                }
+            }}
+
+            __condition = {'_id': self.id}
+            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def delete_important(self):
+        try:
+            __body = {
+                "$pull": {
+                    "important": {
+                        "important": self.important,
+                        "news": self.news
+                    }
+                }
+            }
+
+            __condition = {'_id': self.id}
+            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def update_important(self):
+        try:
+            __body = {"$set": {
+                'important.$.important': self.important,
+            }}
+
+            __condition = {'_id': self.id, 'important.news': self.news}
+            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def is_exist_read(self):
+        try:
+            __body = {'_id': self.id, 'read': {"$in": [self.news]}}
+            if MongodbModel(collection='user', body=__body).count():
+                return True
+            return False
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return False
+
+    def read(self):
+        try:
+            note = ObjectId()
+            __body = {"$push": {
+                "read": self.news
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = note
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def unread(self):
+        try:
+            __body = {
+                "$pull": {
+                    "read": self.news
+                }
+            }
+
+            __condition = {'_id': self.id}
+            self.result['value'] = MongodbModel(collection='user', condition=__condition, body=__body).update()
             self.result['status'] = True
 
             return self.result
