@@ -157,9 +157,10 @@ class UserModel(BaseModel):
         try:
             if self.id:
                 body = {"_id": self.id}
+            elif self.username:
+                body = {'username': {'$regex': '(?i)' + self.username + '$'}}
             else:
-                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone},
-                                {'username': {'$regex': '(?i)' + self.username + '$'}}, {'email': self.email}]}
+                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'email': self.email}]}
             r = MongodbModel(collection='user', body=body).get_one()
             if r:
                 group = UserGroupModel(_id=r['group']).get_one()
@@ -335,10 +336,10 @@ class UserModel(BaseModel):
         try:
             if self.id:
                 body = {"_id": self.id}
+            elif self.username:
+                body = {'username': {'$regex': '(?i)' + self.username + '$'}}
             else:
-                body = {"$or": [{'mobile': self.mobile}, {'username': {'$regex': '(?i)' + self.username + '$'}},
-                                {'email': self.email}]}
-            print body
+                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'email': self.email}]}
             return MongodbModel(collection='user', body=body).count()
 
         except:
