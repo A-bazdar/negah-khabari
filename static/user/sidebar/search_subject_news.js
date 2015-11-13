@@ -39,13 +39,13 @@ $('#search_news_subject').submit(function(e){
                         $('input[name=page]').val(value['page']);
                         auto_load = true;
                         load_img_news();
-                        btn.html('?????');
+                        btn.html('جستجو');
                         __a = true;
                     }
                 },
                 error: function () {
                     Alert.render('error', function(){
-                        btn.html('?????');
+                        btn.html('جستجو');
                         __a = true;
                     });
                 }
