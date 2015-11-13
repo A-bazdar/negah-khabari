@@ -389,14 +389,14 @@ class NewsModel:
             Debug.get_exception(sub_system='statistic_engine_feed', severity='critical_error', tags='get_agency_news_by_time')
             return self.result
 
-    def get_all(self, _page=0, _size=30):
+    def get_all(self, _page=0, _size=30, _sort="date"):
         try:
             body = {
                 "from": _page * _size, "size": _size,
                 "query": {
                     "match_all": {}
                 },
-                "sort": {"date": {"order": "desc"}}
+                "sort": {_sort: {"order": "desc"}}
             }
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
