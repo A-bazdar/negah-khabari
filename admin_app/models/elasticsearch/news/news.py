@@ -432,7 +432,8 @@ class NewsModel:
                 "from": _page * _size, "size": _size,
                 "query": {
                     "match_all": {}
-                }
+                },
+                "sort": {_sort: {"order": "desc"}}
             }
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()

@@ -170,7 +170,9 @@ class AgencyModel():
     def get_one(self):
         try:
             body = {'_id': self.id}
+            print body
             r = MongodbModel(collection='agency', body=body).get_one()
+            print r
             if r:
                 self.get_agency(r)
                 return self.value[0]
