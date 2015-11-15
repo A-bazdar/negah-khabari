@@ -716,6 +716,23 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def get_id(self):
+        try:
+            body = {"query": {"term": {"hash_link": self.get_hash(self.link)}}}
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            _id = False
+            if r['hits']['total']:
+                _id = r['hits']['hits'][0]['_id']
+
+            self.result['value'] = _id
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
 # news = NewsModel().get_all()['value']
 # for i in news:
 #     NewsModel(link=i['link'], title=i['title'], ro_title=i['ro_title'], summary=i['summary'], body=i['body'],
