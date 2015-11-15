@@ -68,6 +68,7 @@ class AgencyModel():
                 titr1_thumbnail=agency['titr1_thumbnail']
             ))
         except:
+            Debug.get_exception(send=False)
             pass
 
     def get_agency_link(self, agency):
