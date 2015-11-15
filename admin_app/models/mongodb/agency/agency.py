@@ -25,8 +25,14 @@ class AgencyModel():
 
     def get_agency(self, agency):
         try:
-            category = CategoryModel(_id=agency['category']).get_one()['value']
-            direction = DirectionModel(_id=agency['direction']).get_one()['value']
+            try:
+                category = CategoryModel(_id=agency['category']).get_one()['value']
+            except:
+                category = None
+            try:
+                direction = DirectionModel(_id=agency['direction']).get_one()['value']
+            except:
+                direction = None
             self.value.append(dict(
                 id=agency['_id'],
                 name=agency['name'],
