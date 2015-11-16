@@ -316,12 +316,14 @@ class NewsModel:
                     }
                 }
             }
+            print body
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
                 count_all = 0
+            print count_all
             try:
                 for b in r['hits']['hits']:
                     self.get_news(b['_source'], b['_id'])
