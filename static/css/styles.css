@@ -1217,7 +1217,12 @@ i.close {
     padding: 10px;
 }
 
-.comment_news_dropdown .fa-check-circle-o {
+.comment_news_dropdown .send-comment {
+    cursor: pointer;
+    float: left;
+}
+
+.comment_news_dropdown .option-news-note-success {
     color: #6dc437;
     cursor: pointer;
     float: left;

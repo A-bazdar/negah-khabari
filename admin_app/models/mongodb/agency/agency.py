@@ -20,14 +20,20 @@ class AgencyModel():
         self.links = links
         self.status = status
         self.pic = pic
+        self.value = []
         self.result = {'value': {}, 'status': False}
 
-    @staticmethod
-    def get_agency(agency):
+    def get_agency(self, agency):
         try:
-            category = CategoryModel(_id=agency['category']).get_one()['value']
-            direction = DirectionModel(_id=agency['direction']).get_one()['value']
-            return dict(
+            try:
+                category = CategoryModel(_id=agency['category']).get_one()['value']
+            except:
+                category = None
+            try:
+                direction = DirectionModel(_id=agency['direction']).get_one()['value']
+            except:
+                direction = None
+            self.value.append(dict(
                 id=agency['_id'],
                 name=agency['name'],
                 link=agency['link'],
@@ -58,10 +64,34 @@ class AgencyModel():
                 titr1_title=agency['titr1_title'],
                 titr1_summary=agency['titr1_summary'],
                 titr1_thumbnail=agency['titr1_thumbnail']
-            )
+            ))
         except:
-            Debug.get_exception(sub_system='agency', severity='error', tags='get_agency')
-            return False
+            Debug.get_exception(send=False)
+            pass
+
+    def get_agency_link(self, agency):
+        try:
+            links = []
+            for i in agency['links']:
+                sub = SubjectModel(_id=i['subject']).get_one()['value']
+                sub_parent = False
+                if sub['parent'] is not None:
+                    sub_parent = SubjectModel(_id=sub['parent']).get_one()['value']['name']
+                links.append(dict(
+                    link=i['link'],
+                    subject_id=sub['id'],
+                    subject_name=sub['name'],
+                    subject_parent_name=sub_parent,
+                ))
+            links = sorted(links, key=lambda k: k['subject_parent_name'], reverse=False)
+            self.value.append(dict(
+                id=agency['_id'],
+                name=agency['name'],
+                link=agency['link'],
+                links=links,
+            ))
+        except:
+            pass
 
     def save(self):
         try:
@@ -98,14 +128,23 @@ class AgencyModel():
     def get_all(self):
         try:
             r = MongodbModel(collection='agency', body={}).get_all()
-            if r:
-                l = []
-                for i in r:
-                    a = self.get_agency(i)
-                    if a:
-                        l.append(a)
-                self.result['value'] = l
-                self.result['status'] = True
+            for i in r:
+                self.get_agency(i)
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
+            return self.result
+
+    def get_all_links(self):
+        try:
+            r = MongodbModel(collection='agency', body={}).get_all()
+            for i in r:
+                self.get_agency_link(i)
+
+            self.result['value'] = self.value
+            self.result['status'] = True
             return self.result
         except:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
@@ -114,14 +153,10 @@ class AgencyModel():
     def get_all_titr_1(self):
         try:
             r = MongodbModel(collection='agency', body={"titr1": True}).get_all()
-            if r:
-                l = []
-                for i in r:
-                    a = self.get_agency(i)
-                    if a:
-                        l.append(a)
-                self.result['value'] = l
-                self.result['status'] = True
+            for i in r:
+                self.get_agency(i)
+            self.result['value'] = self.value
+            self.result['status'] = True
             return self.result
         except:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
@@ -130,14 +165,10 @@ class AgencyModel():
     def get_all_by_category(self):
         try:
             r = MongodbModel(collection='agency', body={'category': self.category}).get_all()
-            if r:
-                l = []
-                for i in r:
-                    a = self.get_agency(i)
-                    if a:
-                        l.append(a)
-                self.result['value'] = l
-                self.result['status'] = True
+            for i in r:
+                self.get_agency(i)
+            self.result['value'] = self.value
+            self.result['status'] = True
             return self.result
         except:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_all_by_category')
@@ -148,11 +179,12 @@ class AgencyModel():
             body = {'_id': self.id}
             r = MongodbModel(collection='agency', body=body).get_one()
             if r:
-                return self.get_agency(r)
-            return False
+                self.get_agency(r)
+                return self.value[0]
+            return {}
         except:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_one')
-            return False
+            return {}
 
     def delete(self):
         try:

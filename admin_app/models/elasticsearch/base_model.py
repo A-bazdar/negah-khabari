@@ -10,7 +10,7 @@ c = Config()
 
 class ElasticSearchBaseModel():
     def __init__(self):
-        self.db = Elasticsearch(host=c.web['elasticsearch']['host'], port=c.web['elasticsearch']['port'], timeout=3600)
+        self.db = Elasticsearch(host=c.web['elasticsearch']['host'], port=c.web['elasticsearch']['port'], timeout=30)
 
 
 class ElasticSearchModel(ElasticSearchBaseModel):
