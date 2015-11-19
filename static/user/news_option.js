@@ -7,6 +7,7 @@ $(document).on('click','.show_option_news', function(){
     if($(this).hasClass('closedp')) {
         $(this).removeClass('closedp').addClass('open');
         $('.dropdown-option-container[data-news=' + data_news + ']').slideDown();
+        $('.dropdown-option-container[data-news!=' + data_news + ']').slideUp();
     }
     else {
         $(this).removeClass('open').addClass('closedp');

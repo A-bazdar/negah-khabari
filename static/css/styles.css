@@ -1201,7 +1201,7 @@ i.close {
     position: absolute;
     top: 100%;
     /*right: 0;*/
-    z-index: 1000000;
+    z-index: 10000;
     display: none;
     float: right;
     min-width: 160px;
@@ -1296,7 +1296,7 @@ i.close {
     display: table;
     position: fixed;
     width: 100%;
-    z-index: 110000000;
+    z-index: 100;
     background: #ffffff;
     padding: 6px 10px;
     top: 54px;
@@ -1391,4 +1391,14 @@ i.close {
 
 .second-header-icon-container i {
     vertical-align: -2px;
+}
+
+.filtration-news {
+    position: absolute;
+    padding: 5px 10px;
+    background: #46639d;
+    right: 50%;
+    top: 0;
+    color: #ffffff;
+    cursor: pointer;
 }
