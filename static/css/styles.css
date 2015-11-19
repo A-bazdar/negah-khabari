@@ -584,7 +584,7 @@ div#nav_search{position: relative}
     background: #ffffff;
     min-height: 1000px;
     position: absolute;
-    top: 55px;
+    top: 97px;
     padding: 50px 15px;
 }
 
@@ -637,8 +637,8 @@ div#nav_search{position: relative}
 }
 
 .side_toggler:hover {
-    color: #ffffff;
-    border: solid 2px #ffffff;
+    color: #828282;
+    border: solid 2px #828282;
 }
 
 .logo{
@@ -1192,25 +1192,85 @@ i.close {
     color: #ffffff !important;
 }
 
+.my-dropdown-container{
+    position: relative;
+    display: inline-block;
+}
+
 .my-dropdown {
     position: absolute;
     top: 100%;
-    right: 0;
-    z-index: 1000;
+    /*right: 0;*/
+    z-index: 1000000;
     display: none;
     float: right;
-    min-width: 300px;
+    min-width: 160px;
     padding: 5px 0;
     margin: 2px 0 0;
     font-size: 14px;
     list-style: none;
-    background-color: #ffffff;
+    background-color: #f6f7f8;
     border: 1px solid #cccccc;
     border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
+    /*border-radius: 4px;*/
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
     background-clip: padding-box;
+}
+
+.my-dropdown.option_news {
+    min-width: 300px;
+}
+
+.my-dropdown.right {
+    right: 0;
+}
+
+.my-dropdown.left {
+    left: 0;
+}
+
+.my-dropdown.min-width {
+    min-width: 160px;
+}
+
+.my-dropdown.middle-width {
+    min-width: 230px;
+}
+
+.my-dropdown.max-width {
+    min-width: 300px;
+}
+
+.custom-menu li {
+    list-style-type: none;
+}
+
+.my-dropdown li a {
+    color: #4d4d4d !important;
+    width: 100%;
+    padding: 5px;
+    position: relative;
+    font-size: 11pt !important;
+    display: block;
+}
+
+.my-dropdown li a:hover {
+    background: #CCD1E4 !important;
+    color: #4d4d4d !important;
+    text-decoration: none;
+}
+
+.my-dropdown hr {
+    margin: 2px 0 !important;
+    border-color: #d7d7d7;
+}
+
+.my-dropdown a span.news_dropdown_count {
+    position: absolute;
+    left: 15px;
+    top: 4px;
+    font-size: 10pt;
 }
 
 .comment_news_dropdown {
@@ -1230,4 +1290,105 @@ i.close {
 
 .important_news_dropdown {
     padding: 10px;
+}
+
+.second-header {
+    display: table;
+    position: fixed;
+    width: 100%;
+    z-index: 110000000;
+    background: #ffffff;
+    padding: 6px 10px;
+    top: 54px;
+    box-shadow: 0 0 2px #aaa !important;
+    border-collapse: separate;
+    border-bottom: 1px solid;
+}
+
+.second-header .slide_toggle {
+    display: table-cell;
+    min-width: 260px;
+    margin: 0;
+    padding: 0 10px 0 0;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.second-header .second-header-options{
+    display: table-cell;
+    width: 100%;
+    margin: 0;
+    vertical-align: middle;
+}
+
+.second-header-dropdown {
+    background: #f6f7f8;
+    border: 1px solid #3f5c99;
+    text-align: center;
+    padding: 2px 15px;
+    color: #6d7488;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.second-header-dropdown i {
+    font-size: 11pt;
+    vertical-align: -3px;
+    margin-right: 10px;
+}
+
+.pagination-container {
+    display: inline-block;
+    text-align: center;
+    color: #6d7488;
+}
+
+.pagination-container i {
+    vertical-align: -2px;
+}
+
+.right-button-pagination {
+    border-radius: 0 4px 4px 0;
+    display: inline-block;
+    background: #f6f7f8;
+    cursor: pointer;
+    padding: 2px 5px;
+    border: 1px solid #a6a9b2;
+}
+
+.left-button-pagination {
+    border-radius: 4px 0 0 4px;
+    display: inline-block;
+    background: #f6f7f8;
+    cursor: pointer;
+    padding: 2px 5px;
+    border: 1px solid #a6a9b2;
+}
+
+.num_pagination_button {
+    background: #f6f7f8;
+    display: inline-block;
+    border: 1px solid #a6a9b2;
+    padding: 2px;
+}
+
+.num_pagination_button a {
+    padding: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.second-header-icon-container {
+    cursor: pointer;
+    padding: 2px 5px;
+    font-size: 10pt;
+    display: inline-block;
+    background: #f6f7f8;
+    border: 1px solid #3f5c99;
+    border-radius: 4px;
+    margin: 0 5px;
+}
+
+.second-header-icon-container i {
+    vertical-align: -2px;
 }
