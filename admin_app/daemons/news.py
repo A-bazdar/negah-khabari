@@ -34,9 +34,9 @@ def save_news(**obj):
                             link=obj['link'])\
                 .save()
 
-            return {'status': False, 'value': {}, 'message': 'ERROR'}
+            return {'status': False, 'value': {}, 'message': 'ERROR', 'type': 'NEWS'}
     except:
-        return {'status': False, 'value': {}, 'message': 'ERROR'}
+        return {'status': False, 'value': {}, 'message': 'ERROR', 'type': 'NEWS'}
 
 
 def extract_news(document, b):
@@ -53,7 +53,7 @@ def extract_news(document, b):
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_news',
                             data='extract_news')
-        return {'status': False, 'value': {}, 'message': 'ERROR'}
+        return {'status': False, 'value': {}, 'message': 'ERROR', 'type': 'NEWS'}
 
 
 def news(brief):
@@ -65,4 +65,4 @@ def news(brief):
             return extract_news(data, b)
     else:
         print 'ReedNews: ' + e
-    return False
+    return {'status': False, 'value': {}, 'message': 'EXIST', 'type': 'NEWS'}
