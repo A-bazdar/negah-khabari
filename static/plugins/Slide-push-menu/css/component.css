@@ -2,7 +2,9 @@
 .cbp-spmenu {
 	background: #E9EAEE;
 	position: fixed;
+	/*display: none;*/
 	padding: 15px 10px;
+	min-height: 3000px;
 }
 
 .cbp-spmenu h3 {
@@ -38,8 +40,8 @@
 .cbp-spmenu-vertical {
 	width: 300px;
 	height: 100%;
-	top: 54px;
-	z-index: 1000;
+	top: 95px;
+	z-index: 50;
 }
 
 .cbp-spmenu-vertical a {

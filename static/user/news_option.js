@@ -7,10 +7,25 @@ $(document).on('click','.show_option_news', function(){
     if($(this).hasClass('closedp')) {
         $(this).removeClass('closedp').addClass('open');
         $('.dropdown-option-container[data-news=' + data_news + ']').slideDown();
+        $('.dropdown-option-container[data-news!=' + data_news + ']').slideUp();
     }
     else {
         $(this).removeClass('open').addClass('closedp');
         $('.dropdown-option-container[data-news=' + data_news + ']').slideUp();
+    }
+});
+
+$(document).on('click','.second-header-dropdown', function(){
+    var data_action = $(this).attr('data-action');
+    if($(this).hasClass('closedp')) {
+        $(this).removeClass('closedp').addClass('open');
+        $('.my-dropdown[data-action=' + data_action + ']').slideDown();
+        $('.my-dropdown[data-action!=' + data_action + ']').slideUp();
+        $('.second-header-dropdown[data-action!=' + data_action + ']').removeClass('open').addClass('closedp');
+    }
+    else if($(this).hasClass('open')){
+        $(this).removeClass('open').addClass('closedp');
+        $('.my-dropdown[data-action=' + data_action + ']').slideUp();
     }
 });
 
