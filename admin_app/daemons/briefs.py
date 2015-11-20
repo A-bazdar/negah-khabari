@@ -38,6 +38,7 @@ def save_brief(**obj):
 def extract_briefs(document, a, sub_link):
     counter = 0
     try:
+        print 2222222222222222
         list_document = Soap(document=document, container=a['brief_container']).get_list_document()
         print a['base_link'], ' ------->> ', sub_link['link']
         e = Extract(base_link=a['base_link'], link=a['brief_link'], ro_title=a['brief_ro_title'], title=a['brief_title'],
@@ -66,6 +67,7 @@ def briefs():
         agencies = AgencyModel().get_all()['value']
         for a in agencies:
             for link in a['links']:
+                print link, 1111111111
                 data = GetUrl(url=link['link']).value
                 if data:
                     __c = extract_briefs(data, a, link)
