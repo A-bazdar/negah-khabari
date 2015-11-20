@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from tendo import singleton
+singleton.SingleInstance()
 from admin_app.engine_feed.extract import Extract
 from admin_app.engine_feed.get_url import GetUrl
 from admin_app.engine_feed.soap import Soap
-
-singleton.SingleInstance()
 from admin_app.models.mongodb.content.content import ContentModel
 from admin_app.models.mongodb.failed_brief.failed_brief import FailedBriefModel
 import datetime
