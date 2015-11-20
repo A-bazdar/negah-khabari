@@ -29,9 +29,12 @@ def extract_titr1(document, a):
             obj = e.get_brief(doc)
 
             s_b = save_brief(**obj)
-            if s_b['status']:
-                if news(s_b['value']['_id']):
+            try:
+                s_n = news(s_b['value']['_id'])
+                if s_n['status']:
                     counter += 1
+            except:
+                pass
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_titr1s',
