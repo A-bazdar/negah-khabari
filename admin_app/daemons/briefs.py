@@ -66,14 +66,13 @@ def briefs():
     try:
         agencies = AgencyModel().get_all()['value']
         for a in agencies:
-            if a['base_link'] == "http://alef.ir":
-                for link in a['links']:
-                    data = GetUrl(url=link['link']).value
-                    if data:
-                        __c = extract_briefs(data, a, link)
-                        if __c > 0:
-                            __link__counter += 1
-                        __counter += __c
+            for link in a['links']:
+                data = GetUrl(url=link['link']).value
+                if data:
+                    __c = extract_briefs(data, a, link)
+                    if __c > 0:
+                        __link__counter += 1
+                    __counter += __c
         return False, 'Success', __counter, __link__counter
     except:
         error_message = Debug.get_exception(sub_system='engine_feed', severity='fatal_error', tags='get_briefs',
