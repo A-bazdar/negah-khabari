@@ -47,9 +47,12 @@ def extract_briefs(document, a, sub_link):
             obj = e.get_brief(doc)
             s_b = save_brief(**obj)
             print s_b
-            s_n = news(s_b['value']['_id'])
-            if s_n['status']:
-                counter += 1
+            try:
+                s_n = news(s_b['value']['_id'])
+                if s_n['status']:
+                    counter += 1
+            except:
+                pass
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_briefs',
