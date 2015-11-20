@@ -80,7 +80,6 @@ class Extract:
 
     def get_thumbnail(self, __soap):
         try:
-            print self.thumbnail
             thumbnail = __soap.select_one(self.thumbnail).find('img')['src'].encode('utf-8')
             if 'http' not in thumbnail and 'www' not in thumbnail:
                 thumbnail = self.base_link.encode('utf-8') + thumbnail
