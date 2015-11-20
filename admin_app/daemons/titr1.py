@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from tendo import singleton
-from admin_app.models.mongodb.content.content import ContentModel
-from admin_app.models.mongodb.failed_brief.failed_brief import FailedBriefModel
-
 singleton.SingleInstance()
+
+from admin_app.daemons.briefs import save_brief
+from admin_app.engine_feed.extract import Extract
+from admin_app.engine_feed.get_url import GetUrl
+from admin_app.engine_feed.soap import Soap
+from admin_app.models.mongodb.content.content import ContentModel
 import datetime
 from bson import ObjectId
-from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
-import urllib2
-from bs4 import BeautifulSoup
 from admin_app.classes.debug import Debug
 from admin_app.daemons.news import news
 from admin_app.models.mongodb.feed_statistic.feed_statistic import FeedStatisticModel
@@ -18,73 +18,20 @@ from admin_app.models.mongodb.feed_statistic.feed_statistic import FeedStatistic
 __author__ = 'Morteza'
 
 
-def get_url(url):
-    try:
-        response = urllib2.urlopen(url)
-        return response.read()
-    except:
-        Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_url_brief', data=url.encode('utf-8'))
-        return False
-
-
 def extract_titr1(document, a):
     counter = 0
     try:
         print a['base_link'], '########'
-        soap = BeautifulSoup(document, "html.parser")
-        list_titr1s = soap.select(a['titr1_container'])
-        for i in list_titr1s:
-            try:
-                if a['titr1_link'] != '':
-                    link = i.select_one(a['titr1_link']).find('a')['href'].encode('utf-8')
-                else:
-                    link = i.find('a')['href'].encode('utf-8')
-                if 'http' not in link and 'www' not in link:
-                    link = a['base_link'].encode('utf-8') + link
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_link_titr1',
-                                    data=a['base_link'].encode('utf-8'))
-                link = None
-            try:
-                if a['titr1_ro_title']:
-                    ro_title = i.select_one(a['titr1_ro_title']).text.encode('utf-8').strip()
-                else:
-                    ro_title = None
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_ro_title_titr1',
-                                    data=a['base_link'].encode('utf-8'))
-                ro_title = None
+        list_document = Soap(document=document, container=a['titr1_container']).get_list_document()
+        e = Extract(base_link=a['base_link'], link=a['titr1_link'], ro_title=a['titr1_ro_title'], title=a['titr1_title'],
+                    summary=a['titr1_summary'], thumbnail=a['titr1_thumbnail'], agency=a, sub_link={"subject": ObjectId("5640dfe846b9a036ebd86e49")}, error_link=a['base_link'])
+        for doc in list_document:
+            obj = e.get_brief(doc)
 
-            try:
-                title = i.select_one(a['titr1_title']).text.encode('utf-8').strip()
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_titr1',
-                                    data=a['base_link'].encode('utf-8'))
-                title = None
-            try:
-                summary = i.select_one(a['titr1_summary']).text.encode('utf-8').strip()
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_summary_titr1',
-                                    data=a['base_link'].encode('utf-8'))
-                summary = None
-            try:
-                thumbnail = i.select_one(a['titr1_thumbnail']).find('img')['src'].encode('utf-8')
-                if 'http' not in thumbnail and 'www' not in thumbnail:
-                    thumbnail = a['base_link'].encode('utf-8') + thumbnail
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_titr1',
-                                    data=a['base_link'].encode('utf-8'))
-                thumbnail = None
-            if link is not None and title is not None and summary is not None and thumbnail is not None:
-                _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
-                                 agency=str(a['id']), subject="5640dfe846b9a036ebd86e49", content=str(ContentModel().titr1)).insert()
-                try:
-                    if news(_b['value']['_id']):
-                        counter += 1
-                except:
-                    pass
-            else:
-                FailedBriefModel(agency=a['id'], subject=l['subject'], content=ContentModel().titr1, title=title, link=link).save()
+            s_b = save_brief(**obj)
+            if s_b['status']:
+                if news(s_b['value']['_id']):
+                    counter += 1
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_titr1s',
@@ -98,7 +45,7 @@ def titr1():
     try:
         agencies = AgencyModel().get_all_titr_1()['value']
         for a in agencies:
-            data = get_url(a['base_link'])
+            data = GetUrl(url=a['base_link']).value
             if data:
                 __c = extract_titr1(data, a)
                 if __c > 0:

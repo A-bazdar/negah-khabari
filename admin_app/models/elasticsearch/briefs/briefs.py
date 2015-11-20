@@ -138,8 +138,10 @@ class BriefsModel:
             if e is False:
                 self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).insert()
                 self.result['status'] = True
+                self.result['message'] = 'INSERT'
             else:
-                self.result['status'] = "Exist"
+                self.result['status'] = False
+                self.result['message'] = 'EXIST'
                 self.result['value'] = {'_id': e}
 
             return self.result

@@ -1,44 +1,15 @@
 # #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
 
-import datetime
-import khayyam
 from admin_app.classes.debug import Debug
-import urllib2
-import re, urlparse
-from bs4 import BeautifulSoup
+from admin_app.engine_feed.extract import Extract
+from admin_app.engine_feed.get_url import GetUrl
+from admin_app.engine_feed.soap import Soap
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.elasticsearch.news.news import NewsModel
 from admin_app.models.mongodb.failed_news.failed_news import FailedNewsModel
 
 __author__ = 'Morteza'
-
-
-def urlEncodeNonAscii(b):
-    return re.sub('[\x80-\xFF]', lambda c: '%%%02x' % ord(c.group(0)), b)
-
-
-def iriToUri(iri):
-    parts = urlparse.urlparse(iri)
-    return urlparse.urlunparse(
-        part.encode('idna') if parti == 1 else urlEncodeNonAscii(part.encode('utf-8'))
-        for parti, part in enumerate(parts)
-    )
-
-
-def clean_url(url):
-    return url.replace("'", "").replace('"', '')
-
-
-def get_url(url, b_id):
-    try:
-        response = urllib2.urlopen(iriToUri(url))
-        return response.read()
-    except:
-        BriefsModel(_id=b_id).delete()
-        # Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_link_news', data=url)
-        print 'delete'
-        return False
 
 
 def get_date(_date):
@@ -51,78 +22,45 @@ def get_date(_date):
     return a
 
 
+def save_news(**obj):
+    try:
+        if obj['title'] is not None and obj['body'] is not None:
+            return NewsModel(link=obj['link'], title=obj['title'], body=obj['body'], ro_title=obj['ro_title'],
+                             summary=obj['summary'], thumbnail=obj['thumbnail'], agency=str(obj['agency']),
+                             subject=str(obj['subject']), content=str(obj['content']), date=obj['date'])\
+                .insert()
+        else:
+            FailedNewsModel(agency=obj['agency'], subject=obj['subject'], content=obj['content'], title=obj['title'],
+                            link=obj['link'])\
+                .save()
+
+            return {'status': False, 'value': {}, 'message': 'ERROR'}
+    except:
+        return {'status': False, 'value': {}, 'message': 'ERROR'}
+
+
 def extract_news(document, b):
     try:
-        soap = BeautifulSoup(document, "html.parser")
-        try:
-            body = soap.select_one(b['agency']['news_body']).encode('utf-8').strip()
-        except:
-            Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=b['link'].encode('utf-8'))
-            body = None
-        try:
-            if b['agency']['news_ro_title']:
-                ro_title = soap.select_one(b['agency']['news_ro_title']).text.encode('utf-8').strip()
-            else:
-                ro_title = None
-        except:
-            Debug.get_exception(sub_system='engine_feed', severity='message', tags='get_ro_title_news', data=b['link'].encode('utf-8'))
-            ro_title = None
-        try:
-            title = soap.select_one(b['agency']['news_title']).text.encode('utf-8').strip()
-        except:
-            Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_news', data=b['link'].encode('utf-8'))
-            title = None
-        try:
-            summary = soap.select_one(b['agency']['news_summary']).text.encode('utf-8').strip()
-        except:
-            Debug.get_exception(sub_system='engine_feed', severity='message', tags='get_summary_news', data=b['link'].encode('utf-8'))
-            summary = None
-        try:
-            news_date = soap.select_one(b['agency']['news_date']).text.replace(u'ي', u'ی').strip()
-            news_date.encode('utf-8')
-            news_date = get_date(news_date)
-            date = khayyam.JalaliDatetime().strptime(news_date,
-                                                     u'{}'.format(b['agency']['news_date_format'])).todatetime()
-        except:
-            Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_date_news', data=b['link'].encode('utf-8'))
-            date = datetime.datetime.now()
-        try:
-            thumbnail = soap.select_one(b['agency']['news_thumbnail']).find('img')['src'].encode('utf-8')
-            if 'http' not in thumbnail and 'www' not in thumbnail:
-                thumbnail = b['agency']['base_link'].encode('utf-8') + thumbnail
-        except:
-            Debug.get_exception(sub_system='engine_feed', severity='message', tags='get_thumbnail_news', data=b['link'].encode('utf-8'))
-            thumbnail = None
-        if summary is None or summary == '':
-            summary = b['summary']
-
-        if title is None or title == '':
-            title = b['title']
-
-        if ro_title is None or ro_title == '':
-            ro_title = b['ro_title']
-
-        if thumbnail is None or thumbnail == '':
-            thumbnail = b['thumbnail']
-        if title and body:
-            r = NewsModel(link=b['link'], title=title, body=body, ro_title=ro_title, summary=summary,
-                          thumbnail=thumbnail, agency=str(b['agency']['id']), subject=str(b['subject']['id']), content=str(b['content']['id']), date=date).insert()
-            print r
-            return r['status']
-
-        else:
-            FailedNewsModel(agency=b['agency']['id'], subject=b['subject']['id'], content=b['content']['id'], title=title, link=b['link']).save()
+        doc = Soap(document=document).soap
+        e = Extract(base_link=b['agency']['base_link'], ro_title=b['agency']['news_ro_title'],
+                    title=b['agency']['news_title'], summary=b['agency']['news_summary'],
+                    date=b['agency']['news_date'], date_format=b['agency']['news_date_format'],
+                    thumbnail=b['agency']['news_thumbnail'], brief=b, error_link=b['link'], body=b['agency']['news_body'])
+        obj = e.get_news(doc)
+        s_n = save_news(**obj)
+        print s_n
+        return s_n
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_news',
                             data='extract_news')
-        return False
+        return {'status': False, 'value': {}, 'message': 'ERROR'}
 
 
 def news(brief):
     b = BriefsModel(_id=brief).get_one()['value']
     e = NewsModel(link=b['link'], title=b['title'], agency=str(b['agency']['id'])).is_exist()
     if e is False:
-        data = get_url(b['link'], b['id'])
+        data = GetUrl(url=b['link']).value
         if data:
             return extract_news(data, b)
     else:
