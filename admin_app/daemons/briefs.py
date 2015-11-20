@@ -66,7 +66,7 @@ def briefs():
     try:
         agencies = AgencyModel().get_all()['value']
         for a in agencies:
-            if a['base_link'] == "http://www.yjc.ir":
+            if a['base_link'] == "http://alef.ir":
                 for link in a['links']:
                     data = GetUrl(url=link['link']).value
                     if data:
