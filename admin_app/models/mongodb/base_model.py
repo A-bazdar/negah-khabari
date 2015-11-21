@@ -56,6 +56,8 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.failed_news
         elif collection == 'news_report_broken':
             self.collection = self.db.news_report_broken
+        elif collection == 'setting':
+            self.collection = self.db.setting
 
     def insert(self):
         try:

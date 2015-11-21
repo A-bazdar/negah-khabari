@@ -274,12 +274,12 @@ $("#custom").spectrum({
         }
 
     });
-
+    var now = new Date("1/1/1900 " + '{{ now.hour }}:{{ now.minute }}:{{ now.second }}');
     function renderTime(){
-        var currentTime = new Date();
-        var h = currentTime.getHours();
-        var m = currentTime.getMinutes();
-        var s = currentTime.getSeconds();
+        var h = now.getHours();
+        var m = now.getMinutes();
+        var s = now.getSeconds();
+        now = new Date(now.valueOf() + 1000);
         if (h < 10){
             h = "0" + h;
         }
