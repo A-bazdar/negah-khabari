@@ -506,11 +506,6 @@ class AdminFailureLogHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_log_charts/failure_log.html')
 
-class AdminGeneralSettingsHandler(BaseHandler):
-    def get(self):
-        self.data['now'] = datetime.datetime.now()
-        self.render('admin/admin_settings/general_setting.html', **self.data)
-
 class AdminAboutUsHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_settings/about_us.html')

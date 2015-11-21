@@ -7,12 +7,14 @@ __author__ = 'Morteza'
 
 
 class SettingModel(BaseModel):
-    def __init__(self, _id=None, font=None, size=None):
+    def __init__(self, _id=None, font=None, size=None, general=None):
         BaseModel.__init__(self)
         self.key_font = "FONT"
+        self.key_general = "GENERAL"
         self.id = _id
         self.font = font
         self.size = size
+        self.general = general
         self.result = {'value': {}, 'status': False}
 
     def save_menu_font(self):
@@ -176,6 +178,40 @@ class SettingModel(BaseModel):
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_one', data='collection > setting')
+            return self.result
+
+    def get_general(self):
+        try:
+            r = MongodbModel(collection='setting', body={'key': self.key_general}).get_one()
+            if r:
+                self.result['value'] = r
+
+                self.result['status'] = True
+            else:
+                self.result['value'] = None
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_one', data='collection > setting')
+            return self.result
+
+    def save_general(self):
+        try:
+            if self.count(self.key_general):
+                __body = {"$set": self.general}
+
+                __condition = {'key': self.key_general}
+                self.result['value'] = MongodbModel(collection='setting', body=__body, condition=__condition).update()
+                self.result['status'] = True
+            else:
+                self.general["key"] = self.key_general
+                __body = self.general
+
+                self.result['value'] = MongodbModel(collection='setting', body=__body).insert()
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > setting')
             return self.result
 
     @staticmethod

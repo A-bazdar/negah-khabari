@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
 
 __author__ = 'Morteza'
 import datetime
@@ -134,3 +135,39 @@ class CustomDateTime:
                 start_date = self.generate_date_time(date=start_date, add=True, _type='days', value=365)
             ls.append(end_date)
         return ls, _type
+
+    @staticmethod
+    def win_set_time(time_tuple):
+        pywin32 = None
+        day_of_week = datetime.datetime(time_tuple).isocalendar()[2]
+        pywin32.SetSystemTime(time_tuple[:2] + day_of_week + time_tuple[2:])
+
+    @staticmethod
+    def linux_set_time(time_tuple):
+        import ctypes
+        import ctypes.util
+        import time
+
+        # /usr/include/linux/time.h:
+
+        clock_real_time = 0
+
+        class timespec(ctypes.Structure):
+            _fields_ = [("tv_sec", ctypes.c_long),
+                        ("tv_nsec", ctypes.c_long)]
+
+        librt = ctypes.CDLL(ctypes.util.find_library("rt"))
+
+        ts = timespec()
+        ts.tv_sec = int(time.mktime(datetime.datetime(*time_tuple[:6]).timetuple()))
+        ts.tv_nsec = time_tuple[6] * 1000000  # Millisecond to nanosecond
+
+        # http://linux.die.net/man/3/clock_settime
+        librt.clock_settime(clock_real_time, ctypes.byref(ts))
+
+    def change_current_time(self, time_tuple):
+        if sys.platform == 'linux2':
+            self.linux_set_time(time_tuple)
+
+        elif sys.platform == 'win32':
+            self.win_set_time(time_tuple)

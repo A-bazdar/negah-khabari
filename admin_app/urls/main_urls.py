@@ -4,7 +4,7 @@ from admin_app.daemons.delete_duplicate import delete_duplicate
 
 from admin_app.handlers.admin import admin
 from admin_app.handlers.admin import management
-from admin_app.handlers.setting import font
+from admin_app.handlers.setting import font, general
 __author__ = 'Morteza'
 
 url_patterns = [
@@ -143,8 +143,8 @@ url_patterns = [
 
     ("/GetAgency", admin.GetAgencyHandler, None, "get_agency"),
 
-    (r'^(?i)/Admin/Settings/GeneralSettings[/]?$', admin.AdminGeneralSettingsHandler),
-    (r'^/Admin/Settings/GeneralSettings', admin.AdminGeneralSettingsHandler, None,
+    (r'^(?i)/Admin/Settings/GeneralSettings[/]?$', general.AdminGeneralSettingsHandler),
+    (r'^/Admin/Settings/GeneralSettings', general.AdminGeneralSettingsHandler, None,
      "admin:settings:general_settings"),
 
     (r'^(?i)/Admin/Settings/FontSettings[/]?$', font.AdminFontSettingsHandler),
