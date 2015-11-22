@@ -4,7 +4,7 @@ from admin_app.daemons.delete_duplicate import delete_duplicate
 
 from admin_app.handlers.admin import admin
 from admin_app.handlers.admin import management
-from admin_app.handlers.setting import font, general
+from admin_app.handlers.setting import font, general, about_us, contact_us
 __author__ = 'Morteza'
 
 url_patterns = [
@@ -151,11 +151,12 @@ url_patterns = [
     (r'^/Admin/Settings/FontSettings', font.AdminFontSettingsHandler, None,
      "admin:settings:font_settings"),
 
-    (r'^(?i)/Admin/Settings/ContactUs[/]?$', admin.AdminContactUsHandler),
-    (r'^/Admin/Settings/ContactUs', admin.AdminContactUsHandler, None,
-     "admin:settings:contact_us"),
+    (r'^(?i)/Admin/Settings/AboutUs[/]?$', about_us.AdminGeneralSettingsAboutUsHandler),
+    (r'^/Admin/Settings/AboutUs', about_us.AdminGeneralSettingsAboutUsHandler, None, "admin:settings:about_us"),
 
-    (r'^(?i)/Admin/Settings/AboutUs[/]?$', admin.AdminAboutUsHandler),
-    (r'^/Admin/Settings/AboutUs', admin.AdminAboutUsHandler, None, "admin:settings:about_us"),
+    (r'^(?i)/Admin/Settings/ContactUs[/]?([\d^/]+)?[/]?$', contact_us.AdminGeneralSettingsContactUsHandler),
+    (r'/Admin/Settings/ContactUs', contact_us.AdminGeneralSettingsContactUsHandler, None, 'admin:settings:contact_us'),
+    (r'/Admin/Settings/ContactUs/(page)', contact_us.AdminGeneralSettingsContactUsHandler, None, 'admin:settings:contact_us_by_page'),
+
     (r'^/delete_duplicate', delete_duplicate, None, "delete_duplicate"),
 ]

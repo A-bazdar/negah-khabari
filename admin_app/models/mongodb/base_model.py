@@ -58,6 +58,10 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.news_report_broken
         elif collection == 'setting':
             self.collection = self.db.setting
+        elif collection == 'about_us':
+            self.collection = self.db.about_us
+        elif collection == 'contact_us':
+            self.collection = self.db.contact_us
 
     def insert(self):
         try:

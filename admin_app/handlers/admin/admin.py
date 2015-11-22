@@ -506,10 +506,6 @@ class AdminFailureLogHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_log_charts/failure_log.html')
 
-class AdminAboutUsHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render('admin/admin_settings/about_us.html')
-
 class AdminContactUsHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/admin_settings/contact_us.html')
