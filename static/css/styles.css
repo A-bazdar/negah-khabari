@@ -1446,6 +1446,7 @@ i.close {
     font-family: Yekan;
     border: 5px solid #c0cfe4;
     padding: 0 10px 10px;
+    max-height: 500px;
 }
 
 .ro-title {
@@ -1456,4 +1457,11 @@ i.close {
 .news_detail_options {
     border-bottom: 1px solid #a1a5ae;
     padding: 2px 10px;
+}
+
+.show-new-detail-container {
+    box-shadow: 0 0 2px #aaa;
+    background: #ffffff;
+    padding: 10px;
+    max-height: 500px;
 }
