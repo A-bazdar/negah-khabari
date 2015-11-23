@@ -7,6 +7,18 @@ __author__ = 'Morteza'
 
 
 class AdminFontSettingsHandler(BaseHandler):
+    @staticmethod
+    def change_css_style():
+        return
+        folder = ''
+        folder2 = ''
+        f1 = open(folder, 'r')
+        f2 = open(folder2, 'w')
+        for line in f1:
+            f2.write(line.replace('__background__', '__background'))
+        f1.close()
+        f2.close()
+
     def get(self):
         self.data['font'] = SettingModel().get_fonts()['value']
         self.render('admin/admin_settings/font_setting.html', **self.data)
@@ -66,4 +78,5 @@ class AdminFontSettingsHandler(BaseHandler):
                 self.status = True
             else:
                 self.messages = ['یکی از فونت ها و اندازه ها را انتخاب کنید.']
+        self.change_css_style()
         self.write(self.result)
