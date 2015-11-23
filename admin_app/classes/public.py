@@ -134,3 +134,19 @@ class UploadPic:
 
         except:
             return self.default
+
+    def upload_logo(self):
+        try:
+            pic_name = "logo"
+            pic = self.__handler.request.files[self.name][0]
+            extension = ".png"
+            upload_folder = os.path.join(Config().applications_root, 'static', 'images')
+            photo_name = pic_name + extension
+            full_name = os.path.join(upload_folder, photo_name)
+            output = open(full_name, 'wb')
+            output.write(pic['body'])
+            output.close()
+            return photo_name
+
+        except:
+            return self.default

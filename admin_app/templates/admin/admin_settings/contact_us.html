@@ -1,7 +1,6 @@
 {% extends '../admin_base.html' %}
 
 {% block other_css %}
-<link rel="stylesheet" href="{{ static_url('plugins/DatePicker/pwt-datepicker.css') }}">
 <style>
     .colorpicker.dropdown-menu{
         width: 148px;
@@ -23,15 +22,28 @@
                                         <td>نام</td>
                                         <td>ایمیل</td>
                                         <td>پیام</td>
+                                        <td>تاریخ</td>
                                         <td>امکانات</td>
                                     </tr>
-                                    <tr>
-                                        <td>28600</td>
-                                        <td>1800</td>
-                                        <td>606542135480</td>
-                                        <td><i class="fa fa-trash-o"></i> </td>
-                                    </tr>
+                                    {% for i in contacts %}
+                                        <tr>
+                                            <td>{{ i['name'] }}</td>
+                                            <td>{{ i['email'] }}</td>
+                                            <td>{{ i['message'][:100] }} ...</td>
+                                            <td>{{ i['date'] }}</td>
+                                            <td>
+                                                <i class="fa fa-trash-o delete-contact"></i>
+                                                <i class="fa colorBlue fa-eye show-contact" data-open="false" data-id="{{ i['_id'] }}"></i>
+                                            </td>
+                                        </tr>
+                                        <tr data-id="{{ i['_id'] }}" class="message" style="display: none">
+                                            <td colspan="5" style="padding: 20px">
+                                                {{ i['message'] }}
+                                            </td>
+                                        </tr>
+                                    {% end %}
                                 </table>
+                                {% module Pagination(**pagination) %}
                             </div>
                         </div>
                     </div>
@@ -43,14 +55,24 @@
 {% end block container %}
 
 {% block other_scripts %}
-<script src="{{ static_url('plugins/DatePicker/pwt-date.js') }}"></script>
-<script src="{{ static_url('plugins/DatePicker/pwt-datepicker.js') }}"></script>
-<script src="{{ static_url('plugins/ckeditor/ckeditor.js') }}"></script>
-<script src="{{ static_url('plugins/ckeditor/config.js') }}"></script>
-<script src="{{ static_url('plugins/ckeditor/styles.js') }}"></script>
 <script>
-    $(".datePicker").val("").pDatepicker();
-    CKEDITOR.replace( 'editor1' );
-
+    $(document).on('click', '.change-page', function(e) {
+        var elm = $(e.target).closest('.change-page');
+        var _page = elm.attr('data-page');
+        location.href = '{{ reverse_url('admin:settings:contact_us_by_page', '__page__') }}'.replace(/__page__/g, _page);
+    });
+    $(document).on('click', '.show-contact', function(e) {
+        var elm = $(e.target);
+        var _id = elm.attr('data-id');
+        var open = elm.attr('data-open');
+        $('tr.message').slideUp();
+        if(open == 'true'){
+            $('tr.message[data-id=' + _id + ']').slideUp();
+            elm.attr('data-open', 'false');
+        }else{
+            $('tr.message[data-id=' + _id + ']').slideDown();
+            elm.attr('data-open', 'true');
+        }
+    });
 </script>
 {% end block other_scripts %}

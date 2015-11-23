@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 from tendo import singleton
 singleton.SingleInstance()
+from admin_app.engine_feed.extract import Extract
+from admin_app.engine_feed.get_url import GetUrl
+from admin_app.engine_feed.soap import Soap
 from admin_app.models.mongodb.content.content import ContentModel
 from admin_app.models.mongodb.failed_brief.failed_brief import FailedBriefModel
 import datetime
 from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
-import urllib2
-from bs4 import BeautifulSoup
 from admin_app.classes.debug import Debug
 from admin_app.daemons.news import news
 from admin_app.models.mongodb.feed_statistic.feed_statistic import FeedStatisticModel
@@ -16,73 +17,41 @@ from admin_app.models.mongodb.feed_statistic.feed_statistic import FeedStatistic
 __author__ = 'Morteza'
 
 
-def get_url(url):
+def save_brief(**obj):
     try:
-        response = urllib2.urlopen(url)
-        return response.read()
+        if obj['link'] is not None and obj['title'] is not None and obj['summary'] is not None and obj['thumbnail'] is not None:
+            return BriefsModel(link=obj['link'], title=obj['title'], ro_title=obj['ro_title'],
+                               summary=obj['summary'], thumbnail=obj['thumbnail'],
+                               agency=str(obj['agency']), subject=str(obj['subject']),
+                               content=str(ContentModel().news))\
+                .insert()
+        else:
+            FailedBriefModel(agency=obj['agency'], subject=obj['subject'], content=ContentModel().news,
+                             title=obj['title'], link=obj['link'])\
+                .save()
+
+            return {'status': False, 'value': {}, 'message': 'ERROR'}
     except:
-        Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='open_url_brief', data=url.encode('utf-8'))
-        return False
+        pass
 
 
-def extract_briefs(document, a, l):
+def extract_briefs(document, a, sub_link):
     counter = 0
     try:
-        soap = BeautifulSoup(document, "html.parser")
-        list_briefs = soap.select(a['brief_container'])
-        print a['base_link'], ' ------->> ', l['link']
-        for i in list_briefs:
+        list_document = Soap(document=document, container=a['brief_container']).get_list_document()
+        print a['base_link'], ' ------->> ', sub_link['link']
+        e = Extract(base_link=a['base_link'], link=a['brief_link'], ro_title=a['brief_ro_title'], title=a['brief_title'],
+                    summary=a['brief_summary'], thumbnail=a['brief_thumbnail'], agency=a, sub_link=sub_link, error_link=a['base_link'])
+        for doc in list_document:
+            obj = e.get_brief(doc)
+            s_b = save_brief(**obj)
+            print s_b
             try:
-                if a['brief_link'] != '':
-                    link = i.select_one(a['brief_link']).find('a')['href'].encode('utf-8')
-                else:
-                    link = i.find('a')['href'].encode('utf-8')
-                if 'http' not in link and 'www' not in link:
-                    link = a['base_link'].encode('utf-8') + link
+                s_n = news(s_b['value']['_id'])
+                if s_n['status']:
+                    counter += 1
             except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_link_brief',
-                                    data=a['base_link'].encode('utf-8'))
-                link = None
-            try:
-                if a['brief_ro_title']:
-                    ro_title = i.select_one(a['brief_ro_title']).text.encode('utf-8').strip()
-                else:
-                    ro_title = None
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_ro_title_brief',
-                                    data=a['base_link'].encode('utf-8'))
-                ro_title = None
-            try:
-                title = i.select_one(a['brief_title']).text.encode('utf-8').strip()
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_title_brief',
-                                    data=a['base_link'].encode('utf-8'))
-                title = None
-            try:
-                summary = i.select_one(a['brief_summary']).text.encode('utf-8').strip()
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_summary_brief',
-                                    data=a['base_link'].encode('utf-8'))
-                summary = None
-            try:
-                thumbnail = i.select_one(a['brief_thumbnail']).find('img')['src'].encode('utf-8')
-                if 'http' not in thumbnail and 'www' not in thumbnail:
-                    thumbnail = a['base_link'].encode('utf-8') + thumbnail
-            except:
-                Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail_brief',
-                                    data=a['base_link'].encode('utf-8'))
-                thumbnail = None
-            if link is not None and title is not None and summary is not None and thumbnail is not None:
-                _b = BriefsModel(link=link, title=title, ro_title=ro_title, summary=summary, thumbnail=thumbnail,
-                                 agency=str(a['id']), subject=str(l['subject']), content=str(ContentModel().news)).insert()
-                print _b
-                try:
-                    if news(_b['value']['_id']):
-                        counter += 1
-                except:
-                    pass
-            else:
-                FailedBriefModel(agency=a['id'], subject=l['subject'], content=ContentModel().news, title=title, link=link).save()
+                pass
         return counter
     except:
         Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='extract_briefs',
@@ -96,10 +65,10 @@ def briefs():
     try:
         agencies = AgencyModel().get_all()['value']
         for a in agencies:
-            for l in a['links']:
-                data = get_url(l['link'])
+            for link in a['links']:
+                data = GetUrl(url=link['link']).value
                 if data:
-                    __c = extract_briefs(data, a, l)
+                    __c = extract_briefs(data, a, link)
                     if __c > 0:
                         __link__counter += 1
                     __counter += __c

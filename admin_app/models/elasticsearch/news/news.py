@@ -126,8 +126,12 @@ class NewsModel:
                 news = self.get_news_id()
                 self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=news).insert()
                 self.result['status'] = True
+                self.result['message'] = 'INSERT'
+                self.result['type'] = 'NEWS'
             else:
                 self.result['value'] = {'_id': e}
+                self.result['message'] = 'EXIST'
+                self.result['type'] = 'NEWS'
 
             return self.result
 
@@ -656,7 +660,7 @@ class NewsModel:
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 for b in r['hits']['hits']:
-                    self.get_news(b['_source'], b['_id'])
+                    self.get_news_module(b['_source'], b['_id'])
             except:
                 pass
             self.result['value'] = self.value

@@ -21,7 +21,60 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1">
-                                <form>
+                                <form id="server_time">
+                                    {% module xsrf_form_html() %}
+                                    <input type="hidden" name="action" value="server_time">
+                                    <div class="form_modal_body">
+                                        <div class="row">
+                                            <div class="col-md-7 col-sm-7">
+                                                <div class="row">
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <span style="vertical-align: -21px" class="form_label">تنظیم ساعت</span>
+                                                    </div>
+                                                    <div class="col-md-7 col-sm-7">
+                                                        <div class="col-md-4 col-sm-4 text-center">
+                                                            <i class="fa fa-caret-up display-block up_down_button" data-meal="1" data-time="h" data-action="up"></i>
+                                                            <input class="form-control text-center filter_inp" name="server-hour" value="00" data-meal="1" data-time="h">
+                                                            <i class="fa fa-caret-down display-block up_down_button" data-meal="1" data-time="h" data-action="down"></i>
+                                                        </div>
+                                                        <div class="col-md-4 col-sm-4 text-center">
+                                                            <i class="fa fa-caret-up display-block up_down_button" data-meal="1" data-time="m" data-action="up" ></i>
+                                                            <input class="form-control text-center filter_inp" name="server-minute" value="00" data-meal="1" data-time="m">
+                                                            <i class="fa fa-caret-down display-block up_down_button" data-meal="1" data-time="m" data-action="down"></i>
+                                                        </div>
+                                                        <div class="col-md-4 col-sm-4 text-center">
+                                                            <i class="fa fa-caret-up display-block up_down_button" data-meal="1" data-time="ds" data-action="up"></i>
+                                                            <input class="form-control text-center filter_inp" name="server-ap" value="ق.ظ" data-meal="1" data-time="ds">
+                                                            <i class="fa fa-caret-down display-block up_down_button" data-meal="1" data-time="ds" data-action="down"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2" style="padding-top: 19px;">
+                                                        <button class="btn R_butt_green server-time-btn">ثبت</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-4">
+                                                        <span style="vertical-align: -21px" class="form_label">ساعت سرور</span>
+                                                    </div>
+                                                    <div class="col-md-8 col-sm-8 text-center">
+                                                        <span style="vertical-align: -21px; font-size: 22pt" class="server_time"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1">
+                                <form id="general_setting" enctype="multipart/form-data">
+                                    {% module xsrf_form_html() %}
+                                    <input type="hidden" name="action" value="general">
                                     <div class="form_modal_body">
                                         <div class="row">
                                             <div class="col-md-7 col-sm-7">
@@ -36,55 +89,19 @@
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
-                                            <div class="col-md-6 col-sm-6">
-                                                <div class="row">
-                                                    <div class="col-md-3 col-sm-3">
-                                                        <span style="vertical-align: -21px" class="form_label">تنظیم ساعت</span>
-                                                    </div>
-                                                    <div class="col-md-9 col-sm-9">
-                                                        <div class="col-md-4 col-sm-4 text-center">
-                                                            <i class="fa fa-caret-up display-block up_down_button" data-meal="1" data-time="m" data-action="up" ></i>
-                                                            <input class="form-control text-center filter_inp" value="00" data-meal="1" data-time="m">
-                                                            <i class="fa fa-caret-down display-block up_down_button" data-meal="1" data-time="m" data-action="down"></i>
-                                                        </div>
-                                                        <div class="col-md-4 col-sm-4 text-center">
-                                                            <i class="fa fa-caret-up display-block up_down_button" data-meal="1" data-time="h" data-action="up"></i>
-                                                            <input class="form-control text-center filter_inp" value="00" data-meal="1" data-time="h">
-                                                            <i class="fa fa-caret-down display-block up_down_button" data-meal="1" data-time="h" data-action="down"></i>
-                                                        </div>
-                                                        <div class="col-md-4 col-sm-4 text-center">
-                                                            <i class="fa fa-caret-up display-block up_down_button" data-meal="1" data-time="ds" data-action="up"></i>
-                                                            <input class="form-control text-center filter_inp" value="ق.ظ" data-meal="1" data-time="ds">
-                                                            <i class="fa fa-caret-down display-block up_down_button" data-meal="1" data-time="ds" data-action="down"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-sm-6">
-                                                <div class="row">
-                                                    <div class="col-md-3 col-sm-3">
-                                                        <span style="vertical-align: -21px" class="form_label">ساعت سرور</span>
-                                                    </div>
-                                                    <div class="col-md-9 col-sm-9 text-center">
-                                                        <span style="vertical-align: -21px; font-size: 22pt" class="server_time"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-top-10">
                                             <div class="col-md-2 col-sm-2">
                                                 <span class="form_label">کلمات کلیدی</span>
                                             </div>
                                             <div class="col-md-10 col-sm-10">
-                                                <input name="tags">
+                                                <input name="tags" {% if general %}value="{% for i in general['tags'] %}{{ i + ',' }}{% end %}"{% end %}>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class="col-md-2 col-sm-2">
                                                 <span class="form_label">حداکثر تعداد حروف در خلاصه خبر</span>
                                             </div>
-                                            <div class="col-md-10 col-sm-10">
-                                                <input name="tags">
+                                            <div class="col-md-5 col-sm-5">
+                                                <input type="text" {% if general %}value="{{ general['max_char_summary'] }}"{% end %} class="form-control" name="max_char_summary">
                                             </div>
                                         </div>
                                         <hr>
@@ -93,24 +110,48 @@
                                                 <span>تنظیم سایز عکس در بولتن</span>
                                             </div>
                                         </div>
-                                        <div class="row margin-top-10">
-                                            <div class="col-md-2 col-sm-2">
+                                        <div class="row margin-top-10 text-center">
+                                            <div class="col-md-1 col-sm-1">
                                                 <span class="form_label">کوچک</span>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
-                                                <input type="text" class="form-control">
+                                            <div class="col-md-3 col-sm-3">
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['bolton_small_image_width'] }}"{% end %} name="bolton-size-small-image-width" placeholder="عرض" type="text" class="form-control text-center">
+                                                </div>
+                                                <div style="display: inline-block; width: 10%">
+                                                    x
+                                                </div>
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['bolton_small_image_height'] }}"{% end %} name="bolton-size-small-image-height"  placeholder="ارتفاع" type="text" class="form-control text-center">
+                                                </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
+                                            <div class="col-md-1 col-sm-1">
                                                 <span class="form_label">متوسط</span>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
-                                                <input type="text" class="form-control">
+                                            <div class="col-md-3 col-sm-3">
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['bolton_medium_image_width'] }}"{% end %} name="bolton-size-medium-image-width" placeholder="عرض" type="text" class="form-control text-center">
+                                                </div>
+                                                <div style="display: inline-block; width: 10%">
+                                                    x
+                                                </div>
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['bolton_medium_image_height'] }}"{% end %} name="bolton-size-medium-image-height" placeholder="ارتفاع" type="text" class="form-control text-center">
+                                                </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
+                                            <div class="col-md-1 col-sm-1">
                                                 <span class="form_label">بزرگ</span>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
-                                                <input type="text" class="form-control">
+                                            <div class="col-md-3 col-sm-3">
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['bolton_big_image_width'] }}"{% end %} name="bolton-size-big-image-width" placeholder="عرض" type="text" class="form-control text-center">
+                                                </div>
+                                                <div style="display: inline-block; width: 10%">
+                                                    x
+                                                </div>
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['bolton_big_image_height'] }}"{% end %} name="bolton-size-big-image-height" placeholder="ارتفاع" type="text" class="form-control text-center">
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
@@ -118,24 +159,48 @@
                                                 <span>تنظیم سایز عکس در مدیریت</span>
                                             </div>
                                         </div>
-                                        <div class="row margin-top-10">
-                                            <div class="col-md-2 col-sm-2">
+                                        <div class="row margin-top-10 text-center">
+                                            <div class="col-md-1 col-sm-1">
                                                 <span class="form_label">کوچک</span>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
-                                                <input type="text" class="form-control">
+                                            <div class="col-md-3 col-sm-3">
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['admin_small_image_width'] }}"{% end %} name="admin-size-small-image-width" placeholder="عرض" type="text" class="form-control text-center">
+                                                </div>
+                                                <div style="display: inline-block; width: 10%">
+                                                    x
+                                                </div>
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['admin_small_image_height'] }}"{% end %} name="admin-size-small-image-height" placeholder="ارتفاع" type="text" class="form-control text-center">
+                                                </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
+                                            <div class="col-md-1 col-sm-1">
                                                 <span class="form_label">متوسط</span>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
-                                                <input type="text" class="form-control">
+                                            <div class="col-md-3 col-sm-3">
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['admin_medium_image_width'] }}"{% end %} name="admin-size-medium-image-width" placeholder="عرض" type="text" class="form-control text-center">
+                                                </div>
+                                                <div style="display: inline-block; width: 10%">
+                                                    x
+                                                </div>
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['admin_medium_image_height'] }}"{% end %} name="admin-size-medium-image-height" placeholder="ارتفاع" type="text" class="form-control text-center">
+                                                </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
+                                            <div class="col-md-1 col-sm-1">
                                                 <span class="form_label">بزرگ</span>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
-                                                <input type="text" class="form-control">
+                                            <div class="col-md-3 col-sm-3">
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['admin_big_image_width'] }}"{% end %} name="admin-size-big-image-width" placeholder="عرض" type="text" class="form-control text-center">
+                                                </div>
+                                                <div style="display: inline-block; width: 10%">
+                                                    x
+                                                </div>
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['admin_big_image_height'] }}"{% end %} name="admin-size-big-image-height" placeholder="ارتفاع" type="text" class="form-control text-center">
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
@@ -143,24 +208,48 @@
                                                 <span>تنظیم سایز عکس در صفحه کاربری</span>
                                             </div>
                                         </div>
-                                        <div class="row margin-top-10">
-                                            <div class="col-md-2 col-sm-2">
+                                        <div class="row margin-top-10 text-center">
+                                            <div class="col-md-1 col-sm-1">
                                                 <span class="form_label">کوچک</span>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
-                                                <input type="text" class="form-control">
+                                            <div class="col-md-3 col-sm-3">
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['user_small_image_width'] }}"{% end %} name="user-size-small-image-width" placeholder="عرض" type="text" class="form-control text-center">
+                                                </div>
+                                                <div style="display: inline-block; width: 10%">
+                                                    x
+                                                </div>
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['user_small_image_height'] }}"{% end %} name="user-size-small-image-height" placeholder="ارتفاع" type="text" class="form-control text-center">
+                                                </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
+                                            <div class="col-md-1 col-sm-1">
                                                 <span class="form_label">متوسط</span>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
-                                                <input type="text" class="form-control">
+                                            <div class="col-md-3 col-sm-3">
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['user_medium_image_width'] }}"{% end %} name="user-size-medium-image-width" placeholder="عرض" type="text" class="form-control text-center">
+                                                </div>
+                                                <div style="display: inline-block; width: 10%">
+                                                    x
+                                                </div>
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['user_medium_image_height'] }}"{% end %} name="user-size-medium-image-height" placeholder="ارتفاع" type="text" class="form-control text-center">
+                                                </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
+                                            <div class="col-md-1 col-sm-1">
                                                 <span class="form_label">بزرگ</span>
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
-                                                <input type="text" class="form-control">
+                                            <div class="col-md-3 col-sm-3">
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['user_big_image_width'] }}"{% end %} name="user-size-big-image-width" placeholder="عرض" type="text" class="form-control text-center">
+                                                </div>
+                                                <div style="display: inline-block; width: 10%">
+                                                    x
+                                                </div>
+                                                <div style="display: inline-block; width: 40%">
+                                                    <input {% if general %}value="{{ general['user_big_image_height'] }}"{% end %} name="user-size-big-image-height" placeholder="ارتفاع" type="text" class="form-control text-center">
+                                                </div>
                                             </div>
                                         </div>
                                         <hr>
@@ -171,14 +260,14 @@
                                             <div class="col-md-9 col-sm-9">
                                                 <div class="fileupload fileupload-new" data-provides="fileupload">
                                                     <div id="photo_show" class="fileupload-new thumbnail" style="width: 184px; height: 134px;">
-                                                        <img  src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                                                        <img src="{{ static_url('images/logo.png') }}" alt="" />
                                                     </div>
                                                     <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
                                                     <div>
                                                         <span class="btn backgroundBlue colorWhite btn-file">
                                                         <span data-toggle="modal" href="#cropper-foodlist" class="fileupload-new"><i class="fa fa-paper-clip"></i> انتخاب تصویر </span>
                                                         <span class="fileupload-exists"><i class="fa fa-undo"></i> تغییر</span>
-                                                        <input name="avatar" type="file" class="default" />
+                                                        <input name="logo" type="file" class="default" />
                                                         </span>
                                                         <a href="#" class="btn backgroundRed colorWhite fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> حذف</a>
                                                     </div>
@@ -187,7 +276,7 @@
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class="col-md-12 col-sm-12 text-left">
-                                                <button class="btn R_butt_green">ثبت اطلاعات</button>
+                                                <button class="btn R_butt_green general-setting-btn">ثبت اطلاعات</button>
                                             </div>
                                         </div>
                                     </div>
@@ -203,9 +292,105 @@
 {% end block container %}
 
 {% block other_scripts %}
+<script type="text/javascript" src="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
 <script src="{{ static_url('plugins/color-picker/spectrum.js') }}"></script>
 <script src="{{ static_url('plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js') }}"></script>
 <script>
+
+    var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+    var __a = true;
+    $('#general_setting').submit(function(e){
+        if(__a){
+            __a = false;
+            e.preventDefault();
+            var btn = $('.general-setting-btn') ;
+            btn.html(loader);
+            var formData = new FormData($(this)[0]);
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (!status) {
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'متاسفانه در سیستم خطایی به وجود آمده، لطفا دوباره امتحان کنید.';
+                            Alert.render(error, function(){
+                                btn.html('ثبت اطلاعات');
+                                __a = true;
+                            });
+                        }else{
+                            Alert.render('success', function(){
+                                btn.html('ثبت اطلاعات');
+                                __a = true;
+                            });
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('ثبت اطلاعات');
+                            __a = true;
+                        });
+                    }
+                });
+        }
+    });
+    var __b = true;
+    $('#server_time').submit(function(e){
+        if(__b){
+            __b = false;
+            e.preventDefault();
+            var btn = $('.server-time-btn') ;
+            btn.html(loader);
+            var postData = $("#server_time").serializeArray();
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (!status) {
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'متاسفانه در سیستم خطایی به وجود آمده، لطفا دوباره امتحان کنید.';
+                            Alert.render(error, function(){
+                                btn.html('ثبت');
+                                __b = true;
+                            });
+                        }else{
+                            Alert.render('success', function(){
+                                btn.html('ثبت');
+                                __b = true;
+                            });
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('ثبت');
+                            __b = true;
+                        });
+                    }
+                });
+        }
+    });
+
 $('input[name=tags]').tagsinput({
     trimValue: true
 });
@@ -274,12 +459,12 @@ $("#custom").spectrum({
         }
 
     });
-
+    var now = new Date("1/1/1900 " + '{{ now.hour }}:{{ now.minute }}:{{ now.second }}');
     function renderTime(){
-        var currentTime = new Date();
-        var h = currentTime.getHours();
-        var m = currentTime.getMinutes();
-        var s = currentTime.getSeconds();
+        var h = now.getHours();
+        var m = now.getMinutes();
+        var s = now.getSeconds();
+        now = new Date(now.valueOf() + 1000);
         if (h < 10){
             h = "0" + h;
         }

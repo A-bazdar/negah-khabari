@@ -628,3 +628,61 @@ class UserModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result
+
+    def get_agency_direction(self):
+        try:
+            __body = {'_id': self.id}
+            __key = {"agency_direction": 1}
+            a = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
+            if 'agency_direction' in a.keys():
+                self.result['value'] = a['agency_direction']
+            else:
+                self.result['value'] = []
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def add_agency_direction(self, agency, direction):
+        try:
+            if not self.is_exist_agency_direction(agency):
+                doc = {
+                    "agency": agency,
+                    "direction": direction,
+                }
+                __body = {"$push": {
+                    "agency_direction": doc
+                }}
+                __condition = {'_id': self.id}
+            else:
+                doc = {
+                    "agency": agency,
+                    "direction": direction,
+                }
+
+                __body = {"$set": {
+                    'agency_direction.$.direction': direction,
+                }}
+
+                __condition = {'_id': self.id, 'agency_direction.agency': agency}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = doc
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > add_agency_direction', data='collection > user')
+            return self.result
+
+    def is_exist_agency_direction(self, agency):
+        try:
+            __body = {'_id': self.id, 'agency_direction.agency': agency}
+            if MongodbModel(collection='user', body=__body).count():
+                return True
+            return False
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > is_exist_agency_direction', data='collection > user')
+            return False
