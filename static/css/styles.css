@@ -1292,6 +1292,15 @@ i.close {
     padding: 10px;
 }
 
+.news_report_broken_text {
+    padding: 10px;
+}
+
+.news_report_broken_text .send-news-report-broken {
+    cursor: pointer;
+    float: left;
+}
+
 .second-header {
     display: table;
     position: fixed;

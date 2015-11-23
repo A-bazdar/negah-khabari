@@ -5,6 +5,8 @@ from admin_app.daemons.delete_duplicate import delete_duplicate
 from admin_app.handlers.admin import admin
 from admin_app.handlers.admin import management
 from admin_app.handlers.setting import font, general, about_us, contact_us
+from admin_app.handlers.setting.report import report
+
 __author__ = 'Morteza'
 
 url_patterns = [
@@ -78,6 +80,10 @@ url_patterns = [
 
     (r'^(?i)/Admin/ManagerLogs/ContentFormat[/]?$', admin.AdminContentFormatHandler),
     (r'^/Admin/ManagerLogs/ContentFormat', admin.AdminContentFormatHandler, None, "admin:manager_logs:content_format"),
+
+    (r'^(?i)/Admin/ManagerLogs/NewsReportBroken[/]?([\d^/]+)?[/]?$', report.AdminManagerLogsNewsReportBrokenHandler),
+    (r'/Admin/ManagerLogs/NewsReportBroken', report.AdminManagerLogsNewsReportBrokenHandler, None, 'admin:manager_logs:news_report_broken'),
+    (r'/Admin/ManagerLogs/NewsReportBroken/(page)', report.AdminManagerLogsNewsReportBrokenHandler, None, 'admin:manager_logs:news_report_broken_by_page'),
 
     (r'^(?i)/Admin/ManagerLogs/SourceAction[/]?$', admin.AdminSourceActionHandler),
     (r'^/Admin/ManagerLogs/SourceAction', admin.AdminSourceActionHandler, None, "admin:manager_logs:source_action"),
