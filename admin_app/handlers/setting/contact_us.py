@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
-import khayyam
-from admin_app.classes.debug import Debug
 from admin_app.handlers.base import BaseHandler
-from admin_app.models.mongodb.about_us.about_us import AboutUsModel
 from admin_app.models.mongodb.contact_us.contact_us import ContactUsModel
-from admin_app.models.mongodb.setting.setting import SettingModel
 
 __author__ = 'Morteza'
 
