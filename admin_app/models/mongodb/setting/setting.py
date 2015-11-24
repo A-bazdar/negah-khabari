@@ -194,6 +194,16 @@ class SettingModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_one', data='collection > setting')
             return self.result
 
+    def get_max_char_summary(self):
+        try:
+            r = MongodbModel(collection='setting', body={'key': self.key_general}).get_one()
+            if r and 'max_char_summary' in r.keys():
+                return r['max_char_summary']
+            return 150
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_one', data='collection > setting')
+            return 150
+
     def save_general(self):
         try:
             if self.count(self.key_general):
