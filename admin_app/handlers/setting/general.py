@@ -21,7 +21,7 @@ class AdminGeneralSettingsHandler(BaseHandler):
             _time = dict()
             action = self.get_argument('action', '')
             if action == 'general':
-                # self.check_sent_value("color", d, "color", u"رنگ پیش زمینه را وارد کنید.")
+                self.check_sent_value("color", d, "color", u"رنگ پیش زمینه را وارد کنید.")
                 self.check_sent_value("tags", d, "tags", u"کلمات کلیدی را وارد کنید.")
                 self.check_sent_value("max_char_summary", d, "max_char_summary", u"حداکثر تعداد حروف در خلاصه خبر را وارد کنید.")
                 self.check_sent_value("bolton-size-small-image-width", d, "bolton_small_image_width", u"سایز عکس را وارد کنید.")
