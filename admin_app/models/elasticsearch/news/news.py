@@ -446,7 +446,10 @@ class NewsModel:
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
-                self.get_news(b['_source'], b['_id'])
+                self.value.append(dict(
+                    _id=b['_id'],
+                    _source=b['_source']
+                ))
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
