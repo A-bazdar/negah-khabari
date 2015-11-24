@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from admin_app.classes.debug import Debug
-from admin_app.models.elasticsearch.news.news import NewsModel
+from admin_app.models.elasticsearch.briefs.briefs import BriefsModel
 import json
 
 __author__ = 'Morteza'
@@ -9,12 +9,12 @@ __author__ = 'Morteza'
 
 all_news = []
 try:
-    for i in range(160):
-        all_news += NewsModel().get_all_all(_page=i)['value']
+    for i in range(290):
+        all_news += BriefsModel().get_all_all(_page=i)['value']
         print len(all_news)
     a = []
     print len(all_news)
-    with open('data.json', 'w') as f:
+    with open('briefs.json', 'w') as f:
         json.dump(all_news, f)
 
 except:

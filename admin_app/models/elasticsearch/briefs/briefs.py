@@ -203,7 +203,7 @@ class BriefsModel:
                                 data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
             return self.result
 
-    def get_all_all(self, _page, _size=1000):
+    def get_all_all(self, _page, _size=100):
         try:
             body = {
                 "from": _page * _size, "size": _size,
@@ -215,10 +215,10 @@ class BriefsModel:
 
             r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
-                try:
-                    self.value.append({'id': b['_id'], 'title': b['_source']['title']})
-                except:
-                    print b['_id'], 'ERROR'
+                self.value.append(dict(
+                    _id=b['_id'],
+                    _source=b['_source']
+                ))
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
