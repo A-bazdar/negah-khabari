@@ -58,7 +58,7 @@ class AdminGeneralSettingsHandler(BaseHandler):
                     try:
                         print str(datetime.datetime.now().date()) + ' ' + _time['server_hour'] + ':' + _time['server_minute'] + ' ' + _time['server_ap']
                         now = datetime.datetime.strptime(str(datetime.datetime.now().date()) + ' ' + _time['server_hour'] + ':' + _time['server_minute'] + ' ' + _time['server_ap'], '%Y-%m-%d %I:%M %p')
-                        CustomDateTime().change_current_time((now.year, now.month, now.day, now.hour, now.minute, now.microsecond))
+                        CustomDateTime().change_current_time((now.year, now.month, now.day, now.hour, now.minute, 0))
                         self.status = True
                     except:
                         Debug.get_exception(send=False)
