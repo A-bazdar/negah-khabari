@@ -50,14 +50,18 @@ class AdminGeneralSettingsHandler(BaseHandler):
                 else:
                     self.messages = self.errors
             elif action == 'server_time':
-                self.check_sent_value("server-minute", _time, "server_minute", u"حداکثر تعداد حروف در خلاصه خبر را وارد کنید.")
-                self.check_sent_value("server-hour", _time, "server_hour", u"حداکثر تعداد حروف در خلاصه خبر را وارد کنید.")
+                self.check_sent_value("server-minute", _time, "server_minute", u"ساعت سرور را وارد کنید.")
+                self.check_sent_value("server-hour", _time, "server_hour", u"ساعت سرور را وارد کنید.")
                 self.check_sent_value("server-ap", _time, "server_ap", u"ساعت سرور را وارد کنید.")
                 if not len(self.errors):
                     _time['server_ap'] = _time['server_ap'].replace(u'ب.ظ', 'PM').replace(u'ق.ظ', 'AM')
-                    now = datetime.datetime.strptime(str(datetime.datetime.now().date()) + ' ' + _time['server_hour'] + ':' + _time['server_minute'] + ' ' + _time['server_ap'], '%Y-%m-%d %I:%M %p')
-                    CustomDateTime().change_current_time((now.year, now.month, now.day, now.hour, now.minute, now.microsecond))
-                    self.status = True
+                    try:
+                        now = datetime.datetime.strptime(str(datetime.datetime.now().date()) + ' ' + _time['server_hour'] + ':' + _time['server_minute'] + ' ' + _time['server_ap'], '%Y-%m-%d %I:%M %p')
+                        CustomDateTime().change_current_time((now.year, now.month, now.day, now.hour, now.minute, now.microsecond))
+                        self.status = True
+                    except:
+                        self.messages = [u'ساعت سرور را درست وارد کنید.']
+
 
                 else:
                     self.messages = self.errors
