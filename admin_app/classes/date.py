@@ -159,8 +159,8 @@ class CustomDateTime:
         librt = ctypes.CDLL(ctypes.util.find_library("rt"))
 
         ts = timespec()
-        ts.tv_sec = int(time.mktime(datetime.datetime(*time_tuple[:6]).timetuple()))
-        ts.tv_nsec = time_tuple[6] * 1000000  # Millisecond to nanosecond
+        ts.tv_sec = int(time.mktime(datetime.datetime(*time_tuple[:5]).timetuple()))
+        ts.tv_nsec = time_tuple[5] * 1000000  # Millisecond to nanosecond
 
         # http://linux.die.net/man/3/clock_settime
         librt.clock_settime(clock_real_time, ctypes.byref(ts))
