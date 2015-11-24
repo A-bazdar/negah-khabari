@@ -205,4 +205,5 @@
     position: relative;
     /*right: -20px;*/
     min-height: 100px;
+    cursor: pointer;
 }
