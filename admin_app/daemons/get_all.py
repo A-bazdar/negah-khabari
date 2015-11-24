@@ -9,7 +9,7 @@ __author__ = 'Morteza'
 
 all_news = []
 try:
-    for i in range(50):
+    for i in range(160):
         all_news += NewsModel().get_all_all(_page=i)['value']
         print len(all_news)
     a = []
