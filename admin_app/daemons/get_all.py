@@ -11,6 +11,7 @@ all_news = []
 try:
     for i in range(50):
         all_news += NewsModel().get_all_all(_page=i)['value']
+        print len(all_news)
     a = []
     print len(all_news)
     with open('data.json', 'w') as f:
