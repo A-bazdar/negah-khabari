@@ -14,7 +14,7 @@ class AdminGeneralSettingsContactUsHandler(BaseHandler):
         except:
             page = 1
         self.data['now'] = datetime.datetime.now()
-        self.data['contacts'] = ContactUsModel().get_all()['value']
+        self.data['contacts'] = ContactUsModel().get_all(_page=page)['value']
         count_all = ContactUsModel().get_count_all()
         self.data['pagination'] = dict(
             count_all=count_all,

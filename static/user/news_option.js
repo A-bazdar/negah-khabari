@@ -220,29 +220,50 @@ $(document).on('click', '.option-news.show-picture', function (e) {
 
 
 $(document).on('click', '.option-news.news-report-broken', function (e) {
+    var data_action = $(this).attr('data-action');
+    if($(this).hasClass('closedp')){
+        $('.news_report_broken_text').css('display','none');
+        $(this).removeClass('closedp').addClass('open');
+        $('.news_report_broken_text[data-action=' + data_action + ']').slideDown();
+    }
+    else{
+        $(this).removeClass('open').addClass('closedp');
+        $('.news_report_broken_text[data-action=' + data_action + ']').slideUp();
+    }
+});
+
+
+$(document).on('click', '.send-news-report-broken', function(e){
     var elm = $(e.target);
     var news = elm.attr('data-news');
-    var postData = [
-        {name: 'news_id', value: news},
-        {name: '_xsrf', value: xsrf_token},
-        {name: 'action', value: 'add'}
-    ];
-    jQuery.ajax(
-    {
-        url: option_news_report_broken_url,
-        type: "post",
-        data: postData,
-        success: function (response) {
-            var status = response['status'];
-            var value = response['value'];
-            if (status) {
-                if(value == 'add'){
-                    elm.removeClass('fa-warning').addClass('fa-check-circle-o colorGreen');
+    var text = $('.news-report-broken-text[data-news='+ news +']').val();
+    var link = elm.attr('data-link');
+    var title = elm.attr('data-title');
+    if(text != ''){
+        var postData = [
+            {name: 'news_id', value: news},
+            {name: 'text', value: text},
+            {name: 'link', value: link},
+            {name: 'title', value: title},
+            {name: '_xsrf', value: xsrf_token},
+            {name: 'action', value: 'add'}
+        ];
+        jQuery.ajax(
+        {
+            url: option_news_report_broken_url,
+            type: "post",
+            data: postData,
+            success: function (response) {
+                var status = response['status'];
+                var value = response['value'];
+                if (status) {
+                    elm.removeClass('fa-paper-plane-o colorBlue').addClass('fa-check-circle-o colorGreen');
                     setTimeout(function () {
-                        elm.removeClass('fa-check-circle-o colorGreen').addClass('fa-warning');
+                        elm.removeClass('fa-check-circle-o colorGreen').addClass('fa-paper-plane-o colorBlue');
                     }, 400);
+                    $('.news-report-broken-text').val('');
                 }
             }
-        }
-    });
+        });
+    }
 });

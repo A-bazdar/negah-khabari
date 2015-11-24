@@ -144,6 +144,8 @@ class NewsModel:
             agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
             x = _source['date'].split('T')
             _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+            x = _source['read_date'].split('T')
+            _read_date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
             try:
                 subject = SubjectModel(_id=ObjectId(_source['subject'])).get_one()['value']
             except:
@@ -164,7 +166,7 @@ class NewsModel:
                 content=content,
                 subject=subject,
                 date=khayyam.JalaliDatetime(_date).strftime('%Y %B %d %H:%M:%S'),
-                read_date=_source['read_date'],
+                read_date=_read_date,
             ))
         except:
             Debug.get_exception(send=False)
