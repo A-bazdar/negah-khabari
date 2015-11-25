@@ -10,6 +10,7 @@ from admin_app.models.elasticsearch.base_model import ElasticSearchModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
 import time
 from admin_app.models.mongodb.content.content import ContentModel
+from admin_app.models.mongodb.setting.setting import SettingModel
 from admin_app.models.mongodb.subject.subject import SubjectModel
 
 __author__ = 'Morteza'
@@ -31,6 +32,7 @@ class NewsModel:
         self.thumbnail = thumbnail
         self.link = link
         self.content = content
+        self.max_char_summary = SettingModel().get_max_char_summary()
         self.result = {'value': {}, 'status': False}
         self.value = []
 
@@ -102,6 +104,17 @@ class NewsModel:
             __id = CreateId().create_object_id()
         return __id
 
+    def summary_text(self, _text):
+        if len(_text) < self.max_char_summary:
+            return _text
+        else:
+            c = 0
+            for i in range(self.max_char_summary, 0, -1):
+                if _text[i] == " ":
+                    c = i
+                    break
+            return _text[:c] + ' ...'
+
     def insert(self):
         try:
             d = datetime.datetime.now()
@@ -160,7 +173,7 @@ class NewsModel:
                 title=_source['title'],
                 ro_title=_source['ro_title'],
                 body=_source['body'],
-                summary=_source['summary'],
+                summary=self.summary_text(_source['summary']),
                 thumbnail=_source['thumbnail'],
                 agency=agency,
                 content=content,
@@ -179,7 +192,7 @@ class NewsModel:
                 title=_source['title'],
                 ro_title=_source['ro_title'],
                 body=_source['body'],
-                summary=_source['summary'],
+                summary=self.summary_text(_source['summary']),
                 thumbnail=_source['thumbnail'],
                 read_date=_source['read_date']
             ))
@@ -434,7 +447,7 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def get_all_all(self, _page=0, _size=30, _sort="date"):
+    def get_all_all(self, _page=0, _size=100, _sort="date"):
         try:
             body = {
                 "from": _page * _size, "size": _size,
@@ -446,7 +459,10 @@ class NewsModel:
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
-                self.get_news(b['_source'], b['_id'])
+                self.value.append(dict(
+                    _id=b['_id'],
+                    _source=b['_source']
+                ))
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result

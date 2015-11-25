@@ -21,7 +21,7 @@ class AdminGeneralSettingsHandler(BaseHandler):
             _time = dict()
             action = self.get_argument('action', '')
             if action == 'general':
-                # self.check_sent_value("color", d, "color", u"رنگ پیش زمینه را وارد کنید.")
+                self.check_sent_value("color", d, "color", u"رنگ پیش زمینه را وارد کنید.")
                 self.check_sent_value("tags", d, "tags", u"کلمات کلیدی را وارد کنید.")
                 self.check_sent_value("max_char_summary", d, "max_char_summary", u"حداکثر تعداد حروف در خلاصه خبر را وارد کنید.")
                 self.check_sent_value("bolton-size-small-image-width", d, "bolton_small_image_width", u"سایز عکس را وارد کنید.")
@@ -50,14 +50,20 @@ class AdminGeneralSettingsHandler(BaseHandler):
                 else:
                     self.messages = self.errors
             elif action == 'server_time':
-                self.check_sent_value("server-minute", _time, "server_minute", u"حداکثر تعداد حروف در خلاصه خبر را وارد کنید.")
-                self.check_sent_value("server-hour", _time, "server_hour", u"حداکثر تعداد حروف در خلاصه خبر را وارد کنید.")
+                self.check_sent_value("server-minute", _time, "server_minute", u"ساعت سرور را وارد کنید.")
+                self.check_sent_value("server-hour", _time, "server_hour", u"ساعت سرور را وارد کنید.")
                 self.check_sent_value("server-ap", _time, "server_ap", u"ساعت سرور را وارد کنید.")
                 if not len(self.errors):
                     _time['server_ap'] = _time['server_ap'].replace(u'ب.ظ', 'PM').replace(u'ق.ظ', 'AM')
-                    now = datetime.datetime.strptime(str(datetime.datetime.now().date()) + ' ' + _time['server_hour'] + ':' + _time['server_minute'] + ' ' + _time['server_ap'], '%Y-%m-%d %I:%M %p')
-                    CustomDateTime().change_current_time((now.year, now.month, now.day, now.hour, now.minute, now.microsecond))
-                    self.status = True
+                    try:
+                        print str(datetime.datetime.now().date()) + ' ' + _time['server_hour'] + ':' + _time['server_minute'] + ' ' + _time['server_ap']
+                        now = datetime.datetime.strptime(str(datetime.datetime.now().date()) + ' ' + _time['server_hour'] + ':' + _time['server_minute'] + ' ' + _time['server_ap'], '%Y-%m-%d %I:%M %p')
+                        CustomDateTime().change_current_time((now.year, now.month, now.day, now.hour, now.minute, 0))
+                        self.status = True
+                    except:
+                        Debug.get_exception(send=False)
+                        self.messages = [u'ساعت سرور را درست وارد کنید.']
+
 
                 else:
                     self.messages = self.errors

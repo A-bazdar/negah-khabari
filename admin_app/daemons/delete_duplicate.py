@@ -11,7 +11,7 @@ class delete_duplicate(BaseHandler):
     def get(self, *args, **kwargs):
         try:
             all_news = []
-            for i in range(16):
+            for i in range(50):
                 all_news += NewsModel().get_all_all(_page=i)['value']
             a = []
             for i in all_news:

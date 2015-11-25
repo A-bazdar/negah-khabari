@@ -7,6 +7,7 @@ from admin_app.classes.debug import Debug
 from admin_app.models.elasticsearch.base_model import ElasticSearchModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
 from admin_app.models.mongodb.content.content import ContentModel
+from admin_app.models.mongodb.setting.setting import SettingModel
 from admin_app.models.mongodb.subject.subject import SubjectModel
 
 __author__ = 'Morteza'
@@ -27,6 +28,7 @@ class BriefsModel:
         self.subject = subject
         self.link = link
         self.content = content
+        self.max_char_summary = SettingModel().get_max_char_summary()
         self.result = {'value': {}, 'status': False}
         self.value = []
 
@@ -36,6 +38,17 @@ class BriefsModel:
             return hashlib.md5(__key.encode('utf-8')).hexdigest()
         except:
             return hashlib.md5(__key).hexdigest()
+
+    def summary_text(self, _text):
+        if len(_text) < self.max_char_summary:
+            return _text
+        else:
+            c = 0
+            for i in range(self.max_char_summary, 0, -1):
+                if _text[i] == " ":
+                    c = i
+                    break
+            return _text[:c] + ' ...'
 
     def get_brief(self, _source, _id):
         agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
@@ -52,7 +65,7 @@ class BriefsModel:
             link=_source['link'],
             title=_source['title'],
             ro_title=_source['ro_title'],
-            summary=_source['summary'],
+            summary=self.summary_text(_source['summary']),
             thumbnail=_source['thumbnail'],
             subject=subject,
             content=content,
@@ -203,7 +216,7 @@ class BriefsModel:
                                 data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
             return self.result
 
-    def get_all_all(self, _page, _size=1000):
+    def get_all_all(self, _page, _size=100):
         try:
             body = {
                 "from": _page * _size, "size": _size,
@@ -215,10 +228,10 @@ class BriefsModel:
 
             r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
-                try:
-                    self.value.append({'id': b['_id'], 'title': b['_source']['title']})
-                except:
-                    print b['_id'], 'ERROR'
+                self.value.append(dict(
+                    _id=b['_id'],
+                    _source=b['_source']
+                ))
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
