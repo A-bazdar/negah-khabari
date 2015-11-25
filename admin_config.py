@@ -39,7 +39,7 @@ class Config:
             'template_address': os.path.join(os.path.dirname(__file__), "templates"),
             'static_address': os.path.join(os.path.dirname(__file__), "static"),
         }
-        self.backup_elastic_search_address_news = os.path.join("/", "root", " backups", "elasticsearch", "news")
+        self.backup_elastic_search_address_news = os.path.join("/", "root", "backups", "elasticsearch", "news")
 
         self.global_config = {
             'cookie_secret': "Gy8tgGsVvz3n#(3eDeW poY667^&A95j6hf5_4cvv 2Y&sAl",
