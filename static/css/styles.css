@@ -397,7 +397,7 @@ div#nav_search{position: relative}
 .user_menu{
     position: absolute;
     top: 35px;
-    left: 0;
+    left: -17px !important;
     z-index: 10000;
 	border:1px solid #fff;
 	background: #fafafa;
@@ -409,7 +409,7 @@ div#nav_search{position: relative}
 	-webkit-box-shadow:0 0 2px #aaa;
 	box-shadow:0 0 2px #aaa;
 	outline:none;
-	padding:6px 5px 6px 20px;
+	padding:0!important;
 	text-shadow:1px 1px 1px #fff;
 	width:400px;
 	float:left;
