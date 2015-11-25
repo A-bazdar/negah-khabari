@@ -54,8 +54,22 @@
                                                     <div class="col-md-9 col-sm-9">
                                                         <select class="select font_select" name="menu-font">
                                                             <option {% if font is not None %}{% if not font['menu']['font'] %}selected{% end %}{% end %} value="">انتخاب کنید</option>
-                                                            <option {% if font is not None %}{% if font['menu']['font'] == "yekan" %}selected{% end %}{% end %} value="yekan">yekan</option>
-                                                            <option {% if font is not None %}{% if font['menu']['font'] == "roya" %}selected{% end %}{% end %} value="roya">roya</option>
+                                                            <option {% if font is not None %}{% if font['menu']['font'] == "Mitra" %}selected{% end %}{% end %} value="Mitra">Mitra</option>
+                                                            <option {% if font is not None %}{% if font['menu']['font'] == "Yekan" %}selected{% end %}{% end %} value="Yekan">Yekan</option>
+                                                            <option {% if font is not None %}{% if font['menu']['font'] == "Roya" %}selected{% end %}{% end %} value="Roya">Roya</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row margin-top-10">
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <span class="form_label">سایز</span>
+                                                    </div>
+                                                    <div class="col-md-9 col-sm-9">
+                                                        <select name="menu-size" class="select menu_font_size_select">
+                                                            <option {% if font is not None %}{% if not font['menu']['size'] %}selected{% end %}{% end %} value="">انتخاب کنید</option>
+                                                            {% for i in range(11, 37) %}
+                                                                <option {% if font is not None %}{% if font['menu']['size'] == str(i) %}selected{% end %}{% end %} value="{{ i }}">{{ i }}</option>
+                                                            {% end %}
                                                         </select>
                                                     </div>
                                                 </div>
@@ -90,8 +104,9 @@
                                                     <div class="col-md-9 col-sm-9">
                                                         <select name="text-font" class="select text_font_select">
                                                             <option {% if font is not None %}{% if not font['text']['font'] %}selected{% end %}{% end %} value="">انتخاب کنید</option>
-                                                            <option {% if font is not None %}{% if font['text']['font'] == "yekan" %}selected{% end %}{% end %} value="yekan">yekan</option>
-                                                            <option {% if font is not None %}{% if font['text']['font'] == "roya" %}selected{% end %}{% end %} value="roya">roya</option>
+                                                            <option {% if font is not None %}{% if font['text']['font'] == "Mitra" %}selected{% end %}{% end %} value="Mitra">Mitra</option>
+                                                            <option {% if font is not None %}{% if font['text']['font'] == "Yekan" %}selected{% end %}{% end %} value="Yekan">Yekan</option>
+                                                            <option {% if font is not None %}{% if font['text']['font'] == "Roya" %}selected{% end %}{% end %} value="Roya">Roya</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -139,8 +154,9 @@
                                                     <div class="col-md-9 col-sm-9">
                                                         <select name="content-font" class="select list_font_select">
                                                             <option {% if font is not None %}{% if not font['content']['font'] %}selected{% end %}{% end %} value="">انتخاب کنید</option>
-                                                            <option {% if font is not None %}{% if font['content']['font'] == "yekan" %}selected{% end %}{% end %} value="yekan">yekan</option>
-                                                            <option {% if font is not None %}{% if font['content']['font'] == "roya" %}selected{% end %}{% end %} value="roya">roya</option>
+                                                            <option {% if font is not None %}{% if font['content']['font'] == "Mitra" %}selected{% end %}{% end %} value="Mitra">Mitra</option>
+                                                            <option {% if font is not None %}{% if font['content']['font'] == "Yekan" %}selected{% end %}{% end %} value="Yekan">Yekan</option>
+                                                            <option {% if font is not None %}{% if font['content']['font'] == "Roya" %}selected{% end %}{% end %} value="Roya">Roya</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -188,8 +204,9 @@
                                                     <div class="col-md-9 col-sm-9">
                                                         <select name="detail-font" class="select detail_font_select">
                                                             <option {% if font is not None %}{% if not font['detail']['font'] %}selected{% end %}{% end %} value="">انتخاب کنید</option>
-                                                            <option {% if font is not None %}{% if font['detail']['font'] == "yekan" %}selected{% end %}{% end %} value="yekan">yekan</option>
-                                                            <option {% if font is not None %}{% if font['detail']['font'] == "roya" %}selected{% end %}{% end %} value="roya">roya</option>
+                                                            <option {% if font is not None %}{% if font['detail']['font'] == "Mitra" %}selected{% end %}{% end %} value="Mitra">Mitra</option>
+                                                            <option {% if font is not None %}{% if font['detail']['font'] == "Yekan" %}selected{% end %}{% end %} value="Yekan">Yekan</option>
+                                                            <option {% if font is not None %}{% if font['detail']['font'] == "Roya" %}selected{% end %}{% end %} value="Roya">Roya</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -237,8 +254,9 @@
                                                     <div class="col-md-4 col-sm-4">
                                                         <select name="print-font-title" class="select detail_font_select">
                                                             <option {% if font is not None %}{% if not font['_print']['title']['font'] %}selected{% end %}{% end %} value="">انتخاب کنید</option>
-                                                            <option {% if font is not None %}{% if font['_print']['title']['font'] == "yekan" %}selected{% end %}{% end %} value="yekan">yekan</option>
-                                                            <option {% if font is not None %}{% if font['_print']['title']['font'] == "roya" %}selected{% end %}{% end %} value="roya">roya</option>
+                                                            <option {% if font is not None %}{% if font['_print']['title']['font'] == "Mitra" %}selected{% end %}{% end %} value="Mitra">Mitra</option>
+                                                            <option {% if font is not None %}{% if font['_print']['title']['font'] == "Yekan" %}selected{% end %}{% end %} value="Yekan">Yekan</option>
+                                                            <option {% if font is not None %}{% if font['_print']['title']['font'] == "Roya" %}selected{% end %}{% end %} value="Roya">Roya</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-2 col-sm-2">
@@ -260,8 +278,9 @@
                                                     <div class="col-md-4 col-sm-4">
                                                         <select name="print-font-summary" class="select detail_font_select">
                                                             <option {% if font is not None %}{% if not font['_print']['summary']['font'] %}selected{% end %}{% end %} value="">انتخاب کنید</option>
-                                                            <option {% if font is not None %}{% if font['_print']['summary']['font'] == "yekan" %}selected{% end %}{% end %} value="yekan">yekan</option>
-                                                            <option {% if font is not None %}{% if font['_print']['summary']['font'] == "roya" %}selected{% end %}{% end %} value="roya">roya</option>
+                                                            <option {% if font is not None %}{% if font['_print']['summary']['font'] == "Mitra" %}selected{% end %}{% end %} value="Mitra">Mitra</option>
+                                                            <option {% if font is not None %}{% if font['_print']['summary']['font'] == "Yekan" %}selected{% end %}{% end %} value="Yekan">Yekan</option>
+                                                            <option {% if font is not None %}{% if font['_print']['summary']['font'] == "Roya" %}selected{% end %}{% end %} value="Roya">Roya</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-2 col-sm-2">
@@ -283,8 +302,9 @@
                                                     <div class="col-md-4 col-sm-4">
                                                         <select name="print-font-body" class="select detail_font_select">
                                                             <option {% if font is not None %}{% if not font['_print']['body']['font'] %}selected{% end %}{% end %} value="">انتخاب کنید</option>
-                                                            <option {% if font is not None %}{% if font['_print']['body']['font'] == "yekan" %}selected{% end %}{% end %} value="yekan">yekan</option>
-                                                            <option {% if font is not None %}{% if font['_print']['body']['font'] == "roya" %}selected{% end %}{% end %} value="roya">roya</option>
+                                                            <option {% if font is not None %}{% if font['_print']['body']['font'] == "Mitra" %}selected{% end %}{% end %} value="Mitra">Mitra</option>
+                                                            <option {% if font is not None %}{% if font['_print']['body']['font'] == "Yekan" %}selected{% end %}{% end %} value="Yekan">Yekan</option>
+                                                            <option {% if font is not None %}{% if font['_print']['body']['font'] == "Roya" %}selected{% end %}{% end %} value="Roya">Roya</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-2 col-sm-2">
@@ -566,6 +586,11 @@
     $('.text_font_size_select').change(function(){
         var my_font_size = $(this).val();
         document.getElementById("text_font_preview").style.fontSize  = my_font_size + 'pt';
+    });
+
+    $('.menu_font_size_select').change(function(){
+        var my_font_size = $(this).val();
+        document.getElementById("font_preview").style.fontSize  = my_font_size + 'pt';
     });
 
     $('.list_font_select').change(function(){

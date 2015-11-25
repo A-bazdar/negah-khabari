@@ -1,34 +1,34 @@
 .menu-font {
-    font-family: Yekan;
-    font-size: 12pt;
+    font-family: Mitra;
+    font-size: 11pt;
 }
 
 .text-font {
+    font-family: Yekan;
+    font-size: 16pt;
+}
+
+.titr-list-show-font {
+    font-family: Yekan;
+    font-size: 11pt;
+}
+
+.titr-detail-show-font {
     font-family: Yekan;
     font-size: 12pt;
 }
 
 .print-titr-news-font {
-    font-family: Mitra;
-    font-size: 12pt;
+    font-family: Yekan;
+    font-size: 20pt;
 }
 
 .print-abstract-news-font {
-    font-family: Mitra;
-    font-size: 12pt;
+    font-family: Yekan;
+    font-size: 16pt;
 }
 
 .print-text-news-font {
-    font-family: Mitra;
-    font-size: 12pt;
-}
-
-.titr-list-show-font {
-    font-family: Mitra;
-    font-size: 12pt;
-}
-
-.titr-detail-show-font {
-    font-family: Mitra;
+    font-family: Yekan;
     font-size: 12pt;
 }

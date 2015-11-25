@@ -22,7 +22,8 @@ class SettingModel(BaseModel):
             if self.count(self.key_font):
                 __body = {"$set": {
                     "menu": {
-                        "font": self.font
+                        "font": self.font,
+                        "size": self.size
                     }
                 }}
 
@@ -165,7 +166,7 @@ class SettingModel(BaseModel):
             if r:
                 self.result['value'] = dict(
                     key=self.key_font,
-                    menu=r['menu'] if 'menu' in r.keys() else dict(font=0),
+                    menu=r['menu'] if 'menu' in r.keys() else dict(font=0, size=0),
                     text=r['text'] if 'text' in r.keys() else dict(font=0, size=0),
                     content=r['content'] if 'content' in r.keys() else dict(font=0, size=0),
                     detail=r['detail'] if 'detail' in r.keys() else dict(font=0, size=0),

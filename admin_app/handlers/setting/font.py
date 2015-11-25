@@ -2,20 +2,34 @@
 # -*- coding: utf-8 -*-
 from admin_app.handlers.base import BaseHandler
 from admin_app.models.mongodb.setting.setting import SettingModel
+from admin_config import Config
 
 __author__ = 'Morteza'
-
 
 class AdminFontSettingsHandler(BaseHandler):
     @staticmethod
     def change_css_style():
-        return
-        folder = ''
-        folder2 = ''
-        f1 = open(folder, 'r')
-        f2 = open(folder2, 'w')
+        fs = SettingModel().get_fonts()['value']
+        c = Config()
+        base_file = c.web['static_address'] + '/css/font-setting/base_font.css'
+        _file = c.web['static_address'] + '/css/font-setting/font.css'
+        f1 = open(base_file, 'r')
+        f2 = open(_file, 'w')
         for line in f1:
-            f2.write(line.replace('__background__', '__background'))
+            f2.write(line.replace('__font_family_menu__', fs['menu']['font'])
+                     .replace('__font_size_menu__', fs['menu']['size'])
+                     .replace('__font_family_text__', fs['text']['font'])
+                     .replace('__font_size_text__', fs['text']['size'])
+                     .replace('__font_family_titr_list__', fs['content']['font'])
+                     .replace('__font_size_titr_list__', fs['content']['size'])
+                     .replace('__font_family_titr_detail__', fs['detail']['font'])
+                     .replace('__font_size_titr_detail__', fs['detail']['size'])
+                     .replace('__font_family_print_titr_news__', fs['_print']['title']['font'])
+                     .replace('__font_size_print_titr_news__', fs['_print']['title']['size'])
+                     .replace('__font_family_print_abstract_news__', fs['_print']['summary']['font'])
+                     .replace('__font_size_print_abstract_news__', fs['_print']['summary']['size'])
+                     .replace('__font_family_print_text_news__', fs['_print']['body']['font'])
+                     .replace('__font_size_print_text_news__', fs['_print']['body']['size']))
         f1.close()
         f2.close()
 
@@ -27,8 +41,9 @@ class AdminFontSettingsHandler(BaseHandler):
         action = self.get_argument('action', '')
         if action == "menu_font":
             _font = self.get_argument('menu-font', 'yekan')
-            if _font != "":
-                SettingModel(font=_font).save_menu_font()
+            _size = self.get_argument('menu-size', '12')
+            if _font != "" and _size != "":
+                SettingModel(font=_font, size=_size).save_menu_font()
                 self.status = True
             else:
                 self.messages = ['یکی از فونت ها را انتخاب کنید.']
