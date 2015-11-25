@@ -397,6 +397,8 @@ $('input[name=tags]').tagsinput({
 $("#custom").spectrum({
     color: "#f00"
 });
+var color = $("#custom").spectrum('get').toHexString();
+    alert(color);
 
     var _time_steps = {
         'min': 1,

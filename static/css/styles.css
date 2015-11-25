@@ -1,7 +1,7 @@
 body{
     font-family: "Mitra" !important;
     direction: rtl;
-    background: #E9EAEE;
+    /*background: #E9EAEE;*/
 }
 
 h1, h2, h3, h4, h5, h6{
@@ -10,15 +10,16 @@ h1, h2, h3, h4, h5, h6{
 }
 
 .header{
-    background: -webkit-linear-gradient(#4E68A1, #415E9A); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#4E68A1, #415E9A); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#4E68A1, #415E9A); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#4E68A1, #415E9A); /* Standard syntax */
+    background: -webkit-linear-gradient(#4E68A1, #415E9A) !important; /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#4E68A1, #415E9A) !important;; /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#4E68A1, #415E9A) !important; /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#4E68A1, #415E9A) !important; /* Standard syntax */
     /*background: #405D99;*/
     padding: 5px 0 5px 10px !important;
     color: white;
     position: fixed !important;
     z-index: 1000;
+    box-shadow: none !important;
 }
 
 .body_header_searchbox .dropdown-menu li .drp_menu_item{
@@ -63,10 +64,10 @@ h1, h2, h3, h4, h5, h6{
 }
 
 .lti i{
-    color: #2F467B;
-    font-size: 16pt;
+    color: #2F467B !important;
+    font-size: 12pt;
     vertical-align: -9px;
-    margin-right: 12px;
+    margin: 0 12px 0 0 !important;
     cursor: pointer;
 }
 
@@ -1182,6 +1183,12 @@ i.option-news{
     margin-left: 7px;
 }
 
+a.option-news{
+    color: #828282;
+    margin-left: 7px;
+    text-decoration: none;
+}
+
 i.show_option_news{
     color: white;
     font-size: 14pt;
@@ -1473,4 +1480,12 @@ i.close {
     background: #ffffff;
     padding: 10px;
     max-height: 500px;
+}
+
+.print-font-setting {
+    background: #e8e8e8;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #d9dde6;
+    box-shadow: 0 0 2px #aaa;
 }
