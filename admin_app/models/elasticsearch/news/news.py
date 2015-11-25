@@ -447,7 +447,7 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def get_all_all(self, _page=0, _size=100, _sort="date"):
+    def get_all_backup(self, _page=0, _size=100, _sort="date"):
         try:
             body = {
                 "from": _page * _size, "size": _size,
