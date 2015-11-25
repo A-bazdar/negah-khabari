@@ -41,4 +41,4 @@ class GetUrl:
             if not self.get_url(self.iri_to_uri()):
                 self.get_url(self.url)
         except:
-            pas
+            pass

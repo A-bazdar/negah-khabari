@@ -1,0 +1,34 @@
+.menu-font {
+    font-family: __font_family_menu__;
+    font-size: __font_size_menu__pt;
+}
+
+.text-font {
+    font-family: __font_family_text__;
+    font-size: __font_size_text__pt;
+}
+
+.titr-list-show-font {
+    font-family: __font_family_titr_list__;
+    font-size: __font_size_titr_list__pt;
+}
+
+.titr-detail-show-font {
+    font-family: __font_family_titr_detail__;
+    font-size: __font_size_titr_detail__pt;
+}
+
+.print-titr-news-font {
+    font-family: __font_family_print_titr_news__;
+    font-size: __font_size_print_titr_news__pt;
+}
+
+.print-abstract-news-font {
+    font-family: __font_family_print_abstract_news__;
+    font-size: __font_size_print_abstract_news__pt;
+}
+
+.print-text-news-font {
+    font-family: __font_family_print_text_news__;
+    font-size: __font_size_print_text_news__pt;
+}
