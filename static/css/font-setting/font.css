@@ -8,7 +8,17 @@
     font-size: 12pt;
 }
 
-.print-font {
+.print-titr-news-font {
+    font-family: Mitra;
+    font-size: 12pt;
+}
+
+.print-abstract-news-font {
+    font-family: Mitra;
+    font-size: 12pt;
+}
+
+.print-text-news-font {
     font-family: Mitra;
     font-size: 12pt;
 }
