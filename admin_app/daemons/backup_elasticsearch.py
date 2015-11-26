@@ -23,6 +23,19 @@ print backup_address_news + '/data_json/news.json'
 with open(backup_address_news + '/data_json/news.json', 'w') as f:
     json.dump(all_news, f)
 
+filename = backup_address_news + '/' + str(datetime.date.today()) + '_news.tar.gz'
+
+with tarfile.open(filename, "w:gz") as tar:
+    tar.add(backup_address_news + '/data_json', arcname=os.path.basename(backup_address_news + '/data_json'))
+
+os.remove(backup_address_news + '/data_json/news.json')
+
+
+
+print backup_address_news + '/data_json/news.json'
+with open(backup_address_news + '/data_json/news.json', 'w') as f:
+    json.dump(all_news, f)
+
 filename = backup_address_news + '/' + str(datetime.date.today() + datetime.timedelta(days=1)) + '_news.tar.gz'
 
 with tarfile.open(filename, "w:gz") as tar:
