@@ -19,16 +19,16 @@ backup_address_news = c.backup_elastic_search_address_news
 #     all_news += NewsModel().get_all_backup(_page=i)['value']
 #     print len(all_news), 'news'
 # print len(all_news)
-print backup_address_news + '/news.json'
-with open(backup_address_news + '/news.json', 'w') as f:
+print backup_address_news + '/data_json/news.json'
+with open(backup_address_news + '/data_json/news.json', 'w') as f:
     json.dump(all_news, f)
 
 filename = backup_address_news + '/' + str(datetime.date.today() + datetime.timedelta(days=1)) + '_news.tar.gz'
 
 with tarfile.open(filename, "w:gz") as tar:
-    tar.add(backup_address_news, arcname=os.path.basename(backup_address_news))
+    tar.add(backup_address_news + '/data_json', arcname=os.path.basename(backup_address_news + '/data_json'))
 
-os.remove(backup_address_news + '/news.json')
+os.remove(backup_address_news + '/data_json/news.json')
 # except:
 #     Debug.get_exception(send=False)
 #     all_news = []
