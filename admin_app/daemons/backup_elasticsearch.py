@@ -12,30 +12,17 @@ c = Config()
 __author__ = 'Morteza'
 
 
-all_news = [{'a': 1, 'b': 1, 'c': 1, 'd': 1, 'e': 1, 'f': 1}]
+all_news = []
 # try:
 backup_address_news = c.backup_elastic_search_address_news
 # for i in range(290):
 #     all_news += NewsModel().get_all_backup(_page=i)['value']
 #     print len(all_news), 'news'
 # print len(all_news)
-print backup_address_news + '/news.json'
 with open(backup_address_news + '/news.json', 'w') as f:
     json.dump(all_news, f)
 
 filename = backup_address_news + '/' + str(datetime.date.today()) + '_news.tar.gz'
-
-with tarfile.open(filename, "w:gz") as tar:
-    tar.add(backup_address_news + '/news.json', arcname=os.path.basename(backup_address_news + '/news.json'))
-
-os.remove(backup_address_news + '/news.json')
-
-
-print backup_address_news + '/news.json'
-with open(backup_address_news + '/news.json', 'w') as f:
-    json.dump(all_news, f)
-
-filename = backup_address_news + '/' + str(datetime.date.today() + datetime.timedelta(days=1)) + '_news.tar.gz'
 
 with tarfile.open(filename, "w:gz") as tar:
     tar.add(backup_address_news + '/news.json', arcname=os.path.basename(backup_address_news + '/news.json'))

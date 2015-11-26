@@ -427,6 +427,7 @@ class NewsModel:
 
     def get_all(self, _page=0, _size=30, _sort="date"):
         try:
+            print _page, _size
             body = {
                 "from": _page * _size, "size": _size,
                 "query": {
@@ -434,9 +435,11 @@ class NewsModel:
                 },
                 "sort": {_sort: {"order": "desc"}}
             }
+            print body
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
+                print b['_id']
                 self.get_news_module(b['_source'], b['_id'])
             self.result['value'] = self.value
             self.result['status'] = True
