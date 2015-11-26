@@ -28,6 +28,7 @@ filename = backup_address_news + '/' + str(datetime.date.today()) + '_news.tar.g
 with tarfile.open(filename, "w:gz") as tar:
     tar.add(backup_address_news, arcname=os.path.basename(backup_address_news))
 
+os.remove(backup_address_news + '/news.json')
 # except:
 #     Debug.get_exception(send=False)
 #     all_news = []
