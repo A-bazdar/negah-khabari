@@ -425,9 +425,8 @@ class NewsModel:
             Debug.get_exception(sub_system='statistic_engine_feed', severity='critical_error', tags='get_agency_news_by_time')
             return self.result
 
-    def get_all(self, _page=0, _size=30, _sort="date"):
+    def get_all(self, _page=0, _size=3, _sort="date"):
         try:
-            print _page, _size
             body = {
                 "from": _page * _size, "size": _size,
                 "query": {
@@ -435,11 +434,9 @@ class NewsModel:
                 },
                 "sort": {_sort: {"order": "desc"}}
             }
-            print body
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
-                print b['_id']
                 self.get_news_module(b['_source'], b['_id'])
             self.result['value'] = self.value
             self.result['status'] = True
@@ -474,6 +471,19 @@ class NewsModel:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
+
+    @staticmethod
+    def get_count_all():
+        try:
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type).count_all()
+            if r:
+                return r
+            return 0
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return 0
 
     def get_all_by_subject(self, subjects=None, _page=0, _size=30):
 

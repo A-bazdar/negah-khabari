@@ -184,6 +184,19 @@ class BriefsModel:
                                 data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
             return self.result
 
+    @staticmethod
+    def get_count_all():
+        try:
+            r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type).count_all()
+            if r:
+                return r
+            return 0
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+            return 0
+
     def get_one(self):
         try:
             r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, _id=self.id).get_one()
@@ -216,7 +229,7 @@ class BriefsModel:
                                 data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
             return self.result
 
-    def get_all_all(self, _page, _size=100):
+    def get_all_backup(self, _page=0, _size=100):
         try:
             body = {
                 "from": _page * _size, "size": _size,
