@@ -4,6 +4,7 @@ import datetime
 import hashlib
 from bson import ObjectId
 import khayyam
+from admin_app.classes.date import CustomDateTime
 from admin_app.classes.debug import Debug
 from admin_app.classes.public import CreateId
 from admin_app.models.elasticsearch.base_model import ElasticSearchModel
@@ -186,6 +187,9 @@ class NewsModel:
 
     def get_news_module(self, _source, _id):
         try:
+            agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
+            x = _source['date'].split('T')
+            _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
             self.value.append(dict(
                 id=_id,
                 link=_source['link'],
@@ -194,7 +198,10 @@ class NewsModel:
                 body=_source['body'],
                 summary=self.summary_text(_source['summary']),
                 thumbnail=_source['thumbnail'],
-                read_date=_source['read_date']
+                read_date=_source['read_date'],
+                _date=CustomDateTime().get_time_difference(_date),
+                agency_name=agency['name'],
+                agency_color=agency['color']
             ))
         except:
             Debug.get_exception(send=False)
@@ -425,8 +432,10 @@ class NewsModel:
             Debug.get_exception(sub_system='statistic_engine_feed', severity='critical_error', tags='get_agency_news_by_time')
             return self.result
 
-    def get_all(self, _page=0, _size=3, _sort="date"):
+    def get_all(self, _page=0, _size=30, _sort="date"):
         try:
+            if _page >= 1:
+                _page -= 1
             body = {
                 "from": _page * _size, "size": _size,
                 "query": {
@@ -436,9 +445,13 @@ class NewsModel:
             }
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            try:
+                count_all = r['hits']['total']
+            except:
+                count_all = 0
             for b in r['hits']['hits']:
                 self.get_news_module(b['_source'], b['_id'])
-            self.result['value'] = self.value
+            self.result['value'] = self.value, count_all
             self.result['status'] = True
             return self.result
 
@@ -490,22 +503,30 @@ class NewsModel:
         def get_subjects(__subjects):
             ls = __subjects
             for sub in __subjects:
-                ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child()]
+                ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child()['value']]
             return ls
 
         try:
+            if _page >= 1:
+                _page -= 1
             body = {
                 "from": _page * _size, "size": _size,
-                "terms": {
-                    "subject": get_subjects(subjects),
+                "filter": {
+                    "terms": {
+                        "subject": get_subjects(subjects)
+                    }
                 },
                 "sort": {"date": {"order": "desc"}}
             }
-
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            try:
+                count_all = r['hits']['total']
+            except:
+                count_all = 0
+
             for b in r['hits']['hits']:
-                self.get_news(b['_source'], b['_id'])
-            self.result['value'] = self.value
+                self.get_news_module(b['_source'], b['_id'])
+            self.result['value'] = self.value, count_all
             self.result['status'] = True
             return self.result
 

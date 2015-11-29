@@ -42,7 +42,7 @@ class CustomDateTime:
         res = now - date
         if res.days != 0:
             if res.days >= 365:
-                return khayyam.JalaliDatetime(date).strftime('%d %B %Y')
+                return khayyam.JalaliDatetime(date).strftime('%y-%m-%d')
             elif 30 <= res.days < 365:
                 return str(res.days / 30) + ' ماه پیش'
             elif res.days < 30:
