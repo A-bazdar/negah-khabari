@@ -342,14 +342,12 @@ class NewsModel:
                     }
                 }
             }
-            print body
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
                 count_all = 0
-            print count_all
             try:
                 for b in r['hits']['hits']:
                     self.get_news(b['_source'], b['_id'])
@@ -518,6 +516,149 @@ class NewsModel:
                 },
                 "sort": {"date": {"order": "desc"}}
             }
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            try:
+                count_all = r['hits']['total']
+            except:
+                count_all = 0
+
+            for b in r['hits']['hits']:
+                self.get_news_module(b['_source'], b['_id'])
+            self.result['value'] = self.value, count_all
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all_by_subject',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
+    @staticmethod
+    def get_query_search(_search):
+        all_words = _search['all_words']
+        without_words = _search['without_words']
+        each_words = _search['each_words']
+        _exactly = _search['exactly_word'].encode('utf-8')
+
+        _all = ' AND '.join(e.encode('utf-8') for e in all_words)
+        _without = ' OR '.join(e.encode('utf-8') for e in without_words)
+        _each = ' OR '.join(e.encode('utf-8') for e in each_words)
+
+        _query = ''
+        if _all != '':
+            _query += '({})'.format(_all)
+
+        if _each != '':
+            if _query == '':
+                _query += '({})'.format(_each)
+            else:
+                _query += ' AND ({})'.format(_each)
+
+        if _without != '':
+            if _query == '':
+                _query += 'NOT({})'.format(_without)
+            else:
+                _query += ' AND NOT({})'.format(_without)
+
+        body = []
+        if _search['start']:
+            body.append({
+                "range": {
+                    "date": {
+                        "lt": str(_search['end'].date()) + 'T' + str(_search['end'].time()),
+                        "gte": str(_search['start'].date()) + 'T' + str(_search['start'].time())
+                    }
+                }
+            })
+
+        if _query != '':
+            body.append({
+                "query": {
+                    "query_string": {
+                        "fields": ["ro_title", "title", "summary", "body"],
+                        "query": _query
+                    }
+                }
+            })
+
+        if _exactly != '':
+            body.append({
+                "or": {
+                    "filters": [
+                        {
+                            "query": {
+                                "match_phrase": {
+                                    "ro_title": _exactly
+                                }
+                            }
+                        },
+                        {
+                            "query": {
+                                "match_phrase": {
+                                    "title": _exactly
+                                }
+                            }
+                        },
+                        {
+                            "query": {
+                                "match_phrase": {
+                                    "summary": _exactly
+                                }
+                            }
+                        },
+                        {
+                            "query": {
+                                "match_phrase": {
+                                    "body": _exactly
+                                }
+                            }
+                        }
+                    ]
+                }
+            })
+
+        if _search['agency'] != 'all':
+            body.append({
+                'term': {'agency': _search['agency']}
+            })
+
+        return body
+
+    def get_all_by_subject_search(self, _search=None, _subjects=None, _page=0, _size=30):
+        if _page >= 1:
+            _page -= 1
+        if not _subjects:
+            _subjects = []
+
+        def get_subjects(__subjects):
+            ls = __subjects
+            for sub in __subjects:
+                ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child()['value']]
+            return ls
+
+        try:
+            body = {
+                "from": _page * _size, "size": _size,
+                "filter": {
+                    "and": {
+                        "filters": []
+                    }
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+
+            query_search = self.get_query_search(_search)
+
+            body['filter']['and']['filters'] += query_search
+
+            if len(_subjects):
+                body['filter']['and']['filters'].append({
+                    "filter": {
+                        "terms": {
+                            "subject": get_subjects(_subjects)
+                        }
+                    }
+                })
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']

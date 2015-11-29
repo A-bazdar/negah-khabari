@@ -174,6 +174,18 @@ class AgencyModel():
             Debug.get_exception(sub_system='agency', severity='error', tags='get_all_by_category')
             return self.result
 
+    def get_all_id_by_category(self):
+        try:
+            r = MongodbModel(collection='agency', body={'category': self.category}).get_all()
+            for i in r:
+                self.value.append(str(i["_id"]))
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_by_category')
+            return self.result
+
     def get_one(self):
         try:
             body = {'_id': self.id}
