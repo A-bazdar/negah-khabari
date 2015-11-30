@@ -10,6 +10,7 @@ from admin_app.classes.public import CreateId
 from admin_app.models.elasticsearch.base_model import ElasticSearchModel
 from admin_app.models.mongodb.agency.agency import AgencyModel
 import time
+from admin_app.models.mongodb.base_model import MongodbModel
 from admin_app.models.mongodb.content.content import ContentModel
 from admin_app.models.mongodb.setting.setting import SettingModel
 from admin_app.models.mongodb.subject.subject import SubjectModel
@@ -116,6 +117,13 @@ class NewsModel:
                     break
             return _text[:c] + ' ...'
 
+    @staticmethod
+    def insert_mongo(body):
+        MongodbModel(body=body, collection='news').insert()
+        if MongodbModel(body={}, collection='news').count() > 60:
+            n = MongodbModel(body={}, collection='news', sort="date", page=1, size=1, ascending=1).get_all_pagination()
+            MongodbModel(body={"_id": n['_id']}, collection='news').delete()
+
     def insert(self):
         try:
             d = datetime.datetime.now()
@@ -139,6 +147,7 @@ class NewsModel:
             if e is False:
                 news = self.get_news_id()
                 self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=news).insert()
+                self.insert_mongo(body)
                 self.result['status'] = True
                 self.result['message'] = 'INSERT'
                 self.result['type'] = 'NEWS'
@@ -188,8 +197,11 @@ class NewsModel:
     def get_news_module(self, _source, _id):
         try:
             agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
-            x = _source['date'].split('T')
-            _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+            try:
+                x = _source['date'].split('T')
+                _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+            except:
+                _date = _source['date']
             self.value.append(dict(
                 id=_id,
                 link=_source['link'],
@@ -456,6 +468,28 @@ class NewsModel:
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            self.result['value'] = [], 0
+            return self.result
+
+    def get_all_mongo(self, _page=0, _size=30):
+        try:
+            body = {}
+
+            r = MongodbModel(body=body, collection='news', size=_size, page=_page).get_all_pagination()
+            try:
+                count_all = MongodbModel(body=body, collection='news').count()
+            except:
+                count_all = 0
+            for b in r:
+                self.get_news_module(b, b['_id'])
+            self.result['value'] = self.value, count_all
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            self.result['value'] = [], 0
             return self.result
 
     def get_all_backup(self, _page=0, _size=100, _sort="date"):

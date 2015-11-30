@@ -14,13 +14,14 @@ class MongodbBaseModel():
 
 
 class MongodbModel(MongodbBaseModel):
-    def __init__(self, collection=None, body=None, condition=None, key=None, size=20, page=1, sort="date"):
+    def __init__(self, collection=None, body=None, condition=None, key=None, size=20, page=1, sort="date", ascending=-1):
         MongodbBaseModel.__init__(self)
         self.__body = body
         self.__size = size
         self.__page = page
         self.__sort = sort
         self.__key = key
+        self.__ascending = ascending
 
         self.__collection = collection
         self.__condition = condition
@@ -62,6 +63,8 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.about_us
         elif collection == 'contact_us':
             self.collection = self.db.contact_us
+        elif collection == 'news':
+            self.collection = self.db.news
 
     def insert(self):
         try:
@@ -81,7 +84,7 @@ class MongodbModel(MongodbBaseModel):
 
     def get_all_pagination(self):
         try:
-            return self.collection.find(self.__body).sort([(self.__sort, -1)]).skip(self.__size * (self.__page - 1)).limit(self.__size)
+            return self.collection.find(self.__body).sort([(self.__sort, self.__ascending)]).skip(self.__size * (self.__page - 1)).limit(self.__size)
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > get_all_pagination',
                                 data='body: ' + str(self.__body))
