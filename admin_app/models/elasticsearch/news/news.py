@@ -194,7 +194,6 @@ class NewsModel:
         except:
             Debug.get_exception(send=False)
 
-    @profile
     def get_news_module(self, _source, _id):
         try:
             agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
@@ -443,7 +442,6 @@ class NewsModel:
             Debug.get_exception(sub_system='statistic_engine_feed', severity='critical_error', tags='get_agency_news_by_time')
             return self.result
 
-    @profile
     def get_all(self, _page=0, _size=20, _sort="date"):
         try:
             if _page >= 1:
@@ -874,7 +872,6 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    @profile
     def get_all_titr_1(self, _page=0, _size=12):
         try:
             body = {
