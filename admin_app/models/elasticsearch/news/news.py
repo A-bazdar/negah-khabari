@@ -444,7 +444,7 @@ class NewsModel:
             return self.result
 
     @profile
-    def get_all(self, _page=0, _size=30, _sort="date"):
+    def get_all(self, _page=0, _size=20, _sort="date"):
         try:
             if _page >= 1:
                 _page -= 1
@@ -875,7 +875,7 @@ class NewsModel:
             return self.result
 
     @profile
-    def get_all_titr_1(self, _page=0, _size=15):
+    def get_all_titr_1(self, _page=0, _size=12):
         try:
             body = {
                 "from": _page * _size, "size": _size,
