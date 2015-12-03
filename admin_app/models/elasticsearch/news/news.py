@@ -122,7 +122,10 @@ class NewsModel:
         MongodbModel(body=body, collection='news').insert()
         if MongodbModel(body={}, collection='news').count() > 60:
             n = MongodbModel(body={}, collection='news', sort="date", page=1, size=1, ascending=1).get_all_pagination()
-            MongodbModel(body={"_id": n['_id']}, collection='news').delete()
+            _id = 0
+            for i in n:
+                _id = i['_id']
+            MongodbModel(body={"_id": _id}, collection='news').delete()
 
     def insert(self):
         try:
