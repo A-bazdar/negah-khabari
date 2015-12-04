@@ -122,7 +122,10 @@ class NewsModel:
         MongodbModel(body=body, collection='news').insert()
         if MongodbModel(body={}, collection='news').count() > 60:
             n = MongodbModel(body={}, collection='news', sort="date", page=1, size=1, ascending=1).get_all_pagination()
-            MongodbModel(body={"_id": n['_id']}, collection='news').delete()
+            _id = 0
+            for i in n:
+                _id = i['_id']
+            MongodbModel(body={"_id": _id}, collection='news').delete()
 
     def insert(self):
         try:
@@ -442,7 +445,7 @@ class NewsModel:
             Debug.get_exception(sub_system='statistic_engine_feed', severity='critical_error', tags='get_agency_news_by_time')
             return self.result
 
-    def get_all(self, _page=0, _size=30, _sort="date"):
+    def get_all(self, _page=0, _size=20, _sort="date"):
         try:
             if _page >= 1:
                 _page -= 1
@@ -872,7 +875,7 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def get_all_titr_1(self, _page=0, _size=15):
+    def get_all_titr_1(self, _page=0, _size=12):
         try:
             body = {
                 "from": _page * _size, "size": _size,
