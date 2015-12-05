@@ -108,10 +108,14 @@ $(document).on('click', '.send-comment', function(e){
 $(document).on('click', '.option-news.star', function (e) {
     var elm = $(e.target);
     var news = elm.attr('data-news');
+    var action = 'delete';
+    if(elm.hasClass('fa-star-o')){
+        action = 'add';
+    }
     var postData = [
         {name: 'news_id', value: news},
         {name: '_xsrf', value: xsrf_token},
-        {name: 'action', value: 'add'}
+        {name: 'action', value: action}
     ];
     jQuery.ajax(
     {
@@ -181,10 +185,14 @@ $(document).on('click', '.option-news-important-select', function (e) {
 $(document).on('click', '.option-news.read', function (e) {
     var elm = $(e.target);
     var news = elm.attr('data-news');
+    var action = 'unread';
+    if(elm.hasClass('fa-circle-o')){
+        action = 'read';
+    }
     var postData = [
         {name: 'news_id', value: news},
         {name: '_xsrf', value: xsrf_token},
-        {name: 'action', value: 'read'}
+        {name: 'action', value: action}
     ];
     jQuery.ajax(
     {
@@ -266,4 +274,71 @@ $(document).on('click', '.send-news-report-broken', function(e){
             }
         });
     }
+});
+
+
+$(document).on('click', '.option-news-all', function(e){
+    var elm = $(e.target);
+    var option = elm.attr('data-option');
+    var value = elm.attr('data-value');
+    if(option == 'note'){
+        value = $('textarea.send-comment-all').val();
+    }
+    var postData = [
+        {name: 'option', value: option},
+        {name: 'value', value: value},
+        {name: '_xsrf', value: xsrf_token}
+    ];
+
+    $.each($('input[type=checkbox][name=news-select]:checked'), function(){
+        postData.push({name: "news", value: $(this).val()});
+    });
+    jQuery.ajax(
+    {
+        url: option_news_all_url,
+        type: "post",
+        data: postData,
+        success: function (response) {
+            var r = response['value'];
+            if(option == 'read'){
+                if(value == 'read'){
+                    for(var i = 0; i < r.length; i++)
+                        $('.option-news.read[data-news=' + r[i] + ']').removeClass('fa-circle-o').addClass('colorGreen fa-circle');
+                }else{
+                    for(var i = 0; i < r.length; i++)
+                        $('.option-news.read[data-news=' + r[i] + ']').removeClass('colorGreen fa-circle').addClass('fa-circle-o');
+                }
+            }
+            if(option == 'star'){
+                if(value == 'add'){
+                    for(var i = 0; i < r.length; i++){
+                        $('.option-news.star[data-news=' + r[i] + ']').removeClass('fa-star-o').addClass('colorOrange fa-star');
+                    }
+                }else{
+                    for(var i = 0; i < r.length; i++)
+                        $('.option-news.star[data-news=' + r[i] + ']').removeClass('colorOrange fa-star').addClass('fa-star-o');
+                }
+            }
+            if(option == 'important'){
+                if(value != 'delete'){
+                    for(var i = 0; i < r.length; i++){
+                        $('.option-news-important-check[data-news=' + r[i] + ']').fadeOut();
+                        $('.option-news-important-check[data-news=' + r[i] + '][data-important= ' + value + ']').fadeIn();
+                    }
+                }else{
+                    for(var i = 0; i < r.length; i++)
+                        $('.option-news-important-check[data-news=' + r[i] + ']').fadeOut();
+                }
+            }
+            if(option == 'note'){
+                if(value != 'delete'){
+                    for(var i = 0; i < r.length; i++)
+                        $('.comment-text[data-news='+ r[i] +']').val(value);
+                }else{
+                    for(var i = 0; i < r.length; i++)
+                        $('.comment-text[data-news='+ r[i] +']').val('');
+                }
+            }
+        }
+    });
 });

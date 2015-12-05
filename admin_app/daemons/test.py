@@ -23,7 +23,7 @@ def __search():
         r = ElasticSearchModel(index='negah_khabari', doc_type='news', body=body).search()
         __end = datetime.datetime.now()
         e = __end - __start
-        __diff = str(e.seconds) + '.' + str(e.microsecond)
+        __diff = str(e.seconds) + '.' + str(e.microseconds)
         r = True if r is not False else False
 
         __db.insert({

@@ -1220,6 +1220,12 @@ input[type=range]:focus::-ms-fill-upper {
     right: 27px;
 }
 
+.option_news_select{
+    position: absolute;
+    top: 15px;
+    right: 27px;
+}
+
 .option_news_icon i.fa-chevron-down{
     color: #ffffff;
 }

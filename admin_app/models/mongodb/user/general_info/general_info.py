@@ -435,7 +435,6 @@ class UserModel(BaseModel):
             __body = {
                 "$pull": {
                     "note": {
-                        "_id": self.note,
                         "news": self.news
                     }
                 }
@@ -458,8 +457,6 @@ class UserModel(BaseModel):
             }}
 
             __condition = {'_id': self.id, 'note.news': self.news}
-            print __body
-            print __condition
             MongodbModel(collection='user', condition=__condition, body=__body).update()
             self.result['value'] = self.get_note()['value']
             self.result['status'] = True
@@ -550,7 +547,6 @@ class UserModel(BaseModel):
     def delete_important(self):
         try:
             imp = {
-                "important": self.important,
                 "news": self.news
             }
             __body = {
@@ -686,3 +682,16 @@ class UserModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > is_exist_agency_direction', data='collection > user')
             return False
+
+    def get_option_news(self):
+        try:
+            __body = {'_id': self.id}
+            __key = {"star": 1, "read": 1, "note": 1, "important": 1}
+            a = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
+            self.result['value'] = a
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
