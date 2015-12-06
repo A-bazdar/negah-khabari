@@ -1654,3 +1654,18 @@ a.change-page {
     opacity: 1 !important;
     color: white !important;
 }
+
+.form_modal_body{
+    padding: 15px;
+    box-shadow: 0 0 2px #aaa;
+    border-radius: 5px;
+    position: relative;
+}
+
+.form_body_title{
+    position: absolute;
+    top: -12px;
+    right: 15px;
+    background: #FBFBFD;
+    padding: 0 10px;
+}
