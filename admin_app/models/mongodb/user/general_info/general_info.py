@@ -190,6 +190,7 @@ class UserModel(BaseModel):
                     read=r['read'] if 'read' in r.keys() else [],
                     note=r['note'] if 'note' in r.keys() else [],
                     star=r['star'] if 'star' in r.keys() else [],
+                    pattern_agency=r['pattern_agency'] if 'pattern_agency' in r.keys() else [],
                     last_activity=r['last_activity']
 
                 )
@@ -683,15 +684,59 @@ class UserModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > is_exist_agency_direction', data='collection > user')
             return False
 
-    def get_option_news(self):
+    def add_pattern_agency(self, pattern_agency):
         try:
-            __body = {'_id': self.id}
-            __key = {"star": 1, "read": 1, "note": 1, "important": 1}
-            a = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
-            self.result['value'] = a
+            __body = {"$push": {
+                "pattern_agency": pattern_agency,
+            }}
+            __condition = {'_id': self.id}
+
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = pattern_agency['_id']
             self.result['status'] = True
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > add_agency_direction', data='collection > user')
+            return self.result
+
+    def update_pattern_agency(self, pattern_agency):
+        try:
+            __body = {"$set": {
+                'pattern_agency.$.name': pattern_agency['name'],
+                'pattern_agency.$.agency': pattern_agency['agency'],
+                'pattern_agency.$.subject': pattern_agency['subject'],
+                'pattern_agency.$.geographic': pattern_agency['geographic']
+            }}
+
+            __condition = {'_id': self.id, 'pattern_agency._id': pattern_agency['_id']}
+
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = pattern_agency['_id']
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > add_agency_direction', data='collection > user')
+            return self.result
+
+    def delete_pattern_agency(self, pattern):
+        try:
+            __body = {
+                "$pull": {
+                    "pattern_agency": {
+                        "_id": pattern
+                    }
+                }
+            }
+
+            __condition = {'_id': self.id}
+
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = pattern
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > add_agency_direction', data='collection > user')
             return self.result
