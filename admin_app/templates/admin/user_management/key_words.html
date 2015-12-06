@@ -29,13 +29,13 @@
                                                         <span class="form_label">اضافه توسط کاربر</span>
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
-                                                        <input type="checkbox" {% if keyword_setting['add_by_user'] %}checked{% end %} value="true" name="add_by_user">
+                                                        <input type="checkbox" {% if keyword_setting is not None keyword_setting['add_by_user'] %}checked{% end %} value="true" name="add_by_user">
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
                                                         <span class="form_label">ویرایش توسط کاربر</span>
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
-                                                        <input type="checkbox" {% if keyword_setting['edit_by_user'] %}checked{% end %} value="true" name="edit_by_user">
+                                                        <input type="checkbox" {% if keyword_setting is not None keyword_setting['edit_by_user'] %}checked{% end %} value="true" name="edit_by_user">
                                                     </div>
                                                 </div>
                                                 <div class="row margin-top-10">
@@ -43,13 +43,13 @@
                                                         <span class="form_label">تعداد سرفصل</span>
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
-                                                        <input type="text" value="{{ keyword_setting['count_topic'] }}" name="count_topic" class="form-control">
+                                                        <input type="text" {% if keyword_setting is not None %}value="{{ keyword_setting['count_topic'] }}"{% end %} name="count_topic" class="form-control">
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
                                                         <span class="form_label">تعداد کلید واژه</span>
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
-                                                        <input type="text" value="{{ keyword_setting['count_keyword'] }}" name="count_keyword" class="form-control">
+                                                        <input type="text" {% if keyword_setting is not None %}value="{{ keyword_setting['count_keyword'] }}"{% end %} name="count_keyword" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="row margin-top-10">
