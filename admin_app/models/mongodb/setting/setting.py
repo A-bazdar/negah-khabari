@@ -7,14 +7,16 @@ __author__ = 'Morteza'
 
 
 class SettingModel(BaseModel):
-    def __init__(self, _id=None, font=None, size=None, general=None):
+    def __init__(self, _id=None, font=None, size=None, general=None, keyword=None):
         BaseModel.__init__(self)
         self.key_font = "FONT"
         self.key_general = "GENERAL"
+        self.key_keyword = "KEYWORD"
         self.id = _id
         self.font = font
         self.size = size
         self.general = general
+        self.keyword = keyword
         self.result = {'value': {}, 'status': False}
 
     def save_menu_font(self):
@@ -234,3 +236,37 @@ class SettingModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > count', data='collection > setting')
             return 0
+
+    def save_keyword(self):
+        try:
+            if self.count(self.key_keyword):
+                __body = {"$set": self.keyword}
+
+                __condition = {'key': self.key_keyword}
+                self.result['value'] = MongodbModel(collection='setting', body=__body, condition=__condition).update()
+                self.result['status'] = True
+            else:
+                self.keyword["key"] = self.key_keyword
+                __body = self.keyword
+
+                self.result['value'] = MongodbModel(collection='setting', body=__body).insert()
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > setting')
+            return self.result
+
+    def get_keyword(self):
+        try:
+            r = MongodbModel(collection='setting', body={'key': self.key_keyword}).get_one()
+            if r:
+                self.result['value'] = r
+
+                self.result['status'] = True
+            else:
+                self.result['value'] = None
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_one', data='collection > setting')
+            return self.result

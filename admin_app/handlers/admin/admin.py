@@ -9,6 +9,8 @@ from admin_app.classes.debug import Debug
 from admin_app.classes.public import UploadPic, CreateHash
 from admin_app.models.mongodb.failed_brief.failed_brief import FailedBriefModel
 from admin_app.models.mongodb.failed_news.failed_news import FailedNewsModel
+from admin_app.models.mongodb.keyword.keyword import KeyWordModel
+from admin_app.models.mongodb.setting.setting import SettingModel
 from admin_config import Config
 from tornado import gen
 from admin_app.handlers.base import BaseHandler
@@ -450,9 +452,61 @@ class AdminSubsetManagementHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('admin/user_management/subset_management.html')
 
-class AdminKeyWordsHandler(tornado.web.RequestHandler):
+class AdminKeyWordsHandler(BaseHandler):
     def get(self):
-        self.render('admin/user_management/key_words.html')
+        self.data['keywords'] = KeyWordModel().get_all()['value']
+        self.data['keyword_setting'] = SettingModel().get_keyword()['value']
+        self.render('admin/user_management/key_words.html', **self.data)
+
+    def post(self):
+        try:
+            action = self.get_argument('action', 'add_keyword_setting')
+            if action == 'add_keyword_setting':
+                add_by_user = self.get_argument('add_by_user', 'false')
+                edit_by_user = self.get_argument('edit_by_user', 'false')
+                add_by_user = True if add_by_user == "true" else False
+                edit_by_user = True if edit_by_user == "true" else False
+                if add_by_user:
+                    count_topic = self.get_argument('count_topic', '')
+                    count_keyword = self.get_argument('count_keyword', '')
+                    if count_topic == '' or count_keyword == '':
+                        self.errors.append('همه موارد را وارد کنید')
+                else:
+                    count_topic = 0
+                    count_keyword = 0
+
+                if not len(self.errors):
+                    __k = dict(add_by_user=add_by_user, edit_by_user=edit_by_user, count_topic=count_topic, count_keyword=count_keyword)
+                    SettingModel(keyword=__k).save_keyword()
+                    self.status = True
+                else:
+                    self.messages = self.errors
+
+            elif action == 'add_keyword':
+                topic = self.get_argument('topic')
+                if topic == '':
+                    self.errors.append('همه موارد را وارد کنید')
+                keywords = []
+                try:
+                    keyword = self.request.arguments['keyword']
+                    synonyms = self.request.arguments['synonyms']
+                    no_synonyms = self.request.arguments['no_synonyms']
+                    for i in range(len(keyword)):
+                        keywords.append(dict(keyword=keyword[i], synonyms=synonyms[i].split(','), no_synonyms=no_synonyms[i].split(',')))
+                except:
+                    Debug.get_exception(send=False)
+                    self.errors.append('همه موارد را وارد کنید')
+
+                if not len(self.errors):
+                    KeyWordModel(keyword=keywords, topic=topic).save()
+                    self.status = True
+                else:
+                    self.messages = self.errors
+            self.write(self.result)
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='admin > login')
+            self.write(self.error_result)
+
 
 class AdminContentFormatHandler(tornado.web.RequestHandler):
     def get(self):

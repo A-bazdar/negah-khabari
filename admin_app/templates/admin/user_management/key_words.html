@@ -6,38 +6,6 @@
 <link rel="stylesheet" type="text/css" href="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
 {% end block other_css %}
 
-{% block user_management %}
-<li class="active">
-    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت کاربر<span class="fa arrow"></span></a>
-    <ul class="nav nav-second-level">
-        <li>
-            <a href="/admin/user_management/general_info">اطلاعات عمومی</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/search_patterns">جستجو و الگوها</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/access_to_source">دسترسی به منابع خبری</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/bolton_management">مدیریت بولتن</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/charts_content">نمودار و تحلیل محتوا</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/subset_management">مدیریت زیر مجموعه</a>
-        </li>
-        <li>
-            <a class="active" href="/admin/user_management/key_words">کلمات کلیدی</a>
-        </li>
-        <li>
-            <a href="/admin/user_management/user_group">مدیریت گروه های کاربر</a>
-        </li>
-    </ul>
-</li>
-{% end block user_management %}
-
 {% block container %}
     <div id="page-wrapper">
         <div class="row">
@@ -52,20 +20,22 @@
                             <div class="box_body">
                                 <div class="row">
                                     <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
-                                        <div class="keyword_form display-none close">
-                                            <form>
+                                        <div class="keyword_form">
+                                            <form class="form_keywords">
+                                                <input type="hidden" value="add_keyword_setting" name="action">
+                                                {% module xsrf_form_html() %}
                                                 <div class="row">
                                                     <div class="col-md-3 col-sm-3">
                                                         <span class="form_label">اضافه توسط کاربر</span>
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
-                                                        <input type="checkbox">
+                                                        <input type="checkbox" {% if keyword_setting['add_by_user'] %}checked{% end %} value="true" name="add_by_user">
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
                                                         <span class="form_label">ویرایش توسط کاربر</span>
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
-                                                        <input type="checkbox">
+                                                        <input type="checkbox" {% if keyword_setting['edit_by_user'] %}checked{% end %} value="true" name="edit_by_user">
                                                     </div>
                                                 </div>
                                                 <div class="row margin-top-10">
@@ -73,56 +43,65 @@
                                                         <span class="form_label">تعداد سرفصل</span>
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" value="{{ keyword_setting['count_topic'] }}" name="count_topic" class="form-control">
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
                                                         <span class="form_label">تعداد کلید واژه</span>
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="row margin-top-10">
-                                                    <div class="col-md-12 col-sm-12">
-                                                        <span class="form_label" style="vertical-align: 17px">سرفصل</span>
-                                                        <hr style="width: 80%; display: inline-block; margin-right: 5px">
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-2 col-sm-2">
-                                                        <span class="form_label">کلید واژه</span>
-                                                    </div>
-                                                    <div class="col-md-2 col-sm-2 padding-right-0">
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                    <div class="col-md-2 col-sm-2">
-                                                        <span class="form_label">مترادف</span>
-                                                    </div>
-                                                    <div class="col-md-2 col-sm-2 padding-right-0">
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                    <div class="col-md-2 col-sm-2">
-                                                        <span class="form_label">نامترادف</span>
-                                                    </div>
-                                                    <div class="col-md-2 col-sm-2 padding-right-0">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" value="{{ keyword_setting['count_keyword'] }}" name="count_keyword" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="row margin-top-10">
                                                     <div class="col-md-2 col-sm-2 pull-left text-left">
-                                                        <button class="btn R_butt_green">افزودن</button>
+                                                        <button class="btn R_butt_green add-keyword-btn">افزودن</button>
                                                     </div>
                                                 </div>
                                             </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row margin-top-10">
-                                    <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
-                                        <div class="row">
-                                            <div class="col-md-3 col-sm-3 text-left pull-left">
-                                                <button class="btn add_keyword R_butt_gray">افزودن کلید واژه</button>
-                                            </div>
+                                            <form class="form_keywords">
+                                                {% module xsrf_form_html() %}
+                                                <input type="hidden" value="add_keyword" name="action">
+                                                <div class="row margin-top-10">
+                                                    <div class="col-md-4 col-sm-4">
+                                                        <span class="form_label" style="vertical-align: 17px">سرفصل</span>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4">
+                                                        <input type="text" name="topic" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div id="keywords">
+                                                    <div class="row">
+                                                        <div class="col-md-11">
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <span class="form_label">کلید واژه</span>
+                                                            </div>
+                                                            <div class="col-md-2 col-sm-2 padding-right-0">
+                                                                <input name="keyword" type="text" class="form-control">
+                                                            </div>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <span class="form_label">مترادف</span>
+                                                            </div>
+                                                            <div class="col-md-2 col-sm-2 padding-right-0">
+                                                                <input name="synonyms" type="text" class="form-control">
+                                                            </div>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <span class="form_label">نامترادف</span>
+                                                            </div>
+                                                            <div class="col-md-2 col-sm-2 padding-right-0">
+                                                                <input name="no_synonyms" type="text" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="R_butt_blue add-keyword"><i class="fa fa-plus"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row margin-top-10">
+                                                    <div class="col-md-2 col-sm-2 pull-left text-left">
+                                                        <button class="btn R_butt_green add-keyword-btn">افزودن</button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -131,17 +110,17 @@
                                         <table class="table table-bordered source_news_table">
                                             <tr>
                                                 <td>نام سرفصل</td>
-                                                <td>کلید واژه</td>
                                                 <td>امکانات</td>
                                             </tr>
-                                            <tr>
-                                                <td>اصولگرا</td>
-                                                <td>کلید واژه1</td>
-                                                <td>
-                                                    <i class="fa fa-pencil"></i>
-                                                    <i class="fa fa-trash-o"></i>
-                                                </td>
-                                            </tr>
+                                            {% for _key in keywords %}
+                                                <tr>
+                                                    <td>{{ _key['topic'] }}</td>
+                                                    <td>
+                                                        <i class="fa fa-pencil"></i>
+                                                        <i class="fa fa-trash-o"></i>
+                                                    </td>
+                                                </tr>
+                                            {% end %}
                                         </table>
                                     </div>
                                 </div>
@@ -167,6 +146,37 @@
 <script src="{{ static_url('plugins/Lc_Switch/lc_switch.min.js') }}"></script>
 <script type="text/javascript" src="/static/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
 <script>
+    var key_word = '<div class="row key_row">\
+                        <div class="col-md-11">\
+                            <div class="col-md-2 col-sm-2">\
+                                <span class="form_label">کلید واژه</span>\
+                            </div>\
+                            <div class="col-md-2 col-sm-2 padding-right-0">\
+                                <input name="keyword" type="text" class="form-control">\
+                            </div>\
+                            <div class="col-md-2 col-sm-2">\
+                                <span class="form_label">مترادف</span>\
+                            </div>\
+                            <div class="col-md-2 col-sm-2 padding-right-0">\
+                                <input name="synonyms" type="text" class="form-control">\
+                            </div>\
+                            <div class="col-md-2 col-sm-2">\
+                                <span class="form_label">نامترادف</span>\
+                            </div>\
+                            <div class="col-md-2 col-sm-2 padding-right-0">\
+                                <input name="no_synonyms" type="text" class="form-control">\
+                            </div>\
+                        </div>\
+                        <div class="col-md-1">\
+                            <div class="R_butt_red remove-keyword"><i class="fa fa-times"></i></div>\
+                        </div>\
+                    </div>';
+    $(document).on('click', '.add-keyword', function(){
+        $('#keywords').append(key_word);
+    });
+    $(document).on('click', '.remove-keyword', function(e){
+        $(e.target).closest('.key_row').remove();
+    });
 $(".datePicker").val("").pDatepicker();
 $('input[type=checkbox]').lc_switch();
     $('.add_keyword').click(function(){
@@ -181,6 +191,49 @@ $('input[type=checkbox]').lc_switch();
             $('.keyword_form').removeClass('open');
             $('.keyword_form').addClass('close');
             $(this).html('افزودن ');
+        }
+    });
+
+    var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+    var __a = true;
+    $('form.form_keywords').submit(function(e){
+        if(__a){
+            __a = false;
+            e.preventDefault();
+            var btn = $('.add-keyword-btn') ;
+            btn.html(loader);
+            var postData = $(this).serializeArray();
+            jQuery.ajax(
+                {
+                    url: '',
+                    type: "post",
+                    data: postData,
+                    success: function (response) {
+                        var status = response['status'];
+                        var value = response['value'];
+                        var messages = response['messages'];
+                        if (!status) {
+                            var error = '';
+                            for(var i = 0; i < messages.length ; i++){
+                                error += messages[i] + '<br>';
+                            }
+                            if(error == '')
+                                error = 'error';
+                            Alert.render(error, function(){
+                                btn.html('افزودن');
+                                __a = true;
+                            });
+                        }else{
+                            location.href = '';
+                        }
+                    },
+                    error: function () {
+                        Alert.render('error', function(){
+                            btn.html('افزودن');
+                            __a = true;
+                        });
+                    }
+                });
         }
     });
 </script>
