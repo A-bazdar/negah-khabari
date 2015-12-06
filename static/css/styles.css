@@ -168,6 +168,23 @@ h1, h2, h3, h4, h5, h6{
     color: white;
 }
 
+.agency_btn {
+    width: 5.7em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border: 0;
+    box-shadow: -2px 3px 2px #aaa;
+    text-align: center;
+    color: #000;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+.agency_btn:hover {
+    color: white;
+}
+
 .green_btn_light{
     background: #CDFFC8;
     text-align: center;
@@ -796,6 +813,16 @@ div#nav_search{position: relative}
         position: relative !important;
     }
 
+    .second-header {
+        position: relative !important;
+        top: 0 !important;
+    }
+
+    .main {
+        top: 0 !important;
+        position: relative !important;
+    }
+
 
     .icon_menu_info li{
         display: inline-block;
@@ -882,8 +909,12 @@ div#nav_search{position: relative}
 }
 
 @media (max-width: 767px) {
-    .header{
+    .header {
         position: relative !important;
+    }
+    .second-header {
+        position: relative !important;
+        top: 0;
     }
 
     .icon_menu_info li{
@@ -1570,4 +1601,50 @@ i.close {
 a.change-page {
     text-decoration: none;
     color: #6d7488;
+}
+
+.refinement_news_container {
+    position: absolute;
+
+}
+
+.form-check-span {
+    vertical-align: 3px;
+    margin-right: 3px;
+}
+
+.negah-btn {
+    background: -webkit-linear-gradient(#ffffff 55%, #9aa9ca) !important; /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#ffffff 55%, #9aa9ca) !important;; /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#ffffff 55%, #9aa9ca) !important; /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#ffffff 55%, #9aa9ca) !important; /* Standard syntax */
+    padding: 2px 20px;
+    border: 1px solid #afb7c7;
+    color: #515151;
+    transition: all 0.5s;
+    border-radius: 4px;
+}
+
+.negah-btn:hover {
+    background: -webkit-linear-gradient(#9aa9ca 20%, #ffffff) !important; /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#9aa9ca 20%, #ffffff) !important;; /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#9aa9ca 20%, #ffffff) !important; /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#9aa9ca 20%, #ffffff) !important; /* Standard syntax */
+    padding: 2px 20px;
+    border: 1px solid #afb7c7;
+    color: #505050;
+    border-radius: 4px;
+}
+
+.custom-modal-header {
+    background: -webkit-linear-gradient(#4E68A1, #415E9A) !important; /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#4E68A1, #415E9A) !important;; /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#4E68A1, #415E9A) !important; /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#4E68A1, #415E9A) !important; /* Standard syntax */
+    color: white;
+}
+
+.custom-modal-header .close {
+    opacity: 1 !important;
+    color: white !important;
 }
