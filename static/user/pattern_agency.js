@@ -58,13 +58,14 @@ $(document).on('submit', '#pattern_agencies_form', function(e){
                         var a = $('input.pattern-agencies[name=pattern-name]');
                         var b = $('input.pattern-agencies[name=action]');
                         if(b.val() == 'edit'){
-                            $('.pattern-agency.name').html(a.val());
+                            $('.pattern-agency.name[data-id=' + value + ']').html(a.val());
                         }else{
                             $('table.table.pattern-agency').append(pattern_agency.replace(/__id__/g, value).replace(/__name__/g, a.val()));
                         }
                         $('input.pattern-agencies[type=checkbox]').lcs_off();
                         b.val('add');
                         $('input.pattern-agencies[name=pattern_id]').val('');
+                        $('table.table.pattern-agency tr.empty').remove();
                         a.val('');
                     });
                 }
