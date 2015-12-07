@@ -192,6 +192,7 @@ class UserModel(BaseModel):
                     star=r['star'] if 'star' in r.keys() else [],
                     pattern_agency=r['pattern_agency'] if 'pattern_agency' in r.keys() else [],
                     pattern_search=r['pattern_search'] if 'pattern_search' in r.keys() else [],
+                    agency_direction=r['agency_direction'] if 'agency_direction' in r.keys() else [],
                     last_activity=r['last_activity']
 
                 )
