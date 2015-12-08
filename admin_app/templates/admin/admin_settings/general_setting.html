@@ -256,6 +256,59 @@
                                         <hr>
                                         <div class="row margin-top-10">
                                             <div class="col-md-2 col-sm-2">
+                                                <span class="form_label">حذف عکس های اخبار</span>
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                <input type="text" {% if general %}value="{{ general['number_day_delete_picture_news'] }}"{% end %} class="form-control" name="number-day-delete-picture-news">
+                                            </div>
+                                            <div class="col-md-4 col-sm-4">
+                                                <span class="form_label">روز قبل</span>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-2 col-sm-2">
+                                                <span class="form_label">حذف فید های تیتر 1</span>
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                <input type="text" {% if general %}value="{{ general['number_day_delete_titr1'] }}"{% end %} class="form-control" name="number-day-delete-titr1">
+                                            </div>
+                                            <div class="col-md-4 col-sm-4">
+                                                <span class="form_label">روز قبل</span>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-2 col-sm-2">
+                                                <span class="form_label">حذف فید های اخبار ویژه</span>
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                <input type="text" {% if general %}value="{{ general['number_day_delete_special'] }}"{% end %} class="form-control" name="number-day-delete-special">
+                                            </div>
+                                            <div class="col-md-4 col-sm-4">
+                                                <span class="form_label">روز قبل</span>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-2 col-sm-2">
+                                                <span class="form_label">حذف فید های دارای كلمات كلیدی</span>
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                <input type="text" {% if general %}value="{{ general['number_day_delete_with_tag'] }}"{% end %} class="form-control" name="number-day-delete-with-tag">
+                                            </div>
+                                            <div class="col-md-4 col-sm-4">
+                                                <span class="form_label">روز قبل</span>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-2 col-sm-2">
+                                                <span class="form_label">تعداد كلمات مشابه</span>
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                <input type="text" {% if general %}value="{{ general['number_similar_words'] }}"{% end %} class="form-control" name="number-similar-words">
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row margin-top-10">
+                                            <div class="col-md-2 col-sm-2">
                                                 <span class="form_label">انتخاب لوگوی سایت</span>
                                             </div>
                                             <div class="col-md-9 col-sm-9">
@@ -402,8 +455,6 @@ $("#custom").spectrum({
     }
 });
 var color = $("#custom").spectrum('get').toHexString();
-    alert(color);
-
     var _time_steps = {
         'min': 1,
         'hour': 1

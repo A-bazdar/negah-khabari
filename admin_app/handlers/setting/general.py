@@ -19,33 +19,46 @@ class AdminGeneralSettingsHandler(BaseHandler):
         try:
             d = dict()
             _time = dict()
+            a = dict()
             action = self.get_argument('action', '')
             if action == 'general':
                 self.check_sent_value("color", d, "color", u"رنگ پیش زمینه را وارد کنید.")
                 self.check_sent_value("tags", d, "tags", u"کلمات کلیدی را وارد کنید.")
-                self.check_sent_value("max_char_summary", d, "max_char_summary", u"حداکثر تعداد حروف در خلاصه خبر را وارد کنید.")
-                self.check_sent_value("bolton-size-small-image-width", d, "bolton_small_image_width", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("bolton-size-small-image-height", d, "bolton_small_image_height", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("bolton-size-medium-image-width", d, "bolton_medium_image_width", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("bolton-size-medium-image-height", d, "bolton_medium_image_height", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("bolton-size-big-image-width", d, "bolton_big_image_width", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("bolton-size-big-image-height", d, "bolton_big_image_height", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("admin-size-small-image-width", d, "admin_small_image_width", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("admin-size-small-image-height", d, "admin_small_image_height", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("admin-size-medium-image-width", d, "admin_medium_image_width", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("admin-size-medium-image-height", d, "admin_medium_image_height", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("admin-size-big-image-width", d, "admin_big_image_width", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("admin-size-big-image-height", d, "admin_big_image_height", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("user-size-small-image-width", d, "user_small_image_width", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("user-size-small-image-height", d, "user_small_image_height", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("user-size-medium-image-width", d, "user_medium_image_width", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("user-size-medium-image-height", d, "user_medium_image_height", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("user-size-big-image-width", d, "user_big_image_width", u"سایز عکس را وارد کنید.")
-                self.check_sent_value("user-size-big-image-height", d, "user_big_image_height", u"سایز عکس را وارد کنید.")
-                d['tags'] = d['tags'].split(',')
+                try:
+                    a = dict(
+                        max_char_summary=int(self.get_argument("max_char_summary", 0)),
+                        bolton_small_image_width=int(self.get_argument("bolton-size-small-image-width", 0)),
+                        bolton_small_image_height=int(self.get_argument("bolton-size-small-image-height", 0)),
+                        bolton_medium_image_width=int(self.get_argument("bolton-size-medium-image-width", 0)),
+                        bolton_medium_image_height=int(self.get_argument("bolton-size-medium-image-height", 0)),
+                        bolton_big_image_width=int(self.get_argument("bolton-size-big-image-width", 0)),
+                        bolton_big_image_height=int(self.get_argument("bolton-size-big-image-height", 0)),
+                        admin_small_image_width=int(self.get_argument("admin-size-small-image-width", 0)),
+                        admin_small_image_height=int(self.get_argument("admin-size-small-image-height", 0)),
+                        admin_medium_image_width=int(self.get_argument("admin-size-medium-image-width", 0)),
+                        admin_medium_image_height=int(self.get_argument("admin-size-medium-image-height", 0)),
+                        admin_big_image_width=int(self.get_argument("admin-size-big-image-width", 0)),
+                        admin_big_image_height=int(self.get_argument("admin-size-big-image-height", 0)),
+                        user_small_image_width=int(self.get_argument("user-size-small-image-width", 0)),
+                        user_small_image_height=int(self.get_argument("user-size-small-image-height", 0)),
+                        user_medium_image_width=int(self.get_argument("user-size-medium-image-width", 0)),
+                        user_medium_image_height=int(self.get_argument("user-size-medium-image-height", 0)),
+                        user_big_image_width=int(self.get_argument("user-size-big-image-width", 0)),
+                        user_big_image_height=int(self.get_argument("user-size-big-image-height", 0)),
+                        number_similar_words=int(self.get_argument("number-similar-words", 0)),
+                        number_day_delete_with_tag=int(self.get_argument("number-day-delete-with-tag", 0)),
+                        number_day_delete_special=int(self.get_argument("number-day-delete-special", 0)),
+                        number_day_delete_titr1=int(self.get_argument("number-day-delete-titr1", 0)),
+                        number_day_delete_picture_news=int(self.get_argument("number-day-delete-picture-news", 0))
+                    )
+                except:
+                    self.errors = [u"در فیلد های ارسالی خطا وجود دارد."]
                 if not len(self.errors):
-                    print UploadPic(handler=self, name='logo').upload_logo()
-                    SettingModel(general=d).save_general()
+                    d['tags'] = d['tags'].split(',')
+                    z = a.copy()
+                    z.update(d)
+                    UploadPic(handler=self, name='logo').upload_logo()
+                    SettingModel(general=z).save_general()
                     self.status = True
                 else:
                     self.messages = self.errors
