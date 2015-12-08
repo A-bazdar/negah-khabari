@@ -658,11 +658,14 @@ class NewsModel:
                 }
             })
 
-        if _search['agency'] != 'all':
+        if len(_search['agency']):
             body.append({
-                'term': {'agency': _search['agency']}
+                "query": {
+                    "terms": {
+                        "agency": _search['agency']
+                    }
+                }
             })
-
         return body
 
     def get_query_filter(self, _filter):

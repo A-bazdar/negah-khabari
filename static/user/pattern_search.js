@@ -10,7 +10,7 @@ var pattern_search = '<tr class="pattern-search-row">\
                     </td>\
                 </tr>';
 
-$("form#pattern_search_form .select[name=period]").select2({
+$("form#pattern_search_form .pattern-search[name=period]").select2({
     placeholder: "انتخاب کنید"
 }).on("change", function () {
     if ($(this).select2("val") == 'period') {
@@ -236,6 +236,8 @@ function empty_modal_pattern_search(){
     $('input.pattern-search[type=checkbox]').prop('checked', false);
     $('input.pattern-search[name=pattern_id]').val('');
     $('select.pattern-search[name=period]').select2("val", "hour");
+    $('input.pattern-search[name=start-date]').val('');
+    $('input.pattern-search[name=end-date]').val('');
     $('form#pattern_search_form .period-date').fadeOut();
     $('table.table.pattern-search tr.empty').remove();
     $('input.pattern-search.select2_keywords').select2("data", [], true);
