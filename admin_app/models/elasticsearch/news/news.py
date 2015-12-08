@@ -22,7 +22,8 @@ class NewsModel:
     index = 'negah_khabari'
     doc_type = 'news'
 
-    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None, subject=None, body=None, date=None, content=None):
+    def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
+                 subject=None, body=None, date=None, content=None, full_current_user=None):
         self.id = _id
         self.title = title
         self.agency = agency
@@ -34,6 +35,7 @@ class NewsModel:
         self.thumbnail = thumbnail
         self.link = link
         self.content = content
+        self.full_current_user = full_current_user
         self.max_char_summary = SettingModel().get_max_char_summary()
         self.result = {'value': {}, 'status': False}
         self.value = []
@@ -149,7 +151,8 @@ class NewsModel:
             e = self.is_exist()
             if e is False:
                 news = self.get_news_id()
-                self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=news).insert()
+                self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body,
+                                                          _id=news).insert()
                 self.insert_mongo(body)
                 self.result['status'] = True
                 self.result['message'] = 'INSERT'
@@ -442,7 +445,8 @@ class NewsModel:
             return self.result
 
         except:
-            Debug.get_exception(sub_system='statistic_engine_feed', severity='critical_error', tags='get_agency_news_by_time')
+            Debug.get_exception(sub_system='statistic_engine_feed', severity='critical_error',
+                                tags='get_agency_news_by_time')
             return self.result
 
     def get_all(self, _page=0, _size=20, _sort="date"):
@@ -654,14 +658,120 @@ class NewsModel:
                 }
             })
 
-        if _search['agency'] != 'all':
+        if len(_search['agency']):
             body.append({
-                'term': {'agency': _search['agency']}
+                "query": {
+                    "terms": {
+                        "agency": _search['agency']
+                    }
+                }
             })
-
         return body
 
-    def get_all_by_subject_search(self, _search=None, _subjects=None, _page=0, _size=30):
+    def get_query_filter(self, _filter):
+        query_filter = False
+        if _filter == "all":
+            return False
+        if _filter == 'read':
+            query_filter = {
+                "query": {
+                    "terms": {
+                        "_id": self.full_current_user['read']
+                    }
+                }
+            }
+        elif _filter == 'unread':
+            query_filter = {
+                "not": {
+                    "filter": {
+                        "query": {
+                            "terms": {
+                                "_id": self.full_current_user['read']
+                            }
+                        }
+                    }
+                }
+            }
+        elif _filter == 'star':
+            query_filter = {
+                "query": {
+                    "terms": {
+                        "_id": self.full_current_user['star']
+                    }
+                }
+            }
+        elif _filter == 'without_star':
+            query_filter = {
+                "not": {
+                    "filter": {
+                        "query": {
+                            "terms": {
+                                "_id": self.full_current_user['star']
+                            }
+                        }
+                    }
+                }
+            }
+        elif _filter == 'Important1' or _filter == 'Important2' or _filter == 'Important3':
+            important = self.full_current_user['important']
+            _news = []
+            for i in important:
+                if i['important'] == _filter:
+                    _news.append(i['news'])
+            query_filter = {
+                "query": {
+                    "terms": {
+                        "_id": _news
+                    }
+                }
+            }
+        elif _filter == 'without_important':
+            important = self.full_current_user['important']
+            _news = []
+            for i in important:
+                _news.append(i['news'])
+            query_filter = {
+                "not": {
+                    "filter": {
+                        "query": {
+                            "terms": {
+                                "_id": _news
+                            }
+                        }
+                    }
+                }
+            }
+        elif _filter == 'note':
+            note = self.full_current_user['note']
+            _news = []
+            for i in note:
+                _news.append(i['news'])
+            query_filter = {
+                "query": {
+                    "terms": {
+                        "_id": _news
+                    }
+                }
+            }
+        elif _filter == 'without_note':
+            note = self.full_current_user['note']
+            _news = []
+            for i in note:
+                _news.append(i['news'])
+            query_filter = {
+                "not": {
+                    "filter": {
+                        "query": {
+                            "terms": {
+                                "_id": _news
+                            }
+                        }
+                    }
+                }
+            }
+        return query_filter
+
+    def get_all_by_subject_search(self, _search=None, _subjects=None, _filter=None, _page=0, _size=30):
         if _page >= 1:
             _page -= 1
         if not _subjects:
@@ -685,8 +795,11 @@ class NewsModel:
             }
 
             query_search = self.get_query_search(_search)
+            query_filter = self.get_query_filter(_filter)
 
             body['filter']['and']['filters'] += query_search
+            if query_filter is not False:
+                body['filter']['and']['filters'] += [query_filter]
 
             if len(_subjects):
                 body['filter']['and']['filters'].append({
@@ -837,7 +950,8 @@ class NewsModel:
                 }
             }
 
-            return ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=self.id).update()
+            return ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body,
+                                      _id=self.id).update()
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
@@ -969,25 +1083,25 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-# news = NewsModel().get_all()['value']
-# for i in news:
-#     NewsModel(link=i['link'], title=i['title'], ro_title=i['ro_title'], summary=i['summary'], body=i['body'],
-#               thumbnail=i['thumbnail'], agency=str(i['agency']['id']), date=i['date']).insert()
+            # news = NewsModel().get_all()['value']
+            # for i in news:
+            #     NewsModel(link=i['link'], title=i['title'], ro_title=i['ro_title'], summary=i['summary'], body=i['body'],
+            #               thumbnail=i['thumbnail'], agency=str(i['agency']['id']), date=i['date']).insert()
 
-# news = NewsModel().get_all_all()['value']
-# for i in news:
-#     print NewsModel(_id=i['id']).update_subject_news()
+            # news = NewsModel().get_all_all()['value']
+            # for i in news:
+            #     print NewsModel(_id=i['id']).update_subject_news()
 
-# import datetime
-# import time
-# __date = datetime.datetime.strptime("2015/11/03 01:00:00", "%Y/%m/%d %H:%M:%S")
-# __time_stamp = int(time.mktime(__date.timetuple()))
-# a = BriefsModel().get_all()['value']
-# for i in a:
-#     x = i['date'].split('T')
-#     read_date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
-#     if int(time.mktime(read_date.timetuple())) >= __time_stamp:
-#         BriefsModel(_id=i['id']).delete()
-    # a = '2015-10-30T19:10:32.358107'
-    # time_stamp = int(time.mktime(i['read_date'].timetuple()))
-    # NewsModel(i['id']).update_read_date(time_stamp)
+            # import datetime
+            # import time
+            # __date = datetime.datetime.strptime("2015/11/03 01:00:00", "%Y/%m/%d %H:%M:%S")
+            # __time_stamp = int(time.mktime(__date.timetuple()))
+            # a = BriefsModel().get_all()['value']
+            # for i in a:
+            #     x = i['date'].split('T')
+            #     read_date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+            #     if int(time.mktime(read_date.timetuple())) >= __time_stamp:
+            #         BriefsModel(_id=i['id']).delete()
+            # a = '2015-10-30T19:10:32.358107'
+            # time_stamp = int(time.mktime(i['read_date'].timetuple()))
+            # NewsModel(i['id']).update_read_date(time_stamp)
