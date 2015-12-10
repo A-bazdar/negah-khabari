@@ -23,7 +23,7 @@ class NewsModel:
     doc_type = 'news'
 
     def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
-                 subject=None, body=None, date=None, content=None, full_current_user=None):
+                 subject=None, body=None, date=None, content=None, full_current_user=None, images=None):
         self.id = _id
         self.title = title
         self.agency = agency
@@ -35,6 +35,7 @@ class NewsModel:
         self.thumbnail = thumbnail
         self.link = link
         self.content = content
+        self.images = images
         self.full_current_user = full_current_user
         self.max_char_summary = SettingModel().get_max_char_summary()
         self.result = {'value': {}, 'status': False}
@@ -145,6 +146,7 @@ class NewsModel:
                 'subject': self.subject,
                 'date': self.date,
                 'content': self.content,
+                'images': self.images,
                 'read_date': d,
                 'read_timestamp': int(time.mktime(d.timetuple())),
             }

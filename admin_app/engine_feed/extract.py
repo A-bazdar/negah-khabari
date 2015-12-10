@@ -99,6 +99,21 @@ class Extract:
             body = None
         return body
 
+    def get_images(self, __soap):
+        try:
+            if self.body is not None:
+                images = __soap.select_one(self.body).find_all('img')
+                img = []
+                for i in images:
+                    __img = i['src'].encode('utf-8').strip()
+                    if 'http' not in __img and 'www' not in __img:
+                        __img = self.base_link.encode('utf-8') + __img
+                        img.append(__img)
+        except:
+            Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=self.error_link.encode('utf-8'))
+            img = []
+        return img
+
     def get_date(self, __soap):
         try:
             news_date = __soap.select_one(self.date).text.replace(u'ي', u'ی').strip()
@@ -131,6 +146,7 @@ class Extract:
         summary = self.get_summary(doc)
         thumbnail = self.get_thumbnail(doc)
         body = self.get_body(doc)
+        pictures = self.get_images(doc)
         date = self.get_date(doc)
 
         if summary is None or summary == '':
@@ -143,7 +159,7 @@ class Extract:
             ro_title = self.brief['ro_title']
 
         if thumbnail is None or thumbnail == '':
-            thumbnail = self.brief['thumbnail']
+            pictures.insert(0, thumbnail)
 
         return dict(
             link=self.brief['link'],
@@ -153,6 +169,7 @@ class Extract:
             thumbnail=thumbnail,
             body=body,
             date=date,
+            pictures=pictures,
             agency=self.brief['agency']['id'],
             subject=self.brief['subject']['id'],
             content=self.brief['content']['id']

@@ -27,7 +27,7 @@ def save_news(**obj):
         if obj['title'] is not None and obj['body'] is not None:
             return NewsModel(link=obj['link'], title=obj['title'], body=obj['body'], ro_title=obj['ro_title'],
                              summary=obj['summary'], thumbnail=obj['thumbnail'], agency=str(obj['agency']),
-                             subject=str(obj['subject']), content=str(obj['content']), date=obj['date'])\
+                             subject=str(obj['subject']), content=str(obj['content']), date=obj['date'], images=obj['images'])\
                 .insert()
         else:
             FailedNewsModel(agency=obj['agency'], subject=obj['subject'], content=obj['content'], title=obj['title'],
