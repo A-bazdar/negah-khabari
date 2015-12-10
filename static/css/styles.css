@@ -381,6 +381,33 @@ a.R_butt_light_gray:hover{
     background: #FBFBFD;
     border-top: 2px solid #FD0000;
 }
+.keyword_tabs_container li a {
+    margin-left: 0 !important;
+    border-left: 1px solid #cbcbcb !important;
+    border-right: 1px solid #cbcbcb !important;
+    border-top: 1px solid #cbcbcb !important;
+    border-bottom: 0 !important;
+    border-radius: 0 !important;
+    cursor: pointer !important;
+    font-size: 13pt;
+    color: #000000;
+}
+.keyword_tabs_container li.active a {
+    border-top: 1px solid #ff0000 !important;
+}
+.keyword_tabs_container li {
+    margin-left: 0 !important;
+    border: 0;
+    border-radius: 0 !important;
+    cursor: pointer !important;
+    font-size: 13pt;
+    color: #000000;
+}
+.nav-tabs li.active a{
+    background: #FBFBFD;
+    border-top: 2px solid #FD0000;
+    color: #000000;
+}
 
 .user_info_nav{
     background: #EBEEF5;
@@ -1667,4 +1694,43 @@ a.change-page {
     right: 15px;
     background: #FBFBFD;
     padding: 0 10px;
+}
+
+.keywords_box {
+    box-shadow: 0 0 2px #aaa;
+    padding: 10px;
+}
+
+.keyword_tabs {
+    padding: 5px !important;
+}
+
+.reg_blue_btn {
+    border-radius: 5px;
+    border: 1px solid #707070 !important;
+    background: #4691B7;
+    padding: 3px 10px !important;
+    font-size: 10pt !important;
+    color: #ffffff;
+    vertical-align: middle;
+    margin: 1px !important;
+    /*display: block;*/
+    cursor: pointer;
+    text-decoration: none;
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    -ms-transition: background 0.2s;
+    -o-transition: background 0.2s;
+    transition: background 0.2s;
+}
+
+.reg_blue_btn:hover {
+    background: #0079a6;
+    color: #ffffff;
+    text-decoration: none;
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    -ms-transition: background 0.2s;
+    -o-transition: background 0.2s;
+    transition: background 0.2s;
 }
