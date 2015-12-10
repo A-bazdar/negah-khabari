@@ -858,30 +858,30 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    # def get_all_all(self, _page, _size=1000):
-    #     try:
-    #         body = {
-    #             "from": _page * _size, "size": _size,
-    #             "query": {
-    #                 "match_all": {}
-    #             },
-    #             "sort": {"date": {"order": "desc"}}
-    #         }
-    #
-    #         r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
-    #         for b in r['hits']['hits']:
-    #             try:
-    #                 self.value.append({'id': b['_id'], 'agency': b['_source']['agency'], 'title': b['_source']['title']})
-    #             except:
-    #                 print b['_id'], 'ERROR'
-    #         self.result['value'] = self.value
-    #         self.result['status'] = True
-    #         return self.result
-    #
-    #     except:
-    #         Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-    #                             data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
-    #         return self.result
+    def get_all_all(self, _page, _size=100):
+        try:
+            body = {
+                "from": _page * _size, "size": _size,
+                "query": {
+                    "match_all": {}
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            for b in r['hits']['hits']:
+                try:
+                    self.value.append(b['_id'])
+                except:
+                    print b['_id'], 'ERROR'
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
 
     def get_all_similar(self):
         try:
