@@ -771,7 +771,23 @@ class NewsModel:
             }
         return query_filter
 
-    def get_all_by_subject_search(self, _search=None, _subjects=None, _filter=None, _page=0, _size=30):
+    def get_query_sort(self, _sort):
+        query_sort = False
+        if _sort == "unread":
+            query_sort = {
+                "not": {
+                    "filter": {
+                        "query": {
+                            "terms": {
+                                "_id": self.full_current_user['read']
+                            }
+                        }
+                    }
+                }
+            }
+        return query_sort
+
+    def get_all_by_subject_search(self, _search=None, _subjects=None, _filter=None, _page=0, _size=30, _sort="date"):
         if _page >= 1:
             _page -= 1
         if not _subjects:
@@ -794,6 +810,7 @@ class NewsModel:
                 "sort": {"date": {"order": "desc"}}
             }
 
+            # query_sort = self.get_query_sort(_sort)
             query_search = self.get_query_search(_search)
             query_filter = self.get_query_filter(_filter)
 
