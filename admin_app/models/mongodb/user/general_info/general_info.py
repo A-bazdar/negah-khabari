@@ -14,7 +14,7 @@ class UserModel(BaseModel):
     def __init__(self, _id=None, name=None, family=None, username=None, organization=None, password=None, phone=None,
                  mobile=None, address=None, fax=None, email=None, status=None, welcome=None, register_start_date=None,
                  register_end_date=None, archive_start_date=None, archive_end_date=None, group=None, pic=None,
-                 role=None, last_activity=None, news=None, note=None, important=None):
+                 role=None, last_activity=None, news=None, note=None, important=None, keyword=None, font=None):
         BaseModel.__init__(self)
         self.id = _id
         self.name = name
@@ -40,6 +40,8 @@ class UserModel(BaseModel):
         self.news = news
         self.note = note
         self.important = important
+        self.keyword = keyword
+        self.font = font
         self.result = {'value': {}, 'status': False}
 
     def save(self):
@@ -193,6 +195,8 @@ class UserModel(BaseModel):
                     pattern_agency=r['pattern_agency'] if 'pattern_agency' in r.keys() else [],
                     pattern_search=r['pattern_search'] if 'pattern_search' in r.keys() else [],
                     agency_direction=r['agency_direction'] if 'agency_direction' in r.keys() else [],
+                    keyword=r['keyword'] if 'keyword' in r.keys() else [],
+                    font=r['font'] if 'font' in r.keys() else {},
                     last_activity=r['last_activity']
 
                 )
@@ -819,4 +823,63 @@ class UserModel(BaseModel):
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > add_agency_direction', data='collection > user')
+            return self.result
+
+    def is_exist_keyword(self):
+        try:
+            __body = {'_id': self.id, 'keyword._id': self.keyword}
+            if MongodbModel(collection='user', body=__body).count():
+                return True
+            return False
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return False
+
+    def update_keyword(self):
+        try:
+            __body = {"$set": {
+                'keyword.$.topic': self.keyword['topic'],
+                'keyword.$.keyword': self.keyword['keyword']
+            }}
+
+            __condition = {'_id': self.id, 'keyword._id': self.keyword['_id']}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = self.keyword['_id']
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def add_keyword(self):
+        try:
+            __body = {"$push": {
+                "keyword": self.keyword
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = self.keyword['_id']
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def update_font(self, _type):
+        try:
+            __body = {"$set": {
+                'font.' + _type: self.font,
+            }}
+
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = self.font
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result

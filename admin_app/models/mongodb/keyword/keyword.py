@@ -33,7 +33,7 @@ class KeyWordModel(BaseModel):
             r = MongodbModel(collection='keyword', body={}).get_all()
             if r:
                 l = [dict(
-                     id=str(i['_id']),
+                     _id=i['_id'],
                      keyword=i['keyword'],
                      topic=i['topic']) for i in r]
                 self.result['value'] = l

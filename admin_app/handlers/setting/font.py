@@ -40,7 +40,7 @@ class AdminFontSettingsHandler(BaseHandler):
     def post(self, *args, **kwargs):
         action = self.get_argument('action', '')
         if action == "menu_font":
-            _font = self.get_argument('menu-font', 'yekan')
+            _font = self.get_argument('menu-font', 'Yekan')
             _size = self.get_argument('menu-size', '12')
             if _font != "" and _size != "":
                 SettingModel(font=_font, size=_size).save_menu_font()
@@ -48,7 +48,7 @@ class AdminFontSettingsHandler(BaseHandler):
             else:
                 self.messages = ['یکی از فونت ها را انتخاب کنید.']
         if action == "text_font":
-            _font = self.get_argument('text-font', 'yekan')
+            _font = self.get_argument('text-font', 'Yekan')
             _size = self.get_argument('text-size', '12')
             if _font != "" and _size != "":
                 SettingModel(font=_font, size=_size).save_text_font()
@@ -56,7 +56,7 @@ class AdminFontSettingsHandler(BaseHandler):
             else:
                 self.messages = ['یکی از فونت ها و اندازه ها را انتخاب کنید.']
         if action == "content_font":
-            _font = self.get_argument('content-font', 'yekan')
+            _font = self.get_argument('content-font', 'Yekan')
             _size = self.get_argument('content-size', '12')
             if _font != "" and _size != "":
                 SettingModel(font=_font, size=_size).save_content_font()
@@ -64,7 +64,7 @@ class AdminFontSettingsHandler(BaseHandler):
             else:
                 self.messages = ['یکی از فونت ها و اندازه ها را انتخاب کنید.']
         if action == "detail_font":
-            _font = self.get_argument('detail-font', 'yekan')
+            _font = self.get_argument('detail-font', 'Yekan')
             _size = self.get_argument('detail-size', '12')
             if _font != "" and _size != "":
                 SettingModel(font=_font, size=_size).save_detail_font()
@@ -74,15 +74,15 @@ class AdminFontSettingsHandler(BaseHandler):
         if action == "print_font":
             a = dict(
                 title=dict(
-                    font=self.get_argument('print-font-title', 'yekan'),
+                    font=self.get_argument('print-font-title', 'Yekan'),
                     size=self.get_argument('print-size-title', '12')
                 ),
                 summary=dict(
-                    font=self.get_argument('print-font-summary', 'yekan'),
+                    font=self.get_argument('print-font-summary', 'Yekan'),
                     size=self.get_argument('print-size-summary', '12')
                 ),
                 body=dict(
-                    font=self.get_argument('print-font-body', 'yekan'),
+                    font=self.get_argument('print-font-body', 'Yekan'),
                     size=self.get_argument('print-size-body', '12')
                 )
             )

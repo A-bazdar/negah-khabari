@@ -492,7 +492,9 @@ class AdminKeyWordsHandler(BaseHandler):
                     synonyms = self.request.arguments['synonyms']
                     no_synonyms = self.request.arguments['no_synonyms']
                     for i in range(len(keyword)):
-                        keywords.append(dict(keyword=keyword[i], synonyms=synonyms[i].split(','), no_synonyms=no_synonyms[i].split(',')))
+                        keywords.append(
+                            dict(_id=ObjectId(), keyword=keyword[i], synonyms=synonyms[i].split(','),
+                                 no_synonyms=no_synonyms[i].split(',')))
                 except:
                     Debug.get_exception(send=False)
                     self.errors.append('همه موارد را وارد کنید')
