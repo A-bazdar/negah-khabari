@@ -55,10 +55,10 @@ for i in all_news:
     body = {
         "script": "ctx._source.images = __images;ctx._source.video = __video;ctx._source.sound = __sound",
         "params": {
-            "__images": [],
+            "__images": [i['thumbnail']],
             "__video": None,
             "__sound": None
         }
     }
 
-    print ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=i).update()
+    print ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body, _id=i['_id']).update()

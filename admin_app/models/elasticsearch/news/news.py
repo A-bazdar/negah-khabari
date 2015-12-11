@@ -881,7 +881,7 @@ class NewsModel:
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
                 try:
-                    self.value.append(b['_id'])
+                    self.value.append({'_id': b['_id'], 'thumbnail': b['_source']['thumbnail']})
                 except:
                     print b['_id'], 'ERROR'
             self.result['value'] = self.value
