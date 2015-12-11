@@ -23,7 +23,7 @@ class NewsModel:
     doc_type = 'news'
 
     def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
-                 subject=None, body=None, date=None, content=None, full_current_user=None, images=None):
+                 subject=None, body=None, date=None, content=None, full_current_user=None, images=None, video=None, sound=None):
         self.id = _id
         self.title = title
         self.agency = agency
@@ -36,6 +36,8 @@ class NewsModel:
         self.link = link
         self.content = content
         self.images = images
+        self.video = video
+        self.sound = sound
         self.full_current_user = full_current_user
         self.max_char_summary = SettingModel().get_max_char_summary()
         self.result = {'value': {}, 'status': False}
@@ -147,6 +149,8 @@ class NewsModel:
                 'date': self.date,
                 'content': self.content,
                 'images': self.images,
+                'video': self.video,
+                'sound': self.sound,
                 'read_date': d,
                 'read_timestamp': int(time.mktime(d.timetuple())),
             }
@@ -196,6 +200,9 @@ class NewsModel:
                 agency=agency,
                 content=content,
                 subject=subject,
+                images=_source['images'],
+                video=_source['video'],
+                sound=_source['sound'],
                 date=khayyam.JalaliDatetime(_date).strftime('%Y %B %d %H:%M:%S'),
                 read_date=_read_date,
             ))
@@ -221,6 +228,9 @@ class NewsModel:
                 read_date=_source['read_date'],
                 _date=CustomDateTime().get_time_difference(_date),
                 agency_name=agency['name'],
+                images=_source['images'],
+                video=_source['video'],
+                sound=_source['sound'],
                 agency_color=agency['color']
             ))
         except:

@@ -40,21 +40,24 @@ __author__ = 'Morteza'
 # __search()
 
 count_all_news = NewsModel().get_count_all()
+print count_all_news, "count_all_news"
 _size = 100
-_rang = (count_all_news / (_size + 1))
+_rang = (count_all_news / _size) + 1
 all_news = []
 
 for i in range(_rang):
-    all_news += NewsModel().get_all_backup(_page=i, _size=_size)['value']
+    all_news += NewsModel().get_all_all(_page=i, _size=_size)['value']
     print len(all_news), 'news'
 
 print len(all_news)
 
 for i in all_news:
     body = {
-        "script": "ctx._source.images = __images",
+        "script": "ctx._source.images = __images;ctx._source.video = __video;ctx._source.sound = __sound",
         "params": {
-            "__images": []
+            "__images": [],
+            "__video": None,
+            "__sound": None
         }
     }
 

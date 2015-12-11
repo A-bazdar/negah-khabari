@@ -101,9 +101,9 @@ class Extract:
 
     def get_images(self, __soap):
         try:
+            img = []
             if self.body is not None:
                 images = __soap.select_one(self.body).find_all('img')
-                img = []
                 for i in images:
                     __img = i['src'].encode('utf-8').strip()
                     if 'http' not in __img and 'www' not in __img:
@@ -113,6 +113,35 @@ class Extract:
             Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=self.error_link.encode('utf-8'))
             img = []
         return img
+
+    def get_video(self, __soap):
+        try:
+            video = None
+            if self.body is not None:
+                try:
+                    video = __soap.select_one(self.body).find('video')['src'].encode('utf-8').strip()
+                except:
+                    video = __soap.select_one(self.body).find('embed')['src'].encode('utf-8').strip()
+                if 'http' not in video and 'www' not in video:
+                    video = self.base_link.encode('utf-8') + video
+                video = video if not any(substring in video.lower() for substring in ["mp3", "wav", "wma", "ogg"]) else None
+        except:
+            Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=self.error_link.encode('utf-8'))
+            video = None
+        return video
+
+    def get_sound(self, __soap):
+        try:
+            sound = None
+            if self.body is not None:
+                sound = __soap.select_one(self.body).find('embed')['src'].encode('utf-8').strip()
+                if 'http' not in sound and 'www' not in sound:
+                    sound = self.base_link.encode('utf-8') + sound
+                sound = sound if any(substring in sound.lower() for substring in ["mp3", "wav", "wma", "ogg"]) else None
+        except:
+            Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=self.error_link.encode('utf-8'))
+            sound = None
+        return sound
 
     def get_date(self, __soap):
         try:
@@ -147,6 +176,8 @@ class Extract:
         thumbnail = self.get_thumbnail(doc)
         body = self.get_body(doc)
         pictures = self.get_images(doc)
+        video = self.get_video(doc)
+        sound = self.get_sound(doc)
         date = self.get_date(doc)
 
         if summary is None or summary == '':
@@ -169,6 +200,8 @@ class Extract:
             thumbnail=thumbnail,
             body=body,
             date=date,
+            video=video,
+            sound=sound,
             pictures=pictures,
             agency=self.brief['agency']['id'],
             subject=self.brief['subject']['id'],

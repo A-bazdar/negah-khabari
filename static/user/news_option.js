@@ -73,7 +73,10 @@ $(document).on('click', '.option-news.note', function (e) {
 //    }
 //});
 
-
+var html_note = '<div class="row margin-top-10" style="background-color: #BED0E2">\
+                    <div class="col-md-1 col-sm-1 text-right"><i class="fa fa-comment"></i></div>\
+                    <div class="col-md-11 col-sm-11">__note__</div>\
+                </div>';
 $(document).on('click', '.send-comment', function(e){
     var elm = $(e.target);
     var news = elm.attr('data-news');
@@ -98,6 +101,8 @@ $(document).on('click', '.send-comment', function(e){
                     setTimeout(function () {
                         elm.removeClass('fa-check-circle-o colorGreen').addClass('fa-paper-plane-o colorBlue');
                     }, 400);
+                    $('.option-news.note[data-news=' + news + ']').addClass('colorBlue');
+                    $('.body-news-comment[data-news=' + news + ']').html(html_note.replace(/__note__/g, note));
                 }
             }
         });
@@ -175,6 +180,7 @@ $(document).on('click', '.option-news-important-select', function (e) {
                 $('.option-news-important-check[data-news=' + news + ']').fadeOut();
                 if(value == 'add'){
                     $('.option-news-important-check[data-news=' + news + '][data-important= ' + important + ']').fadeIn();
+                    $('.option-news.important[data-news=' + news + ']').addClass('colorBeautyRed');
                 }
             }
         }
@@ -217,13 +223,10 @@ $(document).on('click', '.option-news.read', function (e) {
 
 
 $(document).on('click', '.option-news.show-picture', function (e) {
-    var elm = $(e.target);
-    var has_thumbnail = elm.attr('data-has-thumbnail');
-    var thumbnail = elm.attr('data-thumbnail');
-    if(has_thumbnail == 'true'){
-        $('.option_news_body').html('<img src="' + thumbnail + '" class="img-responsive" style="margin: 0 auto;">');
-        $('#option_news').modal('toggle');
-    }
+    var elm = $("div.option-news.div-images", e.target);
+    var images = elm.html();
+    $('#option_news_images').html(images);
+    $('#option_news').modal('toggle');
 });
 
 
@@ -281,7 +284,7 @@ $(document).on('click', '.option-news-all', function(e){
     var elm = $(e.target);
     var option = elm.attr('data-option');
     var value = elm.attr('data-value');
-    if(option == 'note'){
+    if(option == 'note' && value != "delete"){
         value = $('textarea.send-comment-all').val();
     }
     var postData = [
@@ -324,19 +327,28 @@ $(document).on('click', '.option-news-all', function(e){
                     for(var i = 0; i < r.length; i++){
                         $('.option-news-important-check[data-news=' + r[i] + ']').fadeOut();
                         $('.option-news-important-check[data-news=' + r[i] + '][data-important= ' + value + ']').fadeIn();
+                        $('.option-news.important[data-news=' + r[i] + ']').addClass('colorBeautyRed');
                     }
                 }else{
-                    for(var i = 0; i < r.length; i++)
+                    for(var i = 0; i < r.length; i++){
                         $('.option-news-important-check[data-news=' + r[i] + ']').fadeOut();
+                        $('.option-news.important[data-news=' + r[i] + ']').removeClass('colorBeautyRed');
+                    }
                 }
             }
             if(option == 'note'){
                 if(value != 'delete'){
-                    for(var i = 0; i < r.length; i++)
+                    for(var i = 0; i < r.length; i++){
                         $('.comment-text[data-news='+ r[i] +']').val(value);
+                        $('.option-news.note[data-news=' + r[i] + ']').addClass('colorBlue');
+                        $('.body-news-comment[data-news=' + r[i] + ']').html(html_note.replace(/__note__/g, value));
+                    }
                 }else{
-                    for(var i = 0; i < r.length; i++)
+                    for(var i = 0; i < r.length; i++){
                         $('.comment-text[data-news='+ r[i] +']').val('');
+                        $('.option-news.note[data-news=' + r[i] + ']').removeClass('colorBlue');
+                        $('.body-news-comment[data-news=' + r[i] + ']').html('');
+                    }
                 }
             }
         }

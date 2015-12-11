@@ -862,12 +862,12 @@
 }
 
 .colorBeautyRed {
-    color: #FF604D;
+    color: #FF604D !important;
 }
 
 
 .colorBlue {
-    color: #00a0dc;
+    color: #00a0dc !important;
 }
 
 .colorDarkBlue {
