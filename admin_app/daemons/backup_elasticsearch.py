@@ -18,7 +18,7 @@ try:
     backup_address_news = c.backup_elastic_search_address_news
     count_all_news = NewsModel().get_count_all()
     _size = 100
-    _rang = (count_all_news / (_size + 1))
+    _rang = (count_all_news / _size) + 1
     for i in range(_rang):
         all_news += NewsModel().get_all_backup(_page=i, _size=_size)['value']
         print len(all_news), 'news'
@@ -41,7 +41,7 @@ try:
     backup_address_briefs = c.backup_elastic_search_address_briefs
     count_all_briefs = BriefsModel().get_count_all()
     _size = 100
-    _rang = (count_all_briefs / (_size + 1))
+    _rang = (count_all_briefs / _size) + 1
     for i in range(_rang):
         all_news += BriefsModel().get_all_backup(_page=i, _size=_size)['value']
         print len(all_news), 'briefs'
