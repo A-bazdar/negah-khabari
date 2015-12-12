@@ -14,7 +14,7 @@ class UserModel(BaseModel):
     def __init__(self, _id=None, name=None, family=None, username=None, organization=None, password=None, phone=None,
                  mobile=None, address=None, fax=None, email=None, status=None, welcome=None, register_start_date=None,
                  register_end_date=None, archive_start_date=None, archive_end_date=None, group=None, pic=None,
-                 role=None, last_activity=None, news=None, note=None, important=None, keyword=None, font=None):
+                 role=None, last_activity=None, news=None, note=None, important=None, keyword=None, font=None, content=None):
         BaseModel.__init__(self)
         self.id = _id
         self.name = name
@@ -42,6 +42,7 @@ class UserModel(BaseModel):
         self.important = important
         self.keyword = keyword
         self.font = font
+        self.content = content
         self.result = {'value': {}, 'status': False}
 
     def save(self):
@@ -196,6 +197,7 @@ class UserModel(BaseModel):
                     pattern_search=r['pattern_search'] if 'pattern_search' in r.keys() else [],
                     agency_direction=r['agency_direction'] if 'agency_direction' in r.keys() else [],
                     keyword=r['keyword'] if 'keyword' in r.keys() else [],
+                    content=r['content'] if 'content' in r.keys() else {"main_source_news": [], "news_group": [], "news_maker": []},
                     font=r['font'] if 'font' in r.keys() else {},
                     last_activity=r['last_activity']
 
@@ -877,6 +879,52 @@ class UserModel(BaseModel):
             __condition = {'_id': self.id}
             MongodbModel(collection='user', condition=__condition, body=__body).update()
             self.result['value'] = self.font
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def add_content(self, action):
+        try:
+            __content = dict(name=self.content, _id=ObjectId())
+            __body = {"$push": {
+                "content." + action: __content
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = __content
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def update_content(self, action, name):
+        try:
+            __body = {"$set": {
+                "content." + action + ".$.name": name
+            }}
+            __condition = {'_id': self.id, "content." + action + "._id": self.content}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = name
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def delete_content(self, action):
+        try:
+            __body = {"$pull": {
+                "content." + action: {"_id": self.content}
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = self.content
             self.result['status'] = True
 
             return self.result
