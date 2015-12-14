@@ -1,0 +1,101 @@
+.tooltip_show{
+    position: relative;
+    margin: 0;
+    /*padding: 0;*/
+}
+
+.tooltip_show *{margin: 0;padding: 0}
+
+.tooltip_show tooltip{
+    position: absolute;
+    display: none;
+    margin-right: -30px;
+}
+
+.tooltip_show tooltip.top{bottom: 100%;}
+.tooltip_show tooltip.bottom{top: 100%;}
+.tooltip_show tooltip.left{right: 100%;}
+.tooltip_show tooltip.right{left: 100%;}
+
+.tooltip_show tooltip arrow i{
+    position: absolute;
+}
+
+
+.tooltip_show tooltip.top arrow i{
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 15px 10px 0 10px;
+    border-color: #F6F7F8 transparent transparent transparent;
+}
+.tooltip_show tooltip.bottom arrow i{
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0 10px 15px 10px;
+    border-color: transparent transparent #F6F7F8 transparent;
+	margin-right: 15px;
+}
+.tooltip_show tooltip.left arrow i{
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 10px 0 10px 15px;
+    border-color: transparent transparent transparent #F6F7F8;
+	margin-top: 15px;
+}
+.tooltip_show tooltip.right arrow i{
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 10px 15px 10px 0;
+    border-color: transparent #F6F7F8 transparent transparent;
+	margin-top: 15px;
+}
+.tooltip_show tooltip.top section{
+    position: relative;
+    background-color: #F6F7F8;
+    padding: 10px;
+    width: 300px;
+    height: 50px;
+    z-index: 100000;
+	border-radius: 15px;
+}
+.tooltip_show tooltip.top section{
+    margin-bottom:15px;
+    background-color: #F6F7F8;
+    padding: 10px;
+    width: 300px;
+    height: 50px;
+    z-index: 100000;
+	border-radius: 15px;
+}
+.tooltip_show tooltip.bottom section{
+    margin-top:15px;
+    background-color: #F6F7F8;
+    padding: 10px;
+    width: 130px;
+    box-shadow: 0 0 2px #aaa;
+    height: 50px;
+	border-radius: 5px;
+    z-index: 100000;
+}
+.tooltip_show tooltip.left section{
+    margin-right:15px;
+    background-color: #F6F7F8;
+    padding: 10px;
+    width: 300px;
+    height: 50px;
+	border-radius: 15px;
+    z-index: 100000;
+}
+.tooltip_show tooltip.right section{
+    margin-left:15px;
+    background-color: #F6F7F8;
+    padding: 10px;
+    width: 300px;
+    height: 50px;
+	border-radius: 15px;
+    z-index: 100000;
+}

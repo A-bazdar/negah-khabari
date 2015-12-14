@@ -1597,7 +1597,10 @@ i.close {
     background: #ffffff;
     font-family: Yekan;
     border: 5px solid #c0cfe4;
-    padding: 0 10px 10px;
+    padding: 0 10px 0;
+}
+
+.detail_news_scroll {
     max-height: 500px;
 }
 
