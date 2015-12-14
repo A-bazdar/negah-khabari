@@ -6,7 +6,7 @@ $(".select2_keywords.key-words").select2({
     tags: []
 });
 
-$('.key-words.keyword_tabs').click(function(){
+$(document).on('click', '.key-words.keyword_tabs', function(){
     var data_action = $(this).attr('data-action');
     var data_key = $(this).attr('data-key');
     $('.tab-content.key-words[data-key=' + data_key + ']').css('display','none');
@@ -27,6 +27,18 @@ $(document).on('click', '.cancel-edit.key-words', function(e){
     $('.edit_keywords_box.key-words[data-key=' + key_id + ']').addClass('display-none');
 });
 
+$(document).on('click', '#show_hide_add_keyword', function(e){
+    var elm = $(e.target);
+    var a = elm.attr('data-show');
+    if(a == 'true'){
+        $('#add_keyword_div').slideUp();
+        elm.attr('data-show', 'false').html('+ افزودن');
+    }else{
+        $('#add_keyword_div').slideDown();
+        elm.attr('data-show', 'true').html('- انصراف');
+    }
+});
+
 $(document).on('click', '.save-edit.key-words', function(e){
     var elm = $(e.target).closest('.save-edit.key-words');
     var key_id = elm.attr('data-key');
@@ -45,4 +57,67 @@ $(document).on('click', '.save-edit.key-words', function(e){
             }
         }
     });
+});
+
+$(document).on('click', '.save-add.key-words', function(e){
+    var postData = $('#form_add_keyword').serializeArray();
+    jQuery.ajax(
+    {
+        url: key_word_url,
+        type: "post",
+        data: postData,
+        success: function (response) {
+            var status = response['status'];
+            var value = response['value'];
+            if (status) {
+                $('#all_key_words').append(value);
+                $('#add_keyword_div').slideUp();
+                $('#show_hide_add_keyword').attr('data-show', 'false').html('+ افزودن');
+                $('#form_add_keyword input[type=text]').val('');
+            }
+        }
+    });
+});
+
+$(document).on('click', '.cancel-add.key-words', function(e){
+    $('#add_keyword_div').slideUp();
+    $('#show_hide_add_keyword').attr('data-show', 'false').html('+ افزودن');
+});
+
+var key_word_html = '<div class="key-word-row">\
+                        <div class="row margin-top-10">\
+                            <div class="col-md-1 col-sm-1 col-md-offset-1 col-sm-offset-1">\
+                                <span>کلیدواژه : </span>\
+                            </div>\
+                            <div class="col-md-4 col-sm-4">\
+                                <input class="form-control" type="text" name="keyword">\
+                            </div>\
+                            <div class="col-md-1 col-sm-1">\
+                                <div class="R_butt_red key-words remove-key-word"><i class="fa fa-times"></i></div>\
+                            </div>\
+                        </div>\
+                        <div class="row margin-top-10">\
+                            <div class="col-md-1 col-sm-1 col-md-offset-2 col-sm-offset-2">\
+                                <span>مترادف : </span>\
+                            </div>\
+                            <div class="col-md-9 col-sm-9">\
+                                <input class="form-control select2_keywords key-words" type="text" name="synonyms">\
+                            </div>\
+                        </div>\
+                        <div class="row margin-top-10">\
+                            <div class="col-md-1 col-sm-1 col-md-offset-2 col-sm-offset-2">\
+                                <span>نامترادف : </span>\
+                            </div>\
+                            <div class="col-md-9 col-sm-9">\
+                                <input class="form-control select2_keywords key-words" type="text" name="no_synonyms">\
+                            </div>\
+                        </div>\
+                    </div>';
+
+$(document).on('click', '.add-key-word.key-words', function(e){
+    $('#add_key_word_key_words').append(key_word_html);
+});
+
+$(document).on('click', '.remove-key-word.key-words', function(e){
+    $(e.target).closest('.key-word-row').remove();
 });
