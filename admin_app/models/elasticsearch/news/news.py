@@ -799,17 +799,66 @@ class NewsModel:
             }
         return query_sort
 
-    def get_all_by_subject_search(self, _search=None, _subjects=None, _filter=None, _page=0, _size=30, _sort="date"):
+    @staticmethod
+    def get_query_grouping(__grouping, __grouping_type):
+        query_grouping = False
+        if len(__grouping):
+            query_grouping = {
+                "query": {
+                    "terms": {
+                        __grouping_type: __grouping
+                    }
+                }
+            }
+        return query_grouping
+
+    def get_query_keyword(self, __news_type, __grouping_type):
+        body = []
+        if __news_type == "top_news" and __grouping_type != "keyword":
+            from admin_app.models.mongodb.keyword.keyword import KeyWordModel
+            keywords = KeyWordModel().get_all()['value']
+            user_keywords = self.full_current_user['keyword']
+            user_keywords_ids = [i['_id'] for i in user_keywords]
+            for i in keywords:
+                if i['_id'] not in user_keywords_ids:
+                    user_keywords.append(i)
+            keyword = []
+            no_keyword = []
+            for topic in user_keywords:
+                for _key in topic['keyword']:
+                    keyword += [_key['keyword']]
+                    keyword += [i for i in _key['synonyms']]
+                    no_keyword += [i for i in _key['no_synonyms']]
+
+            keyword = ' AND '.join(e.encode('utf-8') for e in keyword)
+            no_keyword = ' AND '.join(e.encode('utf-8') for e in no_keyword)
+
+            _query = ''
+            if keyword != '':
+                _query += '({})'.format(keyword)
+
+            if no_keyword != '':
+                if _query == '':
+                    _query += 'NOT({})'.format(no_keyword)
+                else:
+                    _query += ' AND NOT({})'.format(no_keyword)
+
+            if _query != '':
+                body.append({
+                    "query": {
+                        "query_string": {
+                            "fields": ["ro_title", "title", "summary", "body"],
+                            "query": _query
+                        }
+                    }
+                })
+        return body
+
+    def get_all_by_subject_search(self, _search=None, _grouping=None, _grouping_type=None, _news_type=None, _filter=None, _page=0, _size=30, _sort="date"):
         if _page >= 1:
             _page -= 1
-        if not _subjects:
-            _subjects = []
-
-        def get_subjects(__subjects):
-            ls = __subjects
-            for sub in __subjects:
-                ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child()['value']]
-            return ls
+        if not _grouping:
+            _grouping = []
 
         try:
             body = {
@@ -825,25 +874,21 @@ class NewsModel:
             # query_sort = self.get_query_sort(_sort)
             query_search = self.get_query_search(_search)
             query_filter = self.get_query_filter(_filter)
+            query_keyword = self.get_query_keyword(_news_type, _grouping_type)
+            query_grouping = self.get_query_grouping(_grouping, _grouping_type)
 
             body['filter']['and']['filters'] += query_search
+            body['filter']['and']['filters'] += query_keyword
             if query_filter is not False:
                 body['filter']['and']['filters'] += [query_filter]
+            if query_grouping is not False:
+                body['filter']['and']['filters'] += [query_grouping]
 
-            if len(_subjects):
-                body['filter']['and']['filters'].append({
-                    "filter": {
-                        "terms": {
-                            "subject": get_subjects(_subjects)
-                        }
-                    }
-                })
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
                 count_all = 0
-
             for b in r['hits']['hits']:
                 self.get_news_module(b['_source'], b['_id'])
             self.result['value'] = self.value, count_all
