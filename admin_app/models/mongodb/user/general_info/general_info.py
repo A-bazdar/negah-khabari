@@ -931,3 +931,45 @@ class UserModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result
+
+    @staticmethod
+    def get_agency_direction_show_source_user(full_current_user):
+        try:
+            from admin_app.models.mongodb.direction.direction import DirectionModel
+            from admin_app.models.mongodb.agency.agency import AgencyModel
+            from admin_app.models.mongodb.category.category import CategoryModel
+
+            agency_direction = full_current_user['agency_direction']
+            agency_direction_ids = [i['agency'] for i in agency_direction]
+            directions = DirectionModel().get_all('source')['value']
+            for _dir in directions:
+                _agencies = AgencyModel(direction=_dir['id']).get_all_by_direction()['value']
+                _categories = []
+                _categories_id = []
+                for _ag in _agencies:
+                    if _ag['category']['id'] not in _categories_id:
+                        _categories_id.append(_ag['category']['id'])
+                        _cat = CategoryModel(_id=_ag['category']['id']).get_one()['value']
+                        _a = []
+                        for _ag2 in _agencies:
+                            if _ag2['id'] not in agency_direction_ids:
+                                if _ag2['category']['id'] == _cat['id']:
+                                    _ag2['selected'] = False
+                                    _a.append(_ag2)
+                        _cat['agencies'] = _a
+                        _categories.append(_cat)
+                _dir['categories'] = _categories
+
+            for _ad in agency_direction:
+                for _dir in directions:
+                    if _dir['id'] == _ad['direction']:
+                        _a = AgencyModel(_id=_ad['agency']).get_one()
+                        for c in _dir['categories']:
+                            if c['id'] == _a['category']['id']:
+                                _a['selected'] = _ad['direction']
+                                c['agencies'].append(_a)
+
+            return directions
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return {}

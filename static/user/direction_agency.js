@@ -56,13 +56,14 @@ $(document).on('click', '.change-direction', function(e){
                     if (status) {
                         Alert.render('success', function () {
                             elm.html(check);
-                            var new_direction = direction;
                             var category = elm.attr("data-category");
                             var old_direction = elm.attr("data-direction");
-                            var _html = elm.closest('.agency-content-row-change').html().replace(old_direction, new_direction).replace(old_direction, new_direction);
-                            _html = '<div class="row margin-top-5 agency-content-row-change">' + _html + '</div>';
-                            $('.direction-agency.agency-content.direction-show[data-direction=' + new_direction + '][data-category=' + category + ']').append(_html);
-                            elm.closest('.agency-content-row-change').remove();
+                            $('.tab_content.direction-agency.source-show').html(value);
+                            $('.direction-agency.agency-content.direction-show').hide();
+                            $('.direction-agency.category-content.direction-show').hide();
+                            $('.direction-agency.category-content.direction-show[data-direction=' + old_direction + ']').fadeIn();
+                            $('.direction-agency.agency-content.direction-show[data-direction=' + old_direction + '][data-category=' + category + ']').fadeIn();
+                            $('select.select.user-direction.direction-show').select2();
                             __w = true;
                         });
                     }else{
