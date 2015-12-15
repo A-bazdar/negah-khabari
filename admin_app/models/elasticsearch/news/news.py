@@ -802,36 +802,64 @@ class NewsModel:
     @staticmethod
     def get_query_grouping(__grouping, __grouping_type):
         query_grouping = False
-        if len(__grouping):
-            query_grouping = {
-                "query": {
-                    "terms": {
-                        __grouping_type: __grouping
+        if __grouping_type != "keyword":
+            if len(__grouping):
+                query_grouping = {
+                    "query": {
+                        "terms": {
+                            __grouping_type: __grouping
+                        }
                     }
                 }
-            }
+        else:
+            keyword = ' AND '.join(e for e in __grouping)
+            no_keyword = ''
+
+            _query = ''
+            if keyword != '':
+                _query += '({})'.format(keyword)
+
+            if no_keyword != '':
+                if _query == '':
+                    _query += 'NOT({})'.format(no_keyword)
+                else:
+                    _query += ' AND NOT({})'.format(no_keyword)
+
+            if _query != '':
+                query_grouping = {
+                    "query": {
+                        "query_string": {
+                            "fields": ["ro_title", "title", "summary", "body"],
+                            "query": _query
+                        }
+                    }
+                }
         return query_grouping
 
-    def get_query_keyword(self, __news_type, __grouping_type):
+    def get_query_keyword(self, __news_type, __grouping, __grouping_type):
         body = []
-        if __news_type == "top_news" and __grouping_type != "keyword":
-            from admin_app.models.mongodb.keyword.keyword import KeyWordModel
-            keywords = KeyWordModel().get_all()['value']
-            user_keywords = self.full_current_user['keyword']
-            user_keywords_ids = [i['_id'] for i in user_keywords]
-            for i in keywords:
-                if i['_id'] not in user_keywords_ids:
-                    user_keywords.append(i)
-            keyword = []
-            no_keyword = []
-            for topic in user_keywords:
-                for _key in topic['keyword']:
-                    keyword += [_key['keyword']]
-                    keyword += [i for i in _key['synonyms']]
-                    no_keyword += [i for i in _key['no_synonyms']]
+        if __news_type == "top_news":
+            if __grouping_type != "keyword":
+                from admin_app.models.mongodb.keyword.keyword import KeyWordModel
+                keywords = KeyWordModel().get_all()['value']
+                user_keywords = self.full_current_user['keyword']
+                user_keywords_ids = [i['_id'] for i in user_keywords]
+                for i in keywords:
+                    if i['_id'] not in user_keywords_ids:
+                        user_keywords.append(i)
+                keyword = []
+                no_keyword = []
+                for topic in user_keywords:
+                    for _key in topic['keyword']:
+                        keyword += [_key['keyword']]
+                        keyword += [i for i in _key['synonyms']]
+                        no_keyword += [i for i in _key['no_synonyms']]
 
-            keyword = ' AND '.join(e.encode('utf-8') for e in keyword)
-            no_keyword = ' AND '.join(e.encode('utf-8') for e in no_keyword)
+                keyword = ' AND '.join(e.encode('utf-8') for e in keyword)
+                no_keyword = ' AND '.join(e.encode('utf-8') for e in no_keyword)
+            else:
+                keyword = ' AND '.join(e for e in __grouping)
+                no_keyword = ''
 
             _query = ''
             if keyword != '':
@@ -874,7 +902,7 @@ class NewsModel:
             # query_sort = self.get_query_sort(_sort)
             query_search = self.get_query_search(_search)
             query_filter = self.get_query_filter(_filter)
-            query_keyword = self.get_query_keyword(_news_type, _grouping_type)
+            query_keyword = self.get_query_keyword(_news_type, _grouping, _grouping_type)
             query_grouping = self.get_query_grouping(_grouping, _grouping_type)
 
             body['filter']['and']['filters'] += query_search
@@ -883,7 +911,6 @@ class NewsModel:
                 body['filter']['and']['filters'] += [query_filter]
             if query_grouping is not False:
                 body['filter']['and']['filters'] += [query_grouping]
-
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
