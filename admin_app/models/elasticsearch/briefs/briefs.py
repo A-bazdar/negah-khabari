@@ -163,6 +163,31 @@ class BriefsModel:
             Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='insert_brief', data=self.link)
             return self.result
 
+    def restore(self, body):
+        try:
+            body = {
+                'link': body['_source']['link'],
+                'hash_link': body['_source']['hash_link'],
+                'title': body['_source']['title'],
+                'hash_title': body['_source']['hash_title'],
+                'ro_title': body['_source']['ro_title'],
+                'summary': body['_source']['summary'],
+                'thumbnail': body['_source']['thumbnail'],
+                'agency': body['_source']['agency'],
+                'subject': body['_source']['subject'],
+                'content': body['_source']['content'],
+                'date': body['_source']['date']
+            }
+            self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body, _id=body['_id']).insert()
+            self.result['status'] = True
+            self.result['message'] = 'INSERT'
+
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='insert_brief', data=self.link)
+            return self.result
+
     def get_all(self):
         try:
             body = {

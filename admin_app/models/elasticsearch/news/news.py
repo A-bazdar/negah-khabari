@@ -174,6 +174,39 @@ class NewsModel:
             Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='save_news', data=self.link)
             return self.result
 
+    def restore(self, body):
+        try:
+            body = {
+                'link': body['_source']['link'],
+                'hash_link': body['_source']['hash_link'],
+                'title': body['_source']['title'],
+                'hash_title': body['_source']['hash_title'],
+                'ro_title': body['_source']['ro_title'],
+                'summary': body['_source']['summary'],
+                'body': body['_source']['body'],
+                'thumbnail': body['_source']['thumbnail'],
+                'agency': body['_source']['agency'],
+                'subject': body['_source']['subject'],
+                'date': body['_source']['date'],
+                'content': body['_source']['content'],
+                'images': body['_source']['images'],
+                'video': body['_source']['video'],
+                'sound': body['_source']['sound'],
+                'read_date': body['_source']['read_date'],
+                'read_timestamp': body['read_timestamp'],
+            }
+            self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body,
+                                                      _id=body['_id']).insert()
+            self.result['status'] = True
+            self.result['message'] = 'INSERT'
+            self.result['type'] = 'NEWS'
+
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='engine_feed', severity='critical_error', tags='save_news', data=self.link)
+            return self.result
+
     def get_news(self, _source, _id):
         try:
             agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
