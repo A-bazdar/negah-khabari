@@ -39,6 +39,19 @@
                                                         </span>
                                                     </div>
                                                 </div>
+                                                <div class="child">
+                                                    {% for child_2 in child['child'] %}
+                                                        <div class="content_sub_detail_2 geographic-row">
+                                                            <div class="display-inline-block"><span>{{ child_2['name'] }}</span> </div>
+                                                            <div class="display-inline-block content_icon pull-left">
+                                                                <i class="fa fa-pencil"></i>
+                                                                <span class="delete-geographic" data-geographic="{{ child_2['id'] }}">
+                                                                    <i class="fa fa-trash-o"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    {% end %}
+                                                </div>
                                             {% end %}
                                         </div>
                                     </div>
@@ -100,8 +113,11 @@
                                         <div class="col-xs-9">
                                             <select name="geographic-parent" style="width: 100%" class="select">
                                                 <option value="0">اصلی</option>
-                                                {% for parent in parent_geographic %}
-                                                    <option value="{{ parent['id'] }}">{{ parent['name'] }}</option>
+                                                {% for geo in geographic %}
+                                                    <option value="{{ geo['id'] }}">{{ geo['name'] }}</option>
+                                                    {% for ch in geo['child'] %}
+                                                        <option value="{{ ch['id'] }}"> --> {{ ch['name'] }}</option>
+                                                    {% end %}
                                                 {% end %}
                                             </select>
                                         </div>
@@ -174,24 +190,25 @@
                         var messages = response['messages'];
                         if (status) {
                             Alert.render('success', function () {
-                                $('.empty').remove();
-                                if (value['parent'] == null) {
-                                    $('.geographic-div').append(geographic.replace(/__name__/g, value['name']).replace(/__geographic_id__/g, value['id']).replace(/__id__/g, value['id']));
-                                    var options = '<option value="0">اصلی</option>';
-                                    for (var i = 0; i < value['parents'].length; i++) {
-                                        options += "<option value='" + value['parents'][i]['id'] + "'>" + value['parents'][i]['name'] + "</option>";
-                                    }
-                                    $(".select[name=geographic-parent]").html(options).select2("val", 0);
-                                } else {
-                                    $('.geographic-div .geographic[data-geographic-id=' + value['parent'] + '] .child').append(sub_geographic.replace(/__name__/g, value['name']).replace(/__id__/g, value['id']));
-                                    $(".select[name=geographic-parent]").select2("val", 0);
-                                    var c = $('.counter-child[data-geographic-id=' + value['parent'] + ']');
-                                    c.html(parseInt(c.html()) + 1);
-                                }
-                                btn.html('افزودن');
-                                $('#new_geo_modal').modal('toggle');
-                                $('input[name=geographic-name]').val('');
-                                __a = true;
+{#                                $('.empty').remove();#}
+{#                                if (value['parent'] == null) {#}
+{#                                    $('.geographic-div').append(geographic.replace(/__name__/g, value['name']).replace(/__geographic_id__/g, value['id']).replace(/__id__/g, value['id']));#}
+{#                                    var options = '<option value="0">اصلی</option>';#}
+{#                                    for (var i = 0; i < value['parents'].length; i++) {#}
+{#                                        options += "<option value='" + value['parents'][i]['id'] + "'>" + value['parents'][i]['name'] + "</option>";#}
+{#                                    }#}
+{#                                    $(".select[name=geographic-parent]").html(options).select2("val", 0);#}
+{#                                } else {#}
+{#                                    $('.geographic-div .geographic[data-geographic-id=' + value['parent'] + '] .child').append(sub_geographic.replace(/__name__/g, value['name']).replace(/__id__/g, value['id']));#}
+{#                                    $(".select[name=geographic-parent]").select2("val", 0);#}
+{#                                    var c = $('.counter-child[data-geographic-id=' + value['parent'] + ']');#}
+{#                                    c.html(parseInt(c.html()) + 1);#}
+{#                                }#}
+{#                                btn.html('افزودن');#}
+{#                                $('#new_geo_modal').modal('toggle');#}
+{#                                $('input[name=geographic-name]').val('');#}
+{#                                __a = true;#}
+                                location.href = "";
                             });
                         }else{
                             var error = '';

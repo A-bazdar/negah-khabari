@@ -64,6 +64,7 @@ class AdminManagementSubjectHandler(BaseHandler):
                 subject = dict()
                 self.check_sent_value("subject-name", subject, "name", u"نام موضوع را وارد کنید.")
                 self.check_sent_value("subject-parent", subject, "parent", u"مجموعه را وارد کنید.")
+                print subject
                 if not len(self.errors):
                     if subject['parent'] == '0':
                         subject['parent'] = None

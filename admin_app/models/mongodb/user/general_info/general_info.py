@@ -156,6 +156,45 @@ class UserModel(BaseModel):
                                 data='collection > user')
             return self.result
 
+    def get_all_user_by_group(self):
+        try:
+            body = {"group": self.group}
+            r = MongodbModel(collection='user', body=body).get_all()
+            l = []
+            if r:
+                for i in r:
+                    l.append(dict(
+                        id=i['_id'],
+                        name=i['name'],
+                        family=i['family'],
+                        username=i['username'],
+                        full_name=u'{} {}'.format(i['name'], i['family']),
+                        organization=i['organization'],
+                        password=i['password'],
+                        phone=i['phone'],
+                        mobile=i['mobile'],
+                        fax=i['fax'],
+                        email=i['email'],
+                        status=i['status'],
+                        welcome=i['welcome'],
+                        role=i['role'],
+                        register_start_date=i['register_start_date'],
+                        register_end_date=i['register_end_date'],
+                        archive_start_date=i['archive_start_date'],
+                        archive_end_date=i['archive_end_date'],
+                        pic=i['pic'],
+                        last_activity=i['last_activity']
+
+                    ))
+            self.result['value'] = l
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all',
+                                data='collection > user')
+            return self.result
+
     def get_one(self):
         try:
             if self.id:

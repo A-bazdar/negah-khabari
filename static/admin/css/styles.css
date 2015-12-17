@@ -170,6 +170,24 @@
     background: #d9d9d9;
 }
 
+.content_sub_detail_2{
+    background: -webkit-linear-gradient(#FDFDFD, #E9E9E9);
+    background: -o-linear-gradient(#FDFDFD, #E9E9E9);
+    background: -moz-linear-gradient(#FDFDFD, #E9E9E9);
+    background: linear-gradient(#FDFDFD, #E9E9E9);
+    border: 1px solid #d7d7d7;
+    border-radius: 4px;
+    /*margin-bottom: 5px;*/
+    padding: 5px;
+    display: block;
+    width: 80%;
+    margin: 5px auto;
+}
+
+.content_sub_detail_2:hover{
+    background: #d9d9d9;
+}
+
 .content_icon i{
     font-size: 12pt;
     margin: 0 5px;
