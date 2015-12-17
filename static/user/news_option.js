@@ -212,9 +212,11 @@ $(document).on('click', '.option-news.read', function (e) {
                 if(value == 'read'){
                     elm.removeClass('fa-circle-o');
                     elm.addClass('colorGreen fa-circle');
+                    $('.news_list_detail[data-news=' + news + ']').addClass('read').removeClass('unread');
                 }else{
                     elm.removeClass('colorGreen fa-circle');
                     elm.addClass('fa-circle-o');
+                    $('.news_list_detail[data-news=' + news + ']').addClass('unread').removeClass('read');
                 }
             }
         }
@@ -305,11 +307,15 @@ $(document).on('click', '.option-news-all', function(e){
             var r = response['value'];
             if(option == 'read'){
                 if(value == 'read'){
-                    for(var i = 0; i < r.length; i++)
+                    for(var i = 0; i < r.length; i++){
                         $('.option-news.read[data-news=' + r[i] + ']').removeClass('fa-circle-o').addClass('colorGreen fa-circle');
-                }else{
-                    for(var i = 0; i < r.length; i++)
+                        $('.news_list_detail[data-news=' + r[i] + ']').addClass('read').removeClass('unread');
+                    }
+                }else {
+                    for (var i = 0; i < r.length; i++){
                         $('.option-news.read[data-news=' + r[i] + ']').removeClass('colorGreen fa-circle').addClass('fa-circle-o');
+                        $('.news_list_detail[data-news=' + r[i] + ']').addClass('unread').removeClass('read');
+                    }
                 }
             }
             if(option == 'star'){
