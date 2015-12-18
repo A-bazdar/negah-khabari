@@ -235,11 +235,12 @@
                                                         <input type="text" class="form-control" placeholder="لینک" name="link">
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <select name="subject" class="select">
+                                                        <select name="subject" data-action="1" class="select link-news">
+                                                            <option data-name="" selected value="">انتخاب کنید</option>
                                                             {% for sub in subjects %}
-                                                                <option style="background-color: #a1a1a1" value="{{ sub['id'] }}">{{ sub['name'] }}</option>
+                                                                <option data-name="{{ sub['name'] }}" style="background-color: #a1a1a1" value="{{ sub['id'] }}">{{ sub['name'] }}</option>
                                                                 {% for ch in sub['child'] %}
-                                                                    <option value="{{ ch['id'] }}"> --> {{ ch['name'] }}</option>
+                                                                    <option data-name="{{ ch['name'] }}" value="{{ ch['id'] }}"> --> {{ ch['name'] }}</option>
                                                                 {% end %}
                                                             {% end %}
                                                         </select>
@@ -538,11 +539,11 @@
         }
     });
 
-var sub_select = '<select name="subject" class="select-link-news" style="width: 100%">';
+var sub_select = '<select name="subject" class="select select-link-news link-news" style="width: 100%"><option selected value="">انتخاب کنید</option>';
 {% for sub in subjects %}
-    sub_select += '<option style="background-color: #a1a1a1" value="{{ sub['id'] }}">{{ sub['name'] }}</option>';
+    sub_select += '<option data-name="{{ sub['name'] }}" style="background-color: #a1a1a1" value="{{ sub['id'] }}">{{ sub['name'] }}</option>';
     {% for ch in sub['child'] %}
-        sub_select += '<option value="{{ ch['id'] }}"> --> {{ ch['name'] }}</option>';
+        sub_select += '<option data-name="{{ ch['name'] }}" value="{{ ch['id'] }}"> --> {{ ch['name'] }}</option>';
     {% end %}
 {% end %}
 sub_select += '</select>';
@@ -579,6 +580,14 @@ $(document).on('click', '.remove-link-news.agency', function(){
     var data_action = $(this).closest('a').attr('data-action');
     $(this).closest('li.news-link-li').remove();
     $('.tab_content.add-link-con.agency[data-action=' + data_action + ']').remove();
+});
+
+$(document).on('change', 'select.link-news[name=subject]', function(){
+    var s = $("option:selected", this).attr('data-name');
+    if(s != "") {
+        var action = $(this).closest('.add-link-con.agency').attr("data-action");
+        $('.dir_tab.tab-link-agency[data-action=' + action + '] span').html(s);
+    }
 });
 </script>
 
