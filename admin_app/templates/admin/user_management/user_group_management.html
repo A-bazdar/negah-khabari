@@ -815,188 +815,188 @@ $('#add_user_group').submit(function(e){
     }
 });
 
-    $(document).on('click', '.setting-group', function(e){
-        var elm = $(e.target);
-        var group_id = elm.attr('data-id');
-        var postData = [
-            {'name': 'group_id', 'value': group_id},
-            {'name': 'action', 'value': 'setting'},
-            {'name': '_xsrf', 'value': '{{ handler.xsrf_token }}'}
-        ];
-        jQuery.ajax(
-            {
-                url: '',
-                type: "post",
-                data: postData,
-                success: function (response) {
-                    var value = response['value'];
-                    $('input[type=checkbox]').lcs_off();
-                    $('input[name=count-pattern-search]').val('');
-                    $('input[name=count-pattern-sources]').val('');
-                    $('input[name=bolton-name]').val('');
-                    $('input[name=time-edit-bolton]').val('');
-                    $('input[name=time-edit-newspaper]').val('');
-                    $('input[name=bolton-count]').val('');
-                    $('input[name=bolton-count-part]').val('');
-                    $('input[name=bolton-automatic-count]').val('');
-                    $('input[name=bolton-automatic-count-part]').val('');
-                    $('input[name=newspaper-count]').val('');
-                    $('input[name=newspaper-count-part]').val('');
-                    if(value['search_pattern']){
-                        var s_p = value['search_pattern'];
-                        if(s_p['simple_search']){
-                            $('input[name=simple-search]').lcs_on();
-                        }else{
-                            $('input[name=simple-search]').lcs_off();
-                        }
-                        if(s_p['advanced_search']){
-                            $('input[name=advanced-search]').lcs_on();
-                        }else{
-                            $('input[name=advanced-search]').lcs_off();
-                        }
-                        if(s_p['refining_news']){
-                            $('input[name=refining-news]').lcs_on();
-                        }else{
-                            $('input[name=refining-news]').lcs_off();
-                        }
-                        if(s_p['pattern_sources']){
-                            $('input[name=pattern-sources]').lcs_on();
-                        }else{
-                            $('input[name=pattern-sources]').lcs_off();
-                        }
-                        if(s_p['pattern_search']){
-                            $('input[name=pattern-search]').lcs_on();
-                        }else{
-                            $('input[name=pattern-search]').lcs_off();
-                        }
-                        $('input[name=count-pattern-search]').val(s_p['count_pattern_search']);
-                        $('input[name=count-pattern-sources]').val(s_p['count_pattern_sources']);
+$(document).on('click', '.setting-group', function(e){
+    var elm = $(e.target);
+    var group_id = elm.attr('data-id');
+    var postData = [
+        {'name': 'group_id', 'value': group_id},
+        {'name': 'action', 'value': 'setting'},
+        {'name': '_xsrf', 'value': '{{ handler.xsrf_token }}'}
+    ];
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData,
+            success: function (response) {
+                var value = response['value'];
+                $('input[type=checkbox]').lcs_off();
+                $('input[name=count-pattern-search]').val('');
+                $('input[name=count-pattern-sources]').val('');
+                $('input[name=bolton-name]').val('');
+                $('input[name=time-edit-bolton]').val('');
+                $('input[name=time-edit-newspaper]').val('');
+                $('input[name=bolton-count]').val('');
+                $('input[name=bolton-count-part]').val('');
+                $('input[name=bolton-automatic-count]').val('');
+                $('input[name=bolton-automatic-count-part]').val('');
+                $('input[name=newspaper-count]').val('');
+                $('input[name=newspaper-count-part]').val('');
+                if(value['search_pattern']){
+                    var s_p = value['search_pattern'];
+                    if(s_p['simple_search']){
+                        $('input[name=simple-search]').lcs_on();
+                    }else{
+                        $('input[name=simple-search]').lcs_off();
+                    }
+                    if(s_p['advanced_search']){
+                        $('input[name=advanced-search]').lcs_on();
+                    }else{
+                        $('input[name=advanced-search]').lcs_off();
+                    }
+                    if(s_p['refining_news']){
+                        $('input[name=refining-news]').lcs_on();
+                    }else{
+                        $('input[name=refining-news]').lcs_off();
+                    }
+                    if(s_p['pattern_sources']){
+                        $('input[name=pattern-sources]').lcs_on();
+                    }else{
+                        $('input[name=pattern-sources]').lcs_off();
+                    }
+                    if(s_p['pattern_search']){
+                        $('input[name=pattern-search]').lcs_on();
+                    }else{
+                        $('input[name=pattern-search]').lcs_off();
+                    }
+                    $('input[name=count-pattern-search]').val(s_p['count_pattern_search']);
+                    $('input[name=count-pattern-sources]').val(s_p['count_pattern_sources']);
 
-                    }
-                    if(value['access_sources']){
-                        var a_s = value['access_sources'];
-                        for(var a = 0; a < a_s['agency'].length; a++){
-                            $('input.child[name=agency][data-id=' + a_s['agency'][a] + ']').lcs_on();
-                        }
-                        for(var s = 0; s < a_s['subject'].length; s++){
-                            $('input.child[name=subject][data-id=' + a_s['subject'][s] + ']').lcs_on();
-                        }
-                        for(var g = 0; g < a_s['geographic'].length; g++){
-                            $('input.child[name=geographic][data-id=' + a_s['geographic'][g] + ']').lcs_on();
-                        }
-                    }
-                    if(value['bolton_management']){
-                        var b_m = value['bolton_management'];
-                        $('input[name=bolton-name]').val(b_m['name']);
-                        if(b_m['make_bolton']){
-                            $('input[name=make-bolton]').lcs_on();
-                            $('input[name=bolton-count]').removeAttr('disabled').val(b_m['bolton_count']);
-                            $('input[name=bolton-count-part]').removeAttr('disabled').val(b_m['bolton_count_part']);
-                        }else{
-                            $('input[name=make-bolton]').lcs_off();
-                            $('input[name=bolton-count]').val('').attr('disabled', 'disabled');
-                            $('input[name=bolton-count-part]').val('').attr('disabled', 'disabled');
-                        }
-                        if(b_m['make_bolton_automatic']){
-                            $('input[name=make-bolton-automatic]').lcs_on();
-                            $('input[name=bolton-automatic-count]').removeAttr('disabled').val(b_m['bolton_automatic_count']);
-                            $('input[name=bolton-automatic-count-part]').removeAttr('disabled').val(b_m['bolton_automatic_count_part']);
-                        }else{
-                            $('input[name=make-automatic-bolton]').lcs_off();
-                            $('input[name=bolton-automatic-count]').val('').attr('disabled', 'disabled');
-                            $('input[name=bolton-automatic-count-part]').val('').attr('disabled', 'disabled');
-                        }
-                        if(b_m['make_newspaper']){
-                            $('input[name=make-newspaper]').lcs_on();
-                            $('input[name=newspaper-count]').removeAttr('disabled').val(b_m['newspaper_count']);
-                            $('input[name=newspaper-count-part]').removeAttr('disabled').val(b_m['newspaper_count_part']);
-                        }else{
-                            $('input[name=make-newspaper]').lcs_off();
-                            $('input[name=newspaper-count]').val('').attr('disabled', 'disabled');
-                            $('input[name=newspaper-count-part]').val('').attr('disabled', 'disabled');
-                        }
-                        $('input[name=time-edit-bolton]').val(b_m['time_edit_bolton']);
-                        $('input[name=time-edit-newspaper]').val(b_m['time_edit_newspaper']);
-                    }
-                    if(value['charts_content']){
-                        var c_c = value['charts_content'];
-                        if(c_c['content_format']){
-                            $('input[name=content-format]').lcs_on();
-                        }else{
-                            $('input[name=content-format]').lcs_off();
-                        }
-                        if(c_c['importance_news']){
-                            $('input[name=importance-news]').lcs_on();
-                        }else{
-                            $('input[name=importance-news]').lcs_off();
-                        }
-                        if(c_c['based_count_news']){
-                            $('input[name=based-count-news]').lcs_on();
-                        }else{
-                            $('input[name=based-count-news]').lcs_off();
-                        }
-                        if(c_c['stats_news']){
-                            $('input[name=stats-news]').lcs_on();
-                        }else{
-                            $('input[name=stats-news]').lcs_off();
-                        }
-                        if(c_c['daily_news']){
-                            $('input[name=daily-news]').lcs_on();
-                        }else{
-                            $('input[name=daily-news]').lcs_off();
-                        }
-                        if(c_c['news_headlines']){
-                            $('input[name=news-headlines]').lcs_on();
-                        }else{
-                            $('input[name=news-headlines]').lcs_off();
-                        }
-                        if(c_c['tags_news']){
-                            $('input[name=tags-news]').lcs_on();
-                        }else{
-                            $('input[name=tags-news]').lcs_off();
-                        }
-                        if(c_c['reflecting_news']){
-                            $('input[name=reflecting-news]').lcs_on();
-                        }else{
-                            $('input[name=reflecting-news]').lcs_off();
-                        }
-                        if(c_c['importance_media']){
-                            $('input[name=importance-media]').lcs_on();
-                        }else{
-                            $('input[name=importance-media]').lcs_off();
-                        }
-                        if(c_c['positive_negative_orientation']){
-                            $('input[name=positive-negative-orientation]').lcs_on();
-                        }else{
-                            $('input[name=positive-negative-orientation]').lcs_off();
-                        }
-                        if(c_c['orientation_news_sources']){
-                            $('input[name=orientation-news-sources]').lcs_on();
-                        }else{
-                            $('input[name=orientation-news-sources]').lcs_off();
-                        }
-                        if(c_c['important_news_makers']){
-                            $('input[name=important-news-makers]').lcs_on();
-                        }else{
-                            $('input[name=important-news-makers]').lcs_off();
-                        }
-                        if(c_c['main_sources_news_1']){
-                            $('input[name=main-sources-news-1]').lcs_on();
-                        }else{
-                            $('input[name=main-sources-news-1]').lcs_off();
-                        }
-                        if(c_c['main_sources_news_2']){
-                            $('input[name=main-sources-news-2]').lcs_on();
-                        }else{
-                            $('input[name=main-sources-news-2]').lcs_off();
-                        }
-                    }
-                    $('input.setting-group-id').val(group_id);
-                    $('#user_group_modal').modal('toggle');
                 }
-            });
+                if(value['access_sources']){
+                    var a_s = value['access_sources'];
+                    for(var a = 0; a < a_s['agency'].length; a++){
+                        $('input.child[name=agency][data-id=' + a_s['agency'][a] + ']').lcs_on();
+                    }
+                    for(var s = 0; s < a_s['subject'].length; s++){
+                        $('input.child[name=subject][data-id=' + a_s['subject'][s] + ']').lcs_on();
+                    }
+                    for(var g = 0; g < a_s['geographic'].length; g++){
+                        $('input.child[name=geographic][data-id=' + a_s['geographic'][g] + ']').lcs_on();
+                    }
+                }
+                if(value['bolton_management']){
+                    var b_m = value['bolton_management'];
+                    $('input[name=bolton-name]').val(b_m['name']);
+                    if(b_m['make_bolton']){
+                        $('input[name=make-bolton]').lcs_on();
+                        $('input[name=bolton-count]').removeAttr('disabled').val(b_m['bolton_count']);
+                        $('input[name=bolton-count-part]').removeAttr('disabled').val(b_m['bolton_count_part']);
+                    }else{
+                        $('input[name=make-bolton]').lcs_off();
+                        $('input[name=bolton-count]').val('').attr('disabled', 'disabled');
+                        $('input[name=bolton-count-part]').val('').attr('disabled', 'disabled');
+                    }
+                    if(b_m['make_bolton_automatic']){
+                        $('input[name=make-bolton-automatic]').lcs_on();
+                        $('input[name=bolton-automatic-count]').removeAttr('disabled').val(b_m['bolton_automatic_count']);
+                        $('input[name=bolton-automatic-count-part]').removeAttr('disabled').val(b_m['bolton_automatic_count_part']);
+                    }else{
+                        $('input[name=make-automatic-bolton]').lcs_off();
+                        $('input[name=bolton-automatic-count]').val('').attr('disabled', 'disabled');
+                        $('input[name=bolton-automatic-count-part]').val('').attr('disabled', 'disabled');
+                    }
+                    if(b_m['make_newspaper']){
+                        $('input[name=make-newspaper]').lcs_on();
+                        $('input[name=newspaper-count]').removeAttr('disabled').val(b_m['newspaper_count']);
+                        $('input[name=newspaper-count-part]').removeAttr('disabled').val(b_m['newspaper_count_part']);
+                    }else{
+                        $('input[name=make-newspaper]').lcs_off();
+                        $('input[name=newspaper-count]').val('').attr('disabled', 'disabled');
+                        $('input[name=newspaper-count-part]').val('').attr('disabled', 'disabled');
+                    }
+                    $('input[name=time-edit-bolton]').val(b_m['time_edit_bolton']);
+                    $('input[name=time-edit-newspaper]').val(b_m['time_edit_newspaper']);
+                }
+                if(value['charts_content']){
+                    var c_c = value['charts_content'];
+                    if(c_c['content_format']){
+                        $('input[name=content-format]').lcs_on();
+                    }else{
+                        $('input[name=content-format]').lcs_off();
+                    }
+                    if(c_c['importance_news']){
+                        $('input[name=importance-news]').lcs_on();
+                    }else{
+                        $('input[name=importance-news]').lcs_off();
+                    }
+                    if(c_c['based_count_news']){
+                        $('input[name=based-count-news]').lcs_on();
+                    }else{
+                        $('input[name=based-count-news]').lcs_off();
+                    }
+                    if(c_c['stats_news']){
+                        $('input[name=stats-news]').lcs_on();
+                    }else{
+                        $('input[name=stats-news]').lcs_off();
+                    }
+                    if(c_c['daily_news']){
+                        $('input[name=daily-news]').lcs_on();
+                    }else{
+                        $('input[name=daily-news]').lcs_off();
+                    }
+                    if(c_c['news_headlines']){
+                        $('input[name=news-headlines]').lcs_on();
+                    }else{
+                        $('input[name=news-headlines]').lcs_off();
+                    }
+                    if(c_c['tags_news']){
+                        $('input[name=tags-news]').lcs_on();
+                    }else{
+                        $('input[name=tags-news]').lcs_off();
+                    }
+                    if(c_c['reflecting_news']){
+                        $('input[name=reflecting-news]').lcs_on();
+                    }else{
+                        $('input[name=reflecting-news]').lcs_off();
+                    }
+                    if(c_c['importance_media']){
+                        $('input[name=importance-media]').lcs_on();
+                    }else{
+                        $('input[name=importance-media]').lcs_off();
+                    }
+                    if(c_c['positive_negative_orientation']){
+                        $('input[name=positive-negative-orientation]').lcs_on();
+                    }else{
+                        $('input[name=positive-negative-orientation]').lcs_off();
+                    }
+                    if(c_c['orientation_news_sources']){
+                        $('input[name=orientation-news-sources]').lcs_on();
+                    }else{
+                        $('input[name=orientation-news-sources]').lcs_off();
+                    }
+                    if(c_c['important_news_makers']){
+                        $('input[name=important-news-makers]').lcs_on();
+                    }else{
+                        $('input[name=important-news-makers]').lcs_off();
+                    }
+                    if(c_c['main_sources_news_1']){
+                        $('input[name=main-sources-news-1]').lcs_on();
+                    }else{
+                        $('input[name=main-sources-news-1]').lcs_off();
+                    }
+                    if(c_c['main_sources_news_2']){
+                        $('input[name=main-sources-news-2]').lcs_on();
+                    }else{
+                        $('input[name=main-sources-news-2]').lcs_off();
+                    }
+                }
+                $('input.setting-group-id').val(group_id);
+                $('#user_group_modal').modal('toggle');
+            }
+        });
 
-    });
+});
 
 var __b = true;
 $('#search_and_patterns').submit(function(e){

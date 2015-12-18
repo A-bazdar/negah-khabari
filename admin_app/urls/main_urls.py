@@ -52,6 +52,9 @@ url_patterns = [
     (r'^(?i)/Admin/TableManagement[/]?$', admin.AdminTableHandler),
     (r'^/Admin/TableManagement', admin.AdminTableHandler, None, "admin:table_management"),
 
+    (r'^(?i)/Admin/UserManagement[/]?$', admin.AdminUserManagementHandler),
+    (r'^/Admin/UserManagement', admin.AdminUserManagementHandler, None, "admin:user_management"),
+
     (r'^(?i)/Admin/UserManagement/GeneralInfo[/]?$', admin.AdminUserGeneralInfoHandler),
     (r'^/Admin/UserManagement/GeneralInfo', admin.AdminUserGeneralInfoHandler, None, "admin:user_management:general_info"),
 
