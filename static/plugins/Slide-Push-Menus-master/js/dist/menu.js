@@ -81,6 +81,7 @@
     this.wrapper.classList.add('has-' + this.options.type);
     this.menu.classList.add('is-active');
     this.mask.classList.add('is-active');
+    $('.c-menu').removeClass('display-none');
     this.disableMenuOpeners();
   };
 
@@ -92,6 +93,7 @@
     this.wrapper.classList.remove('has-' + this.options.type);
     this.menu.classList.remove('is-active');
     this.mask.classList.remove('is-active');
+    $('.c-menu').addClass('display-none');
     this.enableMenuOpeners();
   };
 
