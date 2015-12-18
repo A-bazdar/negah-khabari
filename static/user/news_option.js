@@ -6,11 +6,14 @@ $(document).on('click','.show_option_news', function(){
     var data_news = $(this).attr('data-news');
     if($(this).hasClass('closedp')) {
         $(this).removeClass('closedp').addClass('open');
+        $('.show_option_news').css('background-position','-47px -130px');
+        $(this).css('background-position','-29px -131px');
         $('.dropdown-option-container[data-news=' + data_news + ']').slideDown();
         $('.dropdown-option-container[data-news!=' + data_news + ']').slideUp();
     }
     else {
         $(this).removeClass('open').addClass('closedp');
+        $(this).css('background-position','-47px -130px');
         $('.dropdown-option-container[data-news=' + data_news + ']').slideUp();
     }
 });
