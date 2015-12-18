@@ -242,6 +242,25 @@ class NewsModel:
         except:
             Debug.get_exception(send=False)
 
+    def get_options(self, _id):
+        try:
+            user = self.full_current_user
+            note = False
+            for i in user['note']:
+                if i['news'] == _id:
+                    note = i['note']
+            star = True if str(_id) in user['star'] else False
+            important = False
+            for i in user['important']:
+                if i['news'] == _id:
+                    important = i['important']
+
+            read = True if _id in user['read'] else False
+            return dict(note=note, star=star, important=important, read=read)
+        except:
+            Debug.get_exception(send=False)
+            return dict(note=False, star=False, important=False, read=False)
+
     def get_news_module(self, _source, _id):
         try:
             agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
@@ -250,6 +269,7 @@ class NewsModel:
                 _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
             except:
                 _date = _source['date']
+
             self.value.append(dict(
                 id=_id,
                 link=_source['link'],
@@ -265,6 +285,66 @@ class NewsModel:
                 video=_source['video'],
                 sound=_source['sound'],
                 agency_color=agency['color']
+            ))
+        except:
+            Debug.get_exception(send=False)
+
+    def get_news_module_field(self, _fields, _id):
+        try:
+            agency = AgencyModel(_id=ObjectId(_fields['agency'][0])).get_one()
+            try:
+                x = _fields['date'][0].split('T')
+                _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+            except:
+                _date = _fields['date'][0]
+
+            try:
+                ro_title = _fields['ro_title'][0]
+            except:
+                ro_title = None
+
+            try:
+                thumbnail = _fields['thumbnail'][0]
+            except:
+                thumbnail = None
+
+            try:
+                video = _fields['video'][0]
+            except:
+                video = None
+
+            try:
+                sound = _fields['sound'][0]
+            except:
+                sound = None
+
+            options = self.get_options(_id)
+            self.value.append(dict(
+                id=_id,
+                link=_fields['link'][0],
+                title=_fields['title'][0],
+                ro_title=ro_title,
+                summary=self.summary_text(thumbnail),
+                thumbnail=_fields['thumbnail'][0],
+                read_date=_fields['read_date'][0],
+                _date=CustomDateTime().get_time_difference(_date),
+                agency_name=agency['name'],
+                images=_fields['images'],
+                video=video,
+                download='',
+                sound=sound,
+                options=options,
+                agency_color=agency['color']
+            ))
+        except:
+            Debug.get_exception(send=False)
+
+    def get_titr1(self, _fields, _id):
+        try:
+            self.value.append(dict(
+                id=_id,
+                title=_fields['title'][0],
+                thumbnail=_fields['thumbnail'][0],
             ))
         except:
             Debug.get_exception(send=False)
@@ -498,8 +578,11 @@ class NewsModel:
         try:
             if _page >= 1:
                 _page -= 1
+
             body = {
                 "from": _page * _size, "size": _size,
+                "fields": ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
+                           "agency", "images", "video", "sound"],
                 "query": {
                     "match_all": {}
                 },
@@ -512,7 +595,7 @@ class NewsModel:
             except:
                 count_all = 0
             for b in r['hits']['hits']:
-                self.get_news_module(b['_source'], b['_id'])
+                self.get_news_module_field(b['fields'], b['_id'])
             self.result['value'] = self.value, count_all
             self.result['status'] = True
             return self.result
@@ -924,6 +1007,8 @@ class NewsModel:
         try:
             body = {
                 "from": _page * _size, "size": _size,
+                "fields": ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
+                           "agency", "images", "video", "sound"],
                 "filter": {
                     "and": {
                         "filters": []
@@ -1127,6 +1212,8 @@ class NewsModel:
         try:
             body = {
                 "from": _page * _size, "size": _size,
+                "fields": ["_id", "title", "thumbnail", "read_date", "date",
+                           "agency", "images", "video", "sound"],
                 "query": {
                     "term": {
                         "content": str(ContentModel().titr1)
@@ -1138,7 +1225,7 @@ class NewsModel:
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 for b in r['hits']['hits']:
-                    self.get_news_module(b['_source'], b['_id'])
+                    self.get_titr1(b['_source'], b['_id'])
             except:
                 pass
             self.result['value'] = self.value
