@@ -201,9 +201,20 @@
 }
 
 .slider_content{
-    /*padding: 0 3px;*/
     position: relative;
-    /*right: -20px;*/
-    min-height: 100px;
     cursor: pointer;
+    border: 1px solid #e7e7e7;
+    height: 150px;
+}
+
+.slider_content img{
+    height: 80px;
+}
+
+.slider_content div{
+    line-height: 18px;
+}
+
+.slider_content:hover{
+    border-bottom: 9px solid #5665ff;
 }
