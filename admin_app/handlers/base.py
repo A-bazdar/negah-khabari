@@ -49,19 +49,19 @@ class BaseHandler(tornado.web.RequestHandler, SessionMixin, NotificationMixin):
 
     @property
     def current_user(self):
-        return self.session.get('current_user')
+        return self.session.get('current_admin')
 
     @current_user.setter
-    def current_user(self, current_user):
-        self.session.set('current_user', current_user)
+    def current_user(self, current_admin):
+        self.session.set('current_admin', current_admin)
 
     @property
     def full_current_user(self):
-        return self.session.get('full_current_user')
+        return self.session.get('full_current_admin')
 
     @full_current_user.setter
-    def full_current_user(self, full_current_user):
-        self.session.set('full_current_user', full_current_user)
+    def full_current_user(self, full_current_admin):
+        self.session.set('full_current_admin', full_current_admin)
 
     def add_error(self, message):
         error_list = self.session.get('error_list')

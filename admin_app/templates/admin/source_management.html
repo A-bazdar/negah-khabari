@@ -10,6 +10,12 @@
     .colorpicker.dropdown-menu{
         width: 150px;
     }
+    li.news-link-li.active .remove-link-news.agency{
+        display: inline-block;
+    }
+    li.news-link-li .remove-link-news.agency{
+        display: none;
+    }
 </style>
 {% end block other_css %}
 
@@ -105,7 +111,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="box_body" style="padding: 50px 10px">
+                    <div class="box_body padding-10">
                         <div class="row">
                             <div class="col-xs-10 col-xs-offset-1 form_modal_body">
                                 <form id="add_agency" enctype="multipart/form-data">
@@ -208,38 +214,47 @@
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
-                                        <div class="col-xs-3">
-                                            <span class="form_label">لینک خبر</span>
+                                        <div class="col-xs-4 col-xs-offset-4 text-center">
+                                            <span class="R_butt_blue add-link-btn agency">+ لینک خبر</span>
                                         </div>
-                                        <div class="col-xs-9 news-links">
-                                            <div class="row news-link">
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" name="link">
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <select name="subject" class="select">
-                                                        {% for sub in subjects %}
-                                                            <option style="background-color: #a1a1a1" value="{{ sub['id'] }}">{{ sub['name'] }}</option>
-                                                            {% for ch in sub['child'] %}
-                                                                <option value="{{ ch['id'] }}"> --> {{ ch['name'] }}</option>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="box_header" style="padding-bottom: 0">
+                                            <ul class="nav nav-tabs add-link-tabs agency" role="tablist">
+                                                <li role="presentation" class="active news-link-li">
+                                                    <a class="dir_tab tab-link-agency" data-action="1" aria-controls="source" role="tab" data-toggle="tab">
+                                                        <span>لینک</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="box_body add-link-contents agency">
+                                            <div class="tab_content add-link-con agency" data-action="1">
+                                                <div class="row news-link">
+                                                    <div class="col-md-7">
+                                                        <input type="text" class="form-control" placeholder="لینک" name="link">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <select name="subject" data-action="1" class="select link-news">
+                                                            <option data-name="" selected value="">انتخاب کنید</option>
+                                                            {% for sub in subjects %}
+                                                                <option data-name="{{ sub['name'] }}" style="background-color: #a1a1a1" value="{{ sub['id'] }}">{{ sub['name'] }}</option>
+                                                                {% for ch in sub['child'] %}
+                                                                    <option data-name="{{ ch['name'] }}" value="{{ ch['id'] }}"> --> {{ ch['name'] }}</option>
+                                                                {% end %}
                                                             {% end %}
-                                                        {% end %}
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <i style="color: green;" class="add-news-link cursor-pointer fa fa-plus"></i>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="row text-center margin-top-10">
-                                        <button class="btn R_butt_green add-agency-btn">افزودن</button>
-                                    </div>
                                 </form>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="row text-center padding-10">
+                        <button class="btn R_butt_green add-agency-btn">افزودن</button>
                     </div>
                 </div>
             </div>
@@ -523,6 +538,57 @@
                 });
         }
     });
+
+var sub_select = '<select name="subject" class="select select-link-news link-news" style="width: 100%"><option selected value="">انتخاب کنید</option>';
+{% for sub in subjects %}
+    sub_select += '<option data-name="{{ sub['name'] }}" style="background-color: #a1a1a1" value="{{ sub['id'] }}">{{ sub['name'] }}</option>';
+    {% for ch in sub['child'] %}
+        sub_select += '<option data-name="{{ ch['name'] }}" value="{{ ch['id'] }}"> --> {{ ch['name'] }}</option>';
+    {% end %}
+{% end %}
+sub_select += '</select>';
+
+$(document).on('click', '.add-link-btn.agency', function(){
+    $('li.news-link-li').removeClass('active');
+    $('.tab_content.add-link-con.agency').hide();
+    var action = parseInt(Math.random() * 100000);
+    $('.add-link-tabs.agency').append('<li role="presentation" class="active news-link-li">\
+        <a class="dir_tab tab-link-agency" data-action="' + action + '" aria-controls="source" role="tab" data-toggle="tab">\
+            <i class="fa fa-times remove-link-news agency colorRed" data-action="' + action + '"> </i> <span> لینک</span>\
+            </a>\
+    </li>');
+    $('.add-link-contents.agency').append('<div class="tab_content add-link-con agency" data-action="' + action + '">' +
+            '<div class="row news-link">\
+                <div class="col-md-7">\
+                    <input type="text" class="form-control" placeholder="لینک" name="link">\
+                </div>\
+                <div class="col-md-5">' + sub_select + '</div>\
+            </div>\
+        </div>');
+    $('.select-link-news').select2().removeClass('select-link-news');
+});
+
+$(document).on('click', '.dir_tab.tab-link-agency', function(){
+    var data_action = $(this).attr('data-action');
+    $('.tab_content.add-link-con.agency').hide();
+    $('li.news-link-li').removeClass('active');
+    $(this).closest('li.news-link-li').addClass('active');
+    $('.tab_content.add-link-con.agency[data-action=' + data_action + ']').fadeIn();
+});
+
+$(document).on('click', '.remove-link-news.agency', function(){
+    var data_action = $(this).closest('a').attr('data-action');
+    $(this).closest('li.news-link-li').remove();
+    $('.tab_content.add-link-con.agency[data-action=' + data_action + ']').remove();
+});
+
+$(document).on('change', 'select.link-news[name=subject]', function(){
+    var s = $("option:selected", this).attr('data-name');
+    if(s != "") {
+        var action = $(this).closest('.add-link-con.agency').attr("data-action");
+        $('.dir_tab.tab-link-agency[data-action=' + action + '] span').html(s);
+    }
+});
 </script>
 
 {% end block other_scripts %}
