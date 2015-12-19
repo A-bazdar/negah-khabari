@@ -13,5 +13,5 @@ function make_news_column_detail_view(news) {
     }
     _make.find('div#news_body').html(news['body']);
     $('#show_result_news #detail_first_news').append(_make.html());
-    $('div#detail_row[data-news=' + news['id'] + ']').fadeIn();
+    $('div.news_row[data-news=' + news['id'] + ']').fadeIn();
 }

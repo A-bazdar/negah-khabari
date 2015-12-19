@@ -12,5 +12,5 @@ function make_news_column_list_view(news) {
     _make.find('div#title_news').html(news['title']);
     _make.find('span#date_news').html(news['_date']);
     $('#show_result_news #news_list').append(_make.html());
-    $('div#news_row[data-news=' + news['id'] + ']').fadeIn();
+    $('div.news_row[data-news=' + news['id'] + ']').fadeIn();
 }

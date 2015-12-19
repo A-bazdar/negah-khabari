@@ -84,5 +84,5 @@ function make_news_pic_view(news) {
     _make.find('i#report_broken_btn').attr('data-title', news['title']).attr('data-link', news['link']).attr('data-news', news['id']);
     _make.find('textarea#report_broken_text').attr('data-news', news['id']);
     $('#show_result_news').append(_make.html());
-    $('div#news_row[data-news=' + news['id'] + ']').fadeIn();
+    $('div.news_row[data-news=' + news['id'] + ']').fadeIn();
 }

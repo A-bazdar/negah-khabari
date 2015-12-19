@@ -84,5 +84,5 @@ function make_news_list_view(news) {
     _make.find('div#news_row').attr('data-news', news['id']);
     _make.find('div#detail_news_container').attr('data-news', news['id']);
     $('#show_result_news').append(_make.html());
-    $('div#news_row[data-news=' + news['id'] + ']').fadeIn();
+    $('div.news_row[data-news=' + news['id'] + ']').fadeIn();
 }

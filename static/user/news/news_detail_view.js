@@ -13,5 +13,5 @@ function make_news_detail_view(news) {
     _make.find('span#date_news').html(news['_date']);
     _make.find('button#agency_info').css('background', news['agency_color']).html(news['agency_name']);
     $('#show_result_news').append(_make.html());
-    $('div#news_row[data-news=' + news['id'] + ']').fadeIn();
+    $('div.news_row[data-news=' + news['id'] + ']').fadeIn();
 }
