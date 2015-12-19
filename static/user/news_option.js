@@ -232,7 +232,7 @@ $(document).on('click', '.option-news.read', function (e) {
 $(document).on('click', '.option-news.show-picture', function (e) {
     var elm = $("div.option-news.div-images", e.target);
     var images = elm.html();
-    $('#option_news_images').html(images);
+    $('#option_news_body').html(images);
     $('#option_news').modal('toggle');
 });
 
