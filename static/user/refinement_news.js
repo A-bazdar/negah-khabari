@@ -26,6 +26,30 @@ $("form#refinement_news .refinement-news[name=period]").select2({
     }
 });
 
+$(document).on('click', '.filtration-news.show-slide', function (e) {
+    var _data = [
+        {name: "_xsrf", value: xsrf_token},
+        {name: "action", value: 'get-all'}
+    ];
+    $.ajax({
+        url: pattern_search_url,
+        type: 'put',
+        data: _data,
+        success: function (response) {
+            var status = response['status'];
+            var messages = response['messages'];
+            var value = response['value'];
+            if (status) {
+                var html = '<li class="text-center"><input type="radio" checked name="pattern_search_show_refinement_news" value="nothing"><span style="vertical-align: 3px; margin-right: 10px">Â?ç òœ«„</span><li>';
+                for (var i = 0; i < value.length; i++) {
+                    html += '<input type="radio" name="pattern_search_show_refinement_news" value="' + value[i]['id'] + '"> ' + value[i]['name'];
+                }
+                $('.filtration-news-pattern-search').html(html);
+            }
+        }
+    });
+});
+
 $(".select2_keywords.refinement-news").select2({
     tags: []
 });
