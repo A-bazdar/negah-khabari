@@ -63,7 +63,6 @@ function show_result_news(_page, _view, _grouping, _search, _filter, _sort) {
     var _data = [
         {name: "_xsrf", value: xsrf_token},
         {name: "_page", value: _page},
-        {name: "_view", value: _view},
         {name: "_news_type", value: news_type},
         {name: "_grouping_type", value: grouping_type},
         {name: "_sort", value: _sort},
@@ -80,7 +79,34 @@ function show_result_news(_page, _view, _grouping, _search, _filter, _sort) {
             var messages = response['messages'];
             var value = response['value'];
             if (status) {
-                $('#show_result_news').html(value['news']).attr('data-view', _view);
+                var _show_result_news = $('#show_result_news');
+                _show_result_news.html("").attr('data-view', _view);
+                var j = 0;
+                if(_view == "list_view"){
+                    for(j = 0; j < value['news'].length; j++){
+                        make_news_list_view(value['news'][j]);
+                    }
+                }else if(_view == "column_list_view"){
+                    var html = '<div id="news_list" class="col-md-6 col-sm-6 __scrolling" style="max-height: 500px"></div><div id="detail_first_news" class="col-md-6 col-sm-6 show-detail-main-con"></div>';
+                    _show_result_news.html(html);
+                    for(j = 0; j < value['news'].length; j++){
+                        make_news_column_list_view(value['news'][j]);
+                        if(j == 0)
+                            make_news_column_detail_view(value['news'][j]);
+                    }
+                }else if(_view == "details_view"){
+                    for(j = 0; j < value['news'].length; j++){
+                        make_news_detail_view(value['news'][j]);
+                    }
+                }else if(_view == "details_pic_view"){
+                    for(j = 0; j < value['news'].length; j++){
+                        make_news_detail_pic_view(value['news'][j]);
+                    }
+                }else if(_view == "pic_view"){
+                    for(j = 0; j < value['news'].length; j++){
+                        make_news_pic_view(value['news'][j]);
+                    }
+                }
                 $('#pagination').html(value['pagination']);
                 $('#nav_search').find('.expert-search-btn').slideUp().removeClass('open').addClass('close');
                 $('button.c-menu__close').click();

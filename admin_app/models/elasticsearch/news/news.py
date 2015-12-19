@@ -1059,7 +1059,7 @@ class NewsModel:
             except:
                 count_all = 0
             for b in r['hits']['hits']:
-                self.get_news_module(b['_source'], b['_id'])
+                self.get_news_module_field(b['fields'], b['_id'])
             self.result['value'] = self.value, count_all
             self.result['status'] = True
             return self.result
