@@ -2,6 +2,13 @@ body{
     font-family: "Mitra" !important;
     direction: rtl;
     /*background: #E9EAEE;*/
+    scrollbar-face-color: #000000;
+    scrollbar-shadow-color: #2D2C4D;
+    scrollbar-highlight-color:#7D7E94;
+    scrollbar-3dlight-color: #7D7E94;
+    scrollbar-darkshadow-color: #2D2C4D;
+    scrollbar-track-color: #7D7E94;
+    scrollbar-arrow-color: #C1C1D1;
 }
 
 h1, h2, h3, h4, h5, h6{
@@ -50,6 +57,7 @@ h1, h2, h3, h4, h5, h6{
     color: #ffffff;
     height: 30px;
     width: 60px;
+    border-radius: 1px 0 0 1px !important;
 }
 .body_header_searchbox .input-group{
     width: 410px;
@@ -64,8 +72,8 @@ h1, h2, h3, h4, h5, h6{
 
 .user_welcome{
     vertical-align: -5px;
-    font-size: 10pt;
-    color: #ACB7D5;
+    font-size: 16px;
+    color: #A9B6D1;
     font-family: Traffic;
 }
 
@@ -232,7 +240,7 @@ h1, h2, h3, h4, h5, h6{
     margin-left: 10px;
     left: -25px !important;
     right: auto !important;
-    top: 190% !important;
+    top: 175% !important;
     background-color: #f6f7f8;
     text-align: right;
     box-shadow: 0 0 3px #5666ff;
@@ -505,7 +513,7 @@ div#nav_search{position: relative}
 .user_menu{
     position: absolute;
     top: 35px;
-    left: -17px !important;
+    left: -11px !important;
     z-index: 10000;
 	background: #f6f7f8;
 	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#fafafa));
@@ -722,8 +730,9 @@ div#nav_search{position: relative}
 }
 
 .side_toggler {
+    background-position: -235px -124px;
     /*text-align: right;*/
-    vertical-align: -2px;
+    vertical-align: -10px;
     font-size: 16pt !important;
     color: #a6a9b2;
     border: solid 1px #a6a9b2;
@@ -838,6 +847,11 @@ div#nav_search{position: relative}
     width: 100%;
 
     /*display: block;*/
+}
+
+.icon_menu_info li {
+    margin-left: 6px;
+    height: 30px;
 }
 
 
@@ -1884,4 +1898,94 @@ a.change-page {
 
 [type="checkbox"]:disabled + label {
     color: #aaa;
+}
+
+.icon-news {
+    background: url("/static/images/Icons.png") no-repeat;
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.icon-news.help-icon {
+    background-position: -187px -76px;
+    margin-top: 8px;
+}
+
+.icon-news.message-icon {
+    width: 25px;
+    background-position: -150px -76px;
+    margin-top: 8px;
+}
+
+.icon-news.setting-icon {
+    background-position: -120px -76px;
+    margin-top: 8px;
+}
+
+.icon-news.bell-icon {
+    background-position: -88px -76px;
+    margin-top: 8px;
+}
+
+.icon-news.wrench-icon {
+    background-position: -57px -76px;
+    margin-top: 8px;
+}
+
+.icon-news.user-icon {
+    width: 25px;
+    height: 26px;
+    background-position: -24px -72px;
+    margin-top: 5px;
+}
+
+.icon-news.help1-icon {
+    background-position: -219px -72px;
+    margin-top: 4px;
+    height: 25px;
+}
+
+.icon-news.user-group-icon {
+    background-position: -247px -72px;
+    margin-top: 6px;
+    height: 25px;
+    width: 23px;
+}
+
+.icon-news.refresh-icon {
+    background-position: -352px -83px;
+    vertical-align: -5px;
+    height: 16px;
+    width: 23px;
+}
+
+.icon-news.pause-icon {
+    background-position: -326px -83px;
+    vertical-align: -5px;
+    height: 16px;
+    width: 23px;
+}
+
+.icon-news.send-bolton-icon {
+    background-position: -69px -130px;
+    margin-top: 3px;
+    vertical-align: -3px;
+    height: 16px;
+    width: 16px;
+}
+
+.icon-news.show-news-list-icon {
+    background-position: -47px -130px;
+    vertical-align: -3px;
+    height: 16px;
+    width: 16px;
+}
+
+.icon-news.toggle-btn {
+    background-position: -243px -128px;
+    vertical-align: 2px;
+    height: 20px;
+    width: 20px;
 }
