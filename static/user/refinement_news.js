@@ -2,6 +2,20 @@
  * Created by Morteza on 12/8/2015.
  */
 
+var slideTop = new Menu({
+    wrapper: '#o-wrapper',
+    type: 'slide-top',
+    menuOpenerClass: '.c-button',
+    maskId: '#c-mask'
+});
+
+var slideTopBtn = document.querySelector('#c-button--slide-top');
+
+slideTopBtn.addEventListener('click', function (e) {
+    e.preventDefault;
+    slideTop.open();
+});
+
 $("form#refinement_news .refinement-news[name=period]").select2({
     placeholder: "«‰ Œ«» ò‰?œ"
 }).on("change", function () {

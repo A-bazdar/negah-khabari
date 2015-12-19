@@ -1,6 +1,34 @@
 /**
  * Created by Omid on 11/25/2015.
  */
+
+
+$(document).on('click', '.change_pic_div', function () {
+    $('input[name=input_upload_pic]').click();
+});
+
+$(document).on('change', 'input[name=input_upload_pic]', function () {
+    $('.change_pic_div').html(loader.replace(/20/g, '10'));
+    var data = new FormData();
+    data.append('_xsrf', xsrf_token);
+    data.append('pic', $("input[name=input_upload_pic]")[0].files[0]);
+    $.ajax(
+            {
+                url: user_upload_pic_url,
+                type: "post",
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
+                data: data,
+                success: function (data) {
+                    var src = static_url_images_avatars;
+                    $('.user_avatar').attr('src', src + data);
+                    $('.change_pic_div').html('<span>تغییر عکس</span>');
+                }
+            });
+});
+
 jQuery.validator.addMethod("iran_mobiles", function (value, element) {
     return this.optional(element) || /^(09\d{9})$/.test(value);
 }, "شماره موبایل را صحیح وارد کنید.");
@@ -58,7 +86,7 @@ $('.general_settings_tab').click(function(){
             organization: "سازمان را وارد کنید."
         }
     });
-    //var loader = '<img src="{{ static_url('images/loading.gif') }}" width="20" height="20">';
+
     var __a = true;
     $('#edit_general_info_user').submit(function(e){
         if(__a){

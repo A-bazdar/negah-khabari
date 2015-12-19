@@ -13,18 +13,15 @@ function make_news_list_view(news) {
     _make.find('button#agency_info').css('background', news['agency_color']).html(news['agency_name']);
     _make.find('input.news-select').attr('id', news['id']).val(news['id']);
     _make.find('label#label_news_select').attr('for', news['id']);
-    _make.find('i#show_news_list_icon').attr('data-news', news['id']);
+    _make.find('div#show_news_list_icon').attr('data-news', news['id']);
     _make.find('div#show_news_list_container').attr('data-news', news['id']);
-    if (news['options']['note'] != false) {
-        _make.find('i#note_icon').addClass('colorBlue').attr('data-news', news['id']).attr('data-action', news['id']);
-    }else{
-        _make.find('i#note_icon').attr('data-news', news['id']).attr('data-action', news['id']);
-    }
     _make.find('div#note_drop_down').attr('data-action', news['id']);
     _make.find('i#send_note_btn').attr('data-news', news['id']);
     if (news['options']['note'] != false) {
-        _make.find('textarea#send_note_text').attr('data-news', news['id']).val(news['options']['note']);
-    } else {
+        _make.find('i#note_icon').addClass('colorBlue').attr('data-news', news['id']).attr('data-action', news['id']);
+        _make.find('textarea#send_note_text').attr('data-news', news['id']).text(news['options']['note']);
+    }else{
+        _make.find('i#note_icon').attr('data-news', news['id']).attr('data-action', news['id']);
         _make.find('textarea#send_note_text').attr('data-news', news['id']);
     }
     if (news['options']['star']) {
@@ -33,27 +30,27 @@ function make_news_list_view(news) {
         _make.find('i#star_icon').addClass('fa-star-o').attr('data-news', news['id']);
     }
     var important = news['options']['important'];
+    _make.find('div#important_drop_down').attr('data-action', news['id']);
     if (important == "Important1" || important == "Important2" || important == "Important3") {
-        $('i#important_icon').addClass('colorBeautyRed').attr('data-news', news['id']).attr('data-action', news['id']);
+        _make.find('i#important_icon').addClass('colorBeautyRed').attr('data-news', news['id']).attr('data-action', news['id']);
     } else {
-        $('i#important_icon').attr('data-news', news['id']).attr('data-action', news['id']);
+        _make.find('i#important_icon').attr('data-news', news['id']).attr('data-action', news['id']);
     }
-    _make.find('div#note_drop_down').attr('data-action', news['id']);
     _make.find('div.option-news-important-select').attr('data-news', news['id']);
     if (news['options']['important'] != "Important1") {
-        $('i#important1_check').attr('data-news', news['id']).css('display', 'none');
+        _make.find('i#important1_check').attr('data-news', news['id']).css('display', 'none');
     } else {
-        $('i#important1_check').attr('data-news', news['id']);
+        _make.find('i#important1_check').attr('data-news', news['id']);
     }
     if (news['options']['important'] != "Important2") {
-        $('i#important2_check').attr('data-news', news['id']).css('display', 'none');
+        _make.find('i#important2_check').attr('data-news', news['id']).css('display', 'none');
     } else {
-        $('i#important2_check').attr('data-news', news['id']);
+        _make.find('i#important2_check').attr('data-news', news['id']);
     }
     if (news['options']['important'] != "Important3") {
-        $('i#important3_check').attr('data-news', news['id']).css('display', 'none');
+        _make.find('i#important3_check').attr('data-news', news['id']).css('display', 'none');
     } else {
-        $('i#important3_check').attr('data-news', news['id']);
+        _make.find('i#important3_check').attr('data-news', news['id']);
     }
     if (news['options']['read']) {
         _make.find('i#read_icon').addClass('colorGreen fa-circle').attr('data-news', news['id']);
@@ -69,10 +66,10 @@ function make_news_list_view(news) {
     } else {
         _make.find('i#image_icon').css('display-none');
     }
-    if (news['video'] != null && news['video'] != '') {
+    if (news['video'] == null || news['video'] == '') {
         _make.find('i#video_icon').css('display', 'none');
     }
-    if (news['sound'] != null && news['sound'] != '') {
+    if (news['sound'] == null || news['sound'] == '') {
         _make.find('i#sound_icon').css('display', 'none');
     }
     _make.find('i#base_news_link').attr('onclick', "window.open('" + news['link'] + "')");

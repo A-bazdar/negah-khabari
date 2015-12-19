@@ -10,11 +10,13 @@ function make_show_news(news) {
     _make.find('i#send_note_btn').attr('data-news', news['id']);
     if (news['options']['note'] != false) {
         _make.find('i#note_icon').addClass('colorBlue').attr('data-news', news['id']).attr('data-action', news['id']);
-        _make.find('div#note_body_show').html(news['options']['note']);
-        _make.find('textarea#send_note_text').attr('data-news', news['id']).val(news['options']['note']);
+        _make.find('div#note_body_contain').attr('data-news', news['id']);
+        _make.find('div#note_body_show').attr('data-news', news['id']).html(news['options']['note']);
+        _make.find('textarea#send_note_text').attr('data-news', news['id']).text(news['options']['note']);
     }else{
         _make.find('i#note_icon').attr('data-news', news['id']).attr('data-action', news['id']);
-        _make.find('div#note_body_contain').css('display', 'none');
+        _make.find('div#note_body_contain').attr('data-news', news['id']).css('display', 'none');
+        _make.find('div#note_body_show').attr('data-news', news['id']);
         _make.find('textarea#send_note_text').attr('data-news', news['id']);
     }
     if (news['options']['star']) {
@@ -28,6 +30,7 @@ function make_show_news(news) {
     } else {
         $('i#important_icon').attr('data-news', news['id']).attr('data-action', news['id']);
     }
+    _make.find('div#important_drop_down').attr('data-action', news['id']);
     _make.find('div.option-news-important-select').attr('data-news', news['id']);
     if (news['options']['important'] != "Important1") {
         $('i#important1_check').attr('data-news', news['id']).css('display', 'none');
@@ -60,10 +63,10 @@ function make_show_news(news) {
     } else {
         _make.find('i#image_icon').css('display-none');
     }
-    if (news['video'] != null && news['video'] != '') {
+    if (news['video'] == null || news['video'] == '') {
         _make.find('i#video_icon').css('display', 'none');
     }
-    if (news['sound'] != null && news['sound'] != '') {
+    if (news['sound'] == null || news['sound'] == '') {
         _make.find('i#sound_icon').css('display', 'none');
     }
     _make.find('i#base_news_link').attr('onclick', "window.open('" + news['link'] + "')");

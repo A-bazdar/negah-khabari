@@ -5,11 +5,13 @@
 $(document).on('click','.show_option_news', function(){
     var data_news = $(this).attr('data-news');
     if($(this).hasClass('closedp')) {
-        $(this).removeClass('closedp').addClass('open');
-        $('.show_option_news').css('background-position','-47px -130px');
-        $(this).css('background-position','-29px -131px');
-        $('.dropdown-option-container[data-news=' + data_news + ']').slideDown();
-        $('.dropdown-option-container[data-news!=' + data_news + ']').slideUp();
+        if($('.news_list_detail[data-news=' + data_news + ']').hasClass('closeBox')){
+            $(this).removeClass('closedp').addClass('open');
+            $('.show_option_news').css('background-position','-47px -130px');
+            $(this).css('background-position','-29px -131px');
+            $('.dropdown-option-container[data-news=' + data_news + ']').slideDown();
+            $('.dropdown-option-container[data-news!=' + data_news + ']').slideUp();
+        }
     }
     else {
         $(this).removeClass('open').addClass('closedp');
@@ -35,6 +37,7 @@ $(document).on('click','.second-header-dropdown', function(){
 
 $(document).on('click', '.option-news.note', function (e) {
     var data_action = $(this).attr('data-action');
+    var data_news = $(this).attr('data-news');
     if($(this).hasClass('closedp')){
         $('.second-level-drop-down').css('display','none');
         $(this).removeClass('closedp').addClass('open');
@@ -83,7 +86,8 @@ var html_note = '<div class="row margin-top-10" style="background-color: #BED0E2
 $(document).on('click', '.send-comment', function(e){
     var elm = $(e.target);
     var news = elm.attr('data-news');
-    var note = $('.comment-text[data-news='+ news +']').val();
+    var _type = elm.attr('data-type');
+    var note = $('.comment-text[data-news='+ news +'][data-type=' + _type + ']').val();
     if(note != ''){
         var postData = [
             {name: 'news_id', value: news},
@@ -105,7 +109,9 @@ $(document).on('click', '.send-comment', function(e){
                         elm.removeClass('fa-check-circle-o colorGreen').addClass('fa-paper-plane-o colorBlue');
                     }, 400);
                     $('.option-news.note[data-news=' + news + ']').addClass('colorBlue');
-                    $('.body-news-comment[data-news=' + news + ']').html(html_note.replace(/__note__/g, note));
+                    $('.comment-text[data-news='+ news +']').val(note);
+                    $('.note-body-show.note-text[data-news=' + news + ']').html(note);
+                    $('.note-body-contain[data-news=' + news + ']').show();
                 }
             }
         });
@@ -135,11 +141,9 @@ $(document).on('click', '.option-news.star', function (e) {
             var value = response['value'];
             if (status) {
                 if(value == 'add'){
-                    elm.removeClass('fa-star-o');
-                    elm.addClass('colorOrange fa-star');
+                    $('.option-news.star[data-news=' + news + ']').removeClass('fa-star-o').addClass('colorOrange fa-star');
                 }else{
-                    elm.removeClass('colorOrange fa-star');
-                    elm.addClass('fa-star-o');
+                    $('.option-news.star[data-news=' + news + ']').removeClass('colorOrange fa-star').addClass('fa-star-o');
                 }
             }
         }
@@ -213,12 +217,10 @@ $(document).on('click', '.option-news.read', function (e) {
             var value = response['value'];
             if (status) {
                 if(value == 'read'){
-                    elm.removeClass('fa-circle-o');
-                    elm.addClass('colorGreen fa-circle');
+                    $('.option-news.read[data-news=' + news + ']').removeClass('fa-circle-o').addClass('colorGreen fa-circle');
                     $('.news_list_detail[data-news=' + news + ']').addClass('read').removeClass('unread');
                 }else{
-                    elm.removeClass('colorGreen fa-circle');
-                    elm.addClass('fa-circle-o');
+                    $('.option-news.read[data-news=' + news + ']').removeClass('colorGreen fa-circle').addClass('fa-circle-o');
                     $('.news_list_detail[data-news=' + news + ']').addClass('unread').removeClass('read');
                 }
             }
