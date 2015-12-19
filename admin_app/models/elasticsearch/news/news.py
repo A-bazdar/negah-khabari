@@ -222,13 +222,14 @@ class NewsModel:
                 content = ContentModel(_id=ObjectId(_source['content'])).get_one()['value']
             except:
                 content = None
+            options = self.get_options(_id)
             self.value.append(dict(
                 id=_id,
                 link=_source['link'],
                 title=_source['title'],
                 ro_title=_source['ro_title'],
                 body=_source['body'],
-                summary=self.summary_text(_source['summary']),
+                summary=_source['summary'],
                 thumbnail=_source['thumbnail'],
                 agency=agency,
                 content=content,
@@ -236,8 +237,31 @@ class NewsModel:
                 images=_source['images'],
                 video=_source['video'],
                 sound=_source['sound'],
+                options=options,
                 date=khayyam.JalaliDatetime(_date).strftime('%Y %B %d %H:%M:%S'),
                 read_date=_read_date,
+            ))
+        except:
+            Debug.get_exception(send=False)
+
+    def get_news_body_module(self, _source, _id):
+        try:
+            x = _source['date'].split('T')
+            _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+            options = self.get_options(_id)
+            self.value.append(dict(
+                id=str(_id),
+                link=_source['link'],
+                title=_source['title'],
+                ro_title=_source['ro_title'],
+                body=_source['body'],
+                summary=_source['summary'],
+                thumbnail=_source['thumbnail'],
+                images=_source['images'],
+                video=_source['video'],
+                sound=_source['sound'],
+                options=options,
+                date=khayyam.JalaliDatetime(_date).strftime('%Y %B %d %H:%M:%S'),
             ))
         except:
             Debug.get_exception(send=False)
@@ -1275,9 +1299,8 @@ class NewsModel:
 
     def get_one(self):
         try:
-
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, _id=self.id).get_one()
-            self.get_news(r['_source'], r['_id'])
+            self.get_news_body_module(r['_source'], r['_id'])
             self.result['value'] = self.value[0]
             self.result['status'] = True
             return self.result
