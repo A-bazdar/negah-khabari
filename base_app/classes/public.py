@@ -4,7 +4,7 @@ import hashlib
 import os
 import random
 from bson import ObjectId
-from base_app import Config
+from base_config import Config
 import re
 
 __author__ = 'Morteza'
