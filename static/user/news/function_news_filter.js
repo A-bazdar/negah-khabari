@@ -63,6 +63,7 @@ function show_result_news(_page, _view, _grouping, _search, _filter, _sort) {
     var _data = [
         {name: "_xsrf", value: xsrf_token},
         {name: "_page", value: _page},
+        {name: "_view", value: _view},
         {name: "_news_type", value: news_type},
         {name: "_grouping_type", value: grouping_type},
         {name: "_sort", value: _sort},

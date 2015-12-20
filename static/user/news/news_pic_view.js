@@ -17,7 +17,7 @@ function make_news_pic_view(news) {
     _make.find('label#label_news_select').attr('for', news['id']);
     _make.find('p#title_news').html(news['title']);
     _make.find('p#summary_news').html(news['summary']);
-    _make.find('div#show_news_list_container').attr('data-news', news['id']);
+    _make.find('i#show_news_list_container').attr('data-news', news['id']);
     _make.find('div#option_news_drop_down').attr('data-news', news['id']);
     _make.find('div#note_drop_down').attr('data-action', news['id']);
     _make.find('i#send_note_btn').attr('data-news', news['id']);

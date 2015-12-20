@@ -348,8 +348,8 @@ class NewsModel:
                 link=_fields['link'][0],
                 title=_fields['title'][0],
                 ro_title=ro_title,
-                summary=self.summary_text(thumbnail),
-                thumbnail=_fields['thumbnail'][0],
+                summary=self.summary_text(_fields['summary'][0]),
+                thumbnail=thumbnail,
                 read_date=_fields['read_date'][0],
                 _date=CustomDateTime().get_time_difference(_date),
                 agency_name=agency['name'],
@@ -1302,6 +1302,23 @@ class NewsModel:
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, _id=self.id).get_one()
             self.get_news_body_module(r['_source'], r['_id'])
             self.result['value'] = self.value[0]
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
+    def get_news_body(self):
+        try:
+            body = {"fields": ["_id", "body"], "query": {"term": {"_id": self.id}}}
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            body = False
+            if r['hits']['total']:
+                body = r['hits']['hits'][0]['fields']['body'][0]
+
+            self.result['value'] = body
             self.result['status'] = True
             return self.result
 

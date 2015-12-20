@@ -12,6 +12,6 @@ function make_news_column_detail_view(news) {
         _make.find('img#thumbnail_news').attr('data-src', static_url_error_image_news);
     }
     _make.find('div#news_body').html(news['body']);
-    $('#show_result_news #detail_first_news').append(_make.html());
+    $('#show_result_news #detail_first_news').html(_make.html());
     $('div.news_row[data-news=' + news['id'] + ']').fadeIn();
 }
