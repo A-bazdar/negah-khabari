@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from bson import ObjectId
 import datetime
 import khayyam
-from admin_app.classes.debug import Debug
-from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
+from base_app.classes.debug import Debug
+from base_app.models.mongodb.base_model import MongodbModel, BaseModel
 
 __author__ = 'Morteza'
 

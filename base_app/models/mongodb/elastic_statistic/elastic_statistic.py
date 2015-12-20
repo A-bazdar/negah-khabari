@@ -3,8 +3,8 @@
 import datetime
 import json
 import khayyam
-from admin_app.classes.debug import Debug
-from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
+from base_app.classes.debug import Debug
+from base_app.models.mongodb.base_model import MongodbModel, BaseModel
 
 __author__ = 'Morteza'
 
@@ -125,7 +125,7 @@ class ElasticStatisticModel(BaseModel):
 
     def get_result_query(self, **query):
         try:
-            from admin_app.models.elasticsearch.base_model import ElasticSearchModel
+            from base_app.models.elasticsearch.base_model import ElasticSearchModel
             e = ElasticSearchModel(_id=str(query['item_id']), body=query['body'], index=query['index'], doc_type=query['doc_type'])
             result = {}
             if query['function'] == 'search':

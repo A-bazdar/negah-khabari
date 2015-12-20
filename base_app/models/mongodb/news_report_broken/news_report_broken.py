@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 import datetime
 import khayyam
-from admin_app.classes.debug import Debug
-from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
-from admin_app.models.mongodb.user.general_info.general_info import UserModel
+from base_app.classes.debug import Debug
+from base_app.models.mongodb.base_model import MongodbModel, BaseModel
+from base_app.models.mongodb.user.general_info.general_info import UserModel
 
 __author__ = 'Morteza'
 

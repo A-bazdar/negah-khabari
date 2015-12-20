@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
-from admin_app.classes.debug import Debug
-from admin_app.models.mongodb.agency.agency import AgencyModel
-from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
-from admin_app.models.mongodb.content.content import ContentModel
-from admin_app.models.mongodb.subject.subject import SubjectModel
+from base_app.classes.debug import Debug
+from base_app.models.mongodb.agency.agency import AgencyModel
+from base_app.models.mongodb.base_model import MongodbModel, BaseModel
+from base_app.models.mongodb.content.content import ContentModel
+from base_app.models.mongodb.subject.subject import SubjectModel
 
 __author__ = 'Morteza'
 

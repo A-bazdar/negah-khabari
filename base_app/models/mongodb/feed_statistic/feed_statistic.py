@@ -3,10 +3,10 @@
 import datetime
 from bson import ObjectId
 import khayyam
-from admin_app.classes.date import CustomDateTime
-from admin_app.classes.debug import Debug
-from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
-from admin_app.models.mongodb.content.content import ContentModel
+from base_app.classes.date import CustomDateTime
+from base_app.classes.debug import Debug
+from base_app.models.mongodb.base_model import MongodbModel, BaseModel
+from base_app.models.mongodb.content.content import ContentModel
 
 __author__ = 'Morteza'
 

@@ -1,6 +1,6 @@
 import sys
 import traceback
-from admin_app.classes.send_error import SendError
+from base_app.classes.send_error import SendError
 
 
 class Debug:

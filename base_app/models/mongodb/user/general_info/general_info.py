@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 import datetime
 from bson import ObjectId
-from admin_app.classes.debug import Debug
-from admin_app.classes.public import CreateHash
-from admin_app.models.mongodb.base_model import MongodbModel, BaseModel
-from admin_app.models.mongodb.user.group.group import UserGroupModel
+from base_app.classes.debug import Debug
+from base_app.classes.public import CreateHash
+from base_app.models.mongodb.base_model import MongodbModel, BaseModel
+from base_app.models.mongodb.user.group.group import UserGroupModel
 
 __author__ = 'Morteza'
 
@@ -1017,9 +1017,9 @@ class UserModel(BaseModel):
     @staticmethod
     def get_agency_direction_show_source_user(full_current_user):
         try:
-            from admin_app.models.mongodb.direction.direction import DirectionModel
-            from admin_app.models.mongodb.agency.agency import AgencyModel
-            from admin_app.models.mongodb.category.category import CategoryModel
+            from base_app.models.mongodb.direction.direction import DirectionModel
+            from base_app.models.mongodb.agency.agency import AgencyModel
+            from base_app.models.mongodb.category.category import CategoryModel
 
             agency_direction = full_current_user['agency_direction']
             agency_direction_ids = [i['agency'] for i in agency_direction]

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from admin_app.classes.debug import Debug
-from admin_app.models.mongodb.base_model import MongodbModel
-from admin_app.models.mongodb.category.category import CategoryModel
-from admin_app.models.mongodb.direction.direction import DirectionModel
-from admin_app.models.mongodb.subject.subject import SubjectModel
+from base_app.classes.debug import Debug
+from base_app.models.mongodb.base_model import MongodbModel
+from base_app.models.mongodb.category.category import CategoryModel
+from base_app.models.mongodb.direction.direction import DirectionModel
+from base_app.models.mongodb.subject.subject import SubjectModel
 
 __author__ = 'Morteza'
 
