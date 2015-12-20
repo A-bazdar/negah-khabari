@@ -293,22 +293,22 @@ class NewsModel:
                 _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
             except:
                 _date = _source['date']
-
             self.value.append(dict(
-                id=_id,
+                id=str(_id),
                 link=_source['link'],
                 title=_source['title'],
                 ro_title=_source['ro_title'],
                 body=_source['body'],
                 summary=self.summary_text(_source['summary']),
                 thumbnail=_source['thumbnail'],
-                read_date=_source['read_date'],
                 _date=CustomDateTime().get_time_difference(_date),
                 agency_name=agency['name'],
-                images=_source['images'],
-                video=_source['video'],
-                sound=_source['sound'],
-                agency_color=agency['color']
+                images=_source['images'] if 'images' in _source.keys() else [_source['thumbnail']],
+                video=_source['video'] if 'video' in _source.keys() else None,
+                sound=_source['sound'] if 'sound' in _source.keys() else None,
+                agency_color=agency['color'],
+                download='',
+                options=dict(note=False, star=False, important=False, read=False),
             ))
         except:
             Debug.get_exception(send=False)
@@ -630,11 +630,12 @@ class NewsModel:
             self.result['value'] = [], 0
             return self.result
 
-    def get_all_mongo(self, _page=0, _size=30):
+    def get_all_mongo(self, _page=1, _size=20):
         try:
             body = {}
 
             r = MongodbModel(body=body, collection='news', size=_size, page=_page).get_all_pagination()
+            print r
             try:
                 count_all = MongodbModel(body=body, collection='news').count()
             except:
@@ -980,7 +981,7 @@ class NewsModel:
         body = []
         if __news_type == "top_news":
             if __grouping_type != "keyword":
-                from admin_app.models.mongodb.keyword.keyword import KeyWordModel
+                from base_app.models.mongodb.keyword.keyword import KeyWordModel
                 keywords = KeyWordModel().get_all()['value']
                 user_keywords = self.full_current_user['keyword']
                 user_keywords_ids = [i['_id'] for i in user_keywords]
