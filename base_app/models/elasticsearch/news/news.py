@@ -630,7 +630,7 @@ class NewsModel:
             self.result['value'] = [], 0
             return self.result
 
-    def get_all_mongo(self, _page=1, _size=20):
+    def get_all_mongo(self, _page=1, _size=30):
         try:
             body = {}
 
