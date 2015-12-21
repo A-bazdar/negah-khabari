@@ -1761,3 +1761,15 @@ span.select2-arrow {
 span.select2-chosen {
     padding: inherit;
 }
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-center {
+    margin: 0 auto;
+}

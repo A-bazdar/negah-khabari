@@ -136,9 +136,9 @@ function news_update_show_time() {
     var minute = news_update_show_time_title.attr('data-minute');
     minute = parseInt(minute) + 1;
     if (minute > 1)
-        news_update_show_time_title.html('ÈÑæÒ ÑÓÇä? : ' + minute + ' ÏÞ?Þå');
+        news_update_show_time_title.html('ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½? : ' + minute + ' ï¿½ï¿½?ï¿½ï¿½');
     else
-        news_update_show_time_title.html('ÈÑæÒ ÑÓÇä? : åã Ç˜äæä');
+        news_update_show_time_title.html('ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½? : ï¿½ï¿½ Ç˜ï¿½ï¿½ï¿½');
     news_update_show_time_title.attr('data-minute', minute);
 }
 
@@ -157,7 +157,7 @@ $(document).on('click', '#start_update_news', function () {
     update_news();
     $('#news_update_set_time_start').hide();
     $('#news_update_set_time_pause').show();
-    $('#news_update_show_time_title').html('ÈÑæÒ ÑÓÇä? : åã Ç˜äæä').attr('data-minute', 0);
+    $('#news_update_show_time_title').html('ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½? : ï¿½ï¿½ Ç˜ï¿½ï¿½ï¿½').attr('data-minute', 0);
 
 });
 

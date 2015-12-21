@@ -5,6 +5,11 @@
 function make_news_detail_view(news) {
     var _make = $('#make_news_detail_view');
     _make.html($('#news_detail_view').html());
+    if (news['options']['read']) {
+        _make.find('div#read_unread').addClass('read').attr('data-news', news['id']);
+    } else {
+        _make.find('div#read_unread').addClass('unread').attr('data-news', news['id']);
+    }
     _make.find('div#news_row').attr('data-news', news['id']);
     _make.find('input.news-select').attr('id', news['id']).val(news['id']);
     _make.find('label#label_news_select').attr('for', news['id']);
@@ -12,6 +17,7 @@ function make_news_detail_view(news) {
     _make.find('div#summary_news').html(news['summary']);
     _make.find('span#date_news').html(news['_date']);
     _make.find('button#agency_info').css('background', news['agency_color']).html(news['agency_name']);
+    _make.find('div#detail_news_container').attr('data-news', news['id']);
     $('#show_result_news').append(_make.html());
     $('div.news_row[data-news=' + news['id'] + ']').fadeIn();
 }
