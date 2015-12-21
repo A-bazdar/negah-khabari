@@ -1311,6 +1311,19 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def get_one_mongo(self):
+        try:
+            r = MongodbModel(body={"_id": self.id}, collection='news').get_one()
+            self.get_news_module(r, r['_id'])
+            self.result['value'] = self.value[0]
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
     def get_news_body(self):
         try:
             body = {"fields": ["_id", "body"], "query": {"term": {"_id": self.id}}}
