@@ -165,7 +165,7 @@ class BriefsModel:
 
     def restore(self, body):
         try:
-            body = {
+            _body = {
                 'link': body['_source']['link'],
                 'hash_link': body['_source']['hash_link'],
                 'title': body['_source']['title'],
@@ -178,7 +178,7 @@ class BriefsModel:
                 'content': body['_source']['content'],
                 'date': body['_source']['date']
             }
-            self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body, _id=body['_id']).insert()
+            self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=_body, _id=body['_id']).insert()
             self.result['status'] = True
             self.result['message'] = 'INSERT'
 
