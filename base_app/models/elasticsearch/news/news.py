@@ -176,7 +176,7 @@ class NewsModel:
 
     def restore(self, body):
         try:
-            body = {
+            _body = {
                 'link': body['_source']['link'],
                 'hash_link': body['_source']['hash_link'],
                 'title': body['_source']['title'],
@@ -195,7 +195,7 @@ class NewsModel:
                 'read_date': body['_source']['read_date'],
                 'read_timestamp': body['_source']['read_timestamp'],
             }
-            self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body,
+            self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=_body,
                                                       _id=body['_id']).insert()
             self.result['status'] = True
             self.result['message'] = 'INSERT'
