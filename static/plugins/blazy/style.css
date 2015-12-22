@@ -1,0 +1,162 @@
+/*-------------------------------
+ IMAGES
+********************************/
+.wrapper {
+	background-color: #1E1E1E;
+	float:left;
+	height: 0;
+	width:100%;
+	overflow:hidden;
+	position:relative;
+}
+
+.loading {
+	background: #1E1E1E url('/static/images/loading.gif') center center no-repeat;
+}
+img {
+	width:100%;
+	opacity:0;
+	padding:2px 2px 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;   
+	-webkit-transition: opacity 500ms ease-in-out 100ms;
+    -moz-transition: opacity 500ms ease-in-out 100ms;
+    -o-transition: opacity 500ms ease-in-out 100ms;
+    transition: opacity 500ms ease-in-out 100ms;
+}
+
+img.b-loaded {
+	opacity:1;
+	width:auto;
+}
+
+.ratio_big-img {
+	padding-bottom:56.7%;
+}
+.ratio_small-img {
+	padding-bottom:32.61%;
+	width:50%;
+}
+
+/*-------------------------------
+ AD
+********************************/
+.ad {
+	background-color: #1E1E1E;
+	max-height:90px;
+	overflow:hidden;
+}
+
+/*-------------------------------
+ BLOG LINK
+********************************/
+
+.blog-link {
+	text-align: center;
+	font-size: 180%;
+	padding: 50px 0 70px;
+}
+
+.blog-link > a {
+	display: inline-block;
+	text-decoration: none;
+}
+.blog-link > a:hover{
+	text-decoration: underline;
+}
+
+/*-------------------------------
+ MEDIA QUERIES
+********************************/
+
+
+
+.container{
+height:500px;
+overflow:scroll;
+}
+
+
+
+
+
+/* sidebar */
+.sidebar{
+	background: #1e1e1e;
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 250px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	-webkit-overflow-scrolling: touch;
+	padding: 10px 15px 30px;
+	border-right: 1px solid #000;
+	-webkit-box-shadow: 0 0 5px 1px #1e1e1e;
+	-moz-box-shadow: 0 0 5px 1px #1e1e1e;
+	box-shadow: 0 0 5px 1px #1e1e1e;
+}
+	.sidebar .branding{
+		text-decoration:none;
+	}
+	.follow{
+		text-align: center;
+		padding: 8px;
+	}
+	.contents{
+		font:normal 80% Arial, sans-serif;
+	}
+	.contents a{
+		color:#fff;
+		text-decoration:none;
+	}
+	.contents a:hover{
+		color: springgreen;
+	}
+	.contents > a{
+		display:block;
+		font-weight: bold;
+		font-size: 130%;
+		margin: 20px 0 2px;
+		text-decoration: underline;
+	}
+	.contents li:before{
+		content:'- ';
+	}
+	.contents em{
+		font-weight: normal;
+		font-size: 11px;
+	}
+	
+.content{
+	padding: 0 30px 0 280px;
+}
+
+
+@media (max-width: 660px) {
+	h1{
+		font-size: 420%;
+	}
+	.button{
+		position: relative;
+		right: 0;
+		width: 100%;
+	}
+	.share{
+		position: relative;
+		top: 15px;
+		right: 0;
+		width: 100%;
+		padding: 0 0 15px;
+	}
+}
+
+/*TESTING*/
+/*.images{
+width:20000em;overflow-x:scroll;max-width:none;
+}
+.images > div {
+width:970px;
+}*/
