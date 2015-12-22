@@ -28,7 +28,7 @@ class BriefsModel:
         self.subject = subject
         self.link = link
         self.content = content
-        self.max_char_summary = SettingModel().get_max_char_summary()
+        self.max_char_summary = 5
         self.result = {'value': {}, 'status': False}
         self.value = []
 
