@@ -5,10 +5,10 @@ import hashlib
 from bson import ObjectId
 from base_app.classes.debug import Debug
 from base_app.models.elasticsearch.base_model import ElasticSearchModel
-from base_app.models.mongodb.agency.agency import AgencyModel
-from base_app.models.mongodb.content.content import ContentModel
-from base_app.models.mongodb.setting.setting import SettingModel
-from base_app.models.mongodb.subject.subject import SubjectModel
+# from base_app.models.mongodb.agency.agency import AgencyModel
+# from base_app.models.mongodb.content.content import ContentModel
+# from base_app.models.mongodb.setting.setting import SettingModel
+# from base_app.models.mongodb.subject.subject import SubjectModel
 
 __author__ = 'Morteza'
 
