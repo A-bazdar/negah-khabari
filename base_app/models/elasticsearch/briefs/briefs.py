@@ -5,10 +5,10 @@ import hashlib
 from bson import ObjectId
 from base_app.classes.debug import Debug
 from base_app.models.elasticsearch.base_model import ElasticSearchModel
-# from base_app.models.mongodb.agency.agency import AgencyModel
-# from base_app.models.mongodb.content.content import ContentModel
-# from base_app.models.mongodb.setting.setting import SettingModel
-# from base_app.models.mongodb.subject.subject import SubjectModel
+from base_app.models.mongodb.agency.agency import AgencyModel
+from base_app.models.mongodb.content.content import ContentModel
+from base_app.models.mongodb.setting.setting import SettingModel
+from base_app.models.mongodb.subject.subject import SubjectModel
 
 __author__ = 'Morteza'
 
@@ -28,7 +28,7 @@ class BriefsModel:
         self.subject = subject
         self.link = link
         self.content = content
-        self.max_char_summary = 5
+        self.max_char_summary = SettingModel().get_max_char_summary()
         self.result = {'value': {}, 'status': False}
         self.value = []
 
@@ -165,7 +165,7 @@ class BriefsModel:
 
     def restore(self, body):
         try:
-            _body = {
+            body = {
                 'link': body['_source']['link'],
                 'hash_link': body['_source']['hash_link'],
                 'title': body['_source']['title'],
@@ -178,7 +178,7 @@ class BriefsModel:
                 'content': body['_source']['content'],
                 'date': body['_source']['date']
             }
-            self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=_body, _id=body['_id']).insert()
+            self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body, _id=body['_id']).insert()
             self.result['status'] = True
             self.result['message'] = 'INSERT'
 
