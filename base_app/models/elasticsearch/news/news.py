@@ -193,7 +193,7 @@ class NewsModel:
                 'video': body['_source']['video'],
                 'sound': body['_source']['sound'],
                 'read_date': body['_source']['read_date'],
-                'read_timestamp': body['read_timestamp'],
+                'read_timestamp': body['_source']['read_timestamp'],
             }
             self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body,
                                                       _id=body['_id']).insert()
@@ -635,7 +635,6 @@ class NewsModel:
             body = {}
 
             r = MongodbModel(body=body, collection='news', size=_size, page=_page).get_all_pagination()
-            print r
             try:
                 count_all = MongodbModel(body=body, collection='news').count()
             except:
@@ -645,7 +644,6 @@ class NewsModel:
             self.result['value'] = self.value, count_all
             self.result['status'] = True
             return self.result
-
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
