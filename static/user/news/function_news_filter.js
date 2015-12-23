@@ -42,12 +42,10 @@ function get_searches() {
         searches = $("#header_search_news").serializeArray();
     } else if (search_type == "exactly_search") {
         var search_news_header_input = $("#search_news_header_input").val();
-        if (search_news_header_input != "") {
-            searches = [{name: "exactly-word", value: search_news_header_input}, {
-                name: "type-search",
-                value: 'exactly_search'
-            }]
-        }
+        searches = [{name: "exactly-word", value: search_news_header_input}, {
+            name: "type-search",
+            value: 'exactly_search'
+        }]
     } else if (search_type == "refinement_news") {
         searches = $("#refinement_news").serializeArray();
     } else {

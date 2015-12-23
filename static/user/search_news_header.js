@@ -13,7 +13,7 @@ $('select.header-category.search-news').select2().on("change", function(){
         success: function (output3) {
             if (output3 != '0' && output3['agency'].length > 0) {
                 for (var i in output3['agency']) {
-                    options += "<option value='" + output3['agency'][i]['id'] + "'>" + output3['agency'][i]['name'] + "</option>";
+                    options += "<option value='" + output3['agency'][i]['id'] + "'>" + output3['agency'][i]['text'] + "</option>";
                 }
             }
             $(".select.search-news[name=header-agency]").select2("data", []).html(options);

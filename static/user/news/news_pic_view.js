@@ -64,8 +64,8 @@ function make_news_pic_view(news) {
     _make.find('i#site_link').attr('onclick', "window.open('" + show_news_url.replace(/__news__/g, news['id']) + "')");
     if (news['images'].length > 0) {
         var images = '';
-        //for (var i = 0; i < news['images'].length; i++)
-        //    images += '<div class="col-md-6"><img src="' + news['images'][i] + '" class="img-responsive"></div>';
+        for (var i = 0; i < news['images'].length; i++)
+            images += '<div class="col-md-6"><img __src="' + news['images'][i] + '" class="img-responsive"></div>';
         _make.find('div#news_images').html(images);
     } else {
         _make.find('i#image_icon').css('display-none');

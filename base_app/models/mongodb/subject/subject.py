@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from bson import ObjectId
 from base_app.classes.debug import Debug
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
 
@@ -22,6 +23,21 @@ class SubjectModel(BaseModel):
             }
 
             self.result['value'] = str(MongodbModel(collection='subject', body=__body).insert())
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > subject')
+            return self.result
+
+    def update(self):
+        try:
+            __body = {
+                'name': self.name,
+                'parent': self.parent,
+            }
+
+            __condition = {"_id": ObjectId(self.id)}
+            self.result['value'] = MongodbModel(collection='subject', body=__body, condition=__condition).update()
             self.result['status'] = True
             return self.result
         except:
@@ -55,6 +71,32 @@ class SubjectModel(BaseModel):
                         id=i['_id'],
                         name=i['name'],
                         parent=i['parent'],
+                        child=s_l
+                    ))
+                self.result['value'] = l
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > subject')
+            return self.result
+
+    def get_all_two_level(self):
+        try:
+            r = MongodbModel(collection='subject', body={"parent": None}).get_all()
+            if r:
+                l = []
+                for i in r:
+                    s_r = MongodbModel(collection='subject', body={"parent": i['_id']}).get_all()
+                    s_l = []
+                    for j in s_r:
+                        s_l.append(dict(
+                            id=j['_id'],
+                            name=j['name'],
+                        ))
+                    l.append(dict(
+                        id=i['_id'],
+                        name=i['name'],
                         child=s_l
                     ))
                 self.result['value'] = l
@@ -133,6 +175,9 @@ class SubjectModel(BaseModel):
 
     def delete_childs(self):
         try:
+            childs = self.get_all_child()['value']
+            for i in childs:
+                MongodbModel(collection='subject', body={'parent': i['id']}).delete()
             self.result['value'] = MongodbModel(collection='subject', body={'parent': self.parent}).delete()
             self.result['status'] = True
 

@@ -60,8 +60,8 @@ function make_news_list_view(news) {
     _make.find('i#site_link').attr('onclick', "window.open('" + show_news_url.replace(/__news__/g, news['id']) + "')");
     if (news['images'].length > 0) {
         var images = '';
-        //for (var i = 0; i < news['images'].length; i++)
-        //    images += '<div class="col-md-6"><img src="' + news['images'][i] + '" class="img-responsive"></div>';
+        for (var i = 0; i < news['images'].length; i++)
+            images += '<div class="col-md-6"><img __src="' + news['images'][i] + '" class="img-responsive"></div>';
         _make.find('div#news_images').html(images);
     } else {
         _make.find('i#image_icon').css('display-none');
@@ -74,7 +74,7 @@ function make_news_list_view(news) {
     }
     _make.find('i#base_news_link').attr('onclick', "window.open('" + news['link'] + "')");
     _make.find('i#print_icon').attr('data-news', news['id']);
-    _make.find('a#save_icon').attr('download', news["title"] + '.html').attr('href', 'data:text/html;charset=utf-8, ' + news['download']);
+    _make.find('i#save_icon').attr('data-news', news['id']);
     _make.find('i#report_broken_icon').attr('data-news', news['id']).attr('data-action', news['id']);
     _make.find('div#report_broken_drop_down').attr('data-action', news['id']);
     _make.find('i#report_broken_btn').attr('data-title', news['title']).attr('data-link', news['link']).attr('data-news', news['id']);
