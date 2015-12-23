@@ -136,9 +136,9 @@ function news_update_show_time() {
     var minute = news_update_show_time_title.attr('data-minute');
     minute = parseInt(minute) + 1;
     if (minute > 1)
-        news_update_show_time_title.html('���� ����? : ' + minute + ' ��?��');
+        news_update_show_time_title.html('بروز رسانی : ' + minute + ' دقیقه');
     else
-        news_update_show_time_title.html('���� ����? : �� ǘ���');
+        news_update_show_time_title.html('بروز رسانی : هم اکنون');
     news_update_show_time_title.attr('data-minute', minute);
 }
 
@@ -157,7 +157,7 @@ $(document).on('click', '#start_update_news', function () {
     update_news();
     $('#news_update_set_time_start').hide();
     $('#news_update_set_time_pause').show();
-    $('#news_update_show_time_title').html('���� ����? : �� ǘ���').attr('data-minute', 0);
+    $('#news_update_show_time_title').html('بروز رسانی : هم اکنون').attr('data-minute', 0);
 
 });
 

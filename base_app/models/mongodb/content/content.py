@@ -30,6 +30,20 @@ class ContentModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > content')
             return self.result
 
+    def update(self):
+        try:
+            __body = {
+                'name': self.name,
+                'main_page': self.main_page,
+            }
+            __condition = {"_id": ObjectId(self.id)}
+            self.result['value'] = MongodbModel(collection='content', body=__body, condition=__condition).update()
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > content')
+            return self.result
+
     def get_all(self):
         try:
             r = MongodbModel(collection='content', body={}).get_all()
