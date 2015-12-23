@@ -41,6 +41,8 @@ function update_news() {
 
 $(document).on('click', '.change-view-news', function (e) {
     var elm = $(e.target).closest('.change-view-news');
+    $('.change-view-news.active').removeClass('active');
+    elm.addClass('active');
     var _view = elm.attr('data-view');
     var _sort = $('#show_result_news').attr('data-sort');
     var _search = get_searches();
