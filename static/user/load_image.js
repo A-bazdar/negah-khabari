@@ -5,10 +5,10 @@
 function load_news() {
     var bLazy = new Blazy({
         breakpoints: [{
-                width: 420, // max-width
-                src: 'data-src-small'
-            }]
-      , success: function(element){
+            width: 420, // max-width
+            src: 'data-src-small'
+        }]
+        ,success: function(element){
             setTimeout(function(){
                 var parent = element.parentNode;
                 parent.className = parent.className.replace(/\bloading\b/,'');

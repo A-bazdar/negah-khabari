@@ -13,4 +13,11 @@ function make_news_column_list_view(news) {
     _make.find('span#date_news').html(news['_date']);
     $('#show_result_news #news_list').append(_make.html());
     $('div.news_row[data-news=' + news['id'] + ']').fadeIn();
+    $(".__scrolling").niceScroll({
+        cursorcolor: "#000",
+        cursorwidth: "5px",
+        railalign: "left",
+        autohidemode: true,
+        horizrailenabled: false
+    });
 }
