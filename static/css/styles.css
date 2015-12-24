@@ -1342,12 +1342,17 @@ i.close {
     display: inline-block;
 }
 
+.my-dropdown-container:hover .my-dropdown {
+    display: block;
+}
+
 .my-dropdown {
     position: absolute;
-    top: 100%;
+    top: 90%;
     /*right: 0;*/
     z-index: 1000000;
     display: none;
+    /*visibility: hidden;*/
     float: right;
     min-width: 160px;
     padding: 5px 0;
@@ -1361,6 +1366,11 @@ i.close {
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
     background-clip: padding-box;
+    transition: all 0.5s ease 0s;
+}
+
+.my-dropdown a{
+    cursor: pointer;
 }
 
 .my-dropdown.option_news {
@@ -1988,4 +1998,8 @@ a.change-page {
     vertical-align: 2px;
     height: 20px;
     width: 20px;
+}
+
+.change-view-news.active {
+    background: #CCD1E4;
 }

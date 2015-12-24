@@ -77,6 +77,7 @@ function make_show_news(news) {
     _make.find('div#report_broken_drop_down').attr('data-action', news['id']);
     _make.find('i#report_broken_btn').attr('data-title', news['title']).attr('data-link', news['link']).attr('data-news', news['id']);
     _make.find('textarea#report_broken_text').attr('data-news', news['id']);
+    _make.find('div#scroll_news').attr('data-news', news['id']);
     _make.find('div#summary_news').html(news['summary']);
     _make.find('div#body_news').html(news['body'].replace(/src/g, '_src'));
     images = '';
@@ -85,7 +86,8 @@ function make_show_news(news) {
     _make.find('div#news_images_body').html(images);
     _make.find('div#note_body').attr('data-news', news['id']);
     $('.detail_news_container[data-news=' + news['id'] + ']').html(_make.html()).fadeIn();
-    $(".__scrolling[data-news = " + news['id'] + "]").mCustomScrollbar({
+    $(".__scrolling").mCustomScrollbar("destroy");
+    $(".__scrolling").mCustomScrollbar({
         theme: "3d-dark"
     });
 }
