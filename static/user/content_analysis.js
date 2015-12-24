@@ -1,8 +1,7 @@
 /**
  * Created by Morteza on 12/11/2015.
  */
-
-$('.content-analysis.content-analysis-tab').click(function(){
+$(document).on('click', '.content-analysis.content-analysis-tab', function (e) {
     var data_action = $(this).attr('data-action');
     $('.tab_content.content-analysis').hide();
     $('.tab_content.content-analysis[data-action=' + data_action + ']').fadeIn();

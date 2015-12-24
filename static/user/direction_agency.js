@@ -3,7 +3,7 @@
  */
 var check = '<i class="fa fa-check cursor-pointer"></i>';
 
-$('.direction-agency.direction-agency-tabs').click(function(){
+$(document).on('click', '.direction-agency.direction-agency-tabs', function(){
     var data_action = $(this).attr('data-action');
     $('.tab_content.direction-agency').hide();
     $('.tab_content.direction-agency[data-action=' + data_action + ']').fadeIn();

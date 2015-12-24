@@ -3,7 +3,7 @@
  */
 
 
-$('.font-setting.font_setting_tabs').click(function(){
+$(document).on('click', '.font-setting.font_setting_tabs', function(){
     var data_action = $(this).attr('data-action');
     $('.tab_content.font-setting').hide();
     $('.tab_content.font-setting[data-action=' + data_action + ']').fadeIn();

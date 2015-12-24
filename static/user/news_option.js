@@ -229,14 +229,6 @@ $(document).on('click', '.option-news.read', function (e) {
 });
 
 
-$(document).on('click', '.option-news.show-picture', function (e) {
-    var elm = $("div.option-news.div-images", e.target);
-    var images = elm.html().replace(/__src/g, 'src');
-    $('#option_news_body').html(images);
-    $('#option_news').modal('toggle');
-});
-
-
 $(document).on('click', '.option-news.news-report-broken', function (e) {
     var data_action = $(this).attr('data-action');
     if($(this).hasClass('closedp')){
@@ -379,17 +371,10 @@ $(document).on('click', '.option-news.news-report-broken', function (e) {
     }
 });
 
-$('.font-print-option-news.font-print-option-news-tabs').click(function(){
+$(document).on('click', '.font-print-option-news.font-print-option-news-tabs', function(){
     var data_action = $(this).attr('data-action');
     $('.tab_content.font-print-option-news').hide();
     $('.tab_content.font-print-option-news[data-action=' + data_action + ']').fadeIn();
-});
-
-$(document).on('click', '.option-news.print', function (e) {
-    var elm = $(e.target);
-    var news = elm.attr('data-news');
-    $('#news_print_option_news').val(news);
-    $('#pre_print_modal').modal('toggle');
 });
 
 $(document).on('click', '.print-option-news-btn.print-option-news', function(e){

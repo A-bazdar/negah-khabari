@@ -11,20 +11,20 @@ var pattern_agency = '<tr class="pattern-agency-row">\
                 </tr>';
 
 
-$('.pattern-agencies.category').click(function(){
+$(document).on('click', '.pattern-agencies.category', function(){
     var data_action = $(this).attr('data-action');
     $('.pattern-agencies.category-content').css('display','none');
     $('.pattern-agencies.category-content[data-action=' + data_action + ']').fadeIn();
 });
-$('.pattern-agencies.subject').click(function(){
+$(document).on('click', '.pattern-agencies.subject', function(){
     var data_action = $(this).attr('data-action');
     $('.pattern-agencies.subject-content').css('display','none');
     $('.pattern-agencies.subject-content[data-action=' + data_action + ']').fadeIn();
 });
-$('.pattern-agencies.geographic').click(function(){
+$(document).on('click', '.pattern-agencies.geographic', function(){
     var data_action = $(this).attr('data-action');
-    $('pattern-agencies.geographic-content').css('display','none');
-    $('pattern-agencies.geographic-content[data-action=' + data_action + ']').fadeIn();
+    $('.pattern-agencies.geographic-content').css('display','none');
+    $('.pattern-agencies.geographic-content[data-action=' + data_action + ']').fadeIn();
 });
 
 

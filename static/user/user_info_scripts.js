@@ -36,8 +36,7 @@ jQuery.validator.addMethod("iran_phones", function (value, element) {
     return this.optional(element) || /^(0\d{10})$/.test(value);
 }, "شماره تلفن را صحیح وارد کنید.");
 
-$('.switch').lc_switch();
-$('.general_settings_tab').click(function(){
+$(document).on('click', '.general_settings_tab', function(){
     var data_action = $(this).attr('data-action');
     $('.tab_content').css('display','none');
     $('.tab_content[data-action=' + data_action + ']').fadeIn();
