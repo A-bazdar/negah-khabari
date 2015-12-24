@@ -14,6 +14,7 @@ from base_app.models.mongodb.base_model import MongodbModel
 from base_app.models.mongodb.content.content import ContentModel
 from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
+from bs4 import BeautifulSoup
 
 __author__ = 'Morteza'
 
@@ -244,6 +245,13 @@ class NewsModel:
         except:
             Debug.get_exception(send=False)
 
+    @staticmethod
+    def get_body(__body):
+        soup = BeautifulSoup(__body, "html.parser")
+        for i in soup.findAll('img'):
+            i.replaceWith('')
+        return str(soup)
+
     def get_news_body_module(self, _source, _id):
         try:
             x = _source['date'].split('T')
@@ -254,7 +262,7 @@ class NewsModel:
                 link=_source['link'],
                 title=_source['title'],
                 ro_title=_source['ro_title'],
-                body=_source['body'],
+                body=self.get_body(_source['body']),
                 summary=_source['summary'],
                 thumbnail=_source['thumbnail'],
                 images=_source['images'],
