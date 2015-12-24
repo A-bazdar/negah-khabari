@@ -86,8 +86,11 @@ function make_show_news(news) {
     _make.find('div#news_images_body').html(images);
     _make.find('div#note_body').attr('data-news', news['id']);
     $('.detail_news_container[data-news=' + news['id'] + ']').html(_make.html()).fadeIn();
-    $(".__scrolling").mCustomScrollbar("destroy");
-    $(".__scrolling").mCustomScrollbar({
-        theme: "3d-dark"
+    $(".__scrolling").niceScroll({
+        cursorcolor: "#000",
+        cursorwidth: "5px",
+        railalign: "left",
+        autohidemode: true,
+        horizrailenabled: false
     });
 }
