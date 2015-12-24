@@ -1248,7 +1248,7 @@ class NewsModel:
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 for b in r['hits']['hits']:
-                    self.get_titr1(b['_source'], b['_id'])
+                    self.get_titr1(b['fields'], b['_id'])
             except:
                 pass
             self.result['value'] = self.value
