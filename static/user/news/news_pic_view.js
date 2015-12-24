@@ -78,7 +78,7 @@ function make_news_pic_view(news) {
     }
     _make.find('i#base_news_link').attr('onclick', "window.open('" + news['link'] + "')");
     _make.find('i#print_icon').attr('data-news', news['id']);
-    _make.find('a#save_icon').attr('download', news["title"] + '.html').attr('href', 'data:text/html;charset=utf-8, ' + news['download']);
+    _make.find('i#save_icon').attr('data-news', news['id']);
     _make.find('i#report_broken_icon').attr('data-news', news['id']).attr('data-action', news['id']);
     _make.find('div#report_broken_drop_down').attr('data-action', news['id']);
     _make.find('i#report_broken_btn').attr('data-title', news['title']).attr('data-link', news['link']).attr('data-news', news['id']);

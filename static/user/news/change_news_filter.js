@@ -98,6 +98,15 @@ function search_news_header() {
     show_result_news(1, _view, _grouping, _search, _filter, _sort);
 }
 
+$(document).on('click', 'ul#filter_news_header .filter-news-check', function(e){
+    var elm = $(e.target).closest('.filter-news-check');
+    if(elm.attr('data-filter') == 'all'){
+        $('input[type=checkbox][name=news-select]').prop('checked', true);
+    }else{
+        $('input[type=checkbox][name=news-select]').prop('checked', false);
+    }
+});
+
 $(document).on('keyup', '#search_news_header_input', function (e) {
     if (e.keyCode == '13') {
         search_type = "exactly_search";

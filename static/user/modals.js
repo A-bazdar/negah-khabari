@@ -20,6 +20,11 @@ $(document).on('click', '.show-modal', function (e) {
             var news = _elm.attr('data-news');
             $('#news_print_option_news').val(news);
         }
+        if(modal == "UserInfo"){
+            _elm = $(e.target);
+            var tab = _elm.attr('data-modal-tab');
+            $('.general_settings_tab[data-action=' + tab + ']').click();
+        }
         $('#' + modal_id).modal('toggle');
     }else{
         $.ajax({
@@ -43,6 +48,11 @@ $(document).on('click', '.show-modal', function (e) {
                         _elm = $(e.target);
                         var news = _elm.attr('data-news');
                         $('#news_print_option_news').val(news);
+                    }
+                    if(modal == "UserInfo"){
+                        _elm = $(e.target);
+                        var tab = _elm.attr('data-modal-tab');
+                        $('.general_settings_tab[data-action=' + tab + ']').click();
                     }
                     $('select.new_select').select2().removeClass('new_select');
                     $('#' + modal_id).modal('toggle');
