@@ -1025,7 +1025,6 @@ class UserModel(BaseModel):
         try:
             from base_app.models.mongodb.direction.direction import DirectionModel
             from base_app.models.mongodb.agency.agency import AgencyModel
-            from base_app.models.mongodb.category.category import CategoryModel
 
             r = []
 
