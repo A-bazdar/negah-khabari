@@ -266,7 +266,8 @@ class UserModel(BaseModel):
                     keyword=r['keyword'] if 'keyword' in r.keys() else [],
                     content=r['content'] if 'content' in r.keys() else {"main_source_news": [], "news_group": [], "news_maker": []},
                     font=r['font'] if 'font' in r.keys() else {},
-                    last_activity=r['last_activity']
+                    last_activity=r['last_activity'],
+                    view_news=r['view_news'] if 'view_news' in r.keys() else 'list_view',
 
                 )
                 self.result['value'] = v
@@ -1137,6 +1138,18 @@ class UserModel(BaseModel):
             }}}
 
             __condition = {'_id': ObjectId(self.id)}
+            self.result['value'] = MongodbModel(collection='user', body=__body, condition=__condition).update()
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save_charts_content', data='collection > user_group')
+            return self.result
+
+    def change_view_news(self, view_news):
+        try:
+            __body = {"$set": {"view_news": view_news}}
+
+            __condition = {'_id': self.id}
             self.result['value'] = MongodbModel(collection='user', body=__body, condition=__condition).update()
             self.result['status'] = True
             return self.result
