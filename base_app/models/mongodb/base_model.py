@@ -8,8 +8,8 @@ c = Config()
 
 class MongodbBaseModel():
     def __init__(self):
-        connection = pymongo.MongoClient(host=c.mongodb['host'], port=c.mongodb['port'])
-        self.db = connection[c.mongodb['db']]
+        connection = pymongo.MongoClient(host='127.0.0.1', port=27017)
+        self.db = connection['NegahKhabari']
 
 
 class MongodbModel(MongodbBaseModel):
