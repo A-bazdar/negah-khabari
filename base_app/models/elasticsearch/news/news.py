@@ -361,7 +361,7 @@ class NewsModel:
                 read_date=_fields['read_date'][0],
                 _date=CustomDateTime().get_time_difference(_date),
                 agency_name=agency['name'],
-                images=_fields['images'],
+                images=_fields['images'] if 'images' in _fields.keys() else [],
                 video=video,
                 download='',
                 sound=sound,
