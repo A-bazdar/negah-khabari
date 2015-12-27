@@ -1,7 +1,6 @@
 import pymongo
 from base_app.classes.debug import Debug
 from base_config import Config
-from pymongo import MongoClient
 __author__ = 'Morteza'
 c = Config()
 
