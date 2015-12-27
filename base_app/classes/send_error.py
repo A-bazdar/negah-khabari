@@ -11,7 +11,7 @@ __author__ = 'Morteza'
 class SendError:
     def __init__(self, sub_system=None, severity=None, tags=None, file_name=None, file_address=None,
                  function=None, line_num=None, code=None, message=None, data=None):
-        self.url = 'http://bugtrack.ir/AddError'
+        self.url = 'http://tilo.ir/AddError'
 
         self.project = 'NegahKhabari'
         self.sub_system = sub_system
