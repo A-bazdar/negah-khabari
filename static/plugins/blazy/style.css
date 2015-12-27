@@ -28,7 +28,7 @@ img {
 
 img.b-loaded {
 	opacity:1;
-	width:auto;
+	width:100%;
 }
 
 .ratio_big-img {
