@@ -2019,3 +2019,15 @@ a.change-page {
 .line-height-med {
     line-height: 2.5em;
 }
+
+.close-chp-menu {
+    position: absolute;
+    top: 50%;
+    cursor: pointer;
+    left: 0;
+    height: 80px;
+    z-index: 50;
+    width: 5px;
+    background: url("/static/images/Icons.png") no-repeat scroll;
+    background-position: -13px -88px;
+}

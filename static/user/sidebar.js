@@ -17,7 +17,7 @@ $(document).on("click", ".open-side-menu.show-grouping", function (e) {
         $(".__scrolling").niceScroll({
             cursorcolor: "#000",
             cursorwidth: "5px",
-            railalign: "left",
+            railalign: "right",
             autohidemode: false,
             horizrailenabled: false
         });
@@ -47,9 +47,14 @@ $(document).on("click", ".open-side-menu.show-grouping", function (e) {
         $(".__scrolling").niceScroll({
             cursorcolor: "#000",
             cursorwidth: "5px",
-            railalign: "left",
+            railalign: "right",
             autohidemode: false,
             horizrailenabled: false
         });
     }
+});
+
+$(document).on('click','.close-chp-menu', function(){
+    $('.cbp-spmenu.cbp-spmenu-open').removeClass('cbp-spmenu-open');
+    $(".__scrolling").getNiceScroll().remove();
 });
