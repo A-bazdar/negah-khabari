@@ -20,6 +20,9 @@ class FailedNewsModel(BaseModel):
         self.title = title
         self.link = link
         self.value = []
+        self.all_news = []
+        self.agency_list = []
+        self.subject_list = []
         self.result = {'value': {}, 'status': False}
 
     def is_exist(self):
@@ -50,23 +53,49 @@ class FailedNewsModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > failed_news')
             return self.result
 
+    @staticmethod
+    def is_exist_list(_list=None, _key=None, _field="id"):
+        for i in range(len(_list)):
+            if _key == _list[i][_field]:
+                return i
+        return False
+
     def get_failed_news(self, _d):
-        agency = AgencyModel(_id=_d['agency']).get_one()
-        subject = SubjectModel(_id=_d['subject']).get_one()
-        content = ContentModel(_id=_d['content']).get_one()
-        self.value.append(
-            dict(
-                agency=agency,
-                agency_id=_d['agency'],
-                subject=subject,
-                subject_id=_d['subject'],
-                content_id=_d['content'],
-                content=content,
-                title=_d['title'],
-                link=_d['link'],
-                date=_d['date'],
-            )
-        )
+        try:
+            agency = AgencyModel(_id=_d['agency']).get_one()
+            subject = SubjectModel(_id=_d['subject']).get_one()['value']
+
+            self.all_news.append(dict(
+                title=_d['title'][:50] + '...' if _d['title'] is not None else 'بدون عنوان',
+                agency=agency['name'],
+                category=agency['category']['name'],
+                group=subject['name'],
+                subject=subject['name']
+            ))
+
+            _index = self.is_exist_list(_list=self.agency_list, _key=str(agency['id']))
+            if _index is False:
+                self.agency_list.append(dict(
+                    id=str(agency['id']),
+                    name=agency['name'],
+                    count_news=1
+                ))
+            else:
+                self.agency_list[_index]['count_news'] += 1
+
+            _index = self.is_exist_list(_list=self.subject_list, _key=str(subject['id']))
+            if _index is False:
+                self.subject_list.append(dict(
+                    id=str(subject['id']),
+                    name=subject['name'],
+                    agency=agency['name'],
+                    group=agency['name'],
+                    count_news=1
+                ))
+            else:
+                self.subject_list[_index]['count_news'] += 1
+        except:
+            pass
 
     def get_all(self, start=None, end=None):
         try:
@@ -76,34 +105,13 @@ class FailedNewsModel(BaseModel):
                     "$lt": end
                 }
             }
-            r = MongodbModel(collection='failed_news', body=__body).count()
+            r = MongodbModel(collection='failed_news', body=__body).get_all()
 
-            self.result['value'] = r
+            for i in r:
+                self.get_failed_news(i)
+            self.result['value'] = dict(all_news=self.all_news, agency=self.agency_list, subject=self.subject_list)
             self.result['status'] = True
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > failed_news')
             return self.result
-
-    @staticmethod
-    def group_by(col=None, start=None, end=None):
-        try:
-            body = [
-                {
-                    "$match": {
-                        "date": {
-                            "$gte": start,
-                            "$lt": end
-                        }
-                    }
-                },
-                {
-                    "$group": {"_id": "$" + col, "total": {"$sum": 1}}
-                }
-            ]
-
-            r = MongodbModel(collection='failed_news', body=body).aggregate()['result']
-            return [{col: i['_id'], 'total': i['total']} for i in r]
-        except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > group_by', data='collection > failed_news')
-            return []
