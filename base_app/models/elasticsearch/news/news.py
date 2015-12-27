@@ -369,6 +369,7 @@ class NewsModel:
                 agency_color=agency['color']
             ))
         except:
+            print "Error get_news_module_field"
             Debug.get_exception(send=False)
 
     def get_titr1(self, _fields, _id):
@@ -633,8 +634,8 @@ class NewsModel:
             return self.result
 
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            print "Error get_all"
+            Debug.get_exception(send=False)
             self.result['value'] = [], 0
             return self.result
 
