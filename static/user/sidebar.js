@@ -14,6 +14,13 @@ $(document).on("click", ".open-side-menu.show-grouping", function (e) {
         $('#news_grouping_type').attr('data-type', grouping);
         classie.add(this, 'active');
         classie.add(menuRight, 'cbp-spmenu-open');
+        $(".__scrolling").niceScroll({
+            cursorcolor: "#000",
+            cursorwidth: "5px",
+            railalign: "left",
+            autohidemode: false,
+            horizrailenabled: false
+        });
     }else{
         var _loader = '<div class="text-center" style="margin-top: 210px;">' + loader.replace(/20/g, '50') + '</div>';
         $('.sidebar-items.grouping[data-grouping=' + grouping + ']').html(_loader);
@@ -37,5 +44,12 @@ $(document).on("click", ".open-side-menu.show-grouping", function (e) {
         });
         classie.add(this, 'active');
         classie.add(menuRight, 'cbp-spmenu-open');
+        $(".__scrolling").niceScroll({
+            cursorcolor: "#000",
+            cursorwidth: "5px",
+            railalign: "left",
+            autohidemode: false,
+            horizrailenabled: false
+        });
     }
 });
