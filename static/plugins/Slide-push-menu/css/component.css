@@ -4,7 +4,7 @@
 	position: fixed;
 	/*display: none;*/
 	padding: 15px 10px;
-	min-height: 3000px;
+	max-height: 590px;
 }
 
 .cbp-spmenu h3 {
@@ -40,7 +40,7 @@
 .cbp-spmenu-vertical {
 	width: 240px;
 	height: 100%;
-	top: 85px;
+	top: 80px;
 	z-index: 50;
 }
 
