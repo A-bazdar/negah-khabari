@@ -270,6 +270,7 @@ $(document).on('click', '.option-news-all', function(e){
     var option = elm.attr('data-option');
     var value = elm.attr('data-value');
     if(option == 'note' && value != "delete"){
+        elm.html(loader);
         value = $('textarea.send-comment-all').val();
     }
     var postData = [
@@ -339,6 +340,9 @@ $(document).on('click', '.option-news-all', function(e){
                         $('.body-news-comment[data-news=' + r[i] + ']').html('');
                     }
                 }
+                elm.html('ایجاد یادداشت');
+                $('textarea.send-comment-all').val('');
+                $('#create_note').modal('toggle');
             }
         }
     });

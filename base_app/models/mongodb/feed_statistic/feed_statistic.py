@@ -133,11 +133,10 @@ class FeedStatisticModel(BaseModel):
     @staticmethod
     def group_by(col):
         try:
-            body = {
+            body = [{
                 "$group": {"_id": "$" + col, "total": {"$sum": 1}}
-            }
-
-            r = MongodbModel(collection='feed_statistic', body=body).aggregate()['result']
+            }]
+            r = MongodbModel(collection='feed_statistic', body=body).aggregate()
             return [{col: i['_id'], 'total': i['total']} for i in r]
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > group_by', data='collection > feed_statistic')

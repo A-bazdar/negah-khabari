@@ -266,7 +266,8 @@ class UserModel(BaseModel):
                     keyword=r['keyword'] if 'keyword' in r.keys() else [],
                     content=r['content'] if 'content' in r.keys() else {"main_source_news": [], "news_group": [], "news_maker": []},
                     font=r['font'] if 'font' in r.keys() else {},
-                    last_activity=r['last_activity']
+                    last_activity=r['last_activity'],
+                    view_news=r['view_news'] if 'view_news' in r.keys() else 'list_view',
 
                 )
                 self.result['value'] = v
@@ -1016,42 +1017,45 @@ class UserModel(BaseModel):
 
     @staticmethod
     def get_agency_direction_show_source_user(full_current_user):
+        def is_exist(_list=None, _key=None, _field='id'):
+            for _i in range(len(_list)):
+                if _list[_i][_field] == _key:
+                    return _i
+            return False
         try:
             from base_app.models.mongodb.direction.direction import DirectionModel
             from base_app.models.mongodb.agency.agency import AgencyModel
-            from base_app.models.mongodb.category.category import CategoryModel
 
+            r = []
+
+            agencies = AgencyModel().get_all()['value']
             agency_direction = full_current_user['agency_direction']
-            agency_direction_ids = [i['agency'] for i in agency_direction]
-            directions = DirectionModel().get_all('source')['value']
-            for _dir in directions:
-                _agencies = AgencyModel(direction=_dir['id']).get_all_by_direction()['value']
-                _categories = []
-                _categories_id = []
-                for _ag in _agencies:
-                    if _ag['category']['id'] not in _categories_id:
-                        _categories_id.append(_ag['category']['id'])
-                        _cat = CategoryModel(_id=_ag['category']['id']).get_one()['value']
-                        _a = []
-                        for _ag2 in _agencies:
-                            if _ag2['id'] not in agency_direction_ids:
-                                if _ag2['category']['id'] == _cat['id']:
-                                    _ag2['selected'] = False
-                                    _a.append(_ag2)
-                        _cat['agencies'] = _a
-                        _categories.append(_cat)
-                _dir['categories'] = _categories
 
-            for _ad in agency_direction:
-                for _dir in directions:
-                    if _dir['id'] == _ad['direction']:
-                        _a = AgencyModel(_id=_ad['agency']).get_one()
-                        for c in _dir['categories']:
-                            if c['id'] == _a['category']['id']:
-                                _a['selected'] = _ad['direction']
-                                c['agencies'].append(_a)
+            for __ag in agencies:
+                a_index = is_exist(_list=agency_direction, _key=__ag['id'], _field='agency')
+                if a_index is False:
+                    d_index = is_exist(_list=r, _key=__ag['direction']['id'])
+                    if d_index is not False:
+                        c_index = is_exist(_list=r[d_index]['categories'], _key=__ag['category']['id'])
+                        if c_index is not False:
+                            r[d_index]['categories'][c_index]['agencies'].append(dict(id=__ag['id'], name=__ag['name'], selected=False))
+                        else:
+                            r[d_index]['categories'].append(dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=False)]))
+                    else:
+                        r.append(dict(id=__ag['direction']['id'], name=__ag['direction']['name'], categories=[dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=False)])]))
+                else:
+                    direction = DirectionModel(_id=agency_direction[a_index]['direction']).get_one()['value']
+                    d_index = is_exist(_list=r, _key=direction['id'])
+                    if d_index is not False:
+                        c_index = is_exist(_list=r[d_index]['categories'], _key=__ag['category']['id'])
+                        if c_index is not False:
+                            r[d_index]['categories'][c_index]['agencies'].append(dict(id=__ag['id'], name=__ag['name'], selected=direction['id']))
+                        else:
+                            r[d_index]['categories'].append(dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=direction['id'])]))
+                    else:
+                        r.append(dict(id=direction['id'], name=direction['name'], categories=[dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=direction['id'])])]))
 
-            return directions
+            return r
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return {}
@@ -1137,6 +1141,18 @@ class UserModel(BaseModel):
             }}}
 
             __condition = {'_id': ObjectId(self.id)}
+            self.result['value'] = MongodbModel(collection='user', body=__body, condition=__condition).update()
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save_charts_content', data='collection > user_group')
+            return self.result
+
+    def change_view_news(self, view_news):
+        try:
+            __body = {"$set": {"view_news": view_news}}
+
+            __condition = {'_id': self.id}
             self.result['value'] = MongodbModel(collection='user', body=__body, condition=__condition).update()
             self.result['status'] = True
             return self.result

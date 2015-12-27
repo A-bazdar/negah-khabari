@@ -14,6 +14,7 @@ from base_app.models.mongodb.base_model import MongodbModel
 from base_app.models.mongodb.content.content import ContentModel
 from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
+from bs4 import BeautifulSoup
 
 __author__ = 'Morteza'
 
@@ -244,6 +245,13 @@ class NewsModel:
         except:
             Debug.get_exception(send=False)
 
+    @staticmethod
+    def get_body(__body):
+        soup = BeautifulSoup(__body, "html.parser")
+        for i in soup.findAll('img'):
+            i.replaceWith('')
+        return str(soup)
+
     def get_news_body_module(self, _source, _id):
         try:
             x = _source['date'].split('T')
@@ -254,7 +262,7 @@ class NewsModel:
                 link=_source['link'],
                 title=_source['title'],
                 ro_title=_source['ro_title'],
-                body=_source['body'],
+                body=self.get_body(_source['body']),
                 summary=_source['summary'],
                 thumbnail=_source['thumbnail'],
                 images=_source['images'],
@@ -353,7 +361,7 @@ class NewsModel:
                 read_date=_fields['read_date'][0],
                 _date=CustomDateTime().get_time_difference(_date),
                 agency_name=agency['name'],
-                images=_fields['images'],
+                images=_fields['images'] if 'images' in _fields.keys() else [],
                 video=video,
                 download='',
                 sound=sound,
@@ -361,6 +369,7 @@ class NewsModel:
                 agency_color=agency['color']
             ))
         except:
+            print "Error get_news_module_field"
             Debug.get_exception(send=False)
 
     def get_titr1(self, _fields, _id):
@@ -625,8 +634,8 @@ class NewsModel:
             return self.result
 
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            print "Error get_all"
+            Debug.get_exception(send=False)
             self.result['value'] = [], 0
             return self.result
 
@@ -1081,14 +1090,14 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def get_all_all(self, _page, _size=100):
+    def get_all_all(self, _page=0, _size=100, _sort="date"):
         try:
             body = {
                 "from": _page * _size, "size": _size,
                 "query": {
                     "match_all": {}
                 },
-                "sort": {"date": {"order": "desc"}}
+                "sort": {_sort: {"order": "desc"}}
             }
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
@@ -1248,7 +1257,7 @@ class NewsModel:
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 for b in r['hits']['hits']:
-                    self.get_titr1(b['_source'], b['_id'])
+                    self.get_titr1(b['fields'], b['_id'])
             except:
                 pass
             self.result['value'] = self.value

@@ -301,3 +301,49 @@ a.open_details{
 .up_down_button:hover{
     color: #828282;
 }
+
+.table_header{
+    background: #929292;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 0 2px #aaa;
+}
+
+.table_row{
+    color: #828282;
+    text-align: center;
+    border-radius: 5px;
+    /*padding: 10px;*/
+    margin-top: 5px;
+    box-shadow: 0 0 2px #aaa;
+}
+
+.table_row.rw1{
+    background: #f4f4f4;
+}
+
+.table_row.rw2{
+    background: #e7e7e7;
+}
+
+.table_row .table_field{
+    padding: 10px 15px;
+}
+
+.success_status{
+    background: #33c416;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px 0 0 5px;
+}
+
+.danger_status{
+    background: #fe90ff;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px 0 0 5px;
+}

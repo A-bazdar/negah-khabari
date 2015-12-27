@@ -72,14 +72,14 @@ function make_show_news(news) {
     }
     _make.find('i#base_news_link').attr('onclick', "window.open('" + news['link'] + "')");
     _make.find('i#print_icon').attr('data-news', news['id']);
-    _make.find('a#save_icon').attr('download', news["title"] + '.html').attr('href', 'data:text/html;charset=utf-8, ' + news['download']);
+    _make.find('i#save_icon').attr('data-news', news['id']);
     _make.find('i#report_broken_icon').attr('data-news', news['id']).attr('data-action', news['id']);
     _make.find('div#report_broken_drop_down').attr('data-action', news['id']);
     _make.find('i#report_broken_btn').attr('data-title', news['title']).attr('data-link', news['link']).attr('data-news', news['id']);
     _make.find('textarea#report_broken_text').attr('data-news', news['id']);
     _make.find('div#scroll_news').attr('data-news', news['id']);
     _make.find('div#summary_news').html(news['summary']);
-    _make.find('div#body_news').html(news['body'].replace(/src/g, '_src'));
+    _make.find('div#body_news').html(news['body']);
     images = '';
     for (i = 0; i < news['images'].length; i++)
         images += '<img class="news_img b-lazy new_news_img float-center" data-src="' + news['images'][i] + '" data-action="' + news['id'] + '" src="' + static_url_loading + '" onerror="this.onerror=null;this.src=\'' + static_url_error_image_news + '\';">';
