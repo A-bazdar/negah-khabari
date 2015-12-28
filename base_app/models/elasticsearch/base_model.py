@@ -72,14 +72,15 @@ class ElasticSearchModel(ElasticSearchBaseModel):
             return 0
 
     def count(self):
-        try:
+        # try:
             result = self.db.count(index=self.index, doc_type=self.doc_type, body=self.body)
             ElasticStatisticModel(index=self.index, doc_type=self.doc_type, body=self.body, result=result, function='count').insert()
+            print result
             return result['count']
-        except:
+        # except:
             # Debug.get_exception(sub_system='admin', severity='critical_error', tags='elastic_search > count',
             #                     data='index: ' + self.index + ' doc_type: ' + self.doc_type + ' body: ' + str(self.body))
-            return 0
+            # return 0
 
     def get_one(self):
         try:

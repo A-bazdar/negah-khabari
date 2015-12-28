@@ -67,3 +67,13 @@ class NewsReportBrokenModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > news_report_broken')
             return 0
+
+    def delete(self):
+        try:
+            __body = {"_id": self.id}
+            r = MongodbModel(collection='news_report_broken', body=__body).delete()
+            self.result['value'] = r
+            self.result['status'] = True
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > news_report_broken')
+            return self.result

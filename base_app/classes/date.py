@@ -171,3 +171,61 @@ class CustomDateTime:
 
         elif sys.platform == 'win32':
             self.win_set_time(time_tuple)
+
+    def get_time_log(self, type_report_time, page):
+        ls = []
+        if type_report_time == 'hour':
+            end = datetime.datetime.now() - datetime.timedelta(days=(page - 1)) + datetime.timedelta(hours=1)
+            end = datetime.datetime.strptime(str(end.date()) + ' ' + str(end.hour) + ':00:00', '%Y-%m-%d %H:%M:%S')
+            start = self.generate_date_time(date=end, add=False, _type='hours', value=24)
+            while start <= end:
+                ls.append(start)
+                start = self.generate_date_time(date=start, add=True, _type='hours', value=1)
+
+        elif type_report_time == 'day':
+            end = datetime.datetime.now() - datetime.timedelta(days=((page - 1) * 10))
+            end = datetime.datetime.strptime(str(end.date()) + ' 23:00:00', '%Y-%m-%d %H:%M:%S') + datetime.timedelta(hours=1)
+
+            start = self.generate_date_time(date=end, add=False, _type='days', value=10)
+
+            while start <= end:
+                ls.append(start)
+                start = self.generate_date_time(date=start, add=True, _type='days', value=1)
+
+        elif type_report_time == 'week':
+            end = datetime.datetime.now()
+            num_day = khayyam.JalaliDatetime(end).weekday()
+            end = end + datetime.timedelta(days=(6 - num_day)) - datetime.timedelta(weeks=((page - 1) * 10))
+            end = datetime.datetime.strptime(str(end.date()) + ' 23:00:00', '%Y-%m-%d %H:%M:%S') + datetime.timedelta(hours=1)
+
+            start = self.generate_date_time(date=end, add=False, _type='weeks', value=10)
+
+            while start <= end:
+                ls.append(start)
+                start = self.generate_date_time(date=start, add=True, _type='weeks', value=1)
+
+        elif type_report_time == 'month':
+            end = datetime.datetime.now()
+            y = end.year
+            m = (end.month + 1) - ((page - 1) * 10)
+            if m > 12:
+                m = 1
+                y += 1
+            end = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+
+            y = end.year
+            m = end.month - 10
+            if m <= 0:
+                m = 12 - abs(m)
+                y -= 1
+
+            start = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+            while start <= end:
+                ls.append(start)
+                y = start.year
+                m = start.month + 1
+                if m > 12:
+                    m = 1
+                    y += 1
+                start = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+        return ls
