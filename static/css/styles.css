@@ -2026,7 +2026,7 @@ a.change-page {
     cursor: pointer;
     left: 0;
     height: 80px;
-    z-index: 50;
+    z-index: 55555555;
     width: 5px;
     background: url("/static/images/Icons.png") no-repeat scroll;
     background-position: -13px -88px;

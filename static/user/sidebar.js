@@ -56,5 +56,5 @@ $(document).on("click", ".open-side-menu.show-grouping", function (e) {
 
 $(document).on('click','.close-chp-menu', function(){
     $('.cbp-spmenu.cbp-spmenu-open').removeClass('cbp-spmenu-open');
-    $(".__scrolling").getNiceScroll().remove();
+    $(".cbp-spmenu.__scrolling").getNiceScroll().remove();
 });
