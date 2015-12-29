@@ -1565,7 +1565,7 @@ i.close {
     display: inline-block;
     text-align: center;
     color: #6d7488;
-    height: 29px;
+    /*height: 29px;*/
 }
 
 .pagination-container i {
