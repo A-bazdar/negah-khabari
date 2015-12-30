@@ -80,6 +80,7 @@ function make_show_news(news) {
     _make.find('div#scroll_news').attr('data-news', news['id']);
     _make.find('div#summary_news').html(news['summary']);
     _make.find('div#body_news').html(news['body']);
+
     images = '';
     for (i = 0; i < news['images'].length; i++)
         images += '<img class="news_img b-lazy new_news_img float-center" data-src="' + news['images'][i] + '" data-action="' + news['id'] + '" src="' + static_url_loading + '" onerror="this.onerror=null;this.src=\'' + static_url_error_image_news + '\';">';

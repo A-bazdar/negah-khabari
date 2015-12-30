@@ -2008,15 +2008,15 @@ a.change-page {
     overflow-x: hidden;
 }
 
-.line-height-low {
+.line-height-low p, .line-height-low div.body {
     line-height: 1.33em;
 }
 
-.line-height-med {
+.line-height-mid p, .line-height-mid div.body {
     line-height: 2em;
 }
 
-.line-height-med {
+.line-height-high p, .line-height-high div.body {
     line-height: 2.5em;
 }
 
