@@ -53,41 +53,50 @@ class NewsModel:
 
     def is_exist(self):
         try:
-            body = {
-                "filter": {
-                    "or": {
-                        "filters": [
-                            {
-                                "and": {
-                                    "filters": [
-                                        {
-                                            "query": {
-                                                "term": {
-                                                    "hash_title": self.get_hash(self.title)
+            if self.title is not None:
+                body = {
+                    "filter": {
+                        "or": {
+                            "filters": [
+                                {
+                                    "and": {
+                                        "filters": [
+                                            {
+                                                "query": {
+                                                    "term": {
+                                                        "hash_title": self.get_hash(self.title)
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "query": {
+                                                    "term": {
+                                                        "agency": self.agency,
+                                                    }
                                                 }
                                             }
-                                        },
-                                        {
-                                            "query": {
-                                                "term": {
-                                                    "agency": self.agency,
-                                                }
-                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "query": {
+                                        "term": {
+                                            "hash_link": self.get_hash(self.link)
                                         }
-                                    ]
-                                }
-                            },
-                            {
-                                "query": {
-                                    "term": {
-                                        "hash_link": self.get_hash(self.link)
                                     }
                                 }
-                            }
-                        ]
+                            ]
+                        }
                     }
                 }
-            }
+            else:
+                body = {
+                    "query": {
+                        "term": {
+                            "hash_link": self.get_hash(self.link)
+                        }
+                    }
+                }
             e = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             if e['hits']['total']:
                 _id = e['hits']['hits'][0]['_id']
