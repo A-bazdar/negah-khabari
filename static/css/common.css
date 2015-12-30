@@ -347,11 +347,11 @@
 }
 
 .dir-rtl {
-    direction: rtl;
+    direction: rtl !important;
 }
 
 .dir-ltr {
-    direction: ltr;
+    direction: ltr !important;
 }
 
 .no-resize {

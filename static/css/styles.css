@@ -2031,3 +2031,11 @@ a.change-page {
     background: url("/static/images/Icons.png") no-repeat scroll;
     background-position: -13px -88px;
 }
+
+.span-ellipsis {
+    width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    float: right;
+}
