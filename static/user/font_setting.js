@@ -27,15 +27,19 @@ $(document).on('click', '.font-setting-btn.font-setting', function(){
                 if(name == "menu"){
                     $('.font-setting.menu-font.default-again').attr('data-again', result_font['font']);
                     $('.font-setting.menu-size.default-again').attr('data-again', result_font['size']);
+                    $("#cbp-spmenu-s2").css({'font-size': result_font['size'] + 'pt', 'font-family': result_font['font']});
                 }else if(name == "text"){
                     $('.font-setting.text-font.default-again').attr('data-again', result_font['font']);
                     $('.font-setting.text-size.default-again').attr('data-again', result_font['size']);
+                    $(".body-news").css({'font-size': result_font['size'] + 'pt', 'font-family': result_font['font']});
                 }else if(name == "content"){
                     $('.font-setting.content-font.default-again').attr('data-again', result_font['font']);
                     $('.font-setting.content-size.default-again').attr('data-again', result_font['size']);
+                    $(".show_list_title").css({'font-size': result_font['size'] + 'pt', 'font-family': result_font['font']});
                 }else if(name == "detail"){
                     $('.font-setting.detail-font.default-again').attr('data-again', result_font['font']);
                     $('.font-setting.detail-size.default-again').attr('data-again', result_font['size']);
+                    $(".show_list_title").css({'font-size': result_font['size'] + 'pt', 'font-family': result_font['font']});
                 }else if(name == "print"){
                     $('.font-setting.print-font-title.default-again').attr('data-again', result_font['title']['font']);
                     $('.font-setting.print-size-title.default-again').attr('data-again', result_font['title']['size']);

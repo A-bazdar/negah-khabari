@@ -2,7 +2,7 @@
  * Created by Morteza on 12/18/2015.
  */
 
-function make_show_news(news) {
+function make_show_news(news, body_news_font) {
     var _make = $('#make_show_news');
     $('.detail_news_scroll').attr('data-news', news['id']);
     _make.html($('#show_news').html());
@@ -79,7 +79,7 @@ function make_show_news(news) {
     _make.find('textarea#report_broken_text').attr('data-news', news['id']);
     _make.find('div#scroll_news').attr('data-news', news['id']);
     _make.find('div#summary_news').html(news['summary']);
-    _make.find('div#body_news').html(news['body']);
+    _make.find('div#body_news').html(news['body']).css({'font-size': body_news_font['size'] + 'pt', 'font-family': body_news_font['font']});
 
     images = '';
     for (i = 0; i < news['images'].length; i++)

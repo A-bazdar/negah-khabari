@@ -2,7 +2,7 @@
  * Created by Morteza on 12/18/2015.
  */
 
-function make_news_detail_pic_view(news) {
+function make_news_detail_pic_view(news, font, size) {
     var _make = $('#make_news_detail_pic_view');
     _make.html($('#news_detail_pic_view').html());
     if (news['options']['read']) {
@@ -18,7 +18,7 @@ function make_news_detail_pic_view(news) {
     }else{
         _make.find('img#thumbnail_news').attr('data-src', static_url_error_image_news);
     }
-    _make.find('div#title_news').html(news['title']);
+    _make.find('div#title_news').html(news['title']).css({'font-size': size + 'pt', 'font-family': font});
     _make.find('div#summary_news').html(news['summary']);
     _make.find('span#date_news').html(news['_date']);
     _make.find('button#agency_info').css('background', news['agency_color']).html(news['agency_name']);

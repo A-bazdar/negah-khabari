@@ -78,7 +78,7 @@ function show_result_news(_page, _view, _grouping, _search, _filter, _sort) {
             var messages = response['messages'];
             var value = response['value'];
             if (status) {
-                set_news(value['news'], _view);
+                set_news(value['news'], _view, value['font']['font'], value['font']['size']);
                 $('#pagination').html(value['pagination']);
                 $('#nav_search').find('.expert-search-btn').slideUp().removeClass('open').addClass('close');
                 $('button.c-menu__close').click();

@@ -166,14 +166,14 @@ class SettingModel(BaseModel):
         try:
             r = MongodbModel(collection='setting', body={'key': self.key_font}).get_one()
             if r:
-                self.result['value'] = dict(
-                    key=self.key_font,
-                    menu=r['menu'] if 'menu' in r.keys() else dict(font=0, size=0),
-                    text=r['text'] if 'text' in r.keys() else dict(font=0, size=0),
-                    content=r['content'] if 'content' in r.keys() else dict(font=0, size=0),
-                    detail=r['detail'] if 'detail' in r.keys() else dict(font=0, size=0),
-                    _print=r['print'] if 'print' in r.keys() else dict(title=dict(font=0, size=0), summary=dict(font=0, size=0), body=dict(font=0, size=0)),
-                )
+                self.result['value'] = {
+                    "key": self.key_font,
+                    "menu": r['menu'] if 'menu' in r.keys() else dict(font=0, size=0),
+                    "text": r['text'] if 'text' in r.keys() else dict(font=0, size=0),
+                    "content": r['content'] if 'content' in r.keys() else dict(font=0, size=0),
+                    "detail": r['detail'] if 'detail' in r.keys() else dict(font=0, size=0),
+                    "print": r['print'] if 'print' in r.keys() else dict(title=dict(font=0, size=0), summary=dict(font=0, size=0), body=dict(font=0, size=0)),
+                }
 
                 self.result['status'] = True
             else:
