@@ -359,13 +359,18 @@ class NewsModel:
             except:
                 sound = None
 
+            try:
+                summary = _fields['summary'][0]
+            except:
+                summary = _fields['title'][0]
+
             options = self.get_options(_id)
             self.value.append(dict(
                 id=_id,
                 link=_fields['link'][0],
                 title=_fields['title'][0],
                 ro_title=ro_title,
-                summary=self.summary_text(_fields['summary'][0]),
+                summary=self.summary_text(summary),
                 thumbnail=thumbnail,
                 read_date=_fields['read_date'][0],
                 _date=CustomDateTime().get_time_difference(_date),
