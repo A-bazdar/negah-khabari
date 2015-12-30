@@ -85,6 +85,8 @@ function show_result_news(_page, _view, _grouping, _search, _filter, _sort) {
                 load_news();
                 $('body').addClass('loaded');
                 $('h1').css('color', '#222222');
+                $('#news_update_show_time').attr('data-minute', "0");
+                $('#news_update_show_time tooltip section b').html('بروز رسانی : هم اکنون');
             }
         }
     });

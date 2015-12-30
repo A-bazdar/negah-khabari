@@ -142,38 +142,49 @@ $(document).on('click', 'ul#filter_news_header .filter-news', function (e) {
     show_result_news(1, _view, _grouping, _search, _filter, _sort);
 });
 
+
+
+var update_time = 0;
+var start = false;
+var _repeat_update_time = 0;
 function news_update_show_time() {
-    var news_update_show_time_title = $('#news_update_show_time_title');
-    var minute = news_update_show_time_title.attr('data-minute');
-    minute = parseInt(minute) + 1;
-    if (minute > 1)
-        news_update_show_time_title.html('بروز رسانی : ' + minute + ' دقیقه');
-    else
-        news_update_show_time_title.html('بروز رسانی : هم اکنون');
-    news_update_show_time_title.attr('data-minute', minute);
+    update_time += 60000;
+    if(start && _repeat_update_time == update_time){
+        update_news();
+        update_time = 0;
+    }else{
+        var news_update_show_time = $('#news_update_show_time');
+        var minute = news_update_show_time.attr('data-minute');
+        minute = parseInt(minute) + 1;
+        if (minute > 1)
+            $('#news_update_show_time tooltip section b').html('بروز رسانی : ' + minute + ' دقیقه');
+        else
+            $('#news_update_show_time tooltip section b').html('بروز رسانی : هم اکنون');
+        news_update_show_time.attr('data-minute', minute);
+    }
 }
 
-window.setInterval(function () {
+var _timer_2;
+_timer_2 = window.setInterval(function () {
     news_update_show_time();
 }, 60000);
 
-var _timer;
 $(document).on('click', '#start_update_news', function () {
+    clearInterval(_timer_2);
     var _time = $('select#news_update_set_time_change').select2("val");
-    var _repeat_update_time = parseInt(_time);
-    clearInterval(_timer);
-    _timer = window.setInterval(function () {
-        update_news()
-    }, _repeat_update_time);
+    _repeat_update_time = parseInt(_time);
+    start = true;
+    update_time = 0;
     update_news();
+    _timer_2 = window.setInterval(function () {
+        news_update_show_time();
+    }, 60000);
     $('#news_update_set_time_start').hide();
     $('#news_update_set_time_pause').show();
-    $('#news_update_show_time_title').html('بروز رسانی : هم اکنون').attr('data-minute', 0);
-
 });
 
 $(document).on('click', '#news_update_set_time_pause', function () {
     $('#news_update_set_time_start').show();
     $('#news_update_set_time_pause').hide();
-    clearInterval(_timer);
+    start = false;
 });
