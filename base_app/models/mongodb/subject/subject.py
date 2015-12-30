@@ -131,7 +131,6 @@ class SubjectModel(BaseModel):
                 l = [dict(
                     id=i['_id'],
                     name=i['name'],
-                    parent=i['parent'],
                 ) for i in r]
                 self.result['value'] = l
                 self.result['status'] = True

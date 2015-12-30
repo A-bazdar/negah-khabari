@@ -4,6 +4,26 @@
 
 var menuRight = document.getElementById('cbp-spmenu-s2');
 
+function make_sortable(){
+    $('.pr_drag').sortable({
+        connectWith: '.pr_drag',
+        handle: 'div.draggable',
+        cursor: 'move',
+        placeholder: 'placeholder',
+        forcePlaceholderSize: true,
+        opacity: 0.4,
+        stop: function (event, ui) {
+            $(ui.item).find('div.draggable').click();
+            var grouping_type = $('#news_grouping_type').attr('data-type');
+            var postData = [{name: '_xsrf', value: xsrf_token}, {name: 'grouping', value: grouping_type}];
+            $.each($('form.pr_drag[data-grouping=' + grouping_type + '] div.drag'), function(){
+                postData.push({name: 'item', value: $(this).attr('data-id')});
+            });
+            $.ajax({url: show_sidebar_url, type: 'put', data: postData});
+        }
+    })
+}
+
 $(document).on("click", ".open-side-menu.show-grouping", function (e) {
     var elm = $(e.target).closest('.open-side-menu.show-grouping');
     var grouping = elm.attr('data-grouping');
@@ -39,23 +59,7 @@ $(document).on("click", ".open-side-menu.show-grouping", function (e) {
                     $('.sidebar-items.grouping[data-grouping=' + grouping + ']').html(value).fadeIn();
                     $('#news_grouping_type').attr('data-type', grouping);
                     side_bar_grouping.attr('data-' + grouping, 'true');
-                    $('.pr_drag').sortable({
-                        connectWith: '.pr_drag',
-                        handle: 'div.draggable',
-                        cursor: 'move',
-                        placeholder: 'placeholder',
-                        forcePlaceholderSize: true,
-                        opacity: 0.4,
-                        stop: function (event, ui) {
-                            $(ui.item).find('div.draggable').click();
-                            var sortorder='';
-                            $('.pr_drag').each(function(){
-                                var itemorder = $(this).sortable('toArray');
-                                sortorder += itemorder.toString() + '&';
-                            });
-                            //alert('SortOrder: '+sortorder);
-                        }
-                    })
+                    make_sortable();
                 }
             }
         });

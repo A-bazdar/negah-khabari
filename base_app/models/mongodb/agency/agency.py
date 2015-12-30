@@ -69,6 +69,20 @@ class AgencyModel():
             Debug.get_exception(send=False)
             pass
 
+    def get_agency_imp(self, agency):
+        try:
+            self.value.append(dict(
+                id=agency['_id'],
+                name=agency['name'],
+                link=agency['link'],
+                color=agency['color'],
+                status=agency['status'],
+                pic=agency['pic']
+            ))
+        except:
+            Debug.get_exception(send=False)
+            pass
+
     def get_agency_link(self, agency):
         try:
             links = []
@@ -130,6 +144,18 @@ class AgencyModel():
             r = MongodbModel(collection='agency', body={}).get_all()
             for i in r:
                 self.get_agency(i)
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
+            return self.result
+
+    def get_all_imp(self):
+        try:
+            r = MongodbModel(collection='agency', body={}).get_all()
+            for i in r:
+                self.get_agency_imp(i)
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
