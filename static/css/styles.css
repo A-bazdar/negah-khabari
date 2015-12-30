@@ -1565,7 +1565,7 @@ i.close {
     display: inline-block;
     text-align: center;
     color: #6d7488;
-    height: 29px;
+    /*height: 29px;*/
 }
 
 .pagination-container i {
@@ -2026,8 +2026,16 @@ a.change-page {
     cursor: pointer;
     left: 0;
     height: 80px;
-    z-index: 50;
+    z-index: 55555555;
     width: 5px;
     background: url("/static/images/Icons.png") no-repeat scroll;
     background-position: -13px -88px;
+}
+
+.span-ellipsis {
+    width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    float: right;
 }
