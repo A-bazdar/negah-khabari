@@ -12,7 +12,8 @@ __author__ = 'Morteza'
 
 
 class FeedStatisticModel(BaseModel):
-    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, count_link=None, end_time=None, content=None):
+    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, count_link=None,
+                 count_all_link=None, read_links=None, end_time=None, content=None):
         BaseModel.__init__(self)
         self.id = _id
         self.start_time = start_time
@@ -20,6 +21,8 @@ class FeedStatisticModel(BaseModel):
         self.message = message
         self.count = count
         self.count_link = count_link
+        self.count_all_link = count_all_link
+        self.read_links = read_links
         self.end_time = end_time
         self.content = content
         self.value = []
@@ -34,9 +37,10 @@ class FeedStatisticModel(BaseModel):
                 'content': self.content,
                 'count': self.count,
                 'count_link': self.count_link,
+                'count_all_link': self.count_all_link,
+                'read_links': self.read_links,
                 'end_time': self.end_time,
             }
-
             self.result['value'] = str(MongodbModel(collection='feed_statistic', body=__body).insert())
             self.result['status'] = True
             return self.result
@@ -70,6 +74,8 @@ class FeedStatisticModel(BaseModel):
                 message=q['message'],
                 content=content,
                 count_link=q['count_link'],
+                count_all_link=q['count_all_link'] if "count_all_link" in q.keys() else 0,
+                read_links=q['read_links'] if 'read_links' in q.keys() else [],
             )
         )
 
