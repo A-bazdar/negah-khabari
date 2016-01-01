@@ -62,7 +62,7 @@ function make_show_news(news, body_news_font) {
             images += '<div class="col-md-6"><img __src="' + news['images'][i] + '" class="img-responsive"></div>';
         _make.find('div#news_images').html(images);
     } else {
-        _make.find('i#image_icon').css('display-none');
+        _make.find('i#image_icon').css('display', 'none');
     }
     if (news['video'] == null || news['video'] == '') {
         _make.find('i#video_icon').css('display', 'none');
