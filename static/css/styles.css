@@ -2020,6 +2020,10 @@ a.change-page {
     line-height: 2.5em;
 }
 
+.set-line-height.active {
+    background: #CCD1E4;
+}
+
 .close-chp-menu {
     position: absolute;
     top: 50%;

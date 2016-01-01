@@ -268,6 +268,7 @@ class UserModel(BaseModel):
                     font=r['font'] if 'font' in r.keys() else {},
                     last_activity=r['last_activity'],
                     view_news=r['view_news'] if 'view_news' in r.keys() else 'list_view',
+                    line_height=r['line_height'] if 'line_height' in r.keys() else 'low',
                     sort_grouping=r['sort_grouping'] if 'sort_grouping' in r.keys() else {},
 
                 )
@@ -1164,6 +1165,18 @@ class UserModel(BaseModel):
     def update_sort_grouping(self, grouping, sort_list):
         try:
             __body = {"$set": {"sort_grouping." + grouping: sort_list}}
+
+            __condition = {'_id': self.id}
+            self.result['value'] = MongodbModel(collection='user', body=__body, condition=__condition).update()
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save_charts_content', data='collection > user_group')
+            return self.result
+
+    def update_line_height(self, line_height):
+        try:
+            __body = {"$set": {"line_height": line_height}}
 
             __condition = {'_id': self.id}
             self.result['value'] = MongodbModel(collection='user', body=__body, condition=__condition).update()
