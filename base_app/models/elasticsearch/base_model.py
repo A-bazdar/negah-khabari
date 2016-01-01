@@ -1,4 +1,3 @@
-import json
 from base_app.models.mongodb.elastic_statistic.elastic_statistic import ElasticStatisticModel
 from base_config import Config
 from elasticsearch import Elasticsearch

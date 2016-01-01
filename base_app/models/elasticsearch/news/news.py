@@ -58,37 +58,41 @@ class NewsModel:
         try:
             if self.title is not None:
                 body = {
-                    "filter": {
-                        "or": {
-                            "filters": [
-                                {
-                                    "and": {
-                                        "filters": [
-                                            {
-                                                "query": {
-                                                    "term": {
-                                                        "hash_title": self.get_hash(self.title)
+                    "query": {
+                        "filtered": {
+                            "filter": {
+                                "or": {
+                                    "filters": [
+                                        {
+                                            "and": {
+                                                "filters": [
+                                                    {
+                                                        "query": {
+                                                            "term": {
+                                                                "hash_title": self.get_hash(self.title)
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "query": {
+                                                            "term": {
+                                                                "agency": self.agency,
+                                                            }
+                                                        }
                                                     }
-                                                }
-                                            },
-                                            {
-                                                "query": {
-                                                    "term": {
-                                                        "agency": self.agency,
-                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "query": {
+                                                "term": {
+                                                    "hash_link": self.get_hash(self.link)
                                                 }
                                             }
-                                        ]
-                                    }
-                                },
-                                {
-                                    "query": {
-                                        "term": {
-                                            "hash_link": self.get_hash(self.link)
                                         }
-                                    }
+                                    ]
                                 }
-                            ]
+                            }
                         }
                     }
                 }
@@ -100,18 +104,8 @@ class NewsModel:
                         }
                     }
                 }
-            e = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
-            if e['hits']['total']:
-                _id = e['hits']['hits'][0]['_id']
-                if self.content == str(ContentModel().titr1):
-                    _body = {
-                        "script": "ctx._source.content = __content",
-                        "params": {
-                            "__content": str(ContentModel().titr1)
-                        }
-                    }
-                    ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=_body, _id=_id).update()
-                return _id
+            if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
+                return True
             return False
         except:
             return False
@@ -169,8 +163,7 @@ class NewsModel:
                 'read_date': d,
                 'read_timestamp': int(time.mktime(d.timetuple())),
             }
-            e = self.is_exist()
-            if e is False:
+            if not self.is_exist():
                 news = self.get_news_id()
                 self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body,
                                                           _id=news).insert()
@@ -179,7 +172,7 @@ class NewsModel:
                 self.result['message'] = 'INSERT'
                 self.result['type'] = 'NEWS'
             else:
-                self.result['value'] = {'_id': e}
+                self.result['value'] = {}
                 self.result['message'] = 'EXIST'
                 self.result['type'] = 'NEWS'
 
