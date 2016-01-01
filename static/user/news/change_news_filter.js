@@ -102,8 +102,13 @@ $(document).on('click', 'ul#filter_news_header .filter-news-check', function(e){
     var elm = $(e.target).closest('.filter-news-check');
     if(elm.attr('data-filter') == 'all'){
         $('input[type=checkbox][name=news-select]').prop('checked', true);
-    }else{
+    }else if(elm.attr('data-filter') == 'no-one'){
         $('input[type=checkbox][name=news-select]').prop('checked', false);
+    }else{
+        var filter = elm.attr('data-filter');
+        var val = elm.attr('data-val');
+        $('input[type=checkbox][name=news-select]').prop('checked', false);
+        $('input[type=checkbox][name=news-select][data-' + filter + '=' + val + ']').prop('checked', true);
     }
 });
 

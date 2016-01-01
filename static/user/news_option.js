@@ -98,6 +98,7 @@ $(document).on('click', '.send-comment', function(e){
                     $('.comment-text[data-news='+ news +']').val(note);
                     $('.note-body-show.note-text[data-news=' + news + ']').html(note);
                     $('.note-body-contain[data-news=' + news + ']').show();
+                    $('input.news-select[data-news=' + news + ']').attr('data-note', 'true');
                 }
             }
         });
@@ -128,8 +129,10 @@ $(document).on('click', '.option-news.star', function (e) {
             if (status) {
                 if(value == 'add'){
                     $('.option-news.star[data-news=' + news + ']').removeClass('fa-star-o').addClass('colorOrange fa-star');
+                    $('input.news-select[data-news=' + news + ']').attr('data-star', 'true');
                 }else{
                     $('.option-news.star[data-news=' + news + ']').removeClass('colorOrange fa-star').addClass('fa-star-o');
+                    $('input.news-select[data-news=' + news + ']').attr('data-star', 'false');
                 }
             }
         }
@@ -174,6 +177,7 @@ $(document).on('click', '.option-news-important-select', function (e) {
                 if(value == 'add'){
                     $('.option-news-important-check[data-news=' + news + '][data-important= ' + important + ']').fadeIn();
                     $('.option-news.important[data-news=' + news + ']').addClass('colorBeautyRed');
+                    $('input.news-select[data-news=' + news + ']').attr('data-no-important', 'true').attr('data-' + important, 'true');
                 }
             }
         }
@@ -205,9 +209,11 @@ $(document).on('click', '.option-news.read', function (e) {
                 if(value == 'read'){
                     $('.option-news.read[data-news=' + news + ']').removeClass('fa-circle-o').addClass('colorGreen fa-circle');
                     $('.news_list_detail[data-news=' + news + ']').addClass('read').removeClass('unread');
+                    $('input.news-select[data-news=' + news + ']').attr('data-read', 'true');
                 }else{
                     $('.option-news.read[data-news=' + news + ']').removeClass('colorGreen fa-circle').addClass('fa-circle-o');
                     $('.news_list_detail[data-news=' + news + ']').addClass('unread').removeClass('read');
+                    $('input.news-select[data-news=' + news + ']').attr('data-read', 'false');
                 }
             }
         }
@@ -294,11 +300,13 @@ $(document).on('click', '.option-news-all', function(e){
                     for(var i = 0; i < r.length; i++){
                         $('.option-news.read[data-news=' + r[i] + ']').removeClass('fa-circle-o').addClass('colorGreen fa-circle');
                         $('.news_list_detail[data-news=' + r[i] + ']').addClass('read').removeClass('unread');
+                        $('input.news-select[data-news=' + r[i] + ']').attr('data-read', 'true');
                     }
                 }else {
                     for (var i = 0; i < r.length; i++){
                         $('.option-news.read[data-news=' + r[i] + ']').removeClass('colorGreen fa-circle').addClass('fa-circle-o');
                         $('.news_list_detail[data-news=' + r[i] + ']').addClass('unread').removeClass('read');
+                        $('input.news-select[data-news=' + r[i] + ']').attr('data-read', 'false');
                     }
                 }
             }
@@ -306,10 +314,12 @@ $(document).on('click', '.option-news-all', function(e){
                 if(value == 'add'){
                     for(var i = 0; i < r.length; i++){
                         $('.option-news.star[data-news=' + r[i] + ']').removeClass('fa-star-o').addClass('colorOrange fa-star');
+                        $('input.news-select[data-news=' + r[i] + ']').attr('data-star', 'true');
                     }
                 }else{
                     for(var i = 0; i < r.length; i++)
                         $('.option-news.star[data-news=' + r[i] + ']').removeClass('colorOrange fa-star').addClass('fa-star-o');
+                        $('input.news-select[data-news=' + r[i] + ']').attr('data-star', 'false');
                 }
             }
             if(option == 'important'){
@@ -318,11 +328,14 @@ $(document).on('click', '.option-news-all', function(e){
                         $('.option-news-important-check[data-news=' + r[i] + ']').fadeOut();
                         $('.option-news-important-check[data-news=' + r[i] + '][data-important= ' + value + ']').fadeIn();
                         $('.option-news.important[data-news=' + r[i] + ']').addClass('colorBeautyRed');
+                        $('input.news-select[data-news=' + r[i] + ']').attr('data-no-important', 'true').attr('data-' + value, 'true');
                     }
                 }else{
                     for(var i = 0; i < r.length; i++){
                         $('.option-news-important-check[data-news=' + r[i] + ']').fadeOut();
                         $('.option-news.important[data-news=' + r[i] + ']').removeClass('colorBeautyRed');
+                        $('input.news-select[data-news=' + r[i] + ']').attr('data-no-important', 'false')
+                            .attr('data-important1', 'false').attr('data-important2', 'false').attr('data-important3', 'false');
                     }
                 }
             }
@@ -332,12 +345,14 @@ $(document).on('click', '.option-news-all', function(e){
                         $('.comment-text[data-news='+ r[i] +']').val(value);
                         $('.option-news.note[data-news=' + r[i] + ']').addClass('colorBlue');
                         $('.body-news-comment[data-news=' + r[i] + ']').html(html_note.replace(/__note__/g, value));
+                        $('input.news-select[data-news=' + r[i] + ']').attr('data-note', 'true');
                     }
                 }else{
                     for(var i = 0; i < r.length; i++){
                         $('.comment-text[data-news='+ r[i] +']').val('');
                         $('.option-news.note[data-news=' + r[i] + ']').removeClass('colorBlue');
                         $('.body-news-comment[data-news=' + r[i] + ']').html('');
+                        $('input.news-select[data-news=' + r[i] + ']').attr('data-note', 'false');
                     }
                 }
                 elm.html('ایجاد یادداشت');

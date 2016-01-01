@@ -5,6 +5,16 @@
 function make_news_pic_view(news) {
     var _make = $('#make_news_pic_view');
     _make.html($('#news_pic_view').html());
+    var dict_select = {
+        'data-news': news['id'],
+        'data-read': 'false',
+        'data-star': 'false',
+        'data-note': 'false',
+        'data-no-important': 'false',
+        'data-important1': 'false',
+        'data-important2': 'false',
+        'data-important3': 'false'
+    };
     _make.find('div#news_row').attr('data-news', news['id']);
     _make.find('div#news_img_container').attr('data-action', news['id']);
     if(news['thumbnail'] != null && news['thumbnail'] != ''){
@@ -24,12 +34,14 @@ function make_news_pic_view(news) {
     if (news['options']['note'] != false) {
         _make.find('i#note_icon').addClass('colorBlue').attr('data-news', news['id']).attr('data-action', news['id']);
         _make.find('textarea#send_note_text').attr('data-news', news['id']).text(news['options']['note']);
+        dict_select['data-note'] = 'true'
     }else{
         _make.find('i#note_icon').attr('data-news', news['id']).attr('data-action', news['id']);
         _make.find('textarea#send_note_text').attr('data-news', news['id']);
     }
     if (news['options']['star']) {
         _make.find('i#star_icon').addClass('colorOrange fa-star').attr('data-news', news['id']);
+        dict_select['data-star'] = 'true'
     } else {
         _make.find('i#star_icon').addClass('fa-star-o').attr('data-news', news['id']);
     }
@@ -41,23 +53,30 @@ function make_news_pic_view(news) {
         _make.find('i#important_icon').attr('data-news', news['id']).attr('data-action', news['id']);
     }
     _make.find('div.option-news-important-select').attr('data-news', news['id']);
-    if (news['options']['important'] != "Important1") {
-        _make.find('i#important1_check').attr('data-news', news['id']).css('display', 'none');
-    } else {
+    if (news['options']['important'] == "Important1") {
         _make.find('i#important1_check').attr('data-news', news['id']);
-    }
-    if (news['options']['important'] != "Important2") {
-        _make.find('i#important2_check').attr('data-news', news['id']).css('display', 'none');
+        dict_select['data-important1'] = 'true';
+        dict_select['data-no-important'] = 'true'
     } else {
+        _make.find('i#important1_check').attr('data-news', news['id']).css('display', 'none');
+    }
+    if (news['options']['important'] == "Important2") {
         _make.find('i#important2_check').attr('data-news', news['id']);
-    }
-    if (news['options']['important'] != "Important3") {
-        _make.find('i#important3_check').attr('data-news', news['id']).css('display', 'none');
+        dict_select['data-important2'] = 'true';
+        dict_select['data-no-important'] = 'true'
     } else {
+        _make.find('i#important2_check').attr('data-news', news['id']).css('display', 'none');
+    }
+    if (news['options']['important'] == "Important3") {
         _make.find('i#important3_check').attr('data-news', news['id']);
+        dict_select['data-important3'] = 'true';
+        dict_select['data-no-important'] = 'true'
+    } else {
+        _make.find('i#important3_check').attr('data-news', news['id']).css('display', 'none');
     }
     if (news['options']['read']) {
         _make.find('i#read_icon').addClass('colorGreen fa-circle').attr('data-news', news['id']);
+        dict_select['data-read'] = 'true';
     } else {
         _make.find('i#read_icon').addClass('fa-circle-o').attr('data-news', news['id']);
     }
@@ -83,6 +102,7 @@ function make_news_pic_view(news) {
     _make.find('div#report_broken_drop_down').attr('data-action', news['id']);
     _make.find('i#report_broken_btn').attr('data-title', news['title']).attr('data-link', news['link']).attr('data-news', news['id']);
     _make.find('textarea#report_broken_text').attr('data-news', news['id']);
+    _make.find('input.news-select').attr('id', news['id']).val(news['id']).attr(dict_select);
     $('#show_result_news').append(_make.html());
     $('div.news_row[data-news=' + news['id'] + ']').fadeIn();
 }
