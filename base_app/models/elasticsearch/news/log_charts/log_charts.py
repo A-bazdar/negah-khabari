@@ -12,6 +12,7 @@ from base_app.models.mongodb.agency.agency import AgencyModel
 import time
 from base_app.models.mongodb.base_model import MongodbModel
 from base_app.models.mongodb.content.content import ContentModel
+from base_app.models.mongodb.group.group import GroupModel
 from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
 from bs4 import BeautifulSoup
@@ -29,6 +30,7 @@ class NewsLogChartsModel:
         self.category = []
         self.agency = []
         self.subject = []
+        self.group = []
         self.value = []
 
     @staticmethod
@@ -42,12 +44,13 @@ class NewsLogChartsModel:
         try:
             agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
             subject = SubjectModel(_id=ObjectId(_source['subject'])).get_one()['value']
+            group = GroupModel(_id=ObjectId(_source['group'])).get_one()['value']
 
             self.all_news.append(dict(
                 title=_source['title'][:50] + '...',
                 agency=agency['name'],
                 category=agency['category']['name'],
-                group=subject['name'],
+                group=group['name'],
                 subject=subject['name']
             ))
 
@@ -75,6 +78,18 @@ class NewsLogChartsModel:
             else:
                 self.agency[_index]['count_news'] += 1
 
+            _index = self.is_exist(_list=self.group, _key=str(group['id']))
+            if _index is False:
+                self.group.append(dict(
+                    id=str(group['id']),
+                    category=agency['category']['name'],
+                    name=group['name'],
+                    agency=agency['name'],
+                    count_news=1
+                ))
+            else:
+                self.group[_index]['count_news'] += 1
+
             _index = self.is_exist(_list=self.subject, _key=str(subject['id']))
             if _index is False:
                 self.subject.append(dict(
@@ -82,7 +97,7 @@ class NewsLogChartsModel:
                     name=subject['name'],
                     category=agency['category']['name'],
                     agency=agency['name'],
-                    group=agency['name'],
+                    group=group['name'],
                     count_news=1
                 ))
             else:
@@ -120,7 +135,8 @@ class NewsLogChartsModel:
             r = ElasticSearchModel(index=NewsLogChartsModel.index, doc_type=NewsLogChartsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
                 self.get_news_log_charts(b['_source'])
-            self.result['value'] = dict(all_news=self.all_news, category=self.category, agency=self.agency, subject=self.subject)
+            self.result['value'] = dict(all_news=self.all_news, category=self.category,
+                                        agency=self.agency, subject=self.subject, group=self.group)
             self.result['status'] = True
             return self.result
 

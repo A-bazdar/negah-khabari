@@ -24,7 +24,8 @@ class NewsModel:
     doc_type = 'news'
 
     def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
-                 subject=None, body=None, date=None, content=None, full_current_user=None, images=None, video=None, sound=None):
+                 subject=None, body=None, date=None, content=None, full_current_user=None, images=None, video=None,
+                 sound=None, geographic=None, group=None):
         self.id = _id
         self.title = title
         self.agency = agency
@@ -39,6 +40,8 @@ class NewsModel:
         self.images = images
         self.video = video
         self.sound = sound
+        self.geographic = geographic
+        self.group = group
         self.full_current_user = full_current_user
         self.max_char_summary = SettingModel().get_max_char_summary()
         self.result = {'value': {}, 'status': False}
@@ -161,6 +164,8 @@ class NewsModel:
                 'images': self.images,
                 'video': self.video,
                 'sound': self.sound,
+                'geographic': self.geographic,
+                'group': self.group,
                 'read_date': d,
                 'read_timestamp': int(time.mktime(d.timetuple())),
             }
