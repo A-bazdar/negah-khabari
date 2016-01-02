@@ -13,5 +13,10 @@ class Timer:
     def start(self):
         self.start_time = datetime.now()
 
+    @staticmethod
+    def to_float(__d):
+        return float(str(__d.seconds) + '.' + str(__d.microseconds)[:3])
+
     def end(self):
-        return datetime.now() - self.start_time
+        _d = datetime.now() - self.start_time
+        return self.to_float(_d)
