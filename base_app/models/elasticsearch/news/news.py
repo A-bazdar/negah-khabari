@@ -1259,8 +1259,17 @@ class NewsModel:
                 "fields": ["_id", "title", "thumbnail", "read_date", "date",
                            "agency", "images", "video", "sound"],
                 "query": {
-                    "term": {
-                        "content": str(ContentModel().titr1)
+                    "filtered": {
+                        "filter": {
+                            "exists": {
+                                "field": "thumbnail"
+                            }
+                        },
+                        "query": {
+                            "term": {
+                                "content": str(ContentModel().titr1)
+                            }
+                        }
                     }
                 },
                 "sort": {"date": {"order": "desc"}}
