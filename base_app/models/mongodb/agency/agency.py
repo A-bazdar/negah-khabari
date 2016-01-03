@@ -9,17 +9,11 @@ from base_app.models.mongodb.subject.subject import SubjectModel
 __author__ = 'Morteza'
 
 
-class AgencyModel():
-    def __init__(self, _id=None, name=None, link=None, color=None, category=None, direction=None, status=None, pic=None, links=None):
+class AgencyModel:
+    def __init__(self, _id=None, category=None, direction=None):
         self.id = _id
-        self.name = name
-        self.link = link
-        self.color = color
         self.category = category
         self.direction = direction
-        self.links = links
-        self.status = status
-        self.pic = pic
         self.value = []
         self.result = {'value': {}, 'status': False}
 
@@ -44,12 +38,7 @@ class AgencyModel():
                 pic=agency['pic'],
                 base_link=agency['base_link'],
                 links=agency['links'],
-                brief_link=agency['brief_link'],
-                brief_title=agency['brief_title'],
-                brief_ro_title=agency['brief_ro_title'],
-                brief_summary=agency['brief_summary'],
-                brief_container=agency['brief_container'],
-                brief_thumbnail=agency['brief_thumbnail'],
+                news_links=agency['news_links'],
                 news_title=agency['news_title'],
                 news_date=agency['news_date'],
                 news_date_format=agency['news_date_format'],
@@ -58,12 +47,9 @@ class AgencyModel():
                 news_body=agency['news_body'],
                 news_thumbnail=agency['news_thumbnail'],
                 titr1=agency['titr1'],
-                titr1_link=agency['titr1_link'],
-                titr1_container=agency['titr1_container'],
-                titr1_ro_title=agency['titr1_ro_title'],
-                titr1_title=agency['titr1_title'],
-                titr1_summary=agency['titr1_summary'],
-                titr1_thumbnail=agency['titr1_thumbnail']
+                add_by_confirm=agency['add_by_confirm'],
+                extract_image=agency['extract_image'],
+                titr1_links=agency['titr1_links'],
             ))
         except:
             Debug.get_exception(send=False)
@@ -107,29 +93,32 @@ class AgencyModel():
         except:
             pass
 
-    def save(self):
+    def save(self, **agency):
         try:
             __body = {
-                'name': self.name,
-                'base_link': self.link,
-                'color': self.color,
-                'category': self.category,
-                'direction': self.direction,
-                'status': self.status,
-                'pic': self.pic,
-                'link': self.link,
-                'links': self.links,
-                'brief_link': '',
-                'brief_title': '',
-                'brief_ro_title': '',
-                'brief_summary': '',
-                'brief_container': '',
-                'brief_thumbnail': '',
-                'news_title': '',
-                'news_ro_title': '',
-                'news_summary': '',
-                'news_body': '',
-                'news_thumbnail': '',
+                'name': agency['name'],
+                'base_link': agency['link'],
+                'color': agency['color'],
+                'category': agency['category'],
+                'direction': agency['direction'],
+                'status': agency['active'],
+                'pic': agency['pic'],
+                'float_left': agency['float_left'],
+                'add_by_confirm': agency['add_by_confirm'],
+                'extract_image': agency['extract_image'],
+                'news_links': agency['news_links'],
+                'titr1': agency['titr1'],
+                'titr1_links': agency['titr1_links'],
+                'key_words': agency['key_words'],
+                'link': agency['link'],
+                'links': agency['links'],
+                'news_title': agency['news_title'],
+                'news_ro_title': agency['news_ro_title'],
+                'news_date': agency['news_date'],
+                'news_date_format': agency['news_date_format'],
+                'news_summary': agency['news_summary'],
+                'news_body': agency['news_body'],
+                'news_thumbnail': agency['news_thumbnail']
             }
 
             self.result['value'] = str(MongodbModel(collection='agency', body=__body).insert())
