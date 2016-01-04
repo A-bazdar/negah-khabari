@@ -81,7 +81,7 @@ class FeedStatisticModel(BaseModel):
     def get_statistic_times(self, q):
         self.value.append(
             dict(
-                id=str(q['_id']),
+                id=str(q['_id']) if "_id" in q.keys() else str(ObjectId()),
                 extract_news_links=q['extract_news_links'],
                 link=q['link'],
                 summary_link=q['link'][:50],
@@ -100,7 +100,7 @@ class FeedStatisticModel(BaseModel):
     def get_statistic_sub_times(self, q):
         self.value.append(
             dict(
-                id=str(q['_id']),
+                id=str(q['_id']) if "_id" in q.keys() else str(ObjectId()),
                 body=self.get_val(q, 'body'),
                 ro_title=self.get_val(q, 'ro_title'),
                 date=self.get_val(q, 'date'),
