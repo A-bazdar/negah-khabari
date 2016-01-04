@@ -1012,13 +1012,12 @@ class NewsModel:
                 for topic in user_keywords:
                     for _key in topic['keyword']:
                         keyword += [_key['keyword']]
-                        keyword += [i for i in _key['synonyms']]
-                        no_keyword += [i for i in _key['no_synonyms']]
-
-                keyword = ' AND '.join(e.encode('utf-8') for e in keyword)
-                no_keyword = ' AND '.join(e.encode('utf-8') for e in no_keyword)
+                        keyword += _key['synonyms']
+                        no_keyword += _key['no_synonyms']
+                keyword = ' AND '.join(e.encode('utf-8').strip() for e in keyword).replace('AND  AND', 'AND')
+                no_keyword = ' AND '.join(e.encode('utf-8').strip() for e in no_keyword).replace('AND  AND', 'AND')
             else:
-                keyword = ' AND '.join(e for e in __grouping)
+                keyword = ' AND '.join(e.encode('utf-8').strip() for e in __grouping).replace('AND  AND', 'AND')
                 no_keyword = ''
 
             _query = ''
@@ -1066,7 +1065,6 @@ class NewsModel:
             query_filter = self.get_query_filter(_filter)
             query_keyword = self.get_query_keyword(_news_type, _grouping, _grouping_type)
             query_grouping = self.get_query_grouping(_grouping, _grouping_type)
-
             body['filter']['and']['filters'] += query_search
             body['filter']['and']['filters'] += query_keyword
             if query_filter is not False:
