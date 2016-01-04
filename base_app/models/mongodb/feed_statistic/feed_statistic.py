@@ -75,16 +75,88 @@ class FeedStatisticModel(BaseModel):
                 content=content,
                 count_link=q['count_link'],
                 count_all_link=q['count_all_link'] if "count_all_link" in q.keys() else 0,
-                times=q['times'] if 'times' in q.keys() else [],
+            )
+        )
+
+    def get_statistic_times(self, q):
+        self.value.append(
+            dict(
+                id=str(q['_id']),
+                extract_news_links=q['extract_news_links'],
+                link=q['link'],
+                summary_link=q['link'][:50],
+                read_news_links=q['read_news_links'],
+                time=q['time'],
+            )
+        )
+
+    @staticmethod
+    def get_val(__dict, __key):
+        try:
+            return __dict[__key]
+        except:
+            return 0
+
+    def get_statistic_sub_times(self, q):
+        self.value.append(
+            dict(
+                id=str(q['_id']),
+                body=self.get_val(q, 'body'),
+                ro_title=self.get_val(q, 'ro_title'),
+                date=self.get_val(q, 'date'),
+                video=self.get_val(q, 'video'),
+                images=self.get_val(q, 'images'),
+                extract_news=self.get_val(q, 'extract_news'),
+                extract=self.get_val(q, 'extract'),
+                sound=self.get_val(q, 'sound'),
+                read_news_url=self.get_val(q, 'read_news_url'),
+                title=self.get_val(q, 'title'),
+                summary=self.get_val(q, 'summary'),
+                time=self.get_val(q, 'time'),
+                link=q['link'],
+                summary_link=q['link'][:50],
+                save=self.get_val(q, 'save'),
+                is_exist=self.get_val(q, 'is_exist'),
+                thumbnail=self.get_val(q, 'thumbnail'),
             )
         )
 
     def get_all(self, _page=1, _size=20):
         try:
             __body = {"content": self.content}
-            r = MongodbModel(collection='feed_statistic', body=__body, page=_page, size=_size, sort="start_time").get_all_pagination()
+            __key = {"_id": 1, "content": 1, "count": 1, "count_all_link": 1, "count_link": 1,
+                     "end_time": 1, "start_time": 1, "error": 1, "message": 1}
+            r = MongodbModel(collection='feed_statistic', body=__body, key=__key, page=_page, size=_size, sort="start_time").get_all_key_pagination()
             for i in r:
                 self.get_statistic(i)
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > feed_statistic')
+            return self.result
+
+    def get_all_times(self):
+        try:
+            __body = {"_id": self.id}
+            __key = {"times._id": 1, "times.time": 1, "times.link": 1, "times.extract_news_links": 1, "times.read_news_links": 1}
+            r = MongodbModel(collection='feed_statistic', body=__body, key=__key).get_one_key()
+            for i in r['times']:
+                self.get_statistic_times(i)
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > feed_statistic')
+            return self.result
+
+    def get_all_sub_times(self, time_id):
+        try:
+            __body = {"_id": self.id, "times._id": time_id}
+            __key = {"times.$": 1}
+            r = MongodbModel(collection='feed_statistic', body=__body, key=__key).get_one_key()
+            for i in r['times'][0]['save_news']:
+                self.get_statistic_sub_times(i)
             self.result['value'] = self.value
             self.result['status'] = True
             return self.result
