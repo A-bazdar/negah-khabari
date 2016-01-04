@@ -77,7 +77,7 @@ function make_news_list_view(news, font, size) {
     if (news['images'].length > 0) {
         var images = '';
         for (var i = 0; i < news['images'].length; i++)
-            images += '<div class="col-md-6"><img __src="' + news['images'][i] + '" class="img-responsive"></div>';
+            images += '<div class="col-md-6"><img __src="' + news['images'][i] + '" class="img-responsive new_news_img"></div>';
         _make.find('div#news_images').html(images);
     } else {
         _make.find('i#image_icon').css('display', 'none');

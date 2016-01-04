@@ -38,9 +38,9 @@ function make_news_column_detail_view(news) {
     }
     _make.find('div#detail_row').attr('data-news', news['id']);
     if(news['thumbnail'] != null && news['thumbnail'] != ''){
-        _make.find('img#thumbnail_news').attr('data-src', news['thumbnail']).attr('data-action', news['id']);
+        _make.find('img#thumbnail_news').attr('data-src', news['thumbnail']).attr('data-action', news['id']).addClass('new_news_img');
     }else{
-        _make.find('img#thumbnail_news').attr('data-src', static_url_error_image_news);
+        _make.find('img#thumbnail_news').attr('data-src', static_url_error_image_news).addClass('new_news_img');
     }
     _make.find('div#news_body').html(news['body']);
     _make.find('input.news-select').attr('id', news['id']).val(news['id']).attr(dict_select);

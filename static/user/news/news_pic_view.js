@@ -18,9 +18,9 @@ function make_news_pic_view(news) {
     _make.find('div#news_row').attr('data-news', news['id']);
     _make.find('div#news_img_container').attr('data-action', news['id']);
     if(news['thumbnail'] != null && news['thumbnail'] != ''){
-        _make.find('img#thumbnail_news').attr('data-src', news['thumbnail']).attr('data-action', news['id']);
+        _make.find('img#thumbnail_news').attr('data-src', news['thumbnail']).attr('data-action', news['id']).addClass('new_news_img');
     }else{
-        _make.find('img#thumbnail_news').attr('data-src', static_url_error_image_news);
+        _make.find('img#thumbnail_news').attr('data-src', static_url_error_image_news).addClass('new_news_img');
     }
     _make.find('div#abstract_news').attr('data-action', news['id']);
     _make.find('input.news-select').attr('id', news['id']).val(news['id']);

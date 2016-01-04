@@ -79,10 +79,10 @@ function show_result_news(_page, _view, _grouping, _search, _filter, _sort) {
             var value = response['value'];
             if (status) {
                 set_news(value['news'], _view, value['font']['font'], value['size']);
+                load_news();
                 $('#pagination').html(value['pagination']);
                 $('#nav_search').find('.expert-search-btn').slideUp().removeClass('open').addClass('close');
                 $('button.c-menu__close').click();
-                load_news();
                 $('body').addClass('loaded');
                 $('h1').css('color', '#222222');
                 $('#news_update_show_time').attr('data-minute', "0");
