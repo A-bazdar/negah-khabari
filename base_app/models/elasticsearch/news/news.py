@@ -1014,10 +1014,22 @@ class NewsModel:
                         keyword += [_key['keyword']]
                         keyword += _key['synonyms']
                         no_keyword += _key['no_synonyms']
-                keyword = ' AND '.join(e.encode('utf-8').strip() for e in keyword).replace('AND  AND', 'AND')
-                no_keyword = ' AND '.join(e.encode('utf-8').strip() for e in no_keyword).replace('AND  AND', 'AND')
+                _keyword = []
+                _no_keyword = []
+                for i in keyword:
+                    if i != "" and i != " ":
+                        _keyword.append(i)
+                for i in keyword:
+                    if i != "" and i != " ":
+                        no_keyword.append(i)
+                keyword = ' AND '.join(e.encode('utf-8').strip() for e in _keyword).replace('AND  AND', 'AND')
+                no_keyword = ' AND '.join(e.encode('utf-8').strip() for e in _no_keyword).replace('AND  AND', 'AND')
             else:
-                keyword = ' AND '.join(e.encode('utf-8').strip() for e in __grouping).replace('AND  AND', 'AND')
+                _keyword = []
+                for i in __grouping:
+                    if i != "" and i != " ":
+                        _keyword.append(i)
+                keyword = ' AND '.join(e.encode('utf-8').strip() for e in _keyword).replace('AND  AND', 'AND')
                 no_keyword = ''
 
             _query = ''
