@@ -1015,6 +1015,7 @@ class NewsModel:
                         keyword += _key['synonyms']
                         no_keyword += _key['no_synonyms']
                 keyword = ' AND '.join(e.encode('utf-8').strip() for e in keyword).replace('AND  AND', 'AND')
+                print keyword.encode('utf-8')
                 no_keyword = ' AND '.join(e.encode('utf-8').strip() for e in no_keyword).replace('AND  AND', 'AND')
             else:
                 keyword = ' AND '.join(e.encode('utf-8').strip() for e in __grouping).replace('AND  AND', 'AND')
