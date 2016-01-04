@@ -83,7 +83,7 @@ function make_show_news(news, body_news_font) {
 
     images = '';
     for (i = 0; i < news['images'].length; i++)
-        images += '<img class="news_img b-lazy new_news_img float-center" data-src="' + news['images'][i] + '" data-action="' + news['id'] + '" src="' + static_url_loading + '" onerror="this.onerror=null;this.src=\'' + static_url_error_image_news + '\';">';
+        images += '<img class="news_img new_news_img b-lazy new_news_img float-center" data-src="' + news['images'][i] + '" data-action="' + news['id'] + '" src="' + static_url_loading + '" onerror="this.onerror=null;this.src=\'' + static_url_error_image_news + '\';">';
     _make.find('div#news_images_body').html(images);
     _make.find('div#note_body').attr('data-news', news['id']);
     $('.detail_news_container[data-news=' + news['id'] + ']').html(_make.html()).fadeIn();
