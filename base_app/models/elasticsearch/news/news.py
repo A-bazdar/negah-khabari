@@ -1015,7 +1015,6 @@ class NewsModel:
                         keyword += _key['synonyms']
                         no_keyword += _key['no_synonyms']
                 keyword = ' AND '.join(e.encode('utf-8').strip() for e in keyword).replace('AND  AND', 'AND')
-                print keyword.encode('utf-8')
                 no_keyword = ' AND '.join(e.encode('utf-8').strip() for e in no_keyword).replace('AND  AND', 'AND')
             else:
                 keyword = ' AND '.join(e.encode('utf-8').strip() for e in __grouping).replace('AND  AND', 'AND')
@@ -1068,6 +1067,7 @@ class NewsModel:
             query_grouping = self.get_query_grouping(_grouping, _grouping_type)
             body['filter']['and']['filters'] += query_search
             body['filter']['and']['filters'] += query_keyword
+            print query_keyword
             if query_filter is not False:
                 body['filter']['and']['filters'] += [query_filter]
             if query_grouping is not False:
