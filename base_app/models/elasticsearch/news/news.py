@@ -97,7 +97,6 @@ class NewsModel:
                     }
                 }
             else:
-
                 body = {
                     "query": {
                         "term": {
