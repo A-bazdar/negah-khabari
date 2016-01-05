@@ -13,7 +13,6 @@ class Timer:
 
     def start(self):
         self.start_time = datetime.now()
-        print self.start_time
 
     @staticmethod
     def to_float(__d):
