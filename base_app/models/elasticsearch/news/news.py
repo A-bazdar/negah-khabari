@@ -104,7 +104,8 @@ class NewsModel:
                         }
                     }
                 }
-            if ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
+            x = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            if x['hits']['total']:
                 return True
             return False
         except:
