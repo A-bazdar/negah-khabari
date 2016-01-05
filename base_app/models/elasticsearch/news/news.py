@@ -107,7 +107,6 @@ class NewsModel:
                     }
                 }
             x = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
-            print x
             if x['hits']['total']:
                 return True
             return False
