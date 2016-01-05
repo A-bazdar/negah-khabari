@@ -99,15 +99,14 @@ class NewsModel:
             else:
 
                 body = {
-                    "fields": [],
                     "query": {
                         "term": {
                             "hash_link": self.get_hash(self.link)
                         }
                     }
                 }
-            x = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
-            if x['hits']['total']:
+            x = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count()
+            if x:
                 return True
             return False
         except:
