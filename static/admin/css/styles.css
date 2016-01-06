@@ -328,6 +328,10 @@ a.open_details{
     background: #e7e7e7;
 }
 
+.table_row.rw3{
+    background: #bebebe;
+}
+
 .table_row .table_field{
     padding: 10px 15px;
 }
