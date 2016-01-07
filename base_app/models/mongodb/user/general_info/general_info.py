@@ -270,6 +270,7 @@ class UserModel(BaseModel):
                     view_news=r['view_news'] if 'view_news' in r.keys() else 'list_view',
                     line_height=r['line_height'] if 'line_height' in r.keys() else 'low',
                     sort_grouping=r['sort_grouping'] if 'sort_grouping' in r.keys() else {},
+                    sort_news=r['sort_news'] if 'sort_news' in r.keys() else "date",
 
                 )
                 self.result['value'] = v
@@ -1150,9 +1151,9 @@ class UserModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save_charts_content', data='collection > user_group')
             return self.result
 
-    def change_view_news(self, view_news):
+    def change_view_sort_news(self, view_news, sort_news):
         try:
-            __body = {"$set": {"view_news": view_news}}
+            __body = {"$set": {"view_news": view_news, "sort_news": sort_news}}
 
             __condition = {'_id': self.id}
             self.result['value'] = MongodbModel(collection='user', body=__body, condition=__condition).update()

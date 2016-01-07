@@ -652,6 +652,78 @@ class NewsModel:
             self.result['value'] = [], 0
             return self.result
 
+    def get_all_index(self, _page=0, _size=20, _sort="date"):
+        try:
+            if _page >= 1:
+                _page -= 1
+
+            body = {
+                "from": _page * _size, "size": _size,
+                "fields": ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
+                           "agency", "images", "video", "sound"],
+                "filter": {
+                    "and": {
+                        "filters": []
+                    }
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+            query_sort = self.get_query_sort(_sort)
+            if query_sort is not False:
+                body['filter']['and']['filters'] += [query_sort]
+
+            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            try:
+                count_all = r['hits']['total']
+            except:
+                count_all = 0
+            try:
+                count = len(r['hits']['hits'])
+            except:
+                count = 0
+
+            for b in r['hits']['hits']:
+                self.get_news_module_field(b['fields'], b['_id'])
+
+            if count < _size and _sort != "date":
+                body = {
+                    "from": 0, "size": _size - count,
+                    "fields": ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
+                               "agency", "images", "video", "sound"],
+                    "filter": {
+                        "and": {
+                            "filters": []
+                        }
+                    },
+                    "sort": {"date": {"order": "desc"}}
+                }
+                if count == 0:
+                    body['from'] = _page * _size
+                    body['size'] = _size
+
+                query_sort = self.get_query_un_sort(_sort)
+                if query_sort is not False:
+                    body['filter']['and']['filters'] += [query_sort]
+
+                r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+                try:
+                    count_all += r['hits']['total']
+                except:
+                    pass
+
+                for b in r['hits']['hits']:
+                    self.get_news_module_field(b['fields'], b['_id'])
+
+            self.result['value'] = self.value, count_all
+            self.result['status'] = True
+            return self.result
+
+        except:
+            print "Error get_all"
+            Debug.get_exception(send=False)
+            self.result['value'] = [], 0
+            return self.result
+
     def get_all_mongo(self, _page=1, _size=30):
         try:
             body = {}
@@ -946,13 +1018,77 @@ class NewsModel:
 
     def get_query_sort(self, _sort):
         query_sort = False
-        if _sort == "unread":
+        if _sort == "date":
+            return False
+        elif _sort == 'unread':
             query_sort = {
                 "not": {
                     "filter": {
                         "query": {
                             "terms": {
                                 "_id": self.full_current_user['read']
+                            }
+                        }
+                    }
+                }
+            }
+        elif _sort == 'star':
+            query_sort = {
+                "query": {
+                    "terms": {
+                        "_id": self.full_current_user['star']
+                    }
+                }
+            }
+        elif _sort == 'important':
+            important = self.full_current_user['important']
+            _news = []
+            for i in important:
+                _news.append(i['news'])
+            query_sort = {
+                "query": {
+                    "terms": {
+                        "_id": _news
+                    }
+                }
+            }
+        return query_sort
+
+    def get_query_un_sort(self, _sort):
+        query_sort = False
+        if _sort == "date":
+            return False
+        elif _sort == 'unread':
+            query_sort = {
+                "query": {
+                    "terms": {
+                        "_id": self.full_current_user['read']
+                    }
+                }
+            }
+        elif _sort == 'star':
+            query_sort = {
+                "not": {
+                    "filter": {
+                        "query": {
+                            "terms": {
+                                "_id": self.full_current_user['star']
+                            }
+                        }
+                    }
+                }
+            }
+        elif _sort == 'important':
+            important = self.full_current_user['important']
+            _news = []
+            for i in important:
+                _news.append(i['news'])
+            query_sort = {
+                "not": {
+                    "filter": {
+                        "query": {
+                            "terms": {
+                                "_id": _news
                             }
                         }
                     }
@@ -1054,7 +1190,7 @@ class NewsModel:
                 })
         return body
 
-    def get_all_by_subject_search(self, _search=None, _grouping=None, _grouping_type=None, _news_type=None, _filter=None, _page=0, _size=30, _sort="date"):
+    def get_all_by_subject_search(self, _search=None, _grouping=None, _grouping_type=None, _news_type=None, _page=0, _size=30, _sort="date"):
         if _page >= 1:
             _page -= 1
         if not _grouping:
@@ -1073,16 +1209,16 @@ class NewsModel:
                 "sort": {"date": {"order": "desc"}}
             }
 
-            # query_sort = self.get_query_sort(_sort)
+            query_sort = self.get_query_sort(_sort)
             query_search = self.get_query_search(_search)
-            query_filter = self.get_query_filter(_filter)
+            # query_filter = self.get_query_filter(_filter)
             query_keyword = self.get_query_keyword(_news_type, _grouping, _grouping_type)
             query_grouping = self.get_query_grouping(_grouping, _grouping_type)
             body['filter']['and']['filters'] += query_search
             body['filter']['and']['filters'] += query_keyword
-            print query_keyword
-            if query_filter is not False:
-                body['filter']['and']['filters'] += [query_filter]
+
+            if query_sort is not False:
+                body['filter']['and']['filters'] += [query_sort]
             if query_grouping is not False:
                 body['filter']['and']['filters'] += [query_grouping]
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
@@ -1090,8 +1226,43 @@ class NewsModel:
                 count_all = r['hits']['total']
             except:
                 count_all = 0
+            try:
+                count = len(r['hits']['hits'])
+            except:
+                count = 0
+
             for b in r['hits']['hits']:
                 self.get_news_module_field(b['fields'], b['_id'])
+
+            if count < _size and _sort != "date":
+                body = {
+                    "from": 0, "size": _size - count,
+                    "fields": ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
+                               "agency", "images", "video", "sound"],
+                    "filter": {
+                        "and": {
+                            "filters": []
+                        }
+                    },
+                    "sort": {"date": {"order": "desc"}}
+                }
+                if count == 0:
+                    body['from'] = _page * _size
+                    body['size'] = _size
+
+                query_sort = self.get_query_un_sort(_sort)
+                if query_sort is not False:
+                    body['filter']['and']['filters'] += [query_sort]
+
+                r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+                try:
+                    count_all += r['hits']['total']
+                except:
+                    pass
+
+                for b in r['hits']['hits']:
+                    self.get_news_module_field(b['fields'], b['_id'])
+
             self.result['value'] = self.value, count_all
             self.result['status'] = True
             return self.result

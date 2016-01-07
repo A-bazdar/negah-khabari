@@ -2004,6 +2004,10 @@ a.change-page {
     background: #CCD1E4;
 }
 
+.change-sort-news.active {
+    background: #CCD1E4;
+}
+
 .__scrolling {
     overflow-x: hidden;
 }

@@ -54,7 +54,7 @@ function get_searches() {
     return searches
 }
 
-function show_result_news(_page, _view, _grouping, _search, _filter, _sort) {
+function show_result_news(_page, _view, _grouping, _search, _sort) {
     $('body').removeClass('loaded');
     var news_type = $('.grouping.type-grouping.active').attr('data-type');
     var grouping_type = $('#news_grouping_type').attr('data-type');
@@ -64,8 +64,7 @@ function show_result_news(_page, _view, _grouping, _search, _filter, _sort) {
         {name: "_view", value: _view},
         {name: "_news_type", value: news_type},
         {name: "_grouping_type", value: grouping_type},
-        {name: "_sort", value: _sort},
-        {name: "_filter", value: _filter}
+        {name: "_sort", value: _sort}
     ];
     _data = $.merge(_data, _grouping);
     _data = $.merge(_data, _search);
