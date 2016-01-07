@@ -42,11 +42,13 @@ $(document).on('click', '#show_hide_add_keyword', function(e){
 $(document).on('click', '.save-edit.key-words', function(e){
     var elm = $(e.target).closest('.save-edit.key-words');
     var key_id = elm.attr('data-key');
+    var org_html = elm.html();
+    elm.html(loader);
     var postData = $('.form-save-edit.key-words[data-key=' + key_id + ']').serializeArray();
     jQuery.ajax(
     {
         url: key_word_url,
-        type: "post",
+        type: "put",
         data: postData,
         success: function (response) {
             var status = response['status'];
@@ -55,11 +57,15 @@ $(document).on('click', '.save-edit.key-words', function(e){
                 $('.keywords_box.key-words[data-key=' + key_id + ']').html(value).removeClass('display-none');
                 $('.edit_keywords_box.key-words[data-key=' + key_id + ']').addClass('display-none');
             }
+            elm.html(org_html);
         }
     });
 });
 
 $(document).on('click', '.save-add.key-words', function(e){
+    var elm = $(e.target);
+    var org_html = elm.html();
+    elm.html(loader);
     var postData = $('#form_add_keyword').serializeArray();
     jQuery.ajax(
     {
@@ -74,6 +80,7 @@ $(document).on('click', '.save-add.key-words', function(e){
                 $('#add_keyword_div').slideUp();
                 $('#show_hide_add_keyword').attr('data-show', 'false').html('+ افزودن');
                 $('#form_add_keyword input[type=text]').val('');
+                elm.html(org_html);
             }
         }
     });
@@ -116,6 +123,12 @@ var key_word_html = '<div class="key-word-row">\
 
 $(document).on('click', '.add-key-word.key-words', function(e){
     $('#add_key_word_key_words').append(key_word_html);
+});
+
+$(document).on('click', '.edit-add-key-word.key-words', function(e){
+    var elm = $(e.target).closest('.edit-add-key-word');
+    var _key = elm.attr('data-key');
+    $('.edit-keywords-div[data-key=' + _key + ']').append(key_word_html);
 });
 
 $(document).on('click', '.remove-key-word.key-words', function(e){
