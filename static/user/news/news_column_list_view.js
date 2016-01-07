@@ -17,9 +17,12 @@ function make_news_column_list_view(news, font, size) {
     };
     if (news['options']['read']) {
         dict_select['data-read'] = 'true';
+        _make.find('div#news_row').addClass('read');
+    }else{
+        _make.find('div#news_row').addClass('unread');
     }
     if (news['options']['note'] != false) {
-        dict_select['data-note'] = 'true'
+        dict_select['data-note'] = 'true';
     }
     if (news['options']['star']) {
         dict_select['data-star'] = 'true'
