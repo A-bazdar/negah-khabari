@@ -674,10 +674,6 @@ class NewsModel:
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
-                count_all = r['hits']['total']
-            except:
-                count_all = 0
-            try:
                 count = len(r['hits']['hits'])
             except:
                 count = 0
@@ -708,15 +704,11 @@ class NewsModel:
                     body['filter']['and']['filters'] += [query_sort]
 
                 r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
-                try:
-                    count_all += r['hits']['total']
-                except:
-                    pass
 
                 for b in r['hits']['hits']:
                     self.get_news_module_field(b['fields'], b['_id'])
 
-            self.result['value'] = self.value, count_all
+            self.result['value'] = self.value, ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type).count_all()
             self.result['status'] = True
             return self.result
 
@@ -1225,10 +1217,6 @@ class NewsModel:
                 body['filter']['and']['filters'] += [query_grouping]
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
-                count_all = r['hits']['total']
-            except:
-                count_all = 0
-            try:
                 count = len(r['hits']['hits'])
             except:
                 count = 0
@@ -1258,15 +1246,11 @@ class NewsModel:
                     body['filter']['and']['filters'] += [query_sort]
 
                 r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
-                try:
-                    count_all += r['hits']['total']
-                except:
-                    pass
 
                 for b in r['hits']['hits']:
                     self.get_news_module_field(b['fields'], b['_id'])
 
-            self.result['value'] = self.value, count_all
+            self.result['value'] = self.value, ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type).count_all()
             self.result['status'] = True
             return self.result
 
