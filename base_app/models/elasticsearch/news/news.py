@@ -14,7 +14,7 @@ from base_app.models.mongodb.base_model import MongodbModel
 from base_app.models.mongodb.content.content import ContentModel
 from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
-from bs4 import BeautifulSoup
+import re
 
 __author__ = 'Morteza'
 
@@ -256,10 +256,7 @@ class NewsModel:
     @staticmethod
     def get_body(__body):
         try:
-            soup = BeautifulSoup(__body, "html.parser")
-            for i in soup.findAll('img'):
-                i.replaceWith('')
-            return str(soup)
+            return re.sub('<img[^>]+\>', '', __body)
         except:
             return str(__body)
 
