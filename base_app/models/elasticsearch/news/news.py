@@ -681,7 +681,7 @@ class NewsModel:
                 count = len(r['hits']['hits'])
             except:
                 count = 0
-
+            print count, "count count count count"
             for b in r['hits']['hits']:
                 self.get_news_module_field(b['fields'], b['_id'])
 
@@ -700,6 +700,8 @@ class NewsModel:
                 if count == 0:
                     body['from'] = _page * _size
                     body['size'] = _size
+                print body['from'], "body['from'] body['from'] body['from'] body['from']"
+                print body['size'], "body['size'] body['size'] body['size'] body['size']"
 
                 query_sort = self.get_query_un_sort(_sort)
                 if query_sort is not False:
