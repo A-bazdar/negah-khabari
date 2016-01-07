@@ -674,41 +674,13 @@ class NewsModel:
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
-                count = len(r['hits']['hits'])
+                count_all = r['hits']['total']
             except:
-                count = 0
-            print count, "count count count count"
+                count_all = 0
+
             for b in r['hits']['hits']:
                 self.get_news_module_field(b['fields'], b['_id'])
-
-            if count < _size and _sort != "date":
-                body = {
-                    "from": 0, "size": _size - count,
-                    "fields": ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
-                               "agency", "images", "video", "sound"],
-                    "filter": {
-                        "and": {
-                            "filters": []
-                        }
-                    },
-                    "sort": {"date": {"order": "desc"}}
-                }
-                if count == 0:
-                    body['from'] = _page * _size
-                    body['size'] = _size
-                print body['from'], "body['from'] body['from'] body['from'] body['from']"
-                print body['size'], "body['size'] body['size'] body['size'] body['size']"
-
-                query_sort = self.get_query_un_sort(_sort)
-                if query_sort is not False:
-                    body['filter']['and']['filters'] += [query_sort]
-
-                r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
-
-                for b in r['hits']['hits']:
-                    self.get_news_module_field(b['fields'], b['_id'])
-
-            self.result['value'] = self.value, ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type).count_all()
+            self.result['value'] = self.value, count_all
             self.result['status'] = True
             return self.result
 
@@ -1217,40 +1189,12 @@ class NewsModel:
                 body['filter']['and']['filters'] += [query_grouping]
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
-                count = len(r['hits']['hits'])
+                count_all = r['hits']['total']
             except:
-                count = 0
-            print count, "count count count count count"
+                count_all = 0
             for b in r['hits']['hits']:
                 self.get_news_module_field(b['fields'], b['_id'])
-
-            if count < _size and _sort != "date":
-                body = {
-                    "from": 0, "size": _size - count,
-                    "fields": ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
-                               "agency", "images", "video", "sound"],
-                    "filter": {
-                        "and": {
-                            "filters": []
-                        }
-                    },
-                    "sort": {"date": {"order": "desc"}}
-                }
-                if count == 0:
-                    body['from'] = _page * _size
-                    body['size'] = _size
-                print body['from'], "body['from'] body['from'] body['from'] body['from']"
-                print body['size'], "body['size'] body['size'] body['size'] body['size']"
-                query_sort = self.get_query_un_sort(_sort)
-                if query_sort is not False:
-                    body['filter']['and']['filters'] += [query_sort]
-
-                r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
-
-                for b in r['hits']['hits']:
-                    self.get_news_module_field(b['fields'], b['_id'])
-
-            self.result['value'] = self.value, ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type).count_all()
+            self.result['value'] = self.value, count_all
             self.result['status'] = True
             return self.result
 
