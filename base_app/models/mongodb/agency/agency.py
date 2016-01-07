@@ -34,22 +34,12 @@ class AgencyModel:
                 color=agency['color'],
                 category=category,
                 direction=direction,
-                status=agency['status'],
+                active=agency['active'],
                 pic=agency['pic'],
                 base_link=agency['base_link'],
                 links=agency['links'],
-                news_links=agency['news_links'],
-                news_title=agency['news_title'],
-                news_date=agency['news_date'],
-                news_date_format=agency['news_date_format'],
-                news_ro_title=agency['news_ro_title'],
-                news_summary=agency['news_summary'],
-                news_body=agency['news_body'],
-                news_thumbnail=agency['news_thumbnail'],
-                titr1=agency['titr1'],
                 add_by_confirm=agency['add_by_confirm'],
-                extract_image=agency['extract_image'],
-                titr1_links=agency['titr1_links'],
+                extract_image=agency['extract_image']
             ))
         except:
             Debug.get_exception(send=False)
@@ -62,7 +52,7 @@ class AgencyModel:
                 name=agency['name'],
                 link=agency['link'],
                 color=agency['color'],
-                status=agency['status'],
+                active=agency['active'],
                 pic=agency['pic']
             ))
         except:
@@ -101,24 +91,14 @@ class AgencyModel:
                 'color': agency['color'],
                 'category': agency['category'],
                 'direction': agency['direction'],
-                'status': agency['active'],
+                'active': agency['active'],
                 'pic': agency['pic'],
                 'float_left': agency['float_left'],
                 'add_by_confirm': agency['add_by_confirm'],
                 'extract_image': agency['extract_image'],
-                'news_links': agency['news_links'],
-                'titr1': agency['titr1'],
-                'titr1_links': agency['titr1_links'],
-                'key_words': agency['key_words'],
+                'copy_key_words': agency['key_words'],
                 'link': agency['link'],
                 'links': agency['links'],
-                'news_title': agency['news_title'],
-                'news_ro_title': agency['news_ro_title'],
-                'news_date': agency['news_date'],
-                'news_date_format': agency['news_date_format'],
-                'news_summary': agency['news_summary'],
-                'news_body': agency['news_body'],
-                'news_thumbnail': agency['news_thumbnail']
             }
 
             self.result['value'] = str(MongodbModel(collection='agency', body=__body).insert())
