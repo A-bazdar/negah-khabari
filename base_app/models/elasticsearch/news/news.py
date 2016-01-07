@@ -268,7 +268,8 @@ class NewsModel:
             x = _source['date'].split('T')
             _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
             options = self.get_options(_id)
-            print _source['body']
+            print _source['body'], "################"
+            print self.get_body(_source['body'])
             self.value.append(dict(
                 id=str(_id),
                 link=_source['link'],
