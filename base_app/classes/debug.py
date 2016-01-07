@@ -21,6 +21,9 @@ class Debug:
         try:
             print 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message)
         except:
-            print 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code)
+            try:
+                print 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message).encode('utf-8')
+            except:
+                print 'EXCEPTION IN ({}, LINE {} \'{}\')'.format(file_name, line_num, code)
         if return_error:
             return 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message)
