@@ -255,16 +255,20 @@ class NewsModel:
 
     @staticmethod
     def get_body(__body):
-        soup = BeautifulSoup(__body, "html.parser")
-        for i in soup.findAll('img'):
-            i.replaceWith('')
-        return str(soup)
+        try:
+            soup = BeautifulSoup(__body, "html.parser")
+            for i in soup.findAll('img'):
+                i.replaceWith('')
+            return str(soup)
+        except:
+            return str(__body)
 
     def get_news_body_module(self, _source, _id):
         try:
             x = _source['date'].split('T')
             _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
             options = self.get_options(_id)
+            print _source['body']
             self.value.append(dict(
                 id=str(_id),
                 link=_source['link'],
