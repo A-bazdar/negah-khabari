@@ -1128,7 +1128,6 @@ class NewsModel:
                         no_keyword.append(i)
                 keyword = ' AND '.join(e.encode('utf-8').strip() for e in _keyword).replace('AND  AND', 'AND')
                 no_keyword = ' AND '.join(e.encode('utf-8').strip() for e in _no_keyword).replace('AND  AND', 'AND')
-                print no_keyword, '2222222222222222222222'
             else:
                 _keyword = []
                 for i in __grouping:
