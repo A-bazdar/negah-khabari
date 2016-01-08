@@ -1117,6 +1117,7 @@ class NewsModel:
                         keyword += [_key['keyword']]
                         keyword += _key['synonyms']
                         no_keyword += _key['no_synonyms']
+                print no_keyword, '11111111111111111'
                 _keyword = []
                 _no_keyword = []
                 for i in keyword:
@@ -1127,7 +1128,7 @@ class NewsModel:
                         no_keyword.append(i)
                 keyword = ' AND '.join(e.encode('utf-8').strip() for e in _keyword).replace('AND  AND', 'AND')
                 no_keyword = ' AND '.join(e.encode('utf-8').strip() for e in _no_keyword).replace('AND  AND', 'AND')
-                print no_keyword
+                print no_keyword, '2222222222222222222222'
             else:
                 _keyword = []
                 for i in __grouping:
