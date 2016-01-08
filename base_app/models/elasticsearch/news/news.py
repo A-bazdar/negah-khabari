@@ -1123,7 +1123,7 @@ class NewsModel:
                 for i in keyword:
                     if i != "" and i != " ":
                         _keyword.append(i)
-                for i in keyword:
+                for i in no_keyword:
                     if i != "" and i != " ":
                         no_keyword.append(i)
                 keyword = ' AND '.join(e.encode('utf-8').strip() for e in _keyword).replace('AND  AND', 'AND')
