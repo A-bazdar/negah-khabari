@@ -1117,7 +1117,6 @@ class NewsModel:
                         keyword += [_key['keyword']]
                         keyword += _key['synonyms']
                         no_keyword += _key['no_synonyms']
-                print no_keyword, '11111111111111111'
                 _keyword = []
                 _no_keyword = []
                 for i in keyword:

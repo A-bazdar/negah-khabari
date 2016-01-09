@@ -32,6 +32,8 @@ class AgencyModel:
                 name=agency['name'],
                 link=agency['link'],
                 color=agency['color'],
+                float_left=agency['float_left'],
+                copy_key_words=agency['copy_key_words'] if 'copy_key_words' in agency.keys() else [],
                 category=category,
                 direction=direction,
                 active=agency['active'],
@@ -102,6 +104,31 @@ class AgencyModel:
             }
 
             self.result['value'] = str(MongodbModel(collection='agency', body=__body).insert())
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='save')
+            return self.result
+
+    def update(self, **agency):
+        try:
+            __body = {"$set": {
+                'name': agency['name'],
+                'base_link': agency['link'],
+                'color': agency['color'],
+                'category': agency['category'],
+                'direction': agency['direction'],
+                'active': agency['active'],
+                'pic': agency['pic'],
+                'float_left': agency['float_left'],
+                'add_by_confirm': agency['add_by_confirm'],
+                'extract_image': agency['extract_image'],
+                'copy_key_words': agency['key_words'],
+                'link': agency['link'],
+                'links': agency['links']
+            }}
+            condition = {"_id": self.id}
+            self.result['value'] = MongodbModel(collection='agency', body=__body, condition=condition).update()
             self.result['status'] = True
             return self.result
         except:

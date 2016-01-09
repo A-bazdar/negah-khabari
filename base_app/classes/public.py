@@ -114,6 +114,7 @@ class UploadPic:
         self.default = default
         self.__handler = handler
         self.folder = folder
+        self.status = False
 
     def upload(self):
         try:
@@ -126,6 +127,7 @@ class UploadPic:
             output = open(full_name, 'wb')
             output.write(pic['body'])
             output.close()
+            self.status = True
             return photo_name
 
         except:
