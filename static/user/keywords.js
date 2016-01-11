@@ -63,6 +63,7 @@ $(document).on('click', '.save-edit.key-words', function(e){
                 }
                 $(".select.search-news[name=key-words]").select2("data", []).html(options);
                 $(".select.refinement-news[name=key-words]").select2("data", []).html(options);
+                $(".select.pattern-search[name=key-words]").select2("data", []).html(options);
             }
             elm.html(org_html);
         }
@@ -94,6 +95,7 @@ $(document).on('click', '.save-add.key-words', function(e){
                 }
                 $(".select.search-news[name=key-words]").select2("data", []).html(options);
                 $(".select.refinement-news[name=key-words]").select2("data", []).html(options);
+                $(".select.pattern-search[name=key-words]").select2("data", []).html(options);
                 elm.html(org_html);
             }
         }

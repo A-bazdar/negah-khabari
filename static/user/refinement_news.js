@@ -115,11 +115,18 @@ function create_refinement_news(){
                             $('input.refinement-news[name=end-date]').val("");
                         }
 
-                        $('input.refinement-news[name=tags]').select2("data", value["tags"], true);
-                        $('input.refinement-news[name=all-words]').select2("data", value["all_words"], true);
+                        $('select.refinement-news[name=key-words]').select2("data", [], true).select2("data", value["key_words"], true);
+                        $('input.refinement-news[name=tags]').select2("data", [], true).select2("data", value["tags"], true);
+                        $('input.refinement-news[name=all-words]').select2("data", [], true).select2("data", value["all_words"], true);
                         $('input.refinement-news[name=exactly-word]').val(value["exactly_word"]);
-                        $('input.refinement-news[name=each-words]').select2("data", value["each_words"], true);
-                        $('input.refinement-news[name=without-words]').select2("data", value["without_words"], true);
+                        $('input.refinement-news[name=each-words]').select2("data", [], true).select2("data", value["each_words"], true);
+                        $('input.refinement-news[name=without-words]').select2("data", [], true).select2("data", value["without_words"], true);
+
+                        $('select.refinement-news[name=direction-news]').select2('val', value["direction_news"]);
+                        $('select.refinement-news[name=direction-agency]').select2('val', value["direction_agency"]);
+                        $('select.refinement-news[name=main-source-news]').select2('val', value["main_source_news"]);
+                        $('select.refinement-news[name=news-makers]').select2('val', value["news_makers"]);
+
                         $('input.refinement-news[name=picture]').prop('checked', value["picture"]);
                         $('input.refinement-news[name=video]').prop('checked', value["video"]);
                         $('input.refinement-news[name=voice]').prop('checked', value["voice"]);
@@ -135,7 +142,7 @@ function create_refinement_news(){
                         $('input.refinement-news[name=important2]').prop('checked', value["important2"]);
                         $('input.refinement-news[name=important3]').prop('checked', value["important3"]);
                         $('input.refinement-news[name=agency]').val(value['agency']);
-                        $('input.refinement-news[name=agency_names]').select2("data", value['agency_names'], true);
+                        $('input.refinement-news[name=agency_names]').select2("data", [], true).select2("data", value['agency_names'], true);
                     }
                 }
             });
@@ -153,6 +160,11 @@ function empty_refinement_news(){
     $('input.refinement-news[type=checkbox]').prop('checked', false);
     $('input.refinement-news[name=pattern_id]').val('');
     $('select.refinement-news[name=period]').select2("val", "hour");
+    $('select.refinement-news[name=key-words]').select2('data', [], true);
+    $('select.refinement-news[name=direction-news]').select2('val', "all");
+    $('select.refinement-news[name=direction-agency]').select2('val', "all");
+    $('select.refinement-news[name=main-source-news]').select2('val', "all");
+    $('select.refinement-news[name=news-makers]').select2('val', "all");
     $('form#refinement_news .period-date').fadeOut();
     $('input.refinement-news[name=start-date]').val('');
     $('input.refinement-news[name=end-date]').val('');
