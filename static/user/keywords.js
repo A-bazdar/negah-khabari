@@ -44,8 +44,8 @@ $(document).on('click', '.save-edit.key-words', function(e){
     var key_id = elm.attr('data-key');
     var org_html = elm.html();
     elm.html(loader);
-    alert(key_id);
     var postData = $('.form-save-edit.key-words[data-key=' + key_id + ']').serializeArray();
+    alert(JSON.stringify(postData));
     jQuery.ajax(
     {
         url: key_word_url,
