@@ -53,7 +53,6 @@ $(document).on('click', '.save-edit.key-words', function(e){
         data: postData,
         success: function (response) {
             var status = response['status'];
-            alert(status);
             var value = response['value'];
             if (status) {
                 $('.keywords_box.key-words[data-key=' + key_id + ']').html(value['html']).removeClass('display-none');
