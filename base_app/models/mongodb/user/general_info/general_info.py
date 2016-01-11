@@ -1039,6 +1039,7 @@ class UserModel(BaseModel):
                 if a_index is False:
                     try:
                         d_index = is_exist(_list=r, _key=__ag['direction']['id'])
+                        print __ag['direction']
                         if d_index is not False:
                             c_index = is_exist(_list=r[d_index]['categories'], _key=__ag['category']['id'])
                             if c_index is not False:
@@ -1063,7 +1064,6 @@ class UserModel(BaseModel):
                             r.append(dict(id=direction['id'], name=direction['name'], categories=[dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=direction['id'])])]))
                     except:
                         pass
-
             return r
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
