@@ -1184,9 +1184,10 @@ class NewsModel:
             if _action == "SEARCH":
                 query_search = self.get_query_search(_search)
             query_grouping = []
+            query_keyword = []
             if _action == "GROUPING":
                 query_grouping = self.get_query_grouping(_grouping, _type)
-            query_keyword = self.get_query_keyword(_news_type, _grouping, _type)
+                query_keyword = self.get_query_keyword(_news_type, _grouping, _type)
             body['filter']['and']['filters'] += query_search
             body['filter']['and']['filters'] += query_keyword
 
@@ -1194,7 +1195,8 @@ class NewsModel:
             if query_sort is not False:
                 body['filter']['and']['filters'] += [query_sort]
             if query_grouping is not False:
-                body['filter']['and']['filters'] += [query_grouping]
+                body['filter']['and']['filters'] += query_grouping
+            print body
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']

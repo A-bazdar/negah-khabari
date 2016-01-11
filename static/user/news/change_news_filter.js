@@ -2,6 +2,8 @@
  * Created by Morteza on 12/19/2015.
  */
 
+var __type = {type: "ALL", action: "ALL"};
+
 function show_result_news(_page, _view, _search, _grouping, _sort) {
     $('body').removeClass('loaded');
     var news_type = $('.grouping.type-grouping.active').attr('data-type');
@@ -39,14 +41,65 @@ function show_result_news(_page, _view, _search, _grouping, _sort) {
     });
 }
 
+function get_grouping() {
+    var _grouping = [];
+    if(__type['action'] == "GROUPING"){
+        var _all = true;
+        var _nothing = true;
+        $.each($('input[type=checkbox][name=' + __type['type'] + ']'), function () {
+            if (!$(this).prop('checked')) {
+                _all = false;
+            } else {
+                _nothing = false;
+            }
+        });
+        if (_nothing)
+            return [];
+        if (__type['type'] == 'subject') {
+            _grouping = $("#form_grouping_news_subject").serializeArray();
+        } else if (__type['type'] == 'agency') {
+            _grouping = $("#form_grouping_news_agency").serializeArray();
+        } else if (__type['type'] == 'keyword') {
+            _grouping = $("#form_grouping_news_keyword").serializeArray();
+        } else if (__type['type'] == 'group') {
+            _grouping = $("#form_grouping_news_group").serializeArray();
+        } else if (__type['type'] == 'geographic') {
+            _grouping = $("#form_grouping_news_geographic").serializeArray();
+        } else if (__type['type'] == 'direction') {
+            _grouping = $("#form_grouping_news_direction").serializeArray();
+        }
+        $('input.all-subjects[type=checkbox]').prop('checked', _all);
+        if (_all) {
+            _grouping = []
+        }
+    }
+    return _grouping
+}
+
+function get_searches() {
+    var searches = [];
+    if(__type["action"] == "SEARCH"){
+        if (__type["type"] == "EXPERT") {
+            searches = $("#header_search_news").serializeArray();
+        } else if (__type["type"] == "EXACTLY") {
+            var search_news_header_input = $("#search_news_header_input").val();
+            searches = [{name: "exactly-word", value: search_news_header_input}, {
+                name: "type-search",
+                value: 'exactly_search'
+            }]
+        } else if (__type["type"] == "REFINEMENT") {
+            searches = $("#refinement_news").serializeArray();
+        }
+    }
+    return searches
+}
+
 function get_news() {
     var _search = get_searches();
     var _view = $(".change-view-news.active").attr('data-view');
     var _sort = $(".change-sort-news.active").attr('data-sort');
     show_result_news(1, _view, _search, [], _sort);
 }
-
-var __type = {type: "ALL", action: "ALL"};
 
 $(document).on('keyup', '#search_news_header_input', function (e) {
     if (e.keyCode == '13') {
@@ -150,59 +203,6 @@ $(document).on('click', '.change-sort-news', function (e) {
     var _grouping = get_grouping();
     show_result_news(1, _view, _search, _grouping, _sort);
 });
-
-function get_grouping() {
-    if(__type['action'] == "GROUPING"){
-        var _all = true;
-        var _nothing = true;
-        $.each($('input[type=checkbox][name=' + __type['type'] + ']'), function () {
-            if (!$(this).prop('checked')) {
-                _all = false;
-            } else {
-                _nothing = false;
-            }
-        });
-        if (_nothing)
-            return [];
-        var _grouping = [];
-        if (__type['type'] == 'subject') {
-            _grouping = $("#form_grouping_news_subject").serializeArray();
-        } else if (__type['type'] == 'agency') {
-            _grouping = $("#form_grouping_news_agency").serializeArray();
-        } else if (__type['type'] == 'keyword') {
-            _grouping = $("#form_grouping_news_keyword").serializeArray();
-        } else if (__type['type'] == 'group') {
-            _grouping = $("#form_grouping_news_group").serializeArray();
-        } else if (__type['type'] == 'geographic') {
-            _grouping = $("#form_grouping_news_geographic").serializeArray();
-        } else if (__type['type'] == 'direction') {
-            _grouping = $("#form_grouping_news_direction").serializeArray();
-        }
-        $('input.all-subjects[type=checkbox]').prop('checked', _all);
-        if (_all) {
-            _grouping = []
-        }
-    }
-    return _grouping
-}
-
-function get_searches() {
-    var searches = [];
-    if(__type["action"] == "SEARCH"){
-        if (__type["type"] == "EXPERT") {
-            searches = $("#header_search_news").serializeArray();
-        } else if (__type["type"] == "EXACTLY") {
-            var search_news_header_input = $("#search_news_header_input").val();
-            searches = [{name: "exactly-word", value: search_news_header_input}, {
-                name: "type-search",
-                value: 'exactly_search'
-            }]
-        } else if (__type["type"] == "REFINEMENT") {
-            searches = $("#refinement_news").serializeArray();
-        }
-    }
-    return searches
-}
 
 $(document).on('click', 'ul#filter_news_header .filter-news-check', function(e){
     var elm = $(e.target).closest('.filter-news-check');
