@@ -1033,38 +1033,36 @@ class UserModel(BaseModel):
 
             agencies = AgencyModel().get_all()['value']
             agency_direction = full_current_user['agency_direction']
-            empty_direction = {'id': None, 'name': 'تعریف نشده'}
+
             for __ag in agencies:
                 a_index = is_exist(_list=agency_direction, _key=__ag['id'], _field='agency')
                 if a_index is False:
                     try:
                         d_index = is_exist(_list=r, _key=__ag['direction']['id'])
-                    except:
-                        __ag['direction'] = empty_direction
-                        d_index = is_exist(_list=r, _key=__ag['direction']['id'])
-                    if d_index is not False:
-                        c_index = is_exist(_list=r[d_index]['categories'], _key=__ag['category']['id'])
-                        if c_index is not False:
-                            r[d_index]['categories'][c_index]['agencies'].append(dict(id=__ag['id'], name=__ag['name'], selected=False))
+                        if d_index is not False:
+                            c_index = is_exist(_list=r[d_index]['categories'], _key=__ag['category']['id'])
+                            if c_index is not False:
+                                r[d_index]['categories'][c_index]['agencies'].append(dict(id=__ag['id'], name=__ag['name'], selected=False))
+                            else:
+                                r[d_index]['categories'].append(dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=False)]))
                         else:
-                            r[d_index]['categories'].append(dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=False)]))
-                    else:
-                        r.append(dict(id=__ag['direction']['id'], name=__ag['direction']['name'], categories=[dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=False)])]))
+                            r.append(dict(id=__ag['direction']['id'], name=__ag['direction']['name'], categories=[dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=False)])]))
+                    except:
+                        pass
                 else:
-                    direction = DirectionModel(_id=agency_direction[a_index]['direction']).get_one()['value']
                     try:
+                        direction = DirectionModel(_id=agency_direction[a_index]['direction']).get_one()['value']
                         d_index = is_exist(_list=r, _key=direction['id'])
-                    except:
-                        direction = empty_direction
-                        d_index = is_exist(_list=r, _key=direction['id'])
-                    if d_index is not False:
-                        c_index = is_exist(_list=r[d_index]['categories'], _key=__ag['category']['id'])
-                        if c_index is not False:
-                            r[d_index]['categories'][c_index]['agencies'].append(dict(id=__ag['id'], name=__ag['name'], selected=direction['id']))
+                        if d_index is not False:
+                            c_index = is_exist(_list=r[d_index]['categories'], _key=__ag['category']['id'])
+                            if c_index is not False:
+                                r[d_index]['categories'][c_index]['agencies'].append(dict(id=__ag['id'], name=__ag['name'], selected=direction['id']))
+                            else:
+                                r[d_index]['categories'].append(dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=direction['id'])]))
                         else:
-                            r[d_index]['categories'].append(dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=direction['id'])]))
-                    else:
-                        r.append(dict(id=direction['id'], name=direction['name'], categories=[dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=direction['id'])])]))
+                            r.append(dict(id=direction['id'], name=direction['name'], categories=[dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=direction['id'])])]))
+                    except:
+                        pass
 
             return r
         except:
