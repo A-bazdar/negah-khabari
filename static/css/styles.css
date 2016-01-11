@@ -1839,77 +1839,6 @@ a.change-page {
     transition: background 0.2s;
 }
 
-/* Base for label styling */
-[type="checkbox"]:not(:checked),
-[type="checkbox"]:checked {
-    position: absolute;
-    left: -9999px;
-    display: none;
-}
-
-[type="checkbox"]:not(:checked) + label,
-[type="checkbox"]:checked + label {
-    position: relative;
-    padding-left: 15px;
-    cursor: pointer;
-    display: inline-block;
-}
-
-/* checkbox aspect */
-[type="checkbox"]:not(:checked) + label:before,
-[type="checkbox"]:checked + label:before {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: -7px;
-    width: 13px;
-    height: 13px;
-    border: 1px solid #2f477a;
-    /*background: #f477a2 ;*/
-    border-radius: 0;
-    box-shadow: inset 0 0px 1px rgba(0, 0, 0, .3)
-}
-
-/* checked mark aspect */
-[type="checkbox"]:not(:checked) + label:after,
-[type="checkbox"]:checked + label:after {
-    content: '✔';
-    position: absolute;
-    top: -5px;
-    right: 1px;
-    font-size: 13px;
-    line-height: 0.8;
-    color: #4f4f4f;
-    transition: all .2s;
-}
-
-/* checked mark aspect changes */
-[type="checkbox"]:not(:checked) + label:after {
-    opacity: 0;
-    transform: scale(0);
-}
-
-[type="checkbox"]:checked + label:after {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* disabled checkbox */
-[type="checkbox"]:disabled:not(:checked) + label:before,
-[type="checkbox"]:disabled:checked + label:before {
-    box-shadow: none;
-    border-color: #bbb;
-    background-color: #ddd;
-}
-
-[type="checkbox"]:disabled:checked + label:after {
-    color: #999;
-}
-
-[type="checkbox"]:disabled + label {
-    color: #aaa;
-}
-
 .icon-news {
     background: url("/static/images/Icons.png") no-repeat;
     height: 20px;
@@ -2035,7 +1964,7 @@ a.change-page {
     left: 0;
     height: 80px;
     z-index: 55555555;
-    width: 5px;
+    width: 7px;
     background: url("/static/images/Icons.png") no-repeat scroll;
     background-position: -13px -88px;
 }
@@ -2046,4 +1975,16 @@ a.change-page {
     text-overflow: ellipsis;
     white-space: nowrap;
     float: right;
+}
+
+.right-checkbox {
+    position: absolute;
+    right: 10px;
+    top: 20px;
+}
+
+.right-checkbox-top-more {
+    position: absolute;
+    right: 5px;
+    top: 40px;
 }
