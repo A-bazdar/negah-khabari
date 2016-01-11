@@ -1037,7 +1037,11 @@ class UserModel(BaseModel):
             for __ag in agencies:
                 a_index = is_exist(_list=agency_direction, _key=__ag['id'], _field='agency')
                 if a_index is False:
-                    d_index = is_exist(_list=r, _key=__ag['direction']['id'])
+                    try:
+                        d_index = is_exist(_list=r, _key=__ag['direction']['id'])
+                    except:
+                        __ag['direction'] = empty_direction
+                        d_index = is_exist(_list=r, _key=__ag['direction']['id'])
                     if d_index is not False:
                         c_index = is_exist(_list=r[d_index]['categories'], _key=__ag['category']['id'])
                         if c_index is not False:
