@@ -12,6 +12,7 @@ from base_app.models.mongodb.agency.agency import AgencyModel
 import time
 from base_app.models.mongodb.base_model import MongodbModel
 from base_app.models.mongodb.content.content import ContentModel
+from base_app.models.mongodb.keyword.keyword import KeyWordModel
 from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
 import re
@@ -785,8 +786,45 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    @staticmethod
-    def get_query_search(_search):
+    def get_keywords(self, key_words):
+        user_keywords = self.full_current_user['keyword']
+        search_keywords = []
+        for i in key_words:
+            r = filter(lambda _key: _key['_id'] == i, user_keywords)
+            if len(r):
+                search_keywords.append(r[0])
+            else:
+                search_keywords.append(KeyWordModel(_id=i).get_one()["value"])
+
+        key_query = ''
+        for topic in search_keywords:
+            _keyword = []
+            _no_keyword = []
+            for __key in topic['keyword']:
+                _keyword += [__key['keyword']] + __key['synonyms']
+                _no_keyword += __key['no_synonyms']
+
+            keyword_query = ' AND '.join(e.encode('utf-8').strip() for e in _keyword).replace('AND  AND', 'AND')
+            no_keyword_query = ' AND '.join(e.encode('utf-8').strip() for e in _no_keyword).replace('AND  AND', 'AND')
+            _query = ''
+            if keyword_query != '':
+                _query += '({})'.format(keyword_query)
+
+            if no_keyword_query != '':
+                if _query == '':
+                    _query += 'NOT({})'.format(no_keyword_query)
+                else:
+                    _query += ' AND NOT({})'.format(no_keyword_query)
+            if key_query == '':
+                key_query += '({})'.format(_query)
+            else:
+                key_query += ' OR ({})'.format(_query)
+
+        return key_query
+
+    def get_query_search(self, _search):
+        keywords = self.get_keywords(_search['key_words'])
+
         all_words = _search['all_words']
         without_words = _search['without_words']
         each_words = _search['each_words']
@@ -874,6 +912,16 @@ class NewsModel:
                 "query": {
                     "terms": {
                         "agency": _search['agency']
+                    }
+                }
+            })
+
+        if keywords != '':
+            body.append({
+                "query": {
+                    "query_string": {
+                        "fields": ["ro_title", "title", "summary", "body"],
+                        "query": keywords
                     }
                 }
             })
@@ -1062,8 +1110,7 @@ class NewsModel:
             }
         return query_sort
 
-    @staticmethod
-    def get_query_grouping(__grouping, __grouping_type):
+    def get_query_grouping(self, __grouping, __grouping_type):
         query_grouping = False
         if __grouping_type != "keyword":
             if len(__grouping):
@@ -1075,25 +1122,15 @@ class NewsModel:
                     }
                 }
         else:
-            keyword = ' AND '.join(e for e in __grouping)
-            no_keyword = ''
+            __grouping = map(ObjectId, __grouping)
+            keywords = self.get_keywords(__grouping)
 
-            _query = ''
-            if keyword != '':
-                _query += '({})'.format(keyword)
-
-            if no_keyword != '':
-                if _query == '':
-                    _query += 'NOT({})'.format(no_keyword)
-                else:
-                    _query += ' AND NOT({})'.format(no_keyword)
-
-            if _query != '':
+            if keywords != '':
                 query_grouping = {
                     "query": {
                         "query_string": {
                             "fields": ["ro_title", "title", "summary", "body"],
-                            "query": _query
+                            "query": keywords
                         }
                     }
                 }
@@ -1103,60 +1140,28 @@ class NewsModel:
         body = []
         if __news_type == "top_news":
             if __grouping_type != "keyword":
-                from base_app.models.mongodb.keyword.keyword import KeyWordModel
                 keywords = KeyWordModel().get_all()['value']
-                user_keywords = self.full_current_user['keyword']
-                user_keywords_ids = [i['_id'] for i in user_keywords]
+                user_keywords_ids = [i['_id'] for i in self.full_current_user['keyword']]
                 for i in keywords:
                     if i['_id'] not in user_keywords_ids:
-                        user_keywords.append(i)
-                keyword = []
-                no_keyword = []
-                for topic in user_keywords:
-                    for _key in topic['keyword']:
-                        keyword += [_key['keyword']]
-                        keyword += _key['synonyms']
-                        no_keyword += _key['no_synonyms']
-                _keyword = []
-                _no_keyword = []
-                for i in keyword:
-                    if i != "" and i != " ":
-                        _keyword.append(i)
-                for i in no_keyword:
-                    if i != "" and i != " ":
-                        _no_keyword.append(i)
-                keyword = ' AND '.join(e.encode('utf-8').strip() for e in _keyword).replace('AND  AND', 'AND')
-                no_keyword = ' AND '.join(e.encode('utf-8').strip() for e in _no_keyword).replace('AND  AND', 'AND')
+                        user_keywords_ids.append(i['_id'])
+                keywords = self.get_keywords(user_keywords_ids)
             else:
-                _keyword = []
-                for i in __grouping:
-                    if i != "" and i != " ":
-                        _keyword.append(i)
-                keyword = ' AND '.join(e.encode('utf-8').strip() for e in _keyword).replace('AND  AND', 'AND')
-                no_keyword = ''
+                __grouping = map(ObjectId, __grouping)
+                keywords = self.get_keywords(__grouping)
 
-            _query = ''
-            if keyword != '':
-                _query += '({})'.format(keyword)
-
-            if no_keyword != '':
-                if _query == '':
-                    _query += 'NOT({})'.format(no_keyword)
-                else:
-                    _query += ' AND NOT({})'.format(no_keyword)
-
-            if _query != '':
+            if keywords != '':
                 body.append({
                     "query": {
                         "query_string": {
                             "fields": ["ro_title", "title", "summary", "body"],
-                            "query": _query
+                            "query": keywords
                         }
                     }
                 })
         return body
 
-    def get_all_by_subject_search(self, _search=None, _grouping=None, _grouping_type=None, _news_type=None, _page=0, _size=30, _sort="date"):
+    def get_all_by_subject_search(self, _search=None, _grouping=None, _news_type=None, _page=0, _size=30, _sort="date", _action="ALL", _type="ALL"):
         if _page >= 1:
             _page -= 1
         if not _grouping:
@@ -1175,14 +1180,17 @@ class NewsModel:
                 "sort": {"date": {"order": "desc"}}
             }
 
-            query_sort = self.get_query_sort(_sort)
-            query_search = self.get_query_search(_search)
-            # query_filter = self.get_query_filter(_filter)
-            query_keyword = self.get_query_keyword(_news_type, _grouping, _grouping_type)
-            query_grouping = self.get_query_grouping(_grouping, _grouping_type)
+            query_search = []
+            if _action == "SEARCH":
+                query_search = self.get_query_search(_search)
+            query_grouping = []
+            if _action == "GROUPING":
+                query_grouping = self.get_query_grouping(_grouping, _type)
+            query_keyword = self.get_query_keyword(_news_type, _grouping, _type)
             body['filter']['and']['filters'] += query_search
             body['filter']['and']['filters'] += query_keyword
 
+            query_sort = self.get_query_sort(_sort)
             if query_sort is not False:
                 body['filter']['and']['filters'] += [query_sort]
             if query_grouping is not False:

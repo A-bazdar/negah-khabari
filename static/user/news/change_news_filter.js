@@ -2,27 +2,74 @@
  * Created by Morteza on 12/19/2015.
  */
 
+var __type = {type: "ALL", action: "ALL"};
+
+$(document).on('keyup', '#search_news_header_input', function (e) {
+    if (e.keyCode == '13') {
+        __type["type"] = "EXACTLY";
+        __type["action"] = "SEARCH";
+        get_news();
+    }
+});
+
+$(document).on('click', '#search_news_header_btn', function (e) {
+    __type["type"] = "EXACTLY";
+    __type["action"] = "SEARCH";
+    get_news();
+});
+
+$(document).on('click', '#refinement_news_search', function (e) {
+    __type["type"] = "REFINEMENT";
+    __type["action"] = "SEARCH";
+    get_news();
+});
+
+$(document).on('click', '#search_news_complete_header_btn', function (e) {
+    __type["type"] = "EXPERT";
+    __type["action"] = "SEARCH";
+    get_news();
+});
+
+$(document).on('change', 'input.grouping.grouping-checkbox[type=checkbox]', function () {
+    __type['type'] = $('.sidebar-items.grouping.active').attr('data-grouping');
+    __type['action'] = "GROUPING";
+    var _view = $(".change-view-news.active").attr('data-view');
+    var _sort = $(".change-sort-news.active").attr('data-sort');
+    var _grouping = get_grouping();
+    show_result_news(1, _view, [], _grouping, _sort);
+});
 
 $('a.grouping[data-toggle=tab]').on('shown.bs.tab', function (e) {
-    var _search = get_searches();
-    var _show_news = $('#show_result_news');
-    var _view = _show_news.attr('data-view');
-    var _sort = _show_news.attr('data-sort');
+    __type['type'] = $('.sidebar-items.grouping.active').attr('data-grouping');
+    __type['action'] = "GROUPING";
+    var _view = $(".change-view-news.active").attr('data-view');
+    var _sort = $(".change-sort-news.active").attr('data-sort');
     var _grouping = get_grouping();
-    //var _filter = $('ul#filter_news_header .filter-news.active').attr('data-filter');
-    show_result_news(1, _view, _grouping, _search, _sort);
+    show_result_news(1, _view, [], _grouping, _sort);
+});
+
+$(document).on('change', 'input.all-grouping-checkbox', function () {
+    if ($(this).prop('checked')) {
+        __type["type"] = "ALL";
+        __type["action"] = "ALL";
+        var _type = $(this).attr('data-type');
+        $('input.grouping[name=' + _type + ']').prop('checked', true);
+        var _view = $(".change-view-news.active").attr('data-view');
+        var _sort = $(".change-sort-news.active").attr('data-sort');
+        show_result_news(1, _view, [], [], _sort);
+    } else {
+        $('input.subject').prop('checked', false);
+    }
 });
 
 $(document).on('click', '#pagination .change-page', function (e) {
     var elm = $(e.target).closest('.change-page');
     var _page = elm.attr('data-page');
     var _search = get_searches();
-    var _show_news = $('#show_result_news');
-    var _view = _show_news.attr('data-view');
-    var _sort = _show_news.attr('data-sort');
+    var _view = $(".change-view-news.active").attr('data-view');
+    var _sort = $(".change-sort-news.active").attr('data-sort');
     var _grouping = get_grouping();
-    //var _filter = $('ul#filter_news_header .filter-news.active').attr('data-filter');
-    show_result_news(_page, _view, _grouping, _search, _sort);
+    show_result_news(_page, _view, _search, _grouping, _sort);
 });
 
 $(document).on('click', '#news_update_show_time', function (e) {
@@ -30,13 +77,11 @@ $(document).on('click', '#news_update_show_time', function (e) {
 });
 
 function update_news() {
-    var _search = get_searches();
-    var _show_news = $('#show_result_news');
-    var _view = _show_news.attr('data-view');
-    var _sort = _show_news.attr('data-sort');
-    var _grouping = get_grouping();
-    //var _filter = $('ul#filter_news_header .filter-news.active').attr('data-filter');
-    show_result_news(1, _view, _grouping, _search, _sort);
+    __type["type"] = "ALL";
+    __type["action"] = "ALL";
+    var _view = $(".change-view-news.active").attr('data-view');
+    var _sort = $(".change-sort-news.active").attr('data-sort');
+    show_result_news(1, _view, [], [], _sort);
 }
 
 $(document).on('click', '.change-view-news', function (e) {
@@ -44,47 +89,120 @@ $(document).on('click', '.change-view-news', function (e) {
     $('.change-view-news.active').removeClass('active');
     elm.addClass('active');
     var _view = elm.attr('data-view');
-    var _sort = $('#show_result_news').attr('data-sort');
+    var _page = $('.pagination-container .change-page.active').attr('data-page');
+    var _sort = $(".change-sort-news.active").attr('data-sort');
     var _search = get_searches();
     var _grouping = get_grouping();
-    //var _filter = $('ul#filter_news_header .filter-news.active').attr('data-filter');
-    show_result_news(1, _view, _grouping, _search, _sort);
+    show_result_news(_page, _view, _search, _grouping, _sort);
 });
 
-$(document).on('change', 'input.all-grouping-checkbox', function () {
-    if ($(this).prop('checked')) {
-        var _type = $(this).attr('data-type');
-        $('input.grouping[name=' + _type + ']').prop('checked', true);
-        var _search = get_searches();
-        var _show_news = $('#show_result_news');
-        var _view = _show_news.attr('data-view');
-        var _sort = _show_news.attr('data-sort');
+$(document).on('click', '.change-sort-news', function (e) {
+    var elm = $(e.target).closest('.change-sort-news');
+    var _sort = elm.attr('data-sort');
+    $('.change-sort-news.active').removeClass('active');
+    elm.addClass('active');
+    var _view = $(".change-view-news.active").attr('data-view');
+    var _search = get_searches();
+    var _grouping = get_grouping();
+    show_result_news(1, _view, _search, _grouping, _sort);
+});
+
+function get_grouping() {
+    if(__type['action'] == "GROUPING"){
+        var _all = true;
+        var _nothing = true;
+        $.each($('input[type=checkbox][name=' + __type['type'] + ']'), function () {
+            if (!$(this).prop('checked')) {
+                _all = false;
+            } else {
+                _nothing = false;
+            }
+        });
+        if (_nothing)
+            return [];
         var _grouping = [];
-        //var _filter = $('ul#filter_news_header .filter-news.active').attr('data-filter');
-        show_result_news(1, _view, _grouping, _search, _sort);
-    } else {
-        $('input.subject').prop('checked', false);
+        if (__type['type'] == 'subject') {
+            _grouping = $("#form_grouping_news_subject").serializeArray();
+        } else if (__type['type'] == 'agency') {
+            _grouping = $("#form_grouping_news_agency").serializeArray();
+        } else if (__type['type'] == 'keyword') {
+            _grouping = $("#form_grouping_news_keyword").serializeArray();
+        } else if (__type['type'] == 'group') {
+            _grouping = $("#form_grouping_news_group").serializeArray();
+        } else if (__type['type'] == 'geographic') {
+            _grouping = $("#form_grouping_news_geographic").serializeArray();
+        } else if (__type['type'] == 'direction') {
+            _grouping = $("#form_grouping_news_direction").serializeArray();
+        }
+        $('input.all-subjects[type=checkbox]').prop('checked', _all);
+        if (_all) {
+            _grouping = []
+        }
     }
-});
+    return _grouping
+}
 
-$(document).on('change', 'input.grouping.grouping-checkbox[type=checkbox]', function () {
-    var _search = get_searches();
-    var _show_news = $('#show_result_news');
-    var _view = _show_news.attr('data-view');
-    var _sort = _show_news.attr('data-sort');
-    var _grouping = get_grouping();
-    //var _filter = $('ul#filter_news_header .filter-news.active').attr('data-filter');
-    show_result_news(1, _view, _grouping, _search, _sort);
-});
+function get_searches() {
+    var searches = [];
+    if(__type["action"] == "SEARCH"){
+        if (__type["type"] == "EXPERT") {
+            searches = $("#header_search_news").serializeArray();
+        } else if (__type["type"] == "EXACTLY") {
+            var search_news_header_input = $("#search_news_header_input").val();
+            searches = [{name: "exactly-word", value: search_news_header_input}, {
+                name: "type-search",
+                value: 'exactly_search'
+            }]
+        } else if (__type["type"] == "REFINEMENT") {
+            searches = $("#refinement_news").serializeArray();
+        }
+    }
+    return searches
+}
 
-function search_news_header() {
+function get_news() {
     var _search = get_searches();
-    var _show_news = $('#show_result_news');
-    var _view = _show_news.attr('data-view');
-    var _sort = _show_news.attr('data-sort');
-    var _grouping = get_grouping();
-    //var _filter = $('ul#filter_news_header .filter-news.active').attr('data-filter');
-    show_result_news(1, _view, _grouping, _search, _sort);
+    var _view = $(".change-view-news.active").attr('data-view');
+    var _sort = $(".change-sort-news.active").attr('data-sort');
+    show_result_news(1, _view, _search, [], _sort);
+}
+
+
+function show_result_news(_page, _view, _search, _grouping, _sort) {
+    $('body').removeClass('loaded');
+    var news_type = $('.grouping.type-grouping.active').attr('data-type');
+    var _data = [
+        {name: "_xsrf", value: xsrf_token},
+        {name: "_page", value: _page},
+        {name: "_view", value: _view},
+        {name: "_type", value: __type['type']},
+        {name: "_action", value: __type['action']},
+        {name: "_news_type", value: news_type},
+        {name: "_sort", value: _sort}
+    ];
+    _data = $.merge(_data, _grouping);
+    _data = $.merge(_data, _search);
+    $.ajax({
+        url: '',
+        type: 'post',
+        data: _data,
+        success: function (response) {
+            var status = response['status'];
+            var messages = response['messages'];
+            var value = response['value'];
+            if (status) {
+                set_news(value['news'], _view, value['font']['font'], value['size']);
+                load_news();
+                $('#pagination').html(value['pagination']);
+                $('#nav_search').find('.expert-search-btn').slideUp().removeClass('open').addClass('close');
+                $('button.c-menu__close').click();
+                $('body').addClass('loaded');
+                $('h1').css('color', '#222222');
+                $('#news_update_show_time').attr('data-minute', "0");
+                $('#news_update_show_time tooltip section b').html('بروز رسانی : هم اکنون');
+            }
+        }
+    });
 }
 
 $(document).on('click', 'ul#filter_news_header .filter-news-check', function(e){
@@ -100,58 +218,6 @@ $(document).on('click', 'ul#filter_news_header .filter-news-check', function(e){
         $('input[type=checkbox][name=news-select][data-' + filter + '=' + val + ']').prop('checked', true);
     }
 });
-
-$(document).on('keyup', '#search_news_header_input', function (e) {
-    if (e.keyCode == '13') {
-        search_type = "exactly_search";
-        search_news_header();
-    }
-});
-
-$(document).on('click', '#search_news_header_btn', function (e) {
-    search_type = "exactly_search";
-    search_news_header();
-});
-
-$(document).on('click', '#search_news_complete_header_btn', function (e) {
-    search_type = "expert_search";
-    search_news_header();
-});
-
-$(document).on('click', '#refinement_news_search', function (e) {
-    search_type = "refinement_news";
-    search_news_header();
-});
-
-//$(document).on('click', 'ul#sort_news_header .filter-news', function (e) {
-//    var elm = $(e.target).closest('.filter-news');
-//    var _filter = elm.attr('data-filter');
-//    var _search = get_searches();
-//    var _show_news = $('#show_result_news');
-//    var _view = _show_news.attr('data-view');
-//    var _sort = _show_news.attr('data-sort');
-//    var _grouping = get_grouping();
-//    $('ul#filter_news_header .filter-news').removeClass('active');
-//    $('ul#filter_news_header .filter-news[data-filter=' + _filter + ']').addClass('active');
-//    show_result_news(1, _view, _grouping, _search, _filter, _sort);
-//});
-
-
-$(document).on('click', '.change-sort-news', function (e) {
-    var elm = $(e.target).closest('.change-sort-news');
-    var _sort = elm.attr('data-sort');
-    $('.change-sort-news.active').removeClass('active');
-    elm.addClass('active');
-    var _show_news = $('#show_result_news');
-    _show_news.attr('data-sort', _sort);
-    var _view = _show_news.attr('data-view');
-    var _search = get_searches();
-    var _grouping = get_grouping();
-    //var _filter = $('ul#filter_news_header .filter-news.active').attr('data-filter');
-    show_result_news(1, _view, _grouping, _search, _sort);
-});
-
-
 
 var update_time = 0;
 var start = false;

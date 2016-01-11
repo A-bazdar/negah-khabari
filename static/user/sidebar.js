@@ -30,7 +30,8 @@ $(document).on("click", ".open-side-menu.show-grouping", function (e) {
     var side_bar_grouping = $('#side_bar_grouping');
     if(side_bar_grouping.attr('data-' + grouping) == 'true'){
         $('.sidebar-items.grouping').hide();
-        $('.sidebar-items.grouping[data-grouping=' + grouping + ']').fadeIn();
+        $('.sidebar-items.grouping.active').removeClass('active');
+        $('.sidebar-items.grouping[data-grouping=' + grouping + ']').addClass('active').fadeIn();
         $('#news_grouping_type').attr('data-type', grouping);
         classie.add(this, 'active');
         classie.add(menuRight, 'cbp-spmenu-open');
@@ -56,7 +57,8 @@ $(document).on("click", ".open-side-menu.show-grouping", function (e) {
                 var value = response['value'];
                 if (status) {
                     $('.sidebar-items.grouping').hide();
-                    $('.sidebar-items.grouping[data-grouping=' + grouping + ']').html(value).fadeIn();
+                    $('.sidebar-items.grouping.active').removeClass('active');
+                    $('.sidebar-items.grouping[data-grouping=' + grouping + ']').addClass('active').html(value).fadeIn();
                     $('#news_grouping_type').attr('data-type', grouping);
                     side_bar_grouping.attr('data-' + grouping, 'true');
                     make_sortable();
