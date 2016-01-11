@@ -1053,7 +1053,6 @@ class UserModel(BaseModel):
                     try:
                         direction = DirectionModel(_id=agency_direction[a_index]['direction']).get_one()['value']
                         d_index = is_exist(_list=r, _key=direction['id'])
-                        print direction
                         if d_index is not False:
                             c_index = is_exist(_list=r[d_index]['categories'], _key=__ag['category']['id'])
                             if c_index is not False:
