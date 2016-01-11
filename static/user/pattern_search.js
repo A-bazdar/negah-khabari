@@ -10,19 +10,6 @@ var pattern_search = '<tr class="pattern-search-row">\
                     </td>\
                 </tr>';
 
-$("form#pattern_search_form .pattern-search[name=period]").select2({
-    placeholder: "انتخاب کنید"
-}).on("change", function () {
-    if ($(this).select2("val") == 'period') {
-        $('form#pattern_search_form .period-date').fadeIn();
-    } else {
-        $('form#pattern_search_form .period-date').fadeOut();
-    }
-});
-
-$(".select2_keywords.pattern-search").select2({
-    tags: []
-});
 
 $(document).on('click', '.add-agency.pattern-search', function(){
     var agency_names = [];
@@ -67,7 +54,6 @@ $(document).on('submit', '#pattern_search_form', function(e){
                         error = 'متاسفانه در سیستم خطایی به وجود آمده، لطفا دوباره امتحان کنید.';
                     $('.errors').html(error);
                     btn.html('ثبت');
-                    __a = true;
                 }else{
                     Alert.render('success', function(){
                         btn.html('ثبت');
@@ -128,11 +114,9 @@ $(document).on('click', '.pattern-search.edit', function(e){
                         error = 'متاسفانه در سیستم خطایی به وجود آمده، لطفا دوباره امتحان کنید.';
                     $('.errors').html(error);
                     elm.html(btn_html);
-                    __a = true;
                 }else{
                     $('input.pattern-search[type=checkbox]').prop('checked', false);
                     $('input.pattern-search[name=pattern-name]').val(value['name']);
-
                     $('select.pattern-search[name=period]').select2("val", value['period']);
                     if(value['period'] == 'period'){
                         $('input.pattern-search[name=start-date]').val(value['start_date']);
@@ -143,12 +127,16 @@ $(document).on('click', '.pattern-search.edit', function(e){
                         $('input.pattern-search[name=start-date]').val("");
                         $('input.pattern-search[name=end-date]').val("");
                     }
-
-                    $('input.pattern-search[name=tags]').select2("data", value["tags"], true);
-                    $('input.pattern-search[name=all-words]').select2("data", value["all_words"], true);
+                    $('select.pattern-search[name=key-words]').select2("data", [], true).select2("data", value["key_words"], true);
+                    $('input.pattern-search[name=all-words]').select2("data", [], true).select2("data", value["all_words"], true);
                     $('input.pattern-search[name=exactly-word]').val(value["exactly_word"]);
-                    $('input.pattern-search[name=each-words]').select2("data", value["each_words"], true);
-                    $('input.pattern-search[name=without-words]').select2("data", value["without_words"], true);
+                    $('input.pattern-search[name=each-words]').select2("data", [], true).select2("data", value["each_words"], true);
+                    $('input.pattern-search[name=without-words]').select2("data", [], true).select2("data", value["without_words"], true);
+
+                    $('select.pattern-search[name=direction-news]').select2('val', value["direction_news"]);
+                    $('select.pattern-search[name=direction-agency]').select2('val', value["direction_agency"]);
+                    $('select.pattern-search[name=main-source-news]').select2('val', value["main_source_news"]);
+                    $('select.pattern-search[name=news-makers]').select2('val', value["news_makers"]);
 
                     $('input.pattern-search[name=picture]').prop('checked', value["picture"]);
                     $('input.pattern-search[name=video]').prop('checked', value["video"]);
@@ -165,7 +153,7 @@ $(document).on('click', '.pattern-search.edit', function(e){
                     $('input.pattern-search[name=important2]').prop('checked', value["important2"]);
                     $('input.pattern-search[name=important3]').prop('checked', value["important3"]);
                     $('input.pattern-search[name=agency]').val(value['agency']);
-                    $('input.pattern-search[name=agency_names]').select2("data", value['agency_names'], true);
+                    $('input.pattern-search[name=agency_names]').select2("data", [], true).select2("data", value['agency_names'], true);
 
                     $('input.pattern-search[name=action]').val('edit');
                     $('input.pattern-search[name=pattern_id]').val(value['_id']);
@@ -236,8 +224,13 @@ function empty_modal_pattern_search(){
     $('input.pattern-search[type=checkbox]').prop('checked', false);
     $('input.pattern-search[name=pattern_id]').val('');
     $('select.pattern-search[name=period]').select2("val", "hour");
+    $('select.pattern-search[name=key-words]').select2('data', [], true);
     $('input.pattern-search[name=start-date]').val('');
     $('input.pattern-search[name=end-date]').val('');
+    $('select.pattern-search[name=direction-news]').select2('val', "all");
+    $('select.pattern-search[name=direction-agency]').select2('val', "all");
+    $('select.pattern-search[name=main-source-news]').select2('val', "all");
+    $('select.pattern-search[name=news-makers]').select2('val', "all");
     $('form#pattern_search_form .period-date').fadeOut();
     $('table.table.pattern-search tr.empty').remove();
     $('input.pattern-search.select2_keywords').select2("data", [], true);

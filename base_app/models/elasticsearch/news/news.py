@@ -786,15 +786,25 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
-    def get_keywords(self, key_words):
+    def get_keyword_info(self, __key):
         user_keywords = self.full_current_user['keyword']
+        r = filter(lambda _key: _key['_id'] == __key, user_keywords)
+        if len(r):
+            return r[0]
+        else:
+            try:
+                return KeyWordModel(_id=__key).get_one()["value"]
+            except:
+                pass
+        return False
+
+    def get_keywords(self, key_words):
+
         search_keywords = []
         for i in key_words:
-            r = filter(lambda _key: _key['_id'] == i, user_keywords)
-            if len(r):
-                search_keywords.append(r[0])
-            else:
-                search_keywords.append(KeyWordModel(_id=i).get_one()["value"])
+            r = self.get_keyword_info(i)
+            if r:
+                search_keywords.append(r)
 
         key_query = ''
         for topic in search_keywords:
