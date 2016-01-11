@@ -54,8 +54,14 @@ $(document).on('click', '.save-edit.key-words', function(e){
             var status = response['status'];
             var value = response['value'];
             if (status) {
-                $('.keywords_box.key-words[data-key=' + key_id + ']').html(value).removeClass('display-none');
+                $('.keywords_box.key-words[data-key=' + key_id + ']').html(value['html']).removeClass('display-none');
                 $('.edit_keywords_box.key-words[data-key=' + key_id + ']').addClass('display-none');
+                var options = '';
+                for (var i in value['keywords']) {
+                    options += "<option value='" + value['keywords'][i]['id'] + "'>" + value['keywords'][i]['topic'] + "</option>";
+                }
+                $(".select.search-news[name=key-words]").select2("data", []).html(options);
+                $(".select.refinement-news[name=key-words]").select2("data", []).html(options);
             }
             elm.html(org_html);
         }
@@ -76,10 +82,16 @@ $(document).on('click', '.save-add.key-words', function(e){
             var status = response['status'];
             var value = response['value'];
             if (status) {
-                $('#all_key_words').append(value);
+                $('#all_key_words').append(value['html']);
                 $('#add_keyword_div').slideUp();
                 $('#show_hide_add_keyword').attr('data-show', 'false').html('+ افزودن');
                 $('#form_add_keyword input[type=text]').val('');
+                var options = '';
+                for (var i in value['keywords']) {
+                    options += "<option value='" + value['keywords'][i]['id'] + "'>" + value['keywords'][i]['topic'] + "</option>";
+                }
+                $(".select.search-news[name=key-words]").select2("data", []).html(options);
+                $(".select.refinement-news[name=key-words]").select2("data", []).html(options);
                 elm.html(org_html);
             }
         }
