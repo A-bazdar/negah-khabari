@@ -49,6 +49,7 @@ function create_refinement_news(){
                         html += '<input type="radio" name="pattern_search_show_refinement_news" value="' + value[i]['id'] + '"> ' + value[i]['name'];
                     }
                     $('.filtration-news-pattern-search').html(html);
+                    $('input.refinement-news.agency[type=checkbox]').lc_switch();
                 }
             }
         });
