@@ -44,6 +44,7 @@ $(document).on('click', '.save-edit.key-words', function(e){
     var key_id = elm.attr('data-key');
     var org_html = elm.html();
     elm.html(loader);
+    alert(key_id);
     var postData = $('.form-save-edit.key-words[data-key=' + key_id + ']').serializeArray();
     jQuery.ajax(
     {
@@ -52,6 +53,7 @@ $(document).on('click', '.save-edit.key-words', function(e){
         data: postData,
         success: function (response) {
             var status = response['status'];
+            alert(status);
             var value = response['value'];
             if (status) {
                 $('.keywords_box.key-words[data-key=' + key_id + ']').html(value['html']).removeClass('display-none');
