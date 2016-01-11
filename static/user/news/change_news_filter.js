@@ -2,6 +2,50 @@
  * Created by Morteza on 12/19/2015.
  */
 
+function show_result_news(_page, _view, _search, _grouping, _sort) {
+    $('body').removeClass('loaded');
+    var news_type = $('.grouping.type-grouping.active').attr('data-type');
+    var _data = [
+        {name: "_xsrf", value: xsrf_token},
+        {name: "_page", value: _page},
+        {name: "_view", value: _view},
+        {name: "_type", value: __type['type']},
+        {name: "_action", value: __type['action']},
+        {name: "_news_type", value: news_type},
+        {name: "_sort", value: _sort}
+    ];
+    _data = $.merge(_data, _grouping);
+    _data = $.merge(_data, _search);
+    $.ajax({
+        url: '',
+        type: 'post',
+        data: _data,
+        success: function (response) {
+            var status = response['status'];
+            var messages = response['messages'];
+            var value = response['value'];
+            if (status) {
+                set_news(value['news'], _view, value['font']['font'], value['size']);
+                load_news();
+                $('#pagination').html(value['pagination']);
+                $('#nav_search').find('.expert-search-btn').slideUp().removeClass('open').addClass('close');
+                $('button.c-menu__close').click();
+                $('body').addClass('loaded');
+                $('h1').css('color', '#222222');
+                $('#news_update_show_time').attr('data-minute', "0");
+                $('#news_update_show_time tooltip section b').html('بروز رسانی : هم اکنون');
+            }
+        }
+    });
+}
+
+function get_news() {
+    var _search = get_searches();
+    var _view = $(".change-view-news.active").attr('data-view');
+    var _sort = $(".change-sort-news.active").attr('data-sort');
+    show_result_news(1, _view, _search, [], _sort);
+}
+
 var __type = {type: "ALL", action: "ALL"};
 
 $(document).on('keyup', '#search_news_header_input', function (e) {
@@ -72,10 +116,6 @@ $(document).on('click', '#pagination .change-page', function (e) {
     show_result_news(_page, _view, _search, _grouping, _sort);
 });
 
-$(document).on('click', '#news_update_show_time', function (e) {
-    update_news();
-});
-
 function update_news() {
     __type["type"] = "ALL";
     __type["action"] = "ALL";
@@ -83,6 +123,10 @@ function update_news() {
     var _sort = $(".change-sort-news.active").attr('data-sort');
     show_result_news(1, _view, [], [], _sort);
 }
+
+$(document).on('click', '#news_update_show_time', function (e) {
+    update_news();
+});
 
 $(document).on('click', '.change-view-news', function (e) {
     var elm = $(e.target).closest('.change-view-news');
@@ -158,51 +202,6 @@ function get_searches() {
         }
     }
     return searches
-}
-
-function get_news() {
-    var _search = get_searches();
-    var _view = $(".change-view-news.active").attr('data-view');
-    var _sort = $(".change-sort-news.active").attr('data-sort');
-    show_result_news(1, _view, _search, [], _sort);
-}
-
-
-function show_result_news(_page, _view, _search, _grouping, _sort) {
-    $('body').removeClass('loaded');
-    var news_type = $('.grouping.type-grouping.active').attr('data-type');
-    var _data = [
-        {name: "_xsrf", value: xsrf_token},
-        {name: "_page", value: _page},
-        {name: "_view", value: _view},
-        {name: "_type", value: __type['type']},
-        {name: "_action", value: __type['action']},
-        {name: "_news_type", value: news_type},
-        {name: "_sort", value: _sort}
-    ];
-    _data = $.merge(_data, _grouping);
-    _data = $.merge(_data, _search);
-    $.ajax({
-        url: '',
-        type: 'post',
-        data: _data,
-        success: function (response) {
-            var status = response['status'];
-            var messages = response['messages'];
-            var value = response['value'];
-            if (status) {
-                set_news(value['news'], _view, value['font']['font'], value['size']);
-                load_news();
-                $('#pagination').html(value['pagination']);
-                $('#nav_search').find('.expert-search-btn').slideUp().removeClass('open').addClass('close');
-                $('button.c-menu__close').click();
-                $('body').addClass('loaded');
-                $('h1').css('color', '#222222');
-                $('#news_update_show_time').attr('data-minute', "0");
-                $('#news_update_show_time tooltip section b').html('بروز رسانی : هم اکنون');
-            }
-        }
-    });
 }
 
 $(document).on('click', 'ul#filter_news_header .filter-news-check', function(e){
