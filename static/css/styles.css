@@ -2047,3 +2047,23 @@ a.change-page {
     white-space: nowrap;
     float: right;
 }
+
+.amcharts-chart-div a{
+    display: none !important;
+}
+
+.highcharts-title{
+    display: none !important;
+}
+
+.highcharts-button{
+    display: none !important;
+}
+
+.highcharts-yaxis-title{
+    display: none !important;
+}
+
+.highcharts-legend{
+    display: none !important;
+}
