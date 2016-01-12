@@ -12,7 +12,7 @@ $(document).on('click', '.chart-content-analysis.chart-content-analysis-tabs', f
 $(document).on('click', '#show_chart_content_analysis_modal', function (e) {
     var elm = $(e.target).closest('.chart-content-analysis');
     var open = elm.attr('data-open');
-    if(open == "true"){
+    if(false){
         $('#chart_content_analysis').modal('toggle');
     }else{
         jQuery.ajax(
@@ -26,7 +26,7 @@ $(document).on('click', '#show_chart_content_analysis_modal', function (e) {
                     if (status) {
                         $('.tab_content.chart-content-analysis[data-action=content_format]').html(value['html']);
                         create_pie_chart("pie_chart_content_format", value['result']['contents']);
-                        create_bar_chart("bar_chart_content_format", value['categories'], value['series']);
+                        create_bar_chart("bar_chart_content_format", value['result']['categories'], value['result']['series']);
                         elm.attr('data-open', 'true');
                         $('#chart_content_analysis').modal('toggle');
                     }
