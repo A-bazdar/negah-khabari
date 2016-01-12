@@ -12,7 +12,7 @@ $(document).on('click', '.chart-content-analysis.chart-content-analysis-tabs', f
 $(document).on('click', '#show_chart_content_analysis_modal', function (e) {
     var elm = $(e.target).closest('.chart-content-analysis');
     var open = elm.attr('data-open');
-    if(false){
+    if(open == "true"){
         $('#chart_content_analysis').modal('toggle');
     }else{
         jQuery.ajax(
