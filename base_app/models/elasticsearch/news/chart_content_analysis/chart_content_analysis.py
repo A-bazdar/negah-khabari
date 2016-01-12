@@ -23,7 +23,7 @@ class NewsChartContentAnalysisModel:
         self.start = CustomDateTime().generate_date_time(self.end, add=False, _type="months", value=1)
         self.value = []
 
-    def get_top_elements(self, _key):
+    def get_top_elements(self, _key, _size):
         try:
             body = {
                 "size": 0,
@@ -38,12 +38,12 @@ class NewsChartContentAnalysisModel:
                 "aggs": {
                     "group_by": {
                         "terms": {
-                            "field": _key
+                            "field": _key,
+                            "size": _size
                         }
                     }
                 }
             }
-            print body
             r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
             result = []
             for b in r['aggregations']['group_by']['buckets']:
@@ -57,7 +57,7 @@ class NewsChartContentAnalysisModel:
             __contents = ContentModel().get_all()['value']
             count_all = 0
             contents = []
-            __categories = self.get_top_elements("category")
+            __categories = self.get_top_elements("category", 3)
             for con in __contents:
                 body = {
                     "query": {
@@ -147,7 +147,8 @@ class NewsChartContentAnalysisModel:
             contents = []
             series = []
             categories = ['منابع خبری']
-            __agencies = self.get_top_elements("agency")
+            count_agency = AgencyModel().count_all()['value']
+            __agencies = self.get_top_elements("agency", count_agency)
             for ag in __agencies:
                 agency = AgencyModel(_id=ObjectId(ag['key'])).get_one()
                 contents.append(dict(title=agency['name'], value=ag['doc_count']))
@@ -167,7 +168,6 @@ class NewsChartContentAnalysisModel:
     def get_general_statistic_agency(self, direction):
         def get_count_direction(__agency, __dir):
             a = 0
-            print len(direction)
             for _i in direction:
                 if _i['agency'] == __agency and _i['direction'] == __dir:
                     a += 1
@@ -175,7 +175,8 @@ class NewsChartContentAnalysisModel:
         try:
             contents = []
             directions = DirectionModel().get_all('content')['value']
-            __agencies = self.get_top_elements("agency")
+            count_agency = AgencyModel().count_all()['value']
+            __agencies = self.get_top_elements("agency", count_agency)
             for ag in __agencies:
                 agency = AgencyModel(_id=ObjectId(ag['key'])).get_one()
                 __a = dict(title=agency['name'], value=ag['doc_count'], direction=[])

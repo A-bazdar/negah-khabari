@@ -147,6 +147,16 @@ class AgencyModel:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
             return self.result
 
+    def count_all(self):
+        try:
+            r = MongodbModel(collection='agency', body={}).count()
+            self.result['value'] = r
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
+            return self.result
+
     def get_all_imp(self):
         try:
             r = MongodbModel(collection='agency', body={}).get_all()
