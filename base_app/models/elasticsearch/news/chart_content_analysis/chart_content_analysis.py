@@ -5,6 +5,7 @@ from bson import ObjectId
 from base_app.classes.date import CustomDateTime
 from base_app.classes.debug import Debug
 from base_app.models.elasticsearch.base_model import ElasticSearchModel
+from base_app.models.mongodb.agency.agency import AgencyModel
 from base_app.models.mongodb.category.category import CategoryModel
 from base_app.models.mongodb.content.content import ContentModel
 
@@ -21,7 +22,7 @@ class NewsChartContentAnalysisModel:
         self.start = CustomDateTime().generate_date_time(self.end, add=False, _type="months", value=1)
         self.value = []
 
-    def get_top_category(self):
+    def get_top_elements(self, _key):
         try:
             body = {
                 "size": 0,
@@ -34,27 +35,27 @@ class NewsChartContentAnalysisModel:
                     }
                 },
                 "aggs": {
-                    "group_by_category": {
+                    "group_by": {
                         "terms": {
-                            "field": "category"
+                            "field": _key
                         }
                     }
                 }
             }
             r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
             result = []
-            for b in r['aggregations']['group_by_category']['buckets']:
+            for b in r['aggregations']['group_by']['buckets']:
                 result.append(dict(key=b['key'], doc_count=b['doc_count']))
             return result
         except:
             return []
 
-    def get_count_content(self):
+    def get_chart_content_format(self):
         try:
             __contents = ContentModel().get_all()['value']
             count_all = 0
             contents = []
-            __categories = self.get_top_category()
+            __categories = self.get_top_elements("category")
             for con in __contents:
                 body = {
                     "query": {
@@ -86,7 +87,7 @@ class NewsChartContentAnalysisModel:
 
             categories = []
             series = []
-            for cat in __categories:
+            for cat in __categories[:3]:
                 __category = CategoryModel(_id=ObjectId(cat['key'])).get_one()['value']
                 categories.append(__category['name'])
                 for con in __contents:
@@ -129,6 +130,30 @@ class NewsChartContentAnalysisModel:
                         series[b]['data'].append(r if r else 0)
                     else:
                         series.append(dict(id=str(con['id']), name=con['name'], data=[r if r else 0]))
+
+            self.result['value'] = dict(contents=contents, series=series, categories=categories, count_all=count_all)
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(send=False)
+            return self.result
+
+    def get_performance_agency_number_news(self):
+        try:
+            count_all = 0
+            contents = []
+            series = []
+            categories = ['منابع خبری']
+            __agencies = self.get_top_elements("agency")
+            for ag in __agencies:
+                agency = AgencyModel(_id=ObjectId(ag['key'])).get_one()
+                contents.append(dict(title=agency['name'], value=ag['doc_count']))
+                series.append(dict(name=agency['name'], data=[ag['doc_count']]))
+                count_all += ag['doc_count']
+
+            for c in contents:
+                c['percent'] = int((c['value'] / count_all) * 100)
 
             self.result['value'] = dict(contents=contents, series=series, categories=categories, count_all=count_all)
             self.result['status'] = True
