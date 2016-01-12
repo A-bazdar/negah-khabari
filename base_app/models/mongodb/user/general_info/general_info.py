@@ -271,6 +271,7 @@ class UserModel(BaseModel):
                     line_height=r['line_height'] if 'line_height' in r.keys() else 'low',
                     sort_grouping=r['sort_grouping'] if 'sort_grouping' in r.keys() else {},
                     sort_news=r['sort_news'] if 'sort_news' in r.keys() else "date",
+                    news_content=r['news_content'] if 'news_content' in r.keys() else dict(direction=[], main_source_news=[], news_group=[], news_maker=[]),
 
                 )
                 self.result['value'] = v
@@ -866,7 +867,7 @@ class UserModel(BaseModel):
                 'pattern_search.$.direction_news': pattern_search['direction_news'],
                 'pattern_search.$.direction_agency': pattern_search['direction_agency'],
                 'pattern_search.$.main_source_news': pattern_search['main_source_news'],
-                'pattern_search.$.news_makers': pattern_search['news_makers'],
+                'pattern_search.$.news_maker': pattern_search['news_maker'],
                 'pattern_search.$.picture': pattern_search['picture'],
                 'pattern_search.$.video': pattern_search['video'],
                 'pattern_search.$.voice': pattern_search['voice'],

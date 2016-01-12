@@ -161,3 +161,26 @@ class NewsChartContentAnalysisModel:
         except:
             Debug.get_exception(send=False)
             return self.result
+
+    def get_general_statistic_agency(self):
+        try:
+            count_all = 0
+            contents = []
+            series = []
+            categories = ['منابع خبری']
+            __agencies = self.get_top_elements("agency")
+            for ag in __agencies:
+                agency = AgencyModel(_id=ObjectId(ag['key'])).get_one()
+                contents.append(dict(title=agency['name'], value=ag['doc_count']))
+                series.append(dict(name=agency['name'], data=[ag['doc_count']]))
+                count_all += ag['doc_count']
+            for c in contents:
+                c['percent'] = int(float(float(c['value']) / count_all) * 100)
+
+            self.result['value'] = dict(contents=contents, series=series, categories=categories, count_all=count_all)
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(send=False)
+            return self.result

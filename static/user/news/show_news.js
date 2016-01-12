@@ -2,7 +2,7 @@
  * Created by Morteza on 12/18/2015.
  */
 
-function make_show_news(news, body_news_font) {
+function make_show_news(news, body_news_font, news_content) {
     var _make = $('#make_show_news');
     $('.detail_news_scroll').attr('data-news', news['id']);
     _make.html($('#show_news').html());
@@ -80,7 +80,14 @@ function make_show_news(news, body_news_font) {
     _make.find('div#scroll_news').attr('data-news', news['id']);
     _make.find('div#summary_news').html(news['summary']);
     _make.find('div#body_news').html(news['body']).css({'font-size': body_news_font['size'] + 'pt', 'font-family': body_news_font['font']});
-
+    _make.find('select#select_content_direction').addClass('new_select').attr('data-news', news['id']);
+    _make.find('select#select_content_direction option[value=' + news_content['direction_select'] + ']').attr('selected', 'selected');
+    _make.find('select#select_news_group').addClass('new_select').attr('data-news', news['id']);
+    _make.find('select#select_news_group option[value=' + news_content['news_group_select'] + ']').attr('selected', 'selected');
+    _make.find('select#select_main_source_news').addClass('new_select').attr('data-news', news['id']);
+    _make.find('select#select_main_source_news option[value=' + news_content['main_source_news_select'] + ']').attr('selected', 'selected');
+    _make.find('select#select_news_maker').addClass('new_select').attr('data-news', news['id']);
+    _make.find('select#select_news_maker option[value=' + news_content['news_maker_select'] + ']').attr('selected', 'selected');
     images = '';
     for (i = 0; i < news['images'].length; i++)
         images += '<img class="news_img new_news_img b-lazy new_news_img float-center" data-src="' + news['images'][i] + '" data-action="' + news['id'] + '" src="' + static_url_loading + '" onerror="this.onerror=null;this.src=\'' + static_url_error_image_news + '\';">';
