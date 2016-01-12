@@ -151,9 +151,8 @@ class NewsChartContentAnalysisModel:
                 contents.append(dict(title=agency['name'], value=ag['doc_count']))
                 series.append(dict(name=agency['name'], data=[ag['doc_count']]))
                 count_all += ag['doc_count']
-
             for c in contents:
-                c['percent'] = int((c['value'] / count_all) * 100)
+                c['percent'] = int(float(float(c['value']) / count_all) * 100)
 
             self.result['value'] = dict(contents=contents, series=series, categories=categories, count_all=count_all)
             self.result['status'] = True
