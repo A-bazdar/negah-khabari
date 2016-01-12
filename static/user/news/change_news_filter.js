@@ -30,7 +30,7 @@ function show_result_news(_page, _view, _search, _grouping, _sort) {
                 set_news(value['news'], _view, value['font']['font'], value['size']);
                 load_news();
                 $('#pagination').html(value['pagination']);
-                $('#nav_search').find('.expert-search-btn').slideUp().removeClass('open').addClass('close');
+                $('#nav_search').find('.sb_dropdown').slideUp().removeClass('open').addClass('close');
                 $('button.c-menu__close').click();
                 $('body').addClass('loaded');
                 $('h1').css('color', '#222222');
