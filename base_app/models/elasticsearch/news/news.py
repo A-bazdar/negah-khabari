@@ -382,6 +382,7 @@ class NewsModel:
                 download='',
                 sound=sound,
                 options=options,
+                agency_id=str(agency['id']),
                 agency_color=agency['color']
             ))
         except:

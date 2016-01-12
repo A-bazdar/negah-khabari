@@ -8,11 +8,12 @@ __author__ = 'Morteza'
 
 
 class UserNewsContentModel(BaseModel):
-    def __init__(self, _id=None, news=None, value=None, _type=None):
+    def __init__(self, _id=None, news=None, value=None, _type=None, agency=None):
         BaseModel.__init__(self)
         self.news = news
         self.value = value
         self.type = _type
+        self.agency = agency
         self.id = _id
         self.result = {'value': {}, 'status': False}
 
@@ -29,7 +30,7 @@ class UserNewsContentModel(BaseModel):
             else:
                 __condition = {"_id": self.id}
                 __body = {"$push": {
-                    "news_content." + self.type: {"news": self.news, self.type: self.value},
+                    "news_content." + self.type: {"agency": self.agency, "news": self.news, self.type: self.value},
                 }}
                 MongodbModel(collection='user', condition=__condition, body=__body).update()
             self.result['value'] = {}

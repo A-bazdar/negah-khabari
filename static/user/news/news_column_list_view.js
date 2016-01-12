@@ -40,7 +40,7 @@ function make_news_column_list_view(news, font, size) {
         dict_select['data-no-important'] = 'true'
     }
     _make.find('div#news_row').attr('data-news', news['id']);
-    _make.find('button#agency_info').css('background', news['agency_color']).html(news['agency_name']);
+    _make.find('button#agency_info').css('background', news['agency_color']).attr({'data-news': news['id'], 'data-agency': news['agency_id']}).html(news['agency_name']);
     _make.find('label#label_news_select').attr('for', news['id']);
     _make.find('div#title_news').html(news['title']).css({'font-size': size + 'pt', 'font-family': font});
     _make.find('span#date_news').html(news['_date']);

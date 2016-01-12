@@ -49,7 +49,7 @@ function make_news_detail_pic_view(news, font, size) {
     _make.find('div#title_news').html(news['title']).css({'font-size': size + 'pt', 'font-family': font});
     _make.find('div#summary_news').html(news['summary']);
     _make.find('span#date_news').html(news['_date']);
-    _make.find('button#agency_info').css('background', news['agency_color']).html(news['agency_name']);
+    _make.find('button#agency_info').css('background', news['agency_color']).attr({'data-news': news['id'], 'data-agency': news['agency_id']}).html(news['agency_name']);
     _make.find('div#detail_news_container').attr('data-news', news['id']);
     _make.find('input.news-select').attr('id', news['id']).val(news['id']).attr(dict_select);
     $('#show_result_news').append(_make.html());

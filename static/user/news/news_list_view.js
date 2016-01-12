@@ -23,7 +23,7 @@ function make_news_list_view(news, font, size) {
         _make.find('div#read_unread').addClass('unread').attr('data-news', news['id']);
         _make.find('i#read_icon').addClass('fa-circle-o').attr('data-news', news['id']);
     }
-    _make.find('button#agency_info').css('background', news['agency_color']).html(news['agency_name']);
+    _make.find('button#agency_info').css('background', news['agency_color']).attr({'data-news': news['id'], 'data-agency': news['agency_id']}).html(news['agency_name']);
 
     _make.find('label#label_news_select').attr('for', news['id']);
     _make.find('div#show_news_list_icon').attr('data-news', news['id']);

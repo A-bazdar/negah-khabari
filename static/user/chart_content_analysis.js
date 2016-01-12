@@ -64,8 +64,10 @@ $(document).on('click', '.dir_tab.chart-content-analysis-tabs', function (e) {
                     if (status) {
                         var a = $('.tab_content.chart-content-analysis[data-action=' + action + ']');
                         a.html(value['html']);
-                        create_pie_chart("pie_chart_performance_agency_number_news", value['contents']);
-                        create_bar_chart("bar_chart_performance_agency_number_news", value['categories'], value['series']);
+                        if(action == "performance_agency_number_news"){
+                            create_pie_chart("pie_chart_performance_agency_number_news", value['contents']);
+                            create_bar_chart("bar_chart_performance_agency_number_news", value['categories'], value['series']);
+                        }
                         $('.tab_content.chart-content-analysis').hide();
                         a.show();
                         elm.attr('data-open', 'true');

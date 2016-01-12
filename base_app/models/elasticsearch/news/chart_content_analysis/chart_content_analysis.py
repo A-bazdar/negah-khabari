@@ -8,6 +8,7 @@ from base_app.models.elasticsearch.base_model import ElasticSearchModel
 from base_app.models.mongodb.agency.agency import AgencyModel
 from base_app.models.mongodb.category.category import CategoryModel
 from base_app.models.mongodb.content.content import ContentModel
+from base_app.models.mongodb.direction.direction import DirectionModel
 
 __author__ = 'Morteza'
 
@@ -42,6 +43,7 @@ class NewsChartContentAnalysisModel:
                     }
                 }
             }
+            print body
             r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
             result = []
             for b in r['aggregations']['group_by']['buckets']:
@@ -162,22 +164,37 @@ class NewsChartContentAnalysisModel:
             Debug.get_exception(send=False)
             return self.result
 
-    def get_general_statistic_agency(self):
+    def get_general_statistic_agency(self, direction):
+        def get_count_direction(__agency, __dir):
+            a = 0
+            print len(direction)
+            for _i in direction:
+                if _i['agency'] == __agency and _i['direction'] == __dir:
+                    a += 1
+            return a
         try:
-            count_all = 0
             contents = []
-            series = []
-            categories = ['منابع خبری']
+            directions = DirectionModel().get_all('content')['value']
             __agencies = self.get_top_elements("agency")
             for ag in __agencies:
                 agency = AgencyModel(_id=ObjectId(ag['key'])).get_one()
-                contents.append(dict(title=agency['name'], value=ag['doc_count']))
-                series.append(dict(name=agency['name'], data=[ag['doc_count']]))
-                count_all += ag['doc_count']
-            for c in contents:
-                c['percent'] = int(float(float(c['value']) / count_all) * 100)
-
-            self.result['value'] = dict(contents=contents, series=series, categories=categories, count_all=count_all)
+                __a = dict(title=agency['name'], value=ag['doc_count'], direction=[])
+                for _dir in directions:
+                    __a['direction'].append(get_count_direction(ObjectId(ag['key']), _dir['id']))
+                contents.append(__a)
+            count_all = dict(no_direction=0, dir_count=[], total=0)
+            for i in contents:
+                __a = 0
+                for j in range(len(i['direction'])):
+                    __a += i['direction'][j]
+                    try:
+                        count_all['dir_count'][j] += i['direction'][j]
+                    except:
+                        count_all['dir_count'].append(i['direction'][j])
+                i['no_direction'] = i['value'] - __a
+                count_all['total'] += i['value']
+                count_all['no_direction'] += i['no_direction']
+            self.result['value'] = dict(contents=contents, count_all=count_all, directions=directions)
             self.result['status'] = True
             return self.result
 
