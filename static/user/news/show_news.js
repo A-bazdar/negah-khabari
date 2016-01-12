@@ -97,7 +97,7 @@ function make_show_news(news, body_news_font, news_content) {
     $(".__scrolling").niceScroll({
         cursorcolor: "#000",
         cursorwidth: "5px",
-        railalign: "left",
+        railalign: "right",
         autohidemode: true,
         horizrailenabled: false
     });
