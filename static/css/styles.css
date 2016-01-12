@@ -1987,4 +1987,9 @@ a.change-page {
     position: absolute;
     right: 5px;
     top: 40px;
+}.remove-icon {
+    background: url("/static/images/Icons.png") no-repeat;
+    width: 30px;
+    height: 30px;
+    background-position: -47px -130px;
 }
