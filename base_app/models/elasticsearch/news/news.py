@@ -817,8 +817,8 @@ class NewsModel:
                 _keyword += [__key['keyword']] + __key['synonyms']
                 _no_keyword += __key['no_synonyms']
 
-            keyword_query = ' AND '.join(e.encode('utf-8').strip() for e in _keyword).replace('AND  AND', 'AND')
-            no_keyword_query = ' AND '.join(e.encode('utf-8').strip() for e in _no_keyword).replace('AND  AND', 'AND')
+            keyword_query = ' OR '.join(e.encode('utf-8').strip() for e in _keyword).replace('AND  AND', 'AND')
+            no_keyword_query = ' OR '.join(e.encode('utf-8').strip() for e in _no_keyword).replace('AND  AND', 'AND')
             _query = ''
             if keyword_query != '':
                 _query += '({})'.format(keyword_query)

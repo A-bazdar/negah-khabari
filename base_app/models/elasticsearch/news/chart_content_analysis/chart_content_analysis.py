@@ -9,6 +9,7 @@ from base_app.models.mongodb.agency.agency import AgencyModel
 from base_app.models.mongodb.category.category import CategoryModel
 from base_app.models.mongodb.content.content import ContentModel
 from base_app.models.mongodb.direction.direction import DirectionModel
+from user_app.classes.keyword import KeyWordClass
 
 __author__ = 'Morteza'
 
@@ -17,33 +18,40 @@ class NewsChartContentAnalysisModel:
     index = 'negah_khabari'
     doc_type = 'news'
 
-    def __init__(self):
+    def __init__(self, user_keyword=None):
         self.result = {'value': {}, 'status': False}
+        self.user_keyword = user_keyword
         self.end = datetime.datetime.now()
         self.start = CustomDateTime().generate_date_time(self.end, add=False, _type="months", value=1)
         self.value = []
 
     def get_top_elements(self, _key, _size):
         try:
+            key_word_query = KeyWordClass(user_keyword=self.user_keyword).get_query_keyword()
             body = {
                 "size": 0,
                 "query": {
-                    "range": {
-                        "date": {
-                            "lt": self.end.isoformat(),
-                            "gte": self.start.isoformat()
-                        }
+                    "filtered": {
+                        "filter": {
+                            "and": {
+                                "filters": [
+                                    {
+                                        "range": {
+                                            "date": {"lt": self.end.isoformat(), "gte": self.start.isoformat()}
+                                        }
+                                    }
+                                ] + key_word_query
+                            }
+                        },
                     }
                 },
-                "aggs": {
+                "aggregations": {
                     "group_by": {
-                        "terms": {
-                            "field": _key,
-                            "size": _size
-                        }
+                        "terms": {"field": _key, "size": _size}
                     }
                 }
             }
+            print body
             r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
             result = []
             for b in r['aggregations']['group_by']['buckets']:
@@ -52,86 +60,79 @@ class NewsChartContentAnalysisModel:
         except:
             return []
 
-    def get_chart_content_format(self):
+    def get_top_categories(self, _size_category, _size_content):
         try:
-            __contents = ContentModel().get_all()['value']
-            count_all = 0
-            contents = []
-            __categories = self.get_top_elements("category", 3)
-            for con in __contents:
-                body = {
-                    "query": {
-                        "filtered": {
-                            "filter": {
-                                "and": {
-                                    "filters": [{
+            key_word_query = KeyWordClass(user_keyword=self.user_keyword).get_query_keyword()
+            body = {
+                "size": 0,
+                "query": {
+                    "filtered": {
+                        "filter": {
+                            "and": {
+                                "filters": [
+                                    {
                                         "range": {
-                                            "date": {
-                                                "lt": self.end.isoformat(),
-                                                "gte": self.start.isoformat()
-                                            }
+                                            "date": {"lt": self.end.isoformat(), "gte": self.start.isoformat()}
                                         }
-                                    }, {
-                                        "query": {
-                                            "term": {
-                                                "content": str(con['id'])
-                                            }
-                                        }
-                                    }]
-                                }
+                                    }
+                                ] + key_word_query
+                            }
+                        },
+                    }
+                },
+                "aggregations": {
+                    "category": {
+                        "terms": {"field": "category", "size": _size_category},
+
+                        "aggregations": {
+                            "content": {
+                                "terms": {"field": "content", "size": _size_content}
                             }
                         }
                     }
                 }
-                r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).count()
-                contents.append(dict(title=con['name'], value=r if r else 0))
-                count_all += r if r else 0
 
+            }
+
+            r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
+            result = []
+            for b in r['aggregations']['category']['buckets']:
+                contents = []
+                for c in b['content']['buckets']:
+                    contents.append(dict(key=c['key'], doc_count=c['doc_count']))
+                result.append(dict(key=b['key'], doc_count=b['doc_count'], contents=contents))
+            return result
+        except:
+            return []
+
+    def get_chart_content_format(self):
+        try:
+            count_content = ContentModel().count_all()['value']
+            __contents = self.get_top_elements("content", count_content)
+            count_all = 0
+            contents = []
+            for con in __contents:
+                content = ContentModel(_id=ObjectId(con['key'])).get_one()['value']
+
+                contents.append(dict(id=con['key'], title=content['name'], value=con['doc_count']))
+                count_all += con['doc_count']
+
+            __categories = self.get_top_categories(3, count_content)
             categories = []
             series = []
-            for cat in __categories[:3]:
+            for cat in __categories:
                 __category = CategoryModel(_id=ObjectId(cat['key'])).get_one()['value']
                 categories.append(__category['name'])
-                for con in __contents:
-                    body = {
-                        "query": {
-                            "filtered": {
-                                "filter": {
-                                    "and": {
-                                        "filters": [{
-                                            "range": {
-                                                "date": {
-                                                    "lt": self.end.isoformat(),
-                                                    "gte": self.start.isoformat()
-                                                }
-                                            }
-                                        }, {
-                                            "query": {
-                                                "term": {
-                                                    "content": str(con['id'])
-                                                }
-                                            }
-                                        }, {
-                                            "query": {
-                                                "term": {
-                                                    "category": cat['key']
-                                                }
-                                            }
-                                        }]
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).count()
+                for con in cat['contents']:
+                    content = ContentModel(_id=ObjectId(con['key'])).get_one()['value']
                     b = False
                     for j in range(len(series)):
-                        if series[j]['id'] == str(con['id']):
+                        if series[j]['id'] == con['key']:
                             b = j
                     if b is not False:
-                        series[b]['data'].append(r if r else 0)
+                        series[b]['data'].append(con['doc_count'])
                     else:
-                        series.append(dict(id=str(con['id']), name=con['name'], data=[r if r else 0]))
+                        series.append(dict(id=con['key'], name=content['name'], data=[con['doc_count']]))
 
             self.result['value'] = dict(contents=contents, series=series, categories=categories, count_all=count_all)
             self.result['status'] = True
