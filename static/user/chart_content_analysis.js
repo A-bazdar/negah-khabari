@@ -68,6 +68,15 @@ $(document).on('click', '.dir_tab.chart-content-analysis-tabs', function (e) {
                             create_pie_chart("pie_chart_performance_agency_number_news", value['contents']);
                             create_bar_chart("bar_chart_performance_agency_number_news", value['categories'], value['series']);
                         }
+                        if(action == "daily_statistics_news"){
+                            create_bar_chart("bar_chart_daily_statistics_news", value['categories'], value['series']);
+                        }
+                        if(action == "important_topic_news"){
+                            create_bar_chart_2("bar_chart_2_important_topic_news", value['categories'], value['series']);
+                        }
+                        if(action == "important_keyword_news"){
+                            create_bar_chart_2("bar_chart_2_important_keyword_news", value['categories'], value['series']);
+                        }
                         $('.tab_content.chart-content-analysis').hide();
                         a.show();
                         elm.attr('data-open', 'true');

@@ -44,4 +44,40 @@ function create_bar_chart(__div_id, __categories, __series){
         },
         series: __series
     });
+
+}
+
+function create_bar_chart_2(__div_id, __categories, __series){
+    $('#' + __div_id).highcharts({
+        chart: {
+            type: 'column'
+        },
+        xAxis: {
+            categories: __categories
+        },
+        yAxis: {
+            min: 0,
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black'
+                    }
+                }
+            }
+        },
+        series: __series
+    });
+
 }

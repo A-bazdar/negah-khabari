@@ -229,3 +229,16 @@ class CustomDateTime:
                     y += 1
                 start = datetime.datetime.strptime(str(y) + '-' + str(m) + '-01 00:00:00', '%Y-%m-%d %H:%M:%S')
         return ls
+
+    @staticmethod
+    def get_days_list(start, end):
+        end = end + datetime.timedelta(days=1)
+        l = []
+        while start <= end:
+            l.append(datetime.datetime(end.year, end.month, end.day))
+            end = end - datetime.timedelta(days=1)
+        r = []
+        for i in range(len(l) - 1):
+            r.append(dict(start=l[i], end=l[i + 1]))
+
+        return r
