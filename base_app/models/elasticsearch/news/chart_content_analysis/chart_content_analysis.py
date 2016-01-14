@@ -144,6 +144,51 @@ class NewsChartContentAnalysisModel:
         except:
             return []
 
+    def get_top_directions(self, _size_direction, _size_agency):
+        try:
+            key_word_query = KeyWordClass(user_keyword=self.user_keyword).get_query_keyword()
+            body = {
+                "size": 0,
+                "query": {
+                    "filtered": {
+                        "filter": {
+                            "and": {
+                                "filters": [
+                                    {
+                                        "range": {
+                                            "date": {"lt": self.end.isoformat(), "gte": self.start.isoformat()}
+                                        }
+                                    }
+                                ] + key_word_query
+                            }
+                        },
+                    }
+                },
+                "aggregations": {
+                    "direction": {
+                        "terms": {"field": "direction", "size": _size_direction},
+
+                        "aggregations": {
+                            "agency": {
+                                "terms": {"field": "agency", "size": _size_agency}
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
+            result = []
+            for b in r['aggregations']['direction']['buckets']:
+                agencies = []
+                for c in b['agency']['buckets']:
+                    agencies.append(dict(key=c['key'], doc_count=c['doc_count']))
+                result.append(dict(key=b['key'], doc_count=b['doc_count'], agencies=agencies))
+            return result
+        except:
+            return []
+
     def get_chart_content_format(self):
         try:
             count_content = ContentModel().count_all()['value']
@@ -398,6 +443,133 @@ class NewsChartContentAnalysisModel:
 
             keywords = sorted(keywords, key=lambda k: k['count'], reverse=False)[:3]
             self.result['value'] = dict(categories=categories, series=series, keywords=keywords)
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(send=False)
+            return self.result
+
+    def get_chart_content_direction(self, direction):
+        def get_direction(__news):
+            for _i in direction:
+                if _i['news'] == __news:
+                    return _i['direction']
+            return False
+
+        def get_count_direction(__agency, __dir):
+            a = 0
+            for _i in direction:
+                if _i['agency'] == __agency and _i['direction'] == __dir:
+                    a += 1
+            return a
+        try:
+            directions = DirectionModel().get_all('content')['value']
+            key_word_query = KeyWordClass(user_keyword=self.user_keyword).get_query_keyword()
+            direction_count = dict(no_direction=0)
+            contents = []
+            series = [dict(id='no_direction', name='بدون جهت گیری', data=[])]
+            for _d in directions:
+                series.append(dict(id=str(_d['id']), name=_d['name'], data=[]))
+                contents.append(dict(id=str(_d['id']), title=_d['name'], value=0))
+                direction_count[str(_d['id'])] = 0
+
+            body = {
+                "size": 1000000,
+                "fields": ["_id", "agency"],
+                "query": {
+                    "filtered": {
+                        "filter": {
+                            "and": {
+                                "filters": [{
+                                    "range": {
+                                        "date": {
+                                            "lt": self.end.isoformat(),
+                                            "gte": self.start.isoformat()
+                                        }
+                                    }
+                                }] + key_word_query
+                            }
+                        }
+                    }
+                }
+            }
+            news = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
+
+            try:
+                count_all = news['hits']['total']
+            except:
+                count_all = 0
+            for n in news['hits']['hits']:
+                __dir = get_direction(n['_id'])
+
+                if __dir is not False:
+                    direction_count[str(__dir)] += 1
+                else:
+                    direction_count['no_direction'] += 1
+
+            for s in contents:
+                try:
+                    s['value'] = direction_count[s['id']]
+                except:
+                    s['value'] = 0
+
+            categories = []
+            count_agency = AgencyModel().count_all()['value']
+            __agencies = self.get_top_elements("agency", count_agency)
+            for ag in __agencies:
+                direction_count = dict(no_direction=0)
+                for _d in directions:
+                    direction_count[str(_d['id'])] = 0
+                agency = AgencyModel(_id=ObjectId(ag['key'])).get_one()
+                _c = 0
+                for _dir in directions:
+                    _x = get_count_direction(ObjectId(ag['key']), _dir['id'])
+                    direction_count[str(_dir['id'])] = _x
+                    _c += _x
+                series[0]['data'].append(ag['doc_count'] - _c)
+                for s in series[1:]:
+                    try:
+                        s['data'].append(direction_count[str(s['id'])])
+                    except:
+                        s['data'].append(0)
+
+                categories.append(agency['name'])
+
+            self.result['value'] = dict(contents=contents, series=series, categories=categories, count_all=count_all)
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(send=False)
+            return self.result
+
+    def get_chart_agency_direction(self):
+        try:
+            count_direction = DirectionModel().count_all('source')['value']
+            __directions = self.get_top_elements("direction", count_direction)
+            contents = []
+            count_all = 0
+            categories = []
+            series = [dict(name='جهت گیری', data=[])]
+            for _dir in __directions:
+                direction = DirectionModel(_id=ObjectId(_dir['key'])).get_one()['value']
+                categories.append(direction['name'])
+                series[0]['data'].append(_dir['doc_count'])
+                contents.append(dict(id=_dir['key'], title=direction['name'], value=_dir['doc_count']))
+
+                count_all += _dir['doc_count']
+
+            __directions = self.get_top_directions(count_direction, 3)
+            directions = []
+            for _dir in __directions:
+                direction = DirectionModel(_id=ObjectId(_dir['key'])).get_one()['value']
+                _d = dict(name=direction['name'], count=_dir['doc_count'], agencies=[])
+                for _ag in _dir['agencies']:
+                    agency = AgencyModel(_id=ObjectId(_ag['key'])).get_one()
+                    _d['agencies'].append(dict(name=agency['name'], count=_ag['doc_count']))
+                directions.append(_d)
+            self.result['value'] = dict(directions=directions, contents=contents, series=series, categories=categories, count_all=count_all)
             self.result['status'] = True
             return self.result
 

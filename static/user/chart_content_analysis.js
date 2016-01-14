@@ -77,6 +77,14 @@ $(document).on('click', '.dir_tab.chart-content-analysis-tabs', function (e) {
                         if(action == "important_keyword_news"){
                             create_bar_chart_2("bar_chart_2_important_keyword_news", value['categories'], value['series']);
                         }
+                        if(action == "content_direction"){
+                            create_pie_chart("pie_chart_content_direction", value['contents']);
+                            create_bar_chart("bar_chart_content_direction", value['categories'], value['series']);
+                        }
+                        if(action == "agency_direction"){
+                            create_pie_chart("pie_chart_agency_direction", value['contents']);
+                            create_bar_chart("bar_chart_agency_direction", value['categories'], value['series']);
+                        }
                         $('.tab_content.chart-content-analysis').hide();
                         a.show();
                         elm.attr('data-open', 'true');

@@ -26,7 +26,7 @@ class NewsModel:
 
     def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
                  subject=None, body=None, date=None, content=None, full_current_user=None, images=None, video=None,
-                 sound=None, geographic=None, group=None, category=None):
+                 sound=None, geographic=None, group=None, category=None, direction=None):
         self.id = _id
         self.title = title
         self.agency = agency
@@ -44,6 +44,7 @@ class NewsModel:
         self.sound = sound
         self.geographic = geographic
         self.group = group
+        self.direction = direction
         self.full_current_user = full_current_user
         self.max_char_summary = SettingModel().get_max_char_summary()
         self.result = {'value': {}, 'status': False}
@@ -157,6 +158,7 @@ class NewsModel:
                 'agency': self.agency,
                 'subject': self.subject,
                 'category': self.category,
+                'direction': self.direction,
                 'date': self.date,
                 'content': self.content,
                 'images': self.images,
