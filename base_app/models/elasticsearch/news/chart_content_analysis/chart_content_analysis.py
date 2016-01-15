@@ -555,6 +555,7 @@ class NewsChartContentAnalysisModel:
             for _dir in __directions:
                 try:
                     direction = DirectionModel(_id=ObjectId(_dir['key'])).get_one()['value']
+                    print direction
                     categories.append(direction['name'])
                     series[0]['data'].append(_dir['doc_count'])
                     contents.append(dict(id=_dir['key'], title=direction['name'], value=_dir['doc_count']))
@@ -568,6 +569,7 @@ class NewsChartContentAnalysisModel:
             for _dir in __directions:
                 try:
                     direction = DirectionModel(_id=ObjectId(_dir['key'])).get_one()['value']
+                    print direction
                     _d = dict(name=direction['name'], count=_dir['doc_count'], agencies=[])
                     for _ag in _dir['agencies']:
                         agency = AgencyModel(_id=ObjectId(_ag['key'])).get_one()
