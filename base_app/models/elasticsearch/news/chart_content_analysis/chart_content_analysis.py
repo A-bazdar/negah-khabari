@@ -547,7 +547,9 @@ class NewsChartContentAnalysisModel:
     def get_chart_agency_direction(self):
         try:
             count_direction = DirectionModel().count_all('source')['value']
+            print count_direction
             __directions = self.get_top_elements("direction", count_direction)
+            print __directions
             contents = []
             count_all = 0
             categories = []
