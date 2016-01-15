@@ -576,3 +576,57 @@ class NewsChartContentAnalysisModel:
         except:
             Debug.get_exception(send=False)
             return self.result
+
+    def get_chart_important_news_maker(self, _user):
+        def get_news(__m):
+            __a = []
+            for i in _user['news_content']['news_maker']:
+                if i['news_maker'] == __m['_id']:
+                    __a.append(i['news'])
+            return __a
+
+        def get_direction(__news):
+            for _i in _user['news_content']['direction']:
+                if _i['news'] == __news:
+                    return _i['direction']
+            return False
+
+        try:
+            count_all = 0
+            categories = []
+            directions = DirectionModel().get_all('content')['value']
+            series = []
+
+            for _d in directions:
+                series.append(dict(id=str(_d['id']), name=_d['name'], data=[]))
+            series.append(dict(id='no_direction', name='بدون جهت گیری', data=[]))
+
+            news_makers = _user['content']['news_maker']
+
+            for m in news_makers:
+                direction_count = dict(no_direction=0)
+                for _d in directions:
+                    direction_count[str(_d['id'])] = 0
+
+                news = get_news(m)
+                for n in news:
+                    __dir = get_direction(n)
+
+                    if __dir is not False:
+                        direction_count[str(__dir)] += 1
+                    else:
+                        direction_count['no_direction'] += 1
+
+                for s in series:
+                    try:
+                        s['data'].append(direction_count[s['id']])
+                    except:
+                        s['data'].append(0)
+                categories.append(m['name'])
+            self.result['value'] = dict(series=series, categories=categories, count_all=count_all)
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(send=False)
+            return self.result

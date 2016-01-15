@@ -85,6 +85,9 @@ $(document).on('click', '.dir_tab.chart-content-analysis-tabs', function (e) {
                             create_pie_chart("pie_chart_agency_direction", value['contents']);
                             create_bar_chart("bar_chart_agency_direction", value['categories'], value['series']);
                         }
+                        if(action == "important_news_maker"){
+                            create_bar_chart_2("bar_chart_2_important_news_maker", value['categories'], value['series']);
+                        }
                         $('.tab_content.chart-content-analysis').hide();
                         a.show();
                         elm.attr('data-open', 'true');
