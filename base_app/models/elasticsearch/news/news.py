@@ -1163,11 +1163,11 @@ class NewsModel:
             else:
                 __grouping = map(ObjectId, __grouping)
                 keywords = self.get_keywords(__grouping)
-
+            print keywords
             if keywords != '':
                 body.append({
                     "query": {
-                        "match_phrase": {
+                        "query_string": {
                             "fields": ["ro_title", "title", "summary", "body"],
                             "query": keywords
                         }
