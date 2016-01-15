@@ -1167,7 +1167,7 @@ class NewsModel:
             if keywords != '':
                 body.append({
                     "query": {
-                        "query_string": {
+                        "match_phrase": {
                             "fields": ["ro_title", "title", "summary", "body"],
                             "query": keywords
                         }
