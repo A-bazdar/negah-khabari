@@ -408,9 +408,9 @@ class NewsModel:
             each_words = words['each_words']
             _exactly = words['exactly_word'].encode('utf-8')
 
-            _all = ' AND '.join(e.encode('utf-8') for e in all_words)
-            _without = ' OR '.join(e.encode('utf-8') for e in without_words)
-            _each = ' OR '.join(e.encode('utf-8') for e in each_words)
+            _all = ' AND '.join('\"' + e.encode('utf-8').strip() + '\"' for e in all_words)
+            _without = ' OR '.join('\"' + e.encode('utf-8').strip() + '\"' for e in without_words)
+            _each = ' OR '.join('\"' + e.encode('utf-8').strip() + '\"' for e in each_words)
 
             _query = ''
             if _all != '':
@@ -840,9 +840,9 @@ class NewsModel:
         each_words = _search['each_words']
         _exactly = _search['exactly_word'].encode('utf-8')
 
-        _all = ' AND '.join(e.encode('utf-8') for e in all_words)
-        _without = ' OR '.join(e.encode('utf-8') for e in without_words)
-        _each = ' OR '.join(e.encode('utf-8') for e in each_words)
+        _all = ' AND '.join('\"' + e.encode('utf-8').strip() + '\"' for e in all_words)
+        _without = ' OR '.join('\"' + e.encode('utf-8').strip() + '\"' for e in without_words)
+        _each = ' OR '.join('\"' + e.encode('utf-8').strip() + '\"' for e in each_words)
 
         _query = ''
         if _all != '':
