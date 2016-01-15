@@ -874,7 +874,7 @@ class NewsModel:
         if _query != '':
             body.append({
                 "query": {
-                    "match_phrase": {
+                    "query_string": {
                         "fields": ["ro_title", "title", "summary", "body"],
                         "query": _query
                     }
@@ -929,7 +929,7 @@ class NewsModel:
         if keywords != '':
             body.append({
                 "query": {
-                    "match_phrase": {
+                    "query_string": {
                         "fields": ["ro_title", "title", "summary", "body"],
                         "query": keywords
                     }
@@ -1167,7 +1167,7 @@ class NewsModel:
             if keywords != '':
                 body.append({
                     "query": {
-                        "match_phrase": {
+                        "query_string": {
                             "fields": ["ro_title", "title", "summary", "body"],
                             "query": keywords
                         }
@@ -1197,7 +1197,6 @@ class NewsModel:
             query_search = []
             if _action == "SEARCH":
                 query_search = self.get_query_search(_search)
-            print query_search
             query_grouping = []
             query_keyword = []
             if _action == "GROUPING":
@@ -1211,7 +1210,6 @@ class NewsModel:
                 body['filter']['and']['filters'] += [query_sort]
             if query_grouping is not False:
                 body['filter']['and']['filters'] += query_grouping
-            print body
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
