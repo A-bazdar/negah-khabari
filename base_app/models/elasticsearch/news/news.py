@@ -872,6 +872,7 @@ class NewsModel:
             })
 
         if _query != '':
+            print _query
             body.append({
                 "query": {
                     "match_phrase": {
