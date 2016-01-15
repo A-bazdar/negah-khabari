@@ -929,7 +929,7 @@ class NewsModel:
         if keywords != '':
             body.append({
                 "query": {
-                    "query_string": {
+                    "match_phrase": {
                         "fields": ["ro_title", "title", "summary", "body"],
                         "query": keywords
                     }
@@ -1195,10 +1195,9 @@ class NewsModel:
             }
 
             query_search = []
-            print _action
-            print _type
             if _action == "SEARCH":
                 query_search = self.get_query_search(_search)
+            print query_search
             query_grouping = []
             query_keyword = []
             if _action == "GROUPING":
