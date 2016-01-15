@@ -21,7 +21,12 @@ class KeyWordModel(BaseModel):
                 'keyword': self.keyword
             }
 
-            self.result['value'] = MongodbModel(collection='keyword', body=__body).insert()
+            _id = MongodbModel(collection='keyword', body=__body).insert()
+            __body['_id'] = _id
+            from base_app.models.mongodb.user.general_info.general_info import UserModel
+            for i in UserModel().get_all_user():
+                UserModel(_id=i['id'], keyword=__body).add_keyword()
+            self.result['value'] = _id
             self.result['status'] = True
             return self.result
         except:

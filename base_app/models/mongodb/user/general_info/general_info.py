@@ -5,6 +5,7 @@ from bson import ObjectId
 from base_app.classes.debug import Debug
 from base_app.classes.public import CreateHash
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
+from base_app.models.mongodb.keyword.keyword import KeyWordModel
 from base_app.models.mongodb.user.group.group import UserGroupModel
 
 __author__ = 'Morteza'
@@ -66,6 +67,7 @@ class UserModel(BaseModel):
                 'group': self.group,
                 'pic': self.pic,
                 'role': self.role,
+                'keyword': KeyWordModel().get_all(),
                 'last_activity': datetime.datetime.now()
             }
 

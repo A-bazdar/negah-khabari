@@ -796,11 +796,6 @@ class NewsModel:
         r = filter(lambda _key: _key['_id'] == __key, user_keywords)
         if len(r):
             return r[0]
-        else:
-            try:
-                return KeyWordModel(_id=__key).get_one()["value"]
-            except:
-                pass
         return False
 
     def get_keywords(self, key_words):
@@ -1163,11 +1158,7 @@ class NewsModel:
         body = []
         if __news_type == "top_news":
             if __grouping_type != "keyword":
-                keywords = KeyWordModel().get_all()['value']
                 user_keywords_ids = [i['_id'] for i in self.full_current_user['keyword']]
-                for i in keywords:
-                    if i['_id'] not in user_keywords_ids:
-                        user_keywords_ids.append(i['_id'])
                 keywords = self.get_keywords(user_keywords_ids)
             else:
                 __grouping = map(ObjectId, __grouping)
