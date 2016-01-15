@@ -1125,30 +1125,38 @@ class NewsModel:
             }
         return query_sort
 
+    @staticmethod
+    def get_sub_grouping(__grouping, __grouping_type):
+        ls = __grouping
+        if __grouping_type == 'subject':
+            for sub in __grouping:
+                ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child()['value']]
+        return ls
+
     def get_query_grouping(self, __grouping, __grouping_type):
         query_grouping = False
         if __grouping_type != "keyword":
+            __grouping = self.get_sub_grouping(__grouping, __grouping_type)
             if len(__grouping):
-                query_grouping = {
+                query_grouping = [{
                     "query": {
                         "terms": {
                             __grouping_type: __grouping
                         }
                     }
-                }
+                }]
         else:
             __grouping = map(ObjectId, __grouping)
             keywords = self.get_keywords(__grouping)
-
             if keywords != '':
-                query_grouping = {
+                query_grouping = [{
                     "query": {
                         "query_string": {
                             "fields": ["ro_title", "title", "summary", "body"],
                             "query": keywords
                         }
                     }
-                }
+                }]
         return query_grouping
 
     def get_query_keyword(self, __news_type, __grouping, __grouping_type):
@@ -1211,7 +1219,6 @@ class NewsModel:
                 body['filter']['and']['filters'] += [query_sort]
             if query_grouping is not False:
                 body['filter']['and']['filters'] += query_grouping
-            print body
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']

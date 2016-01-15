@@ -44,12 +44,9 @@ function show_result_news(_page, _view, _search, _grouping, _sort) {
 function get_grouping() {
     var _grouping = [];
     if(__type['action'] == "GROUPING"){
-        var _all = true;
         var _nothing = true;
         $.each($('input[type=checkbox][name=' + __type['type'] + ']'), function () {
-            if (!$(this).prop('checked')) {
-                _all = false;
-            } else {
+            if ($(this).prop('checked')) {
                 _nothing = false;
             }
         });
@@ -67,10 +64,6 @@ function get_grouping() {
             _grouping = $("#form_grouping_news_geographic").serializeArray();
         } else if (__type['type'] == 'direction') {
             _grouping = $("#form_grouping_news_direction").serializeArray();
-        }
-        $('input.all-subjects[type=checkbox]').prop('checked', _all);
-        if (_all) {
-            _grouping = []
         }
     }
     return _grouping

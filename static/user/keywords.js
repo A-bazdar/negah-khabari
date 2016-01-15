@@ -20,6 +20,29 @@ $(document).on('click', '.edit-keyword.key-words', function(e){
     $('.edit_keywords_box.key-words[data-key=' + key_id + ']').removeClass('display-none');
 });
 
+$(document).on('click', '.delete-keyword.key-words', function(e){
+    var elm = $(e.target).closest('.delete-keyword.key-words');
+    var key_id = elm.attr('data-key');
+    var org_html = elm.html();
+    elm.html(loader);
+    var postData = [{name: "_xsrf", value: xsrf_token}, {name: "key_id", value: key_id}];
+    jQuery.ajax(
+    {
+        url: key_word_url,
+        type: "delete",
+        data: postData,
+        success: function (response) {
+            var status = response['status'];
+            var value = response['value'];
+            if (status) {
+                $('.keywords_box.key-words[data-key=' + key_id + ']').remove();
+                $('.edit_keywords_box.key-words[data-key=' + key_id + ']').remove();
+            }
+            elm.html(org_html);
+        }
+    });
+});
+
 $(document).on('click', '.cancel-edit.key-words', function(e){
     var elm = $(e.target).closest('.cancel-edit.key-words');
     var key_id = elm.attr('data-key');

@@ -961,6 +961,22 @@ class UserModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result
 
+    def delete_keyword(self):
+        try:
+            __body = {"$pull": {
+                "keyword": {"_id": self.keyword}
+            }}
+            __condition = {'_id': self.id}
+            print __body
+            print MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = self.keyword
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
     def update_font(self, _type):
         try:
             __body = {"$set": {
