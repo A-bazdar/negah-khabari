@@ -566,12 +566,15 @@ class NewsChartContentAnalysisModel:
             __directions = self.get_top_directions(count_direction, 3)
             directions = []
             for _dir in __directions:
-                direction = DirectionModel(_id=ObjectId(_dir['key'])).get_one()['value']
-                _d = dict(name=direction['name'], count=_dir['doc_count'], agencies=[])
-                for _ag in _dir['agencies']:
-                    agency = AgencyModel(_id=ObjectId(_ag['key'])).get_one()
-                    _d['agencies'].append(dict(name=agency['name'], count=_ag['doc_count']))
-                directions.append(_d)
+                try:
+                    direction = DirectionModel(_id=ObjectId(_dir['key'])).get_one()['value']
+                    _d = dict(name=direction['name'], count=_dir['doc_count'], agencies=[])
+                    for _ag in _dir['agencies']:
+                        agency = AgencyModel(_id=ObjectId(_ag['key'])).get_one()
+                        _d['agencies'].append(dict(name=agency['name'], count=_ag['doc_count']))
+                    directions.append(_d)
+                except:
+                    pass
             self.result['value'] = dict(directions=directions, contents=contents, series=series, categories=categories, count_all=count_all)
             self.result['status'] = True
             return self.result
