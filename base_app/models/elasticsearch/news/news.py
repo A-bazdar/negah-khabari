@@ -872,7 +872,6 @@ class NewsModel:
             })
 
         if _query != '':
-            print _query
             body.append({
                 "query": {
                     "match_phrase": {
@@ -1211,6 +1210,7 @@ class NewsModel:
                 body['filter']['and']['filters'] += [query_sort]
             if query_grouping is not False:
                 body['filter']['and']['filters'] += query_grouping
+            print body
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
