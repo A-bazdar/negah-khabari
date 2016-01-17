@@ -97,7 +97,7 @@ class FeedStatisticModel(BaseModel):
         try:
             end_time = khayyam.JalaliDatetime(q['end_time']).strftime('%Y/%m/%d %H:%M:%S')
         except:
-            end_time = 'Running'
+            end_time = None
         self.value.append(
             dict(
                 id=q['_id'],
