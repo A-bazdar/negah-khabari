@@ -52,7 +52,10 @@ $(document).on('submit', '#pattern_search_form', function(e){
                     }
                     if(error == '')
                         error = 'متاسفانه در سیستم خطایی به وجود آمده، لطفا دوباره امتحان کنید.';
-                    $('.errors').html(error);
+                    Alert.render(error, function(){
+                        btn.html('ثبت');
+                        __a = true;
+                    });
                     btn.html('ثبت');
                 }else{
                     Alert.render('success', function(){

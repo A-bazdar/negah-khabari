@@ -49,9 +49,10 @@ $(document).on('submit', '#pattern_agencies_form', function(e){
                     }
                     if(error == '')
                         error = 'متاسفانه در سیستم خطایی به وجود آمده، لطفا دوباره امتحان کنید.';
-                    $('.errors').html(error);
-                    btn.html('ثبت');
-                    __a = true;
+                    Alert.render(error, function(){
+                        btn.html('ثبت');
+                        __a = true;
+                    });
                 }else{
                     Alert.render('success', function(){
                         btn.html('ثبت');

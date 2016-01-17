@@ -121,12 +121,13 @@ class UserModel(BaseModel):
     def get_access(self):
         try:
             self.result['value'] = False
-            r = MongodbModel(collection='user', body={'_id': self.id}).get_one()
+            __key = {"access": 1}
+            r = MongodbModel(collection='user', body={'_id': self.id}, key=__key).get_one_key()
             if r:
                 access = r['access'] if 'access' in r.keys() else False
                 if access is not False:
                     access_sources = access['access_sources'] if 'access_sources' in access.keys() else False
-                    if access_sources:
+                    if access_sources is not False:
                         access_sources['agency'] = map(str, access_sources['agency'])
                         access_sources['subject'] = map(str, access_sources['subject'])
                         access_sources['geographic'] = map(str, access_sources['geographic'])
@@ -139,6 +140,20 @@ class UserModel(BaseModel):
                 self.result['value'] = access
                 self.result['status'] = True
 
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_one', data='collection > user_group')
+            return self.result
+
+    def get_group(self):
+        try:
+            __key = {"group": 1}
+            r = MongodbModel(collection='user', body={'_id': self.id}, key=__key).get_one_key()
+            try:
+                self.result['value'] = r['group']
+                self.result['status'] = True
+            except:
+                pass
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_one', data='collection > user_group')
@@ -797,6 +812,22 @@ class UserModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > add_agency_direction', data='collection > user')
             return self.result
 
+    def count_pattern_agency(self):
+        try:
+            __body = {"_id": self.id}
+            __key = {"pattern_agency": 1}
+            r = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
+            try:
+                self.result['value'] = len(r['pattern_agency'])
+            except:
+                self.result['value'] = 0
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > add_agency_direction', data='collection > user')
+            return self.result
+
     def update_pattern_agency(self, pattern_agency):
         try:
             __body = {"$set": {
@@ -847,6 +878,22 @@ class UserModel(BaseModel):
 
             MongodbModel(collection='user', condition=__condition, body=__body).update()
             self.result['value'] = pattern_search['_id']
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > add_agency_direction', data='collection > user')
+            return self.result
+
+    def count_pattern_search(self):
+        try:
+            __body = {"_id": self.id}
+            __key = {"pattern_search": 1}
+            r = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
+            try:
+                self.result['value'] = len(r['pattern_agency'])
+            except:
+                self.result['value'] = 0
             self.result['status'] = True
 
             return self.result
