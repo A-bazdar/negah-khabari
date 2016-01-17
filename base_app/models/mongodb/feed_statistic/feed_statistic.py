@@ -13,13 +13,14 @@ __author__ = 'Morteza'
 
 class FeedStatisticModel(BaseModel):
     def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, count_link=None,
-                 count_all_link=None, times=None, end_time=None, content=None):
+                 count_all_link=None, times=None, end_time=None, content=None, killed=False):
         BaseModel.__init__(self)
         self.id = _id
         self.start_time = start_time
         self.error = error
         self.message = message
         self.count = count
+        self.killed = killed
         self.count_link = count_link
         self.count_all_link = count_all_link
         self.times = times
@@ -32,16 +33,36 @@ class FeedStatisticModel(BaseModel):
         try:
             __body = {
                 'start_time': self.start_time,
-                'error': self.error,
-                'message': self.message,
+                'error': False,
+                'message': None,
+                'killed': False,
                 'content': self.content,
+                'count': 0,
+                'count_link': 0,
+                'count_all_link': 0,
+                'times': [],
+                'end_time': None,
+            }
+            self.result['value'] = MongodbModel(collection='feed_statistic', body=__body).insert()
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > group')
+            return self.result
+
+    def update(self):
+        try:
+            __body = {
+                'message': self.message,
                 'count': self.count,
+                'killed': self.killed,
                 'count_link': self.count_link,
                 'count_all_link': self.count_all_link,
                 'times': self.times,
                 'end_time': self.end_time,
             }
-            self.result['value'] = str(MongodbModel(collection='feed_statistic', body=__body).insert())
+            __condition = {"_id": self.id}
+            self.result['value'] = MongodbModel(collection='feed_statistic', body=__body, condition=__condition).update()
             self.result['status'] = True
             return self.result
         except:
@@ -63,15 +84,21 @@ class FeedStatisticModel(BaseModel):
             content = ContentModel(_id=ObjectId(q['content'])).get_one()['value']
         except:
             content = None
+
+        try:
+            end_time = khayyam.JalaliDatetime(q['end_time']).strftime('%Y/%m/%d %H:%M:%S')
+        except:
+            end_time = None
         self.value.append(
             dict(
                 id=q['_id'],
                 count=q['count'],
                 start_time=CustomDateTime().get_time_difference(q['start_time']),
-                end_time=khayyam.JalaliDatetime(q['end_time']).strftime('%Y/%m/%d %H:%M:%S'),
+                end_time=end_time,
                 different=different,
                 error=q['error'],
                 message=q['message'],
+                killed=q['killed'] if 'killed' in q.keys() else False,
                 content=content,
                 count_link=q['count_link'],
                 count_all_link=q['count_all_link'] if "count_all_link" in q.keys() else 0,

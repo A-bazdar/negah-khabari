@@ -344,6 +344,22 @@ a.open_details{
     border-radius: 5px 0 0 5px;
 }
 
+.killed_status{
+    background: rgba(226, 230, 62, 0.91);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px 0 0 5px;
+}
+
+.run_status{
+    background: #4691B7;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px 0 0 5px;
+}
+
 .danger_status{
     background: #fe90ff;
     color: white;
