@@ -205,15 +205,15 @@ class FeedStatisticModel(BaseModel):
     def get_activity_time(self):
         try:
             __body = {"content": self.content}
-            r = MongodbModel(collection='feed_statistic', body=__body).get_all()
+            __key = {"start_time": 1, "end_time": 1}
+            r = MongodbModel(collection='feed_statistic', body=__body, key=__key).get_all_key()
             import time
             s = 0
+            e = 0
             for i in r:
                 s += int(time.mktime(i['start_time'].timetuple()))
-            e = 0
-            r = MongodbModel(collection='feed_statistic', body=__body).get_all()
-            for i in r:
                 e += int(time.mktime(i['end_time'].timetuple()))
+
             self.result['value'] = (e - s) / 60
             self.result['status'] = True
             return self.result

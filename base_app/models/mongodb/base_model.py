@@ -82,6 +82,14 @@ class MongodbModel(MongodbBaseModel):
                                 data='collection: ' + self.__collection + ' body: ' + str(self.__body))
             return False
 
+    def get_all_key(self):
+        try:
+            return self.collection.find(self.__body, self.__key)
+        except:
+            Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > get_all',
+                                data='collection: ' + self.__collection + ' body: ' + str(self.__body))
+            return False
+
     def get_all_pagination(self):
         try:
             return self.collection.find(self.__body).sort([(self.__sort, self.__ascending)]).skip(self.__size * (self.__page - 1)).limit(self.__size)
