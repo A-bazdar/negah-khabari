@@ -79,7 +79,16 @@ class FeedStatisticModel(BaseModel):
                 'second': str(second) if second > 9 else '0' + str(second)
             }
         except:
-            different = {'minute': '00', 'second': '00'}
+            try:
+                d = (datetime.datetime.now() - q['start_time']).seconds
+                minute = d / 60
+                second = d % 60
+                different = {
+                    'minute': str(minute) if minute > 9 else '0' + str(minute),
+                    'second': str(second) if second > 9 else '0' + str(second)
+                }
+            except:
+                different = {'minute': '00', 'second': '00'}
         try:
             content = ContentModel(_id=ObjectId(q['content'])).get_one()['value']
         except:
@@ -88,7 +97,7 @@ class FeedStatisticModel(BaseModel):
         try:
             end_time = khayyam.JalaliDatetime(q['end_time']).strftime('%Y/%m/%d %H:%M:%S')
         except:
-            end_time = None
+            end_time = 'Running'
         self.value.append(
             dict(
                 id=q['_id'],
