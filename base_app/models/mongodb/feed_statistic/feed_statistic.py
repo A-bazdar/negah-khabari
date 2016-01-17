@@ -161,7 +161,7 @@ class FeedStatisticModel(BaseModel):
         try:
             __body = {"content": self.content}
             __key = {"_id": 1, "content": 1, "count": 1, "count_all_link": 1, "count_link": 1,
-                     "end_time": 1, "start_time": 1, "error": 1, "message": 1}
+                     "end_time": 1, "start_time": 1, "error": 1, "message": 1, "killed": 1}
             r = MongodbModel(collection='feed_statistic', body=__body, key=__key, page=_page, size=_size, sort="start_time").get_all_key_pagination()
             for i in r:
                 self.get_statistic(i)
