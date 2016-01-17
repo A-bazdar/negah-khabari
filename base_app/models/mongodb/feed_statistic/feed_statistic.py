@@ -224,7 +224,7 @@ class FeedStatisticModel(BaseModel):
 
     def get_last_activity(self):
         try:
-            __body = {"content": self.content}
+            __body = {"content": self.content, "end_time": {"$ne": None}}
             r = MongodbModel(collection='feed_statistic', body=__body, page=1, size=1, sort="start_time").get_all_pagination()
             a = datetime.datetime.now()
             for i in r:
