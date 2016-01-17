@@ -13,7 +13,8 @@ __author__ = 'Morteza'
 
 class FeedStatisticModel(BaseModel):
     def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, count_link=None,
-                 count_all_link=None, times=None, end_time=None, content=None, killed=False):
+                 count_all_link=None, times=None, end_time=None, content=None, killed=False,
+                 last_read_links=None, last_read_news=None):
         BaseModel.__init__(self)
         self.id = _id
         self.start_time = start_time
@@ -24,6 +25,8 @@ class FeedStatisticModel(BaseModel):
         self.count_link = count_link
         self.count_all_link = count_all_link
         self.times = times
+        self.last_read_news = last_read_news
+        self.last_read_links = last_read_links
         self.end_time = end_time
         self.content = content
         self.value = []
@@ -57,6 +60,8 @@ class FeedStatisticModel(BaseModel):
                 'count': self.count,
                 'killed': self.killed,
                 'count_link': self.count_link,
+                'last_read_news': self.last_read_news,
+                'last_read_links': self.last_read_links,
                 'count_all_link': self.count_all_link,
                 'times': self.times,
                 'end_time': self.end_time
@@ -108,6 +113,8 @@ class FeedStatisticModel(BaseModel):
                 error=q['error'],
                 message=q['message'],
                 killed=q['killed'] if 'killed' in q.keys() else False,
+                last_read_links=q['last_read_links'] if 'last_read_links' in q.keys() else None,
+                last_read_news=q['last_read_news'] if 'last_read_news' in q.keys() else None,
                 content=content,
                 count_link=q['count_link'],
                 count_all_link=q['count_all_link'] if "count_all_link" in q.keys() else 0,
@@ -161,7 +168,8 @@ class FeedStatisticModel(BaseModel):
         try:
             __body = {"content": self.content}
             __key = {"_id": 1, "content": 1, "count": 1, "count_all_link": 1, "count_link": 1,
-                     "end_time": 1, "start_time": 1, "error": 1, "message": 1, "killed": 1}
+                     "end_time": 1, "start_time": 1, "error": 1, "message": 1, "killed": 1, "last_read_links": 1,
+                     "last_read_news": 1}
             r = MongodbModel(collection='feed_statistic', body=__body, key=__key, page=_page, size=_size, sort="start_time").get_all_key_pagination()
             for i in r:
                 self.get_statistic(i)
