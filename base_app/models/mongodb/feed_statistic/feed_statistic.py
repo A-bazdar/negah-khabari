@@ -211,8 +211,9 @@ class FeedStatisticModel(BaseModel):
             s = 0
             e = 0
             for i in r:
-                s += int(time.mktime(i['start_time'].timetuple()))
-                e += int(time.mktime(i['end_time'].timetuple()))
+                if i['end_time'] is not None:
+                    s += int(time.mktime(i['start_time'].timetuple()))
+                    e += int(time.mktime(i['end_time'].timetuple()))
 
             self.result['value'] = (e - s) / 60
             self.result['status'] = True
