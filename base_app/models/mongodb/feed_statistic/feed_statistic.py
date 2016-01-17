@@ -53,15 +53,14 @@ class FeedStatisticModel(BaseModel):
     def update(self):
         try:
             __body = {"$set": {
-                    'message': self.message,
-                    'count': self.count,
-                    'killed': self.killed,
-                    'count_link': self.count_link,
-                    'count_all_link': self.count_all_link,
-                    'times': self.times,
-                    'end_time': self.end_time
-                }
-            }
+                'message': self.message,
+                'count': self.count,
+                'killed': self.killed,
+                'count_link': self.count_link,
+                'count_all_link': self.count_all_link,
+                'times': self.times,
+                'end_time': self.end_time
+            }}
             __condition = {"_id": self.id}
             self.result['value'] = MongodbModel(collection='feed_statistic', body=__body, condition=__condition).update()
             self.result['status'] = True
