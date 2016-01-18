@@ -12,18 +12,18 @@ __author__ = 'Morteza'
 
 
 class FeedStatisticModel(BaseModel):
-    def __init__(self, _id=None, start_time=None, error=None, message=None, count=None, count_link=None,
-                 count_all_link=None, times=None, end_time=None, content=None, killed=False,
-                 last_read_links=None, last_read_news=None):
+    def __init__(self, _id=None, start_time=None, error=None, message=None, count_read_news=None,
+                 count_links_read_with_news=None, count_all_links=None, times=None, end_time=None, content=None,
+                 killed=False, last_read_links=None, last_read_news=None):
         BaseModel.__init__(self)
         self.id = _id
         self.start_time = start_time
         self.error = error
         self.message = message
-        self.count = count
+        self.count_read_news = count_read_news
         self.killed = killed
-        self.count_link = count_link
-        self.count_all_link = count_all_link
+        self.count_links_read_with_news = count_links_read_with_news
+        self.count_all_links = count_all_links
         self.times = times
         self.last_read_news = last_read_news
         self.last_read_links = last_read_links
@@ -40,9 +40,9 @@ class FeedStatisticModel(BaseModel):
                 'message': None,
                 'killed': False,
                 'content': self.content,
-                'count': 0,
-                'count_link': 0,
-                'count_all_link': 0,
+                'count_read_news': 0,
+                'count_links_read_with_news': 0,
+                'count_all_links': 0,
                 'times': [],
                 'end_time': None,
             }
@@ -57,12 +57,12 @@ class FeedStatisticModel(BaseModel):
         try:
             __body = {"$set": {
                 'message': self.message,
-                'count': self.count,
+                'count_read_news': self.count_read_news,
                 'killed': self.killed,
-                'count_link': self.count_link,
+                'count_links_read_with_news': self.count_links_read_with_news,
                 'last_read_news': self.last_read_news,
                 'last_read_links': self.last_read_links,
-                'count_all_link': self.count_all_link,
+                'count_all_links': self.count_all_links,
                 'times': self.times,
                 'end_time': self.end_time
             }}
@@ -106,7 +106,7 @@ class FeedStatisticModel(BaseModel):
         self.value.append(
             dict(
                 id=q['_id'],
-                count=q['count'],
+                count_read_news=q['count_read_news'],
                 start_time=CustomDateTime().get_time_difference(q['start_time']),
                 end_time=end_time,
                 different=different,
@@ -116,8 +116,8 @@ class FeedStatisticModel(BaseModel):
                 last_read_links=q['last_read_links'] if 'last_read_links' in q.keys() else None,
                 last_read_news=q['last_read_news'] if 'last_read_news' in q.keys() else None,
                 content=content,
-                count_link=q['count_link'],
-                count_all_link=q['count_all_link'] if "count_all_link" in q.keys() else 0,
+                count_links_read_with_news=q['count_links_read_with_news'],
+                count_all_links=q['count_all_links'] if "count_all_links" in q.keys() else 0,
             )
         )
 
@@ -167,7 +167,7 @@ class FeedStatisticModel(BaseModel):
     def get_all(self, _page=1, _size=20):
         try:
             __body = {"content": self.content}
-            __key = {"_id": 1, "content": 1, "count": 1, "count_all_link": 1, "count_link": 1,
+            __key = {"_id": 1, "content": 1, "count_read_news": 1, "count_all_links": 1, "count_links_read_with_news": 1,
                      "end_time": 1, "start_time": 1, "error": 1, "message": 1, "killed": 1, "last_read_links": 1,
                      "last_read_news": 1}
             r = MongodbModel(collection='feed_statistic', body=__body, key=__key, page=_page, size=_size, sort="start_time").get_all_key_pagination()
