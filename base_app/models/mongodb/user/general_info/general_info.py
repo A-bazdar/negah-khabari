@@ -16,7 +16,8 @@ class UserModel(BaseModel):
     def __init__(self, _id=None, name=None, family=None, username=None, organization=None, password=None, phone=None,
                  mobile=None, address=None, fax=None, email=None, status=None, welcome=None, register_start_date=None,
                  register_end_date=None, archive_start_date=None, archive_end_date=None, group=None, pic=None,
-                 role=None, last_activity=None, news=None, note=None, important=None, keyword=None, font=None, content=None):
+                 role=None, last_activity=None, news=None, note=None, important=None, keyword=None, font=None,
+                 content=None, count_online=None):
         BaseModel.__init__(self)
         self.id = _id
         self.name = name
@@ -35,6 +36,7 @@ class UserModel(BaseModel):
         self.archive_start_date = archive_start_date
         self.archive_end_date = archive_end_date
         self.group = group
+        self.count_online = count_online
         self.pic = pic
         self.role = role
         self.address = address
@@ -66,6 +68,7 @@ class UserModel(BaseModel):
                 'archive_start_date': str(self.archive_start_date),
                 'archive_end_date': str(self.archive_end_date),
                 'group': self.group,
+                'count_online': self.count_online,
                 'pic': self.pic,
                 'role': self.role,
                 'keyword': KeyWordModel().get_all()['value'],
