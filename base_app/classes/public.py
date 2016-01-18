@@ -88,7 +88,33 @@ class CheckStrengthPassword:
         if self.current != CreateHash().create(self.new):
             self.result['message'] = self.errors[4]
             return self.result
-        print self.new
+        password_strength = dict.fromkeys(['has_upper', 'has_lower', 'has_num'], False)
+        if re.search(r'[A-Z]', self.new):
+            password_strength['has_upper'] = True
+
+        if re.search(r'[a-z]', self.new):
+            password_strength['has_lower'] = True
+
+        if re.search(r'[0-9]', self.new):
+            password_strength['has_num'] = True
+
+        self.result['score'] = len([b for b in password_strength.values() if b])
+        if self.result['score'] >= 3:
+            self.result['status'] = True
+        else:
+            self.result['message'] = self.errors[self.result['score'] + 5]
+
+        return self.result
+
+    def check_new(self):
+        if len(self.new) < 6:
+            self.result['message'] = self.errors[2]
+            return self.result
+
+        if self.new != self.repeat:
+            self.result['message'] = self.errors[3]
+            return self.result
+
         password_strength = dict.fromkeys(['has_upper', 'has_lower', 'has_num'], False)
         if re.search(r'[A-Z]', self.new):
             password_strength['has_upper'] = True

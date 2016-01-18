@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from bson import ObjectId
+import khayyam
 from base_app.classes.debug import Debug
 from base_app.classes.public import CreateHash
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
@@ -68,7 +69,6 @@ class UserModel(BaseModel):
                 'pic': self.pic,
                 'role': self.role,
                 'keyword': KeyWordModel().get_all()['value'],
-                'last_activity': datetime.datetime.now()
             }
 
             self.result['value'] = str(MongodbModel(collection='user', body=__body).insert())
@@ -95,7 +95,6 @@ class UserModel(BaseModel):
                         password=i['password'],
                         phone=i['phone'],
                         mobile=i['mobile'],
-                        fax=i['fax'],
                         email=i['email'],
                         status=i['status'],
                         welcome=i['welcome'],
@@ -106,7 +105,7 @@ class UserModel(BaseModel):
                         archive_end_date=i['archive_end_date'],
                         group=group['value'],
                         pic=i['pic'],
-                        last_activity=i['last_activity']
+                        last_activity=i['last_activity'] if 'last_activity' in i.keys() else None
 
                     ))
             self.result['value'] = l
@@ -166,6 +165,14 @@ class UserModel(BaseModel):
             if r:
                 for i in r:
                     group = UserGroupModel(_id=i['group']).get_one()
+                    try:
+                        last_activity = khayyam.JalaliDatetime(i['last_activity']).strftime('%Y/%m/%d')
+                    except:
+                        last_activity = None
+                    try:
+                        last_login = khayyam.JalaliDatetime(i['last_login']).strftime('%Y/%m/%d')
+                    except:
+                        last_login = None
                     l.append(dict(
                         id=i['_id'],
                         name=i['name'],
@@ -176,7 +183,7 @@ class UserModel(BaseModel):
                         password=i['password'],
                         phone=i['phone'],
                         mobile=i['mobile'],
-                        fax=i['fax'],
+                        fax=i['fax'] if 'fax' in i.keys() else None,
                         email=i['email'],
                         status=i['status'],
                         welcome=i['welcome'],
@@ -187,7 +194,8 @@ class UserModel(BaseModel):
                         archive_end_date=i['archive_end_date'],
                         group=group['value'],
                         pic=i['pic'],
-                        last_activity=i['last_activity']
+                        last_activity=last_activity,
+                        last_login=last_login
 
                     ))
             self.result['value'] = l
@@ -217,7 +225,7 @@ class UserModel(BaseModel):
                         password=i['password'],
                         phone=i['phone'],
                         mobile=i['mobile'],
-                        fax=i['fax'],
+                        fax=i['fax'] if 'fax' in i.keys() else None,
                         email=i['email'],
                         status=i['status'],
                         welcome=i['welcome'],
@@ -227,7 +235,7 @@ class UserModel(BaseModel):
                         archive_start_date=i['archive_start_date'],
                         archive_end_date=i['archive_end_date'],
                         pic=i['pic'],
-                        last_activity=i['last_activity']
+                        last_activity=i['last_activity'] if 'last_activity' in i.keys() else None
 
                     ))
                 gr['users'] = users
@@ -261,7 +269,7 @@ class UserModel(BaseModel):
                     password=r['password'],
                     phone=r['phone'],
                     mobile=r['mobile'],
-                    fax=r['fax'],
+                    fax=r['fax'] if 'fax' in r.keys() else None,
                     email=r['email'],
                     status=r['status'],
                     welcome=r['welcome'],
@@ -283,7 +291,7 @@ class UserModel(BaseModel):
                     keyword=r['keyword'] if 'keyword' in r.keys() else [],
                     content=r['content'] if 'content' in r.keys() else {"main_source_news": [], "news_group": [], "news_maker": []},
                     font=r['font'] if 'font' in r.keys() else {},
-                    last_activity=r['last_activity'],
+                    last_activity=r['last_activity'] if 'last_activity' in r.keys() else None,
                     view_news=r['view_news'] if 'view_news' in r.keys() else 'list_view',
                     line_height=r['line_height'] if 'line_height' in r.keys() else 'low',
                     sort_grouping=r['sort_grouping'] if 'sort_grouping' in r.keys() else {},
@@ -315,12 +323,11 @@ class UserModel(BaseModel):
                     password=r['password'],
                     phone=r['phone'],
                     mobile=r['mobile'],
-                    fax=r['fax'],
                     email=r['email'],
                     status=r['status'],
                     role=r['role'],
                     pic=r['pic'],
-                    last_activity=r['last_activity'],
+                    last_activity=r['last_activity'] if 'last_activity' in r.keys() else None,
 
                 )
                 self.result['value'] = v
@@ -435,6 +442,21 @@ class UserModel(BaseModel):
             condition = {'_id': self.id}
             body = {'$set': {
                 'last_activity': datetime.datetime.now()
+            }}
+            self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin',
+                                data='collection > user')
+            return self.result
+
+    def set_last_login(self):
+        try:
+            condition = {'_id': self.id}
+            body = {'$set': {
+                'last_login': datetime.datetime.now()
             }}
             self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
             self.result['status'] = True
@@ -1016,7 +1038,6 @@ class UserModel(BaseModel):
                 "keyword": {"_id": self.keyword}
             }}
             __condition = {'_id': self.id}
-            print __body
             print MongodbModel(collection='user', condition=__condition, body=__body).update()
             self.result['value'] = self.keyword
             self.result['status'] = True
