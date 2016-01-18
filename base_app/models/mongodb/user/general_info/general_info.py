@@ -67,7 +67,7 @@ class UserModel(BaseModel):
                 'group': self.group,
                 'pic': self.pic,
                 'role': self.role,
-                'keyword': KeyWordModel().get_all(),
+                'keyword': KeyWordModel().get_all()['value'],
                 'last_activity': datetime.datetime.now()
             }
 
