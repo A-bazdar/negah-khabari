@@ -86,6 +86,13 @@ class Extract:
         try:
             try:
                 thumbnail = __soap.select_one(self.thumbnail).find('img')['src'].encode('utf-8')
+                body_tag = __soap.select_one(self.body)
+                images_ex = []
+                for i in self.excludes:
+                    images_ex += body_tag.select_one(i).find_all('img')
+                images_ex = [i['src'] for i in images_ex]
+                if thumbnail in images_ex:
+                    thumbnail = None
             except:
                 thumbnail = __soap.select_one(self.thumbnail)['src'].encode('utf-8')
             if 'http' not in thumbnail and 'www' not in thumbnail:
@@ -115,12 +122,18 @@ class Extract:
             img = []
             if self.body is not None:
                 images = __soap.select_one(self.body).find_all('img')
+                body_tag = __soap.select_one(self.body)
+                images_ex = []
+                for i in self.excludes:
+                    images_ex += body_tag.select_one(i).find_all('img')
+                images_ex = [i['src'] for i in images_ex]
                 for i in images:
-                    __img = i['src'].encode('utf-8').strip()
-                    if 'http' not in __img and 'www' not in __img:
-                        __img = self.base_link.encode('utf-8') + __img
-                    if __img != __thumbnail:
-                        img.append(__img)
+                    if i['src'] not in images_ex:
+                        __img = i['src'].encode('utf-8').strip()
+                        if 'http' not in __img and 'www' not in __img:
+                            __img = self.base_link.encode('utf-8') + __img
+                        if __img != __thumbnail:
+                            img.append(__img)
         except:
             Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=self.error_link)
             img = []
