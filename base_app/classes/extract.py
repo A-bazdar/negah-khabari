@@ -10,7 +10,7 @@ __author__ = 'Morteza'
 
 class Extract:
     def __init__(self, base_link=None, link=None, ro_title=None, title=None, summary=None, thumbnail=None, body=None,
-                 date=None, date_format=None, agency=None, sub_link=None, error_link=None):
+                 date=None, date_format=None, agency=None, sub_link=None, error_link=None, excludes=None):
         self.link = link
         self.ro_title = ro_title
         self.title = title
@@ -18,6 +18,7 @@ class Extract:
         self.summary = summary
         self.thumbnail = thumbnail
         self.body = body
+        self.excludes = excludes
         self.agency = agency
         self.date = date
         self.date_format = date_format
@@ -99,7 +100,11 @@ class Extract:
         try:
             body = None
             if self.body is not None:
+                body_tag = __soap.select_one(self.body)
                 body = __soap.select_one(self.body).encode('utf-8').strip()
+                for i in self.excludes:
+                    ex = body_tag.select_one(i).encode('utf-8').strip()
+                    body = body.replace(ex, '')
         except:
             Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=self.error_link)
             body = None
