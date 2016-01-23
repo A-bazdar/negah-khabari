@@ -19,11 +19,11 @@ class NewsChartContentAnalysisModel:
     index = 'negah_khabari'
     doc_type = 'news'
 
-    def __init__(self, user_keyword=None):
+    def __init__(self, user_keyword=None, start=None, end=None):
         self.result = {'value': {}, 'status': False}
         self.user_keyword = user_keyword
-        self.end = datetime.datetime.now()
-        self.start = CustomDateTime().generate_date_time(self.end, add=False, _type="months", value=1)
+        self.start = start
+        self.end = end
         self.value = []
 
     def get_top_elements(self, _key, _size):
