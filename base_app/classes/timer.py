@@ -16,7 +16,10 @@ class Timer:
 
     @staticmethod
     def to_float(__d):
-        return float(str(__d)[-9:])
+        try:
+            return float(str(__d)[-9:])
+        except:
+            return float(str('00.000000'))
 
     def end(self):
         _d = datetime.now() - self.start_time
