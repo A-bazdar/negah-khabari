@@ -16,7 +16,8 @@ class UserModel(BaseModel):
     def __init__(self, _id=None, name=None, family=None, username=None, organization=None, password=None, phone=None,
                  mobile=None, address=None, fax=None, email=None, status=None, welcome=None, register_start_date=None,
                  register_end_date=None, archive_start_date=None, archive_end_date=None, group=None, pic=None,
-                 role=None, last_activity=None, news=None, note=None, important=None, keyword=None, font=None,
+                 role=None, last_activity=None, news=None, note=None, important=None, keyword=None,
+                 keyword_setting=None, font=None,
                  content=None, count_online=None):
         BaseModel.__init__(self)
         self.id = _id
@@ -45,6 +46,7 @@ class UserModel(BaseModel):
         self.note = note
         self.important = important
         self.keyword = keyword
+        self.keyword_setting = keyword_setting
         self.font = font
         self.content = content
         self.result = {'value': {}, 'status': False}
@@ -300,6 +302,7 @@ class UserModel(BaseModel):
                     sort_grouping=r['sort_grouping'] if 'sort_grouping' in r.keys() else {},
                     sort_news=r['sort_news'] if 'sort_news' in r.keys() else "date",
                     news_content=r['news_content'] if 'news_content' in r.keys() else dict(direction=[], main_source_news=[], news_group=[], news_maker=[]),
+                    keyword_setting=r['keyword_setting'] if 'keyword_setting' in r.keys() else dict(add_by_user=False, edit_by_user=False, count_topic=0, count_keyword=0),
 
                 )
                 self.result['value'] = v
@@ -1028,6 +1031,42 @@ class UserModel(BaseModel):
             __condition = {'_id': self.id}
             MongodbModel(collection='user', condition=__condition, body=__body).update()
             self.result['value'] = self.keyword['_id']
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def save_keyword(self):
+        try:
+            __body = {"$set": {"keyword": self.keyword, "keyword_setting": self.keyword_setting}}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def get_keywords(self):
+        try:
+            __body = {'_id': self.id}
+            __key = {'keyword': 1, 'keyword_setting': 1}
+            r = MongodbModel(collection='user', key=__key, body=__body).get_one_key()
+            d = dict()
+            try:
+                d['keyword'] = r['keyword']
+            except:
+                d['keyword'] = []
+            try:
+                d['keyword_setting'] = r['keyword_setting']
+            except:
+                d['keyword_setting'] = False
+
+            self.result['value'] = d
             self.result['status'] = True
 
             return self.result

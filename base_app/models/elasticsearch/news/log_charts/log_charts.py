@@ -1,21 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import datetime
-import hashlib
 from bson import ObjectId
-import khayyam
-from base_app.classes.date import CustomDateTime
 from base_app.classes.debug import Debug
-from base_app.classes.public import CreateId
 from base_app.models.elasticsearch.base_model import ElasticSearchModel
 from base_app.models.mongodb.agency.agency import AgencyModel
-import time
-from base_app.models.mongodb.base_model import MongodbModel
-from base_app.models.mongodb.content.content import ContentModel
 from base_app.models.mongodb.group.group import GroupModel
-from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
-from bs4 import BeautifulSoup
 
 __author__ = 'Morteza'
 
