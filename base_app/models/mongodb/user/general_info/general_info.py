@@ -13,7 +13,7 @@ __author__ = 'Morteza'
 
 
 class UserModel(BaseModel):
-    def __init__(self, _id=None, name=None, family=None, username=None, organization=None, password=None, phone=None,
+    def __init__(self, _id=None, name=None, family=None, parent=None, username=None, organization=None, password=None, phone=None,
                  mobile=None, address=None, fax=None, email=None, status=None, welcome=None, register_start_date=None,
                  register_end_date=None, archive_start_date=None, archive_end_date=None, group=None, pic=None,
                  role=None, last_activity=None, news=None, note=None, important=None, keyword=None,
@@ -23,6 +23,7 @@ class UserModel(BaseModel):
         self.id = _id
         self.name = name
         self.family = family
+        self.parent = parent
         self.username = username
         self.organization = organization
         self.password = password
@@ -56,6 +57,7 @@ class UserModel(BaseModel):
             __body = {
                 'name': self.name,
                 'family': self.family,
+                'parent': None,
                 'username': self.username,
                 'organization': self.organization,
                 'password': CreateHash().create(self.password),
@@ -73,7 +75,7 @@ class UserModel(BaseModel):
                 'count_online': self.count_online,
                 'pic': self.pic,
                 'role': self.role,
-                'keyword': KeyWordModel().get_all()['value'],
+                'keyword': []
             }
 
             self.result['value'] = str(MongodbModel(collection='user', body=__body).insert())
@@ -94,6 +96,7 @@ class UserModel(BaseModel):
                         id=i['_id'],
                         name=i['name'],
                         family=i['family'],
+                        parent=i['parent'],
                         username=i['username'],
                         full_name=u'{} {}'.format(i['name'], i['family']),
                         organization=i['organization'],
@@ -112,6 +115,30 @@ class UserModel(BaseModel):
                         pic=i['pic'],
                         last_activity=i['last_activity'] if 'last_activity' in i.keys() else None
 
+                    ))
+            self.result['value'] = l
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all',
+                                data='collection > user')
+            return self.result
+
+    def get_all_by_parent(self):
+        try:
+            r = MongodbModel(collection='user', body={"parent": self.parent, "role": "USER"}).get_all()
+            l = []
+            if r:
+                for i in r:
+                    l.append(dict(
+                        id=i['_id'],
+                        name=i['name'],
+                        family=i['family'],
+                        parent=i['parent'],
+                        username=i['username'],
+                        full_name=u'{} {}'.format(i['name'], i['family']),
+                        pic=i['pic'],
                     ))
             self.result['value'] = l
             self.result['status'] = True
@@ -182,6 +209,7 @@ class UserModel(BaseModel):
                         id=i['_id'],
                         name=i['name'],
                         family=i['family'],
+                        parent=i['parent'],
                         username=i['username'],
                         full_name=u'{} {}'.format(i['name'], i['family']),
                         organization=i['organization'],
@@ -224,6 +252,7 @@ class UserModel(BaseModel):
                         id=i['_id'],
                         name=i['name'],
                         family=i['family'],
+                        parent=i['parent'],
                         username=i['username'],
                         full_name=u'{} {}'.format(i['name'], i['family']),
                         organization=i['organization'],
@@ -268,6 +297,7 @@ class UserModel(BaseModel):
                     id=r['_id'],
                     name=r['name'],
                     family=r['family'],
+                    parent=r['parent'],
                     username=r['username'],
                     full_name=u'{} {}'.format(r['name'], r['family']),
                     organization=r['organization'],
@@ -305,6 +335,51 @@ class UserModel(BaseModel):
                     keyword_setting=r['keyword_setting'] if 'keyword_setting' in r.keys() else dict(add_by_user=False, edit_by_user=False, count_topic=0, count_keyword=0),
 
                 )
+                self.result['value'] = v
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all',
+                                data='collection > user')
+            return self.result
+
+    def get_one_little(self):
+        try:
+            __key = {"_id": 1, "name": 1, "family": 1, "parent": 1, "username": 1}
+            __body = {"_id": self.id}
+            r = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
+            if r:
+                v = dict(
+                    id=r['_id'],
+                    name=r['name'],
+                    family=r['family'],
+                    parent=r['parent'],
+                    username=r['username'],
+                    full_name=u'{} {}'.format(r['name'], r['family']),
+                )
+                self.result['value'] = v
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all',
+                                data='collection > user')
+            return self.result
+
+    def get_all_by_like(self, _like):
+        try:
+            __body = {"$and": [{"parent": None}, {"$or": [{'mobile': {"$regex": '^' + _like}}, {'phone': {"$regex": '^' + _like}}, {'email': {"$regex": '^' + _like}}, {'username': {"$regex": '^' + _like}}]}]}
+            __key = {"_id": 1, "name": 1, "family": 1, "pic": 1}
+            x = MongodbModel(collection='user', body=__body, key=__key, page=1, size=20).get_all_key_limit()
+            v = []
+            if x:
+                for r in x:
+                    v.append(dict(
+                        id=r['_id'],
+                        full_name=u'{} {}'.format(r['name'], r['family']),
+                        pic=r['pic']
+                    ))
                 self.result['value'] = v
                 self.result['status'] = True
 
@@ -418,6 +493,21 @@ class UserModel(BaseModel):
             condition = {'_id': self.id}
             body = {'$set': {
                 'password': new_pass
+            }}
+            self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin',
+                                data='collection > user')
+            return self.result
+
+    def update_parent(self):
+        try:
+            condition = {'_id': self.id}
+            body = {'$set': {
+                'parent': self.parent
             }}
             self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
             self.result['status'] = True

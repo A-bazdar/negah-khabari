@@ -98,6 +98,14 @@ class MongodbModel(MongodbBaseModel):
                                 data='body: ' + str(self.__body))
             return False
 
+    def get_all_key_limit(self):
+        try:
+            return self.collection.find(self.__body, self.__key).skip(self.__size * (self.__page - 1)).limit(self.__size)
+        except:
+            Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > get_all_pagination',
+                                data='body: ' + str(self.__body))
+            return False
+
     def get_all_key_pagination(self):
         try:
             return self.collection.find(self.__body, self.__key).sort([(self.__sort, self.__ascending)]).skip(self.__size * (self.__page - 1)).limit(self.__size)
