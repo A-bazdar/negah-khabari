@@ -4,6 +4,7 @@ import datetime
 import khayyam
 from base_app.classes.debug import Debug
 from base_app.classes.timer import Timer
+import dateutil.parser as d_parser
 
 __author__ = 'Morteza'
 
@@ -51,7 +52,7 @@ class Extract:
 
     def get_ro_title(self, __soap):
         try:
-            if self.ro_title:
+            if self.ro_title is not False:
                 ro_title = __soap.select_one(self.ro_title).text.encode('utf-8').strip()
             else:
                 ro_title = None
@@ -85,17 +86,19 @@ class Extract:
     def get_thumbnail(self, __soap):
         try:
             try:
-                thumbnail = __soap.select_one(self.thumbnail).find('img')['src'].encode('utf-8')
-                body_tag = __soap.select_one(self.body)
-                images_ex = []
-                for i in self.excludes:
-                    images_ex += body_tag.select_one(i).find_all('img')
-                images_ex = [i['src'] for i in images_ex]
-                if thumbnail in images_ex:
-                    thumbnail = None
+                thumbnail = None
+                if self.thumbnail is not False:
+                    thumbnail = __soap.select_one(self.thumbnail).find('img')['src'].encode('utf-8')
+                    body_tag = __soap.select_one(self.body)
+                    images_ex = []
+                    for i in self.excludes:
+                        images_ex += body_tag.select_one(i).find_all('img')
+                    images_ex = [i['src'] for i in images_ex]
+                    if thumbnail in images_ex:
+                        thumbnail = None
             except:
                 thumbnail = __soap.select_one(self.thumbnail)['src'].encode('utf-8')
-            if 'http' not in thumbnail and 'www' not in thumbnail:
+            if thumbnail is not None and 'http' not in thumbnail and 'www' not in thumbnail:
                 thumbnail = self.base_link.encode('utf-8') + thumbnail
         except:
             Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_thumbnail',
@@ -230,6 +233,67 @@ class Extract:
         sound_time = t_2.end()
         t_2 = Timer()
         date = self.get_date(doc)
+        date_time = t_2.end()
+        return dict(
+            news=dict(
+                ro_title=ro_title,
+                title=title,
+                summary=summary,
+                thumbnail=thumbnail,
+                body=body,
+                date=date,
+                video=video,
+                sound=sound,
+                images=images,
+            ),
+            time=dict(
+                ro_title=ro_title_time,
+                title=title_time,
+                summary=summary_time,
+                thumbnail=thumbnail_time,
+                body=body_time,
+                images=images_time,
+                video=video_time,
+                sound=sound_time,
+                date=date_time,
+            )
+        )
+
+    def get_rss(self, doc, entry):
+        t_2 = Timer()
+        ro_title = self.get_ro_title(doc)
+        ro_title_time = t_2.end()
+        t_2 = Timer()
+        title = self.title
+        title_time = t_2.end()
+        t_2 = Timer()
+        try:
+            summary = entry.description
+        except:
+            summary = None
+        if summary is None or summary == '':
+            summary = self.get_summary(doc)
+        summary_time = t_2.end()
+        t_2 = Timer()
+        thumbnail = self.get_thumbnail(doc)
+        thumbnail_time = t_2.end()
+        t_2 = Timer()
+        body = self.get_body(doc)
+        body_time = t_2.end()
+        t_2 = Timer()
+        images = self.get_images(doc, thumbnail)
+        images_time = t_2.end()
+        t_2 = Timer()
+        video = self.get_video(doc)
+        video_time = t_2.end()
+        t_2 = Timer()
+        sound = self.get_sound(doc)
+        sound_time = t_2.end()
+        t_2 = Timer()
+        try:
+            date = d_parser.parse(self.date)
+        except:
+            date = datetime.datetime.now()
         date_time = t_2.end()
         return dict(
             news=dict(
