@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from bson import ObjectId
+
 from base_app.classes.debug import Debug
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
 
@@ -26,6 +28,21 @@ class GeographicModel(BaseModel):
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > geographic')
+            return self.result
+
+    def update(self):
+        try:
+            __body = {
+                'name': self.name,
+                'parent': self.parent,
+            }
+
+            __condition = {"_id": ObjectId(self.id)}
+            self.result['value'] = MongodbModel(collection='geographic', body=__body, condition=__condition).update()
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > subject')
             return self.result
 
     def get_all(self):
@@ -72,6 +89,7 @@ class GeographicModel(BaseModel):
                 l = [dict(
                     id=str(i['_id']),
                     name=i['name'],
+                    parent=i['parent']
                 ) for i in r]
 
                 self.result['value'] = l

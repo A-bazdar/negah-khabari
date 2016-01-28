@@ -67,10 +67,10 @@ class UserModel(BaseModel):
                 'email': self.email,
                 'status': self.status,
                 'welcome': self.welcome,
-                'register_start_date': str(self.register_start_date),
-                'register_end_date': str(self.register_end_date),
-                'archive_start_date': str(self.archive_start_date),
-                'archive_end_date': str(self.archive_end_date),
+                'register_start_date': self.register_start_date,
+                'register_end_date': self.register_end_date,
+                'archive_start_date': self.archive_start_date,
+                'archive_end_date': self.archive_end_date,
                 'group': self.group,
                 'count_online': self.count_online,
                 'pic': self.pic,
@@ -226,6 +226,7 @@ class UserModel(BaseModel):
                         archive_start_date=i['archive_start_date'],
                         archive_end_date=i['archive_end_date'],
                         group=group['value'],
+                        count_online=i['count_online'] if 'count_online' in i.keys() else 1,
                         pic=i['pic'],
                         last_activity=last_activity,
                         last_login=last_login
@@ -479,6 +480,19 @@ class UserModel(BaseModel):
                 'email': self.email,
                 'address': self.address,
             }}
+            self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin',
+                                data='collection > user')
+            return self.result
+
+    def update_all(self, **__user):
+        try:
+            condition = {'_id': self.id}
+            body = {'$set': __user}
             self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
             self.result['status'] = True
 
