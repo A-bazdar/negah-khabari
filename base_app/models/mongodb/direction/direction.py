@@ -50,6 +50,7 @@ class DirectionModel(BaseModel):
                 l = [dict(
                      id=i['_id'],
                      name=i['name'],
+                    sort=i['sort'] if "sort" in i.keys() else 0,
                      type=i['type']) for i in r]
                 self.result['value'] = l
                 self.result['status'] = True

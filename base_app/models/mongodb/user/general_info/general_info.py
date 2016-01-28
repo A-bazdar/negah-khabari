@@ -287,10 +287,8 @@ class UserModel(BaseModel):
         try:
             if self.id:
                 body = {"_id": self.id}
-            elif self.username:
-                body = {'username': {'$regex': '(?i)' + self.username + '$'}}
             else:
-                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'email': self.email}]}
+                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'email': self.email}, {'username': {"$regex": '^' + self.username + '$', "$options": "$i"}}]}
             r = MongodbModel(collection='user', body=body).get_one()
             if r:
                 group = UserGroupModel(_id=r['group']).get_one()
@@ -370,7 +368,7 @@ class UserModel(BaseModel):
 
     def get_all_by_like(self, _like):
         try:
-            __body = {"$and": [{"parent": None}, {"$or": [{'mobile': {"$regex": '^' + _like}}, {'phone': {"$regex": '^' + _like}}, {'email': {"$regex": '^' + _like}}, {'username': {"$regex": '^' + _like}}]}]}
+            __body = {"$and": [{"parent": None}, {"$or": [{'mobile': {"$regex": '^' + _like}}, {'phone': {"$regex": '^' + _like}}, {'email': {"$regex": '^' + _like}}, {'username': {"$regex": '^' + _like, "$options": "$i"}}]}]}
             __key = {"_id": 1, "name": 1, "family": 1, "pic": 1}
             x = MongodbModel(collection='user', body=__body, key=__key, page=1, size=20).get_all_key_limit()
             v = []
@@ -581,10 +579,8 @@ class UserModel(BaseModel):
         try:
             if self.id:
                 body = {"_id": self.id}
-            elif self.username:
-                body = {'username': {'$regex': '(?i)' + self.username + '$'}}
             else:
-                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'email': self.email}]}
+                body = {"$or": [{'mobile': self.mobile}, {'phone': self.phone}, {'email': self.email}, {'username': {"$regex": '^' + self.username + '$', "$options": "$i"}}]}
             return MongodbModel(collection='user', body=body).count()
 
         except:

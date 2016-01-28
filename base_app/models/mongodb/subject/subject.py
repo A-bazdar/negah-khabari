@@ -100,11 +100,12 @@ class SubjectModel(BaseModel):
 
     def get_all_parent(self):
         try:
-            r = MongodbModel(collection='subject', body={"parent": None}).get_all()
+            r = MongodbModel(collection='subject', body={"parent": None}, sort="sort", ascending=1).get_all_sort()
             if r:
                 l = [dict(
                     id=i['_id'],
                     name=i['name'],
+                    sort=i['sort'] if "sort" in i.keys() else 0,
                     parent=i['parent']
                 ) for i in r]
                 self.result['value'] = l
