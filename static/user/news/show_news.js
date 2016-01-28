@@ -75,6 +75,8 @@ function make_show_news(news, body_news_font, news_content) {
     _make.find('i#save_icon').attr('data-news', news['id']);
     _make.find('i#report_broken_icon').attr('data-news', news['id']).attr('data-action', news['id']);
     _make.find('div#report_broken_drop_down').attr('data-action', news['id']);
+    _make.find('i.news-zoom-in').attr('data-news', news['id']);
+    _make.find('i.news-zoom-out').attr('data-news', news['id']);
     _make.find('i#report_broken_btn').attr('data-title', news['title']).attr('data-link', news['link']).attr('data-news', news['id']);
     _make.find('textarea#report_broken_text').attr('data-news', news['id']);
     _make.find('div#scroll_news').attr('data-news', news['id']);
