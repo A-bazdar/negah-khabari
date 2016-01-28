@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from bson import ObjectId
+
 from base_app.classes.debug import Debug
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
 
@@ -26,6 +28,19 @@ class DirectionModel(BaseModel):
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > direction')
+            return self.result
+
+    def update(self):
+        try:
+            __body = {"$set": {
+                'name': self.name,
+            }}
+            __condition = {"_id": ObjectId(self.id)}
+            self.result['value'] = MongodbModel(collection='direction', body=__body, condition=__condition).update()
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > category')
             return self.result
 
     def get_all(self, __type):
