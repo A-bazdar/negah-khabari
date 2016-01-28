@@ -42,7 +42,7 @@ class CategoryModel(BaseModel):
 
     def get_all(self):
         try:
-            r = MongodbModel(collection='category', body={}).get_all()
+            r = MongodbModel(collection='category', body={}, sort="sort", ascending=1).get_all_sort()
             if r:
                 l = [dict(
                      id=str(i['_id']),
@@ -79,4 +79,20 @@ class CategoryModel(BaseModel):
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > category')
+            return self.result
+
+    def change_sort(self, categories):
+        try:
+            _sort = 1
+            for i in categories:
+                __condition = {"_id": ObjectId(i)}
+                __body = {"$set": {"sort": _sort}}
+                MongodbModel(collection='category', body=__body, condition=__condition).update()
+                _sort += 1
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > content')
             return self.result

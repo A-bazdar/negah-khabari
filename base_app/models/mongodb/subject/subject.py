@@ -159,3 +159,19 @@ class SubjectModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete_childs', data='collection > subject')
             return self.result
+
+    def change_sort(self, subjects):
+        try:
+            _sort = 1
+            for i in subjects:
+                __condition = {"_id": ObjectId(i)}
+                __body = {"$set": {"sort": _sort}}
+                MongodbModel(collection='subject', body=__body, condition=__condition).update()
+                _sort += 1
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > content')
+            return self.result

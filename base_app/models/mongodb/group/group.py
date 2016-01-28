@@ -47,35 +47,8 @@ class GroupModel(BaseModel):
 
     def get_all(self):
         try:
-            r = MongodbModel(collection='group', body={"parent": None}).get_all()
-            if r:
-                l = []
-                for i in r:
-                    s_r = MongodbModel(collection='group', body={"parent": i['_id']}).get_all()
-                    s_l = []
-                    for j in s_r:
-                        s_r_2 = MongodbModel(collection='group', body={"parent": j['_id']}).get_all()
-                        s_l_2 = []
-                        for z in s_r_2:
-                            s_l_2.append(dict(
-                                id=z['_id'],
-                                name=z['name'],
-                                parent=z['parent']
-                            ))
-                        s_l.append(dict(
-                            id=j['_id'],
-                            name=j['name'],
-                            parent=j['parent'],
-                            child=s_l_2
-                        ))
-                    l.append(dict(
-                        id=i['_id'],
-                        name=i['name'],
-                        parent=i['parent'],
-                        child=s_l
-                    ))
-                self.result['value'] = l
-                self.result['status'] = True
+            self.result['value'] = self.get_all_parent_child('group')
+            self.result['status'] = True
 
             return self.result
         except:
@@ -140,4 +113,20 @@ class GroupModel(BaseModel):
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete_childs', data='collection > group')
+            return self.result
+
+    def change_sort(self, groups):
+        try:
+            _sort = 1
+            for i in groups:
+                __condition = {"_id": ObjectId(i)}
+                __body = {"$set": {"sort": _sort}}
+                MongodbModel(collection='group', body=__body, condition=__condition).update()
+                _sort += 1
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > content')
             return self.result

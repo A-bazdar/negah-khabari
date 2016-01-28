@@ -46,7 +46,7 @@ class ContentModel(BaseModel):
 
     def get_all(self):
         try:
-            r = MongodbModel(collection='content', body={}).get_all()
+            r = MongodbModel(collection='content', body={}, sort="sort", ascending=1).get_all_sort()
             if r:
                 l = [dict(
                      id=i['_id'],
@@ -91,6 +91,22 @@ class ContentModel(BaseModel):
     def delete(self):
         try:
             self.result['value'] = MongodbModel(collection='content', body={'_id': self.id}).delete()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > content')
+            return self.result
+
+    def change_sort(self, contents):
+        try:
+            _sort = 1
+            for i in contents:
+                __condition = {"_id": ObjectId(i)}
+                __body = {"$set": {"sort": _sort}}
+                MongodbModel(collection='content', body=__body, condition=__condition).update()
+                _sort += 1
+            self.result['value'] = True
             self.result['status'] = True
 
             return self.result
