@@ -57,6 +57,7 @@ class UserModel(BaseModel):
             __body = {
                 'name': self.name,
                 'family': self.family,
+                'full_name': u'{} {}'.format(self.name, self.family),
                 'parent': None,
                 'username': self.username,
                 'organization': self.organization,
@@ -134,9 +135,13 @@ class UserModel(BaseModel):
                     l.append(dict(
                         id=i['_id'],
                         name=i['name'],
+                        group=i['group'],
                         family=i['family'],
                         parent=i['parent'],
+                        status=i['status'],
                         username=i['username'],
+                        welcome=i['welcome'],
+                        password=i['password'],
                         full_name=u'{} {}'.format(i['name'], i['family']),
                         pic=i['pic'],
                     ))
@@ -148,6 +153,17 @@ class UserModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all',
                                 data='collection > user')
             return self.result
+
+    def get_count_by_parent(self):
+        try:
+            r = MongodbModel(collection='user', body={"parent": self.parent, "role": "USER"}).count()
+            if r is not False:
+                return r
+            return 0
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all',
+                                data='collection > user')
+            return 0
 
     def get_access(self):
         try:
@@ -345,7 +361,8 @@ class UserModel(BaseModel):
 
     def get_one_little(self):
         try:
-            __key = {"_id": 1, "name": 1, "family": 1, "parent": 1, "username": 1}
+            __key = {"_id": 1, "name": 1, "family": 1, "parent": 1, "username": 1, "welcome": 1, "mobile": 1,
+                     "phone": 1, "email": 1, "address": 1}
             __body = {"_id": self.id}
             r = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
             if r:
@@ -353,7 +370,12 @@ class UserModel(BaseModel):
                     id=r['_id'],
                     name=r['name'],
                     family=r['family'],
+                    welcome=r['welcome'],
                     parent=r['parent'],
+                    mobile=r['mobile'],
+                    phone=r['phone'],
+                    email=r['email'],
+                    address=r['address'] if 'address' in r.keys() else '',
                     username=r['username'],
                     full_name=u'{} {}'.format(r['name'], r['family']),
                 )
@@ -368,7 +390,19 @@ class UserModel(BaseModel):
 
     def get_all_by_like(self, _like):
         try:
-            __body = {"$and": [{"parent": None}, {"$or": [{'mobile': {"$regex": '^' + _like}}, {'phone': {"$regex": '^' + _like}}, {'email': {"$regex": '^' + _like}}, {'username': {"$regex": '^' + _like, "$options": "$i"}}]}]}
+            __body = {
+                "$and": [
+                    {"parent": None},
+                    {"role": "USER"},
+                    {"$or": [
+                        {'mobile': {"$regex": '^' + _like}},
+                        {'phone': {"$regex": '^' + _like}},
+                        {'email': {"$regex": '^' + _like}},
+                        {'full_name': {"$regex": '^' + _like}},
+                        {'username': {"$regex": '^' + _like, "$options": "$i"}}
+                    ]}
+                ]
+            }
             __key = {"_id": 1, "name": 1, "family": 1, "pic": 1}
             x = MongodbModel(collection='user', body=__body, key=__key, page=1, size=20).get_all_key_limit()
             v = []
@@ -471,6 +505,7 @@ class UserModel(BaseModel):
             body = {'$set': {
                 'name': self.name,
                 'family': self.family,
+                'full_name': u'{} {}'.format(self.name, self.family),
                 'organization': self.organization,
                 'username': self.username,
                 'phone': self.phone,
@@ -490,6 +525,10 @@ class UserModel(BaseModel):
     def update_all(self, **__user):
         try:
             condition = {'_id': self.id}
+            try:
+                __user['full_name'] = u'{} {}'.format(__user['name'], __user['family'])
+            except:
+                pass
             body = {'$set': __user}
             self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
             self.result['status'] = True
