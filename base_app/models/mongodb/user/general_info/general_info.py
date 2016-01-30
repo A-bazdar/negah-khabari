@@ -410,6 +410,8 @@ class UserModel(BaseModel):
                 for r in x:
                     v.append(dict(
                         id=r['_id'],
+                        name=r['name'],
+                        family=r['family'],
                         full_name=u'{} {}'.format(r['name'], r['family']),
                         pic=r['pic']
                     ))
