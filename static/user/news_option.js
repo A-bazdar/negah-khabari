@@ -7,15 +7,15 @@ $(document).on('click','.show_option_news', function(){
     if($(this).hasClass('closedp')) {
         if($('.news_list_detail[data-news=' + data_news + ']').hasClass('closeBox')){
             $(this).removeClass('closedp').addClass('open');
-            $('.show_option_news').css('background-position','-47px -130px');
-            $(this).css('background-position','-29px -131px');
+            $('.show_option_news').removeClass('active');
+            $(this).addClass('active');
             $('.dropdown-option-container[data-news=' + data_news + ']').slideDown();
             $('.dropdown-option-container[data-news!=' + data_news + ']').slideUp();
         }
     }
     else {
         $(this).removeClass('open').addClass('closedp');
-        $(this).css('background-position','-47px -130px');
+        $(this).removeClass('active');
         $('.dropdown-option-container[data-news=' + data_news + ']').slideUp();
     }
 });

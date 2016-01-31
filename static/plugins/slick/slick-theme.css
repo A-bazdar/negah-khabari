@@ -214,6 +214,9 @@
 
 .slider_content div{
     line-height: 18px;
+    font-family: Traffic;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .slider_content:hover{
