@@ -45,11 +45,12 @@ class DirectionModel(BaseModel):
 
     def get_all(self, __type):
         try:
-            r = MongodbModel(collection='direction', body={'type': __type}).get_all()
+            r = MongodbModel(collection='direction', body={'type': __type}, sort="sort", ascending=1).get_all_sort()
             if r:
                 l = [dict(
                      id=i['_id'],
                      name=i['name'],
+                    sort=i['sort'] if "sort" in i.keys() else 0,
                      type=i['type']) for i in r]
                 self.result['value'] = l
                 self.result['status'] = True
@@ -94,4 +95,20 @@ class DirectionModel(BaseModel):
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > direction')
+            return self.result
+
+    def change_sort(self, directions):
+        try:
+            _sort = 1
+            for i in directions:
+                __condition = {"_id": ObjectId(i)}
+                __body = {"$set": {"sort": _sort}}
+                MongodbModel(collection='direction', body=__body, condition=__condition).update()
+                _sort += 1
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > content')
             return self.result

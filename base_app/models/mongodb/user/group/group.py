@@ -135,7 +135,7 @@ class UserGroupModel(BaseModel):
             r = MongodbModel(collection='user_group', body={'_id': self.id}).get_one()
             if r:
                 access_sources = r['access_sources'] if 'access_sources' in r.keys() else False
-                if access_sources:
+                if access_sources is not False:
                     access_sources['agency'] = map(str, access_sources['agency'])
                     access_sources['subject'] = map(str, access_sources['subject'])
                     access_sources['geographic'] = map(str, access_sources['geographic'])
@@ -148,6 +148,22 @@ class UserGroupModel(BaseModel):
                     charts_content=r['charts_content'] if 'charts_content' in r.keys() else False
                 )
                 self.result['value'] = l
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_one', data='collection > user_group')
+            return self.result
+
+    def get_one_info(self):
+        try:
+            r = MongodbModel(collection='user_group', body={'_id': self.id}).get_one()
+            if r:
+                self.result['value'] = dict(
+                    id=r['_id'],
+                    name=r['name']
+                )
+
                 self.result['status'] = True
 
             return self.result

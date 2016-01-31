@@ -16,7 +16,7 @@ from base_app.models.mongodb.keyword.keyword import KeyWordModel
 from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
 import re
-
+import dateutil.parser as d_parser
 __author__ = 'Morteza'
 
 
@@ -267,8 +267,8 @@ class NewsModel:
 
     def get_news_body_module(self, _source, _id):
         try:
-            x = _source['date'].split('T')
-            _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+            _date = d_parser.parse(_source['date'])
+            _date = d_parser.parse(_date.strftime("%Y/%m/%d %H:%M:%S"))
             options = self.get_options(_id)
             self.value.append(dict(
                 id=str(_id),
@@ -338,8 +338,8 @@ class NewsModel:
         try:
             agency = AgencyModel(_id=ObjectId(_fields['agency'][0])).get_one()
             try:
-                x = _fields['date'][0].split('T')
-                _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
+                _date = d_parser.parse(_fields['date'][0])
+                _date = d_parser.parse(_date.strftime("%Y/%m/%d %H:%M:%S"))
             except:
                 _date = _fields['date'][0]
 
@@ -367,7 +367,6 @@ class NewsModel:
                 summary = _fields['summary'][0]
             except:
                 summary = _fields['title'][0]
-
             options = self.get_options(_id)
             self.value.append(dict(
                 id=_id,

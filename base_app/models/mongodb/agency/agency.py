@@ -129,7 +129,8 @@ class AgencyModel:
                 'extract_image': agency['extract_image'],
                 'copy_key_words': agency['key_words'],
                 'link': agency['link'],
-                'links': agency['links']
+                'links': agency['links'],
+                'rss_list': agency['rss_list']
             }}
             condition = {"_id": self.id}
             self.result['value'] = MongodbModel(collection='agency', body=__body, condition=condition).update()

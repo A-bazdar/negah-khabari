@@ -100,11 +100,12 @@ class SubjectModel(BaseModel):
 
     def get_all_parent(self):
         try:
-            r = MongodbModel(collection='subject', body={"parent": None}).get_all()
+            r = MongodbModel(collection='subject', body={"parent": None}, sort="sort", ascending=1).get_all_sort()
             if r:
                 l = [dict(
                     id=i['_id'],
                     name=i['name'],
+                    sort=i['sort'] if "sort" in i.keys() else 0,
                     parent=i['parent']
                 ) for i in r]
                 self.result['value'] = l
@@ -158,4 +159,20 @@ class SubjectModel(BaseModel):
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete_childs', data='collection > subject')
+            return self.result
+
+    def change_sort(self, subjects):
+        try:
+            _sort = 1
+            for i in subjects:
+                __condition = {"_id": ObjectId(i)}
+                __body = {"$set": {"sort": _sort}}
+                MongodbModel(collection='subject', body=__body, condition=__condition).update()
+                _sort += 1
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > content')
             return self.result

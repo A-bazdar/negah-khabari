@@ -114,6 +114,14 @@ class MongodbModel(MongodbBaseModel):
                                 data='body: ' + str(self.__body))
             return False
 
+    def get_all_sort(self):
+        try:
+            return self.collection.find(self.__body).sort([(self.__sort, self.__ascending)])
+        except:
+            Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > get_all_pagination',
+                                data='body: ' + str(self.__body))
+            return False
+
     def get_one(self):
         try:
             return self.collection.find_one(self.__body)
@@ -186,7 +194,7 @@ class BaseModel:
     @staticmethod
     def get_all_parent_child(_col):
         try:
-            r = MongodbModel(collection=_col, body={"parent": None}).get_all()
+            r = MongodbModel(collection=_col, body={"parent": None}, sort="sort", ascending=1).get_all_sort()
             l = []
             for i in r:
                 s_r = MongodbModel(collection=_col, body={"parent": i['_id']}).get_all()
