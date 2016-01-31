@@ -35,6 +35,7 @@ class AgencyModel:
                 float_left=agency['float_left'],
                 type=agency['type'] if 'type' in agency else 'SITE',
                 rss_list=agency['rss_list'] if 'rss_list' in agency else [],
+                comparatives=agency['comparatives'] if 'comparatives' in agency else [],
                 copy_key_words=agency['copy_key_words'] if 'copy_key_words' in agency.keys() else [],
                 category=category,
                 direction=direction,
@@ -96,6 +97,7 @@ class AgencyModel:
                 'category': agency['category'],
                 'direction': agency['direction'],
                 'rss_list': agency['rss_list'],
+                'comparatives': agency['comparatives'],
                 'type': agency['type_agency'],
                 'active': agency['active'],
                 'pic': agency['pic'],
@@ -130,6 +132,7 @@ class AgencyModel:
                 'copy_key_words': agency['key_words'],
                 'link': agency['link'],
                 'links': agency['links'],
+                'comparatives': agency['comparatives'],
                 'rss_list': agency['rss_list']
             }}
             condition = {"_id": self.id}
