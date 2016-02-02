@@ -77,7 +77,7 @@ $(document).on('click', '.refinement-news', function(e){
             excludes.push($(this).val());
         }
     });
-    if(ro_title == "" || title == "" || date == "" || thumbnail  == "" || summary == "" || body == ""){
+    if(title == "" || date == "" || thumbnail  == "" || summary == "" || body == ""){
         Alert.render('همه آدرس ها را وارد کنید.', function(){
             elm.html('پالایش');
         });
@@ -106,6 +106,24 @@ $(document).on('click', '.refinement-news', function(e){
                 var value = response['value'];
                 var messages = response['messages'];
                 if (status) {
+                    if(value['ro_title'] == null){
+                        value['ro_title'] = "استخراج نشده";
+                    }
+                    if(value['title'] == null){
+                        value['title'] = "استخراج نشده";
+                    }
+                    if(value['summary'] == null){
+                        value['summary'] = "استخراج نشده";
+                    }
+                    if(value['thumbnail'] == null){
+                        value['thumbnail'] = "استخراج نشده";
+                    }
+                    if(value['body'] == null){
+                        value['body'] = "استخراج نشده";
+                    }
+                    if(value['date'] == null){
+                        value['date'] = "استخراج نشده";
+                    }
                     var html = '<div class="col-md-12">\
                                     <div class="row">\
                                         <div class="col-md-12">\
