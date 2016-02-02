@@ -8,6 +8,8 @@ __author__ = 'Morteza'
 
 
 class SubjectModel(BaseModel):
+    no_subject = "5637ea5146b9a0596b29b39b"
+
     def __init__(self, _id=None, name=None, parent=0):
         BaseModel.__init__(self)
         self.id = _id

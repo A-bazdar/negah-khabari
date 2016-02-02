@@ -1357,6 +1357,23 @@ class NewsModel:
                                 data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def update_subject(self):
+        try:
+            body = {
+                "script": "ctx._source.subject = __subject",
+                "params": {
+                    "__subject": str(self.subject)
+                }
+            }
+
+            return ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body,
+                                      _id=self.id).update()
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+            return self.result
+
     def get_news_by_subject(self, _page=0, _size=30):
         try:
             body = {

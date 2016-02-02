@@ -37,9 +37,10 @@ $(document).on('click', '.dir_tab.tab-address-agency', function(){
 });
 
 $(document).on('click', '.remove-rss-news.agency', function(){
-    var data_action = $(this).closest('a').attr('data-action');
+    var data_action = $(this).closest('a').attr('data-rss');
+    var data_type = $(this).closest('a').attr('data-type');
     $(this).closest('li.news-rss-li').remove();
-    $('.tab_content.add-rss-con.agency[data-action=' + data_action + ']').remove();
+    $('.tab_content.add-rss-con.agency[data-rss=' + data_action + '][data-type=' + data_type + ']').remove();
 });
 
 $(document).on('change', 'select.rss-news[name=subject]', function(){

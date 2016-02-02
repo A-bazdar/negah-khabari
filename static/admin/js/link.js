@@ -13,6 +13,13 @@ $(document).on('click', '.add-link-btn.agency', function(e){
             <i class="fa fa-times remove-link-news agency colorRed" data-link="' + action + '"> </i> <span> لینک</span>\
             </a>\
     </li>');
+    if(_type == "edit"){
+        var agency_type = elm.attr('data-agency-type');
+        if(agency_type == "COMPARATIVE"){
+            $('.link-agency-select').hide();
+            $('.comparative-agency-select').show();
+        }
+    }
     $('.add-link-contents.agency[data-type=' + _type + ']').append($("#links_content").html().replace(/__link__/g, action).replace(/__type__/g, _type).replace(/ temp/g, ''));
     $('.add-link-contents.agency[data-type=' + _type + '] .new_select').select2().removeClass('new_select').addClass('select');
     $('.tab_content.add-link-con.agency[data-type=' + _type + '][data-link=' + action + ']').fadeIn();
@@ -37,9 +44,10 @@ $(document).on('click', '.dir_tab.tab-address-agency', function(){
 });
 
 $(document).on('click', '.remove-link-news.agency', function(){
-    var data_action = $(this).closest('a').attr('data-action');
+    var data_action = $(this).closest('a').attr('data-link');
+    var data_type = $(this).closest('a').attr('data-type');
     $(this).closest('li.news-link-li').remove();
-    $('.tab_content.add-link-con.agency[data-action=' + data_action + ']').remove();
+    $('.tab_content.add-link-con.agency[data-link=' + data_action + '][data-type=' + data_type + ']').remove();
 });
 
 $(document).on('change', 'select.link-news[name=subject]', function(){
