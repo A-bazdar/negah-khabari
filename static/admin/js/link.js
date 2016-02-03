@@ -8,8 +8,10 @@ $(document).on('click', '.add-link-btn.agency', function(e){
     $('li.news-link-li[data-type=' + _type + ']').removeClass('active');
     $('.tab_content.add-link-con.agency[data-type=' + _type + ']').hide();
     var action = parseInt(Math.random() * 100000);
-    $('.add-link-tabs.agency[data-type=' + _type + ']').append('<li role="presentation" data-type="' + _type + '" class="active news-link-li">\
-        <a class="dir_tab tab-link-agency" data-type="' + _type + '" data-link="' + action + '" aria-controls="source" role="tab" data-toggle="tab">\
+    var __sort = 1;
+    $.each($('.add-link-tabs.agency[data-type=' + _type + '] li'), function(){__sort += 1});
+    $('.add-link-tabs.agency[data-type=' + _type + ']').append('<li role="presentation" data-link="' + action + '" data-type="' + _type + '" data-sort="' + __sort + '" class="active news-link-li drag">\
+        <a class="dir_tab tab-link-agency draggable" data-type="' + _type + '" data-link="' + action + '" aria-controls="source" role="tab" data-toggle="tab">\
             <i class="fa fa-times remove-link-news agency colorRed" data-link="' + action + '"> </i> <span> لینک</span>\
             </a>\
     </li>');
@@ -47,14 +49,49 @@ $(document).on('click', '.remove-link-news.agency', function(){
     var data_action = $(this).closest('a').attr('data-link');
     var data_type = $(this).closest('a').attr('data-type');
     $(this).closest('li.news-link-li').remove();
+    var __sort = 1;
+    $.each($('.add-link-tabs.agency[data-type=' + data_type + '] li'), function(){$(this).attr('data-sort', __sort);__sort += 1});
     $('.tab_content.add-link-con.agency[data-link=' + data_action + '][data-type=' + data_type + ']').remove();
 });
 
-$(document).on('change', 'select.link-news[name=subject]', function(){
-    var s = $("option:selected", this).attr('data-name');
-    if(s != "") {
-        var action = $(this).closest('.add-link-con.agency').attr("data-link");
-        $('.dir_tab.tab-link-agency[data-link=' + action + '] span').html(s);
+$(document).on('change', 'select.link-news[name=subject], select.link-news[name=group]', function(e){
+    var elm = $(e.target);
+    elm = elm.closest('.tab_content.add-link-con.agency');
+    var __subject = elm.find("select.link-news[name=subject] option:selected");
+    var __group = elm.find("select.link-news[name=group] option:selected");
+    var subject_name = __subject.attr('data-name');
+    var subject_parent_name = __subject.attr('data-parent-name');
+    var group_name = __group.attr('data-name');
+    var group_parent_name = __group.attr('data-parent-name');
+    var subject_text = "";
+    var group_text = "";
+    if(subject_name != ""){
+        subject_text += subject_name;
+        if(subject_parent_name != ""){
+            subject_text = subject_parent_name + " / " + subject_text
+        }
+    }
+    if(group_name != ""){
+        group_text += group_name;
+        if(group_parent_name != ""){
+            group_text = group_parent_name + " / " + group_text
+        }
+    }
+    var tab_text = "";
+    if(subject_text != ""){
+        tab_text += subject_text;
+    }
+    if(group_text != "") {
+        if (subject_text != "")
+            tab_text += " | " + group_text;
+        else
+            tab_text += group_text;
+    }
+    var action = $(this).closest('.add-link-con.agency').attr("data-link");
+    if(tab_text != "") {
+        $('.dir_tab.tab-link-agency[data-link=' + action + '] span').html(tab_text);
+    }else{
+        $('.dir_tab.tab-link-agency[data-link=' + action + '] span').html('لینک');
     }
 });
 
@@ -65,20 +102,10 @@ $(document).on('change', 'select.change-date-format', function(){
     $('span.date-format[data-link=' + link + '][data-type=' + type + ']').fadeIn()
 });
 
-var html_exclude = '<div class="col-md-12 row-exclude">\
-    <div class="row">\
-        <div class="col-md-10">\
-            <input type="text" class="form-control text-left" data-link="new-link-1" placeholder="Address" name="exclude">\
-        </div>\
-        <div class="col-md-2">\
-            <div class="R_butt_red text-center test-address-agency delete-exclude" data-action="body" data-link="new-link-1"><i class="fa fa-times"></i></div>\
-        </div>\
-    </div>\
-</div>';
 $(document).on('click', '.add-exclude', function(e){
     var elm = $(e.target).closest('.add-exclude');
     var data_link = elm.attr('data-link');
-    $('.excludes[data-link=' + data_link + ']').append(html_exclude);
+    $('.excludes[data-link=' + data_link + ']').append(html_exclude.replace(/__value__/g, ""));
 });
 $(document).on('click', '.delete-exclude', function(e){
     $(e.target).closest('.row-exclude').remove();

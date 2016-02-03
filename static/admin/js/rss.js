@@ -8,8 +8,10 @@ $(document).on('click', '.add-rss-btn.agency', function(e){
     $('li.news-rss-li[data-type=' + _type + ']').removeClass('active');
     $('.tab_content.add-rss-con.agency[data-type=' + _type + ']').hide();
     var action = parseInt(Math.random() * 100000);
-    $('.add-rss-tabs.agency[data-type=' + _type + ']').append('<li role="presentation" data-type="' + _type + '" class="active news-rss-li">\
-        <a class="dir_tab tab-rss-agency" data-type="' + _type + '" data-rss="' + action + '" aria-controls="source" role="tab" data-toggle="tab">\
+    var __sort = 1;
+    $.each($('.add-rss-tabs.agency[data-type=' + _type + '] li'), function(){__sort += 1});
+    $('.add-rss-tabs.agency[data-type=' + _type + ']').append('<li role="presentation" data-rss="' + action + '" data-type="' + _type + '" data-sort="' + __sort + '" class="active news-rss-li drag">\
+        <a class="dir_tab tab-rss-agency draggable" data-type="' + _type + '" data-rss="' + action + '" aria-controls="source" role="tab" data-toggle="tab">\
             <i class="fa fa-times remove-rss-news agency colorRed" data-rss="' + action + '"> </i> <span> لینک</span>\
             </a>\
     </li>');
@@ -40,6 +42,8 @@ $(document).on('click', '.remove-rss-news.agency', function(){
     var data_action = $(this).closest('a').attr('data-rss');
     var data_type = $(this).closest('a').attr('data-type');
     $(this).closest('li.news-rss-li').remove();
+    var __sort = 1;
+    $.each($('.add-rss-tabs.agency[data-type=' + data_type + '] li'), function(){$(this).attr('data-sort', __sort);__sort += 1});
     $('.tab_content.add-rss-con.agency[data-rss=' + data_action + '][data-type=' + data_type + ']').remove();
 });
 
@@ -48,6 +52,48 @@ $(document).on('change', 'select.rss-news[name=subject]', function(){
     if(s != "") {
         var action = $(this).closest('.add-rss-con.agency').attr("data-rss");
         $('.dir_tab.tab-rss-agency[data-rss=' + action + '] span').html(s);
+    }
+});
+
+
+$(document).on('change', 'select.rss-news[name=subject], select.rss-news[name=group]', function(e){
+    var elm = $(e.target);
+    elm = elm.closest('.tab_content.add-rss-con.agency');
+    var __subject = elm.find("select.rss-news[name=subject] option:selected");
+    var __group = elm.find("select.rss-news[name=group] option:selected");
+    var subject_name = __subject.attr('data-name');
+    var subject_parent_name = __subject.attr('data-parent-name');
+    var group_name = __group.attr('data-name');
+    var group_parent_name = __group.attr('data-parent-name');
+    var subject_text = "";
+    var group_text = "";
+    if(subject_name != ""){
+        subject_text += subject_name;
+        if(subject_parent_name != ""){
+            subject_text = subject_parent_name + " / " + subject_text
+        }
+    }
+    if(group_name != ""){
+        group_text += group_name;
+        if(group_parent_name != ""){
+            group_text = group_parent_name + " / " + group_text
+        }
+    }
+    var tab_text = "";
+    if(subject_text != ""){
+        tab_text += subject_text;
+    }
+    if(group_text != "") {
+        if (subject_text != "")
+            tab_text += " | " + group_text;
+        else
+            tab_text += group_text;
+    }
+    var action = $(this).closest('.add-rss-con.agency').attr("data-rss");
+    if(tab_text != "") {
+        $('.dir_tab.tab-rss-agency[data-rss=' + action + '] span').html(tab_text);
+    }else{
+        $('.dir_tab.tab-rss-agency[data-rss=' + action + '] span').html('لینک');
     }
 });
 
@@ -64,7 +110,7 @@ var html_exclude = '<div class="col-md-12 row-exclude">\
             <input type="text" class="form-control text-left" data-rss="new-rss-1" placeholder="Address" name="exclude">\
         </div>\
         <div class="col-md-2">\
-            <div class="R_butt_red text-center test-address-agency delete-exclude" data-action="body" data-rss="new-rss-1"><i class="fa fa-times"></i></div>\
+            <div class="R_butt_red text-center delete-exclude" data-action="body" data-rss="new-rss-1"><i class="fa fa-times"></i></div>\
         </div>\
     </div>\
 </div>';

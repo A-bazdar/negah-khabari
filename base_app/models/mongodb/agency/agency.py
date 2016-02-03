@@ -27,6 +27,16 @@ class AgencyModel:
                 direction = DirectionModel(_id=agency['direction']).get_one()['value']
             except:
                 direction = None
+            try:
+                links = sorted(agency['links'], key=lambda k: k['sort'], reverse=False)
+            except:
+                links = agency['links']
+            rss_list = agency['rss_list'] if 'rss_list' in agency else []
+            try:
+                rss_list = sorted(agency['rss_list'], key=lambda k: k['sort'], reverse=False)
+            except:
+                pass
+
             self.value.append(dict(
                 id=agency['_id'],
                 name=agency['name'],
@@ -34,7 +44,7 @@ class AgencyModel:
                 color=agency['color'],
                 float_left=agency['float_left'],
                 type=agency['type'] if 'type' in agency else 'SITE',
-                rss_list=agency['rss_list'] if 'rss_list' in agency else [],
+                rss_list=rss_list,
                 comparatives=agency['comparatives'] if 'comparatives' in agency else [],
                 copy_key_words=agency['copy_key_words'] if 'copy_key_words' in agency.keys() else [],
                 category=category,
@@ -42,7 +52,7 @@ class AgencyModel:
                 active=agency['active'],
                 pic=agency['pic'],
                 base_link=agency['base_link'],
-                links=agency['links'],
+                links=links,
                 add_by_confirm=agency['add_by_confirm'],
                 extract_image=agency['extract_image']
             ))
