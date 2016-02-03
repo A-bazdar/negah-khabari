@@ -87,7 +87,7 @@ $(document).on('click', '.general_settings_tab', function(){
     });
 
     var __a = true;
-    $('#edit_general_info_user').submit(function(e){
+    $(document).on('submit', '#edit_general_info_user', function(e){
         if(__a){
             __a = false;
             e.preventDefault();
@@ -136,7 +136,7 @@ $(document).on('click', '.general_settings_tab', function(){
     });
 
 var __d = true;
-$('#edit_setting_user').submit(function(e){
+$(document).on('submit', '#edit_setting_user', function(e){
     if(__d){
         __d = false;
         e.preventDefault();
@@ -181,7 +181,7 @@ $('#edit_setting_user').submit(function(e){
 });
 
 var __e = true;
-$('#change_password').submit(function(e){
+$(document).on('submit', '#change_password', function(e){
     if(__e){
         __e = false;
         e.preventDefault();
@@ -190,7 +190,7 @@ $('#change_password').submit(function(e){
         var postData = $("#change_password").serializeArray();
         jQuery.ajax(
             {
-                url: '',
+                url: change_password_url,
                 type: "post",
                 data: postData,
                 success: function (response) {

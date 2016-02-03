@@ -62,7 +62,7 @@ class CheckStrengthPassword:
             'رمز عبور جدید وارد نشده است',
             'رمز وارد شده کوتاه است',
             'رمز عبور جدید با تکرار آن مطابقت ندارد',
-            'رمز عبور قبلی نادرست است',
+            'رمز عبور فعلی نادرست است',
             'امنیت رمز وارد شده خیلی ضعیف است',
             'امنیت رمز وارد شده ضعیف است',
             'امنیت رمز وارد شده شده متوسط است',
@@ -84,8 +84,7 @@ class CheckStrengthPassword:
         if self.new != self.repeat:
             self.result['message'] = self.errors[3]
             return self.result
-
-        if self.current != CreateHash().create(self.new):
+        if self.current != CreateHash().create(self.old):
             self.result['message'] = self.errors[4]
             return self.result
         password_strength = dict.fromkeys(['has_upper', 'has_lower', 'has_num'], False)
