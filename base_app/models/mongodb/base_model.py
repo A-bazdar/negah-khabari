@@ -65,6 +65,8 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.news
         elif collection == 'keyword':
             self.collection = self.db.keyword
+        elif collection == 'user_collection':
+            self.collection = self.db.user_collection
 
     def insert(self):
         try:
