@@ -15,13 +15,7 @@ $(document).on('click', '.add-link-btn.agency', function(e){
             <i class="fa fa-times remove-link-news agency colorRed" data-link="' + action + '"> </i> <span> لینک</span>\
             </a>\
     </li>');
-    if(_type == "edit"){
-        var agency_type = elm.attr('data-agency-type');
-        if(agency_type == "COMPARATIVE"){
-            $('.link-agency-select').hide();
-            $('.comparative-agency-select').show();
-        }
-    }
+
     $('.add-link-contents.agency[data-type=' + _type + ']').append($("#links_content").html().replace(/__link__/g, action).replace(/__type__/g, _type).replace(/ temp/g, ''));
     $('.add-link-contents.agency[data-type=' + _type + '] .new_select').select2().removeClass('new_select').addClass('select');
     $('.tab_content.add-link-con.agency[data-type=' + _type + '][data-link=' + action + ']').fadeIn();
@@ -58,6 +52,7 @@ $(document).on('change', 'select.link-news[name=subject], select.link-news[name=
     var elm = $(e.target);
     elm = elm.closest('.tab_content.add-link-con.agency');
     var __subject = elm.find("select.link-news[name=subject] option:selected");
+
     var __group = elm.find("select.link-news[name=group] option:selected");
     var subject_name = __subject.attr('data-name');
     var subject_parent_name = __subject.attr('data-parent-name');
