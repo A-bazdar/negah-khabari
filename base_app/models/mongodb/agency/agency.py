@@ -153,6 +153,19 @@ class AgencyModel:
             Debug.get_exception(sub_system='agency', severity='error', tags='save')
             return self.result
 
+    def update_direction(self):
+        try:
+            __body = {"$set": {
+                'direction': self.direction,
+            }}
+            condition = {"_id": self.id}
+            self.result['value'] = MongodbModel(collection='agency', body=__body, condition=condition).update()
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='save')
+            return self.result
+
     def get_all(self):
         try:
             r = MongodbModel(collection='agency', body={}).get_all()
