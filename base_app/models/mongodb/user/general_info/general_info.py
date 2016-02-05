@@ -7,6 +7,7 @@ from base_app.classes.debug import Debug
 from base_app.classes.public import CreateHash
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
 from base_app.models.mongodb.keyword.keyword import KeyWordModel
+from base_app.models.mongodb.user.collection.collection import UserCollectionModel
 from base_app.models.mongodb.user.group.group import UserGroupModel
 
 __author__ = 'Morteza'
@@ -17,13 +18,14 @@ class UserModel(BaseModel):
                  mobile=None, address=None, fax=None, email=None, status=None, welcome=None, register_start_date=None,
                  register_end_date=None, archive_start_date=None, archive_end_date=None, group=None, pic=None,
                  role=None, last_activity=None, news=None, note=None, important=None, keyword=None,
-                 keyword_setting=None, font=None,
+                 keyword_setting=None, font=None, collection=None,
                  content=None, count_online=None):
         BaseModel.__init__(self)
         self.id = _id
         self.name = name
         self.family = family
         self.parent = parent
+        self.collection = collection
         self.username = username
         self.organization = organization
         self.password = password
@@ -59,6 +61,7 @@ class UserModel(BaseModel):
                 'family': self.family,
                 'full_name': u'{} {}'.format(self.name, self.family),
                 'parent': None,
+                'collection': None,
                 'username': self.username,
                 'organization': self.organization,
                 'password': CreateHash().create(self.password),
@@ -99,6 +102,7 @@ class UserModel(BaseModel):
                         name=i['name'],
                         family=i['family'],
                         parent=i['parent'],
+                        collection=i['collection'],
                         username=i['username'],
                         full_name=u'{} {}'.format(i['name'], i['family']),
                         organization=i['organization'],
@@ -139,6 +143,7 @@ class UserModel(BaseModel):
                         group=i['group'],
                         family=i['family'],
                         parent=i['parent'],
+                        collection=i['collection'],
                         status=i['status'],
                         username=i['username'],
                         welcome=i['welcome'],
@@ -227,6 +232,7 @@ class UserModel(BaseModel):
                         name=i['name'],
                         family=i['family'],
                         parent=i['parent'],
+                        collection=i['collection'],
                         username=i['username'],
                         full_name=u'{} {}'.format(i['name'], i['family']),
                         organization=i['organization'],
@@ -272,6 +278,7 @@ class UserModel(BaseModel):
                         name=i['name'],
                         family=i['family'],
                         parent=i['parent'],
+                        collection=i['collection'],
                         username=i['username'],
                         full_name=u'{} {}'.format(i['name'], i['family']),
                         organization=i['organization'],
@@ -316,6 +323,7 @@ class UserModel(BaseModel):
                     name=r['name'],
                     family=r['family'],
                     parent=r['parent'],
+                    collection=r['collection'],
                     username=r['username'],
                     full_name=u'{} {}'.format(r['name'], r['family']),
                     organization=r['organization'],
@@ -563,7 +571,8 @@ class UserModel(BaseModel):
         try:
             condition = {'_id': self.id}
             body = {'$set': {
-                'parent': self.parent
+                'parent': self.parent,
+                'collection': self.collection
             }}
             self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
             self.result['status'] = True

@@ -1,19 +1,234 @@
 @font-face {
-  font-family: 'Yekan';
-  src: url('../fonts/Yekan.otf?#'),  /* IE6–8 */
-       url('../fonts/Yekan.ttf') format('truetype');  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+  font-family: 'Badr';
+  src: url('../fonts/BBadr.eot?#'),  /* IE6–8 */
+       url('../fonts/BBadr.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BBadr.woff') format('woff'); /* Pretty Modern Browsers */
 }
 @font-face {
-  font-family: 'Zar';
-  src: url('../fonts/Zar.otf?#'),  /* IE6–8 */
-       url('../fonts/Zar.ttf') format('truetype');  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+  font-family: 'Baran';
+  src: url('../fonts/BBaran.eot?#'),  /* IE6–8 */
+       url('../fonts/BBaran.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BBaran.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Bardiya';
+  src: url('../fonts/BBardiya.eot?#'),  /* IE6–8 */
+       url('../fonts/BBardiya.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BBardiya.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Compset';
+  src: url('../fonts/BCompset.eot?#'),  /* IE6–8 */
+       url('../fonts/BCompset.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BCompset.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Davat';
+  src: url('../fonts/BDavat.eot?#'),  /* IE6–8 */
+       url('../fonts/BDavat.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BDavat.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Elham';
+  src: url('../fonts/BElham.eot?#'),  /* IE6–8 */
+       url('../fonts/BElham.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BElham.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Esfehan';
+  src: url('../fonts/BEsfehanBold.eot?#'),  /* IE6–8 */
+       url('../fonts/BEsfehanBold.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BEsfehanBold.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Fantezy';
+  src: url('../fonts/BFantezy.eot?#'),  /* IE6–8 */
+       url('../fonts/BFantezy.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BFantezy.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Farnaz';
+  src: url('../fonts/BFarnaz.eot?#'),  /* IE6–8 */
+       url('../fonts/BFarnaz.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BFarnaz.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Ferdosi';
+  src: url('../fonts/BFerdosi.eot?#'),  /* IE6–8 */
+       url('../fonts/BFerdosi.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BFerdosi.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Hamid';
+  src: url('../fonts/BHamid.eot?#'),  /* IE6–8 */
+       url('../fonts/BHamid.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BHamid.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Helal';
+  src: url('../fonts/BHelal.eot?#'),  /* IE6–8 */
+       url('../fonts/BHelal.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BHelal.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Homa';
+  src: url('../fonts/BHoma.eot?#'),  /* IE6–8 */
+       url('../fonts/BHoma.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BHoma.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Jadid';
+  src: url('../fonts/BJadidBold.eot?#'),  /* IE6–8 */
+       url('../fonts/BJadidBold.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BJadidBold.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Jalal';
+  src: url('../fonts/BJalal.eot?#'),  /* IE6–8 */
+       url('../fonts/BJalal.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BJalal.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Koodak';
+  src: url('../fonts/BKoodakBold.eot?#'),  /* IE6–8 */
+       url('../fonts/BKoodakBold.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BKoodakBold.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Kourosh';
+  src: url('../fonts/BKourosh.eot?#'),  /* IE6–8 */
+       url('../fonts/BKourosh.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BKourosh.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Lotus';
+  src: url('../fonts/BLotus.eot?#'),  /* IE6–8 */
+       url('../fonts/BLotus.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BLotus.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Mahsa';
+  src: url('../fonts/BMahsa.eot?#'),  /* IE6–8 */
+       url('../fonts/BMahsa.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BMahsa.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Mehr';
+  src: url('../fonts/BMehrBold.eot?#'),  /* IE6–8 */
+       url('../fonts/BMehrBold.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BMehrBold.woff') format('woff'); /* Pretty Modern Browsers */
 }
 @font-face {
   font-family: 'Mitra';
   src: url('../fonts/BMitra.eot?#'),  /* IE6–8 */
-       url('../fonts/BMitra.ttf') format('truetype');  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BMitra.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BMitra.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Morvarid';
+  src: url('../fonts/BMorvarid.eot?#'),  /* IE6–8 */
+       url('../fonts/BMorvarid.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BMorvarid.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Narm';
+  src: url('../fonts/BNarm.eot?#'),  /* IE6–8 */
+       url('../fonts/BNarm.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BNarm.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Nasim';
+  src: url('../fonts/BNasimBold.eot?#'),  /* IE6–8 */
+       url('../fonts/BNasimBold.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BNasimBold.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Nazanin';
+  src: url('../fonts/BNazanin.eot?#'),  /* IE6–8 */
+       url('../fonts/BNazanin.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BNazanin.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Roya';
+  src: url('../fonts/BRoya.eot?#'),  /* IE6–8 */
+       url('../fonts/BRoya.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BRoya.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Setareh';
+  src: url('../fonts/BSetarehBold.eot?#'),  /* IE6–8 */
+       url('../fonts/BSetarehBold.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BSetarehBold.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Shiraz';
+  src: url('../fonts/BShiraz.eot?#'),  /* IE6–8 */
+       url('../fonts/BShiraz.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BShiraz.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Sina';
+  src: url('../fonts/BSinaBold.eot?#'),  /* IE6–8 */
+       url('../fonts/BSinaBold.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BSinaBold.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Tabassom';
+  src: url('../fonts/BTabassom.eot?#'),  /* IE6–8 */
+       url('../fonts/BTabassom.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BTabassom.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Tehran';
+  src: url('../fonts/BTehran.eot?#'),  /* IE6–8 */
+       url('../fonts/BTehran.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BTehran.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Titr';
+  src: url('../fonts/BTitrBold.eot?#'),  /* IE6–8 */
+       url('../fonts/BTitrBold.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BTitrBold.woff') format('woff'); /* Pretty Modern Browsers */
 }
 @font-face {
   font-family: 'Traffic';
-  src: url('../fonts/BTraffic.ttf') format('truetype');  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+  src: url('../fonts/BTraffic.eot?#'),  /* IE6–8 */
+       url('../fonts/BTraffic.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BTraffic.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Vahid';
+  src: url('../fonts/BVahidBold.eot?#'),  /* IE6–8 */
+       url('../fonts/BVahidBold.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BVahidBold.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Yagut';
+  src: url('../fonts/BYagut.eot?#'),  /* IE6–8 */
+       url('../fonts/BYagut.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BYagut.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Yas';
+  src: url('../fonts/BYas.eot?#'),  /* IE6–8 */
+       url('../fonts/BYas.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BYas.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Yekan';
+  src: url('../fonts/BYekan.eot?#'),  /* IE6–8 */
+       url('../fonts/BYekan.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BYekan.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Zar';
+  src: url('../fonts/BZar.eot?#'),  /* IE6–8 */
+       url('../fonts/BZar.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BZar.woff') format('woff'); /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'Ziba';
+  src: url('../fonts/BZiba.eot?#'),  /* IE6–8 */
+       url('../fonts/BZiba.ttf') format('truetype'),  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+       url('../fonts/BZiba.woff') format('woff'); /* Pretty Modern Browsers */
 }
