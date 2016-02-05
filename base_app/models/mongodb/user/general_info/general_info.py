@@ -1191,6 +1191,23 @@ class UserModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result
 
+    def count_topic(self):
+        try:
+            __key = {"keyword.length": 1}
+            __body = {'_id': self.id}
+            r = MongodbModel(collection='user', key=__key, body=__body).get_one_key()
+            try:
+                count = len(r['keyword'])
+            except:
+                count = 0
+            self.result['value'] = count
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
     def save_keyword(self):
         try:
             __body = {"$set": {"keyword": self.keyword, "keyword_setting": self.keyword_setting}}

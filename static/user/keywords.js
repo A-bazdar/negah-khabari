@@ -77,6 +77,7 @@ $(document).on('click', '.save-edit.key-words', function(e){
         success: function (response) {
             var status = response['status'];
             var value = response['value'];
+            var messages = response['messages'];
             if (status) {
                 $('.keywords_box.key-words[data-key=' + key_id + ']').html(value['html']).removeClass('display-none');
                 $('.edit_keywords_box.key-words[data-key=' + key_id + ']').addClass('display-none');
@@ -87,14 +88,25 @@ $(document).on('click', '.save-edit.key-words', function(e){
                 $(".select.search-news[name=key-words]").select2("data", []).html(options);
                 $(".select.refinement-news[name=key-words]").select2("data", []).html(options);
                 $(".select.pattern-search[name=key-words]").select2("data", []).html(options);
+                elm.html(org_html);
+            }else{
+                var error = '';
+                for(var i = 0; i < messages.length ; i++){
+                    error += messages[i] + '<br>';
+                }
+                if(error == '')
+                    error = 'error';
+                Alert.render(error, function(){
+                    elm.html(org_html);
+                    __w = true;
+                });
             }
-            elm.html(org_html);
         }
     });
 });
 
 $(document).on('click', '.save-add.key-words', function(e){
-    var elm = $(e.target);
+    var elm = $(e.target).closest('.save-add.key-words');
     var org_html = elm.html();
     elm.html(loader);
     var postData = $('#form_add_keyword').serializeArray();
@@ -107,6 +119,7 @@ $(document).on('click', '.save-add.key-words', function(e){
         success: function (response) {
             var status = response['status'];
             var value = response['value'];
+            var messages = response['messages'];
             if (status) {
                 $('#all_key_words').append(value['html']);
                 $('#add_keyword_div').slideUp();
@@ -120,6 +133,17 @@ $(document).on('click', '.save-add.key-words', function(e){
                 $(".select.refinement-news[name=key-words]").select2("data", []).html(options);
                 $(".select.pattern-search[name=key-words]").select2("data", []).html(options);
                 elm.html(org_html);
+            }else{
+                var error = '';
+                for(var i = 0; i < messages.length ; i++){
+                    error += messages[i] + '<br>';
+                }
+                if(error == '')
+                    error = 'error';
+                Alert.render(error, function(){
+                    elm.html(org_html);
+                    __w = true;
+                });
             }
         }
     });
