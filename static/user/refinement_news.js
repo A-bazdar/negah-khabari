@@ -50,6 +50,7 @@ function create_refinement_news(){
                     }
                     $('.filtration-news-pattern-search').html(html);
                     $('input.refinement-news.agency[type=checkbox]').lc_switch();
+                    $(".datePicker").persianDatepicker();
                 }
             }
         });

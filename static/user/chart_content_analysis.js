@@ -10,7 +10,7 @@
 
 
 $(document).on('click', '#show_chart_content_analysis_modal', function (e) {
-    $(".chart-content-date-picker").pDatepicker();
+    $(".chart-content-date-picker").persianDatepicker();
     var chart_content_analysis = $('#chart_content_analysis');
     chart_content_analysis.modal('toggle');
     var elm = $(e.target).closest('.chart-content-analysis');
