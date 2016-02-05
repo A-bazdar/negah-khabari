@@ -7,6 +7,12 @@ __author__ = 'Morteza'
 
 
 class SettingModel(BaseModel):
+    Fonts = ['Badr', 'Baran', 'Bardiya', 'Compset', 'Davat', 'Elham', 'Esfehan', 'Fantezy', 'Farnaz',
+                              'Ferdosi', 'Hamid', 'Helal', 'Homa', 'Jadid', 'Jalal', 'Koodak', 'Kourosh', 'Lotus',
+                              'Mahsa', 'Mehr', 'Mitra', 'Morvarid', 'Narm', 'Nasim', 'Nazanin', 'Roya', 'Setareh',
+                              'Shiraz', 'Sina', 'Tabassom', 'Tehran', 'Titr', 'Traffic', 'Vahid', 'Yagut', 'Yas',
+                              'Yekan', 'Zar', 'Ziba']
+
     def __init__(self, _id=None, font=None, size=None, general=None, keyword=None):
         BaseModel.__init__(self)
         self.key_font = "FONT"
