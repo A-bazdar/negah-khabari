@@ -1720,7 +1720,8 @@ i.close {
     width: 100px;
     height: 26px;
     font-family: Traffic;
-    font-size: 16px;
+    font-size: 18px;
+    line-height: 22px;
     text-align: center;
 }
 

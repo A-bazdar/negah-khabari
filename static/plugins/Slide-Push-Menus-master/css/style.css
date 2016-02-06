@@ -451,6 +451,9 @@ img {
  */
 .c-menu--slide-top,
 .c-menu--push-top {
+    height: 550px;
+    font-family: Tahoma;
+    font-size: 10px !important;
     top: 0;
     left: 0;
     -webkit-transform: translateY(-620px);
