@@ -247,7 +247,8 @@ h1, h2, h3, h4, h5, h6{
     top: 175% !important;
     background-color: #f6f7f8;
     text-align: right;
-    box-shadow: 0 0 3px #5666ff;
+    border: 1px solid #687ca8;
+    box-shadow: 0 0 3px #687ca8;
     padding: 10px 0 !important;
     border-radius: 0;
     min-width: 200px;
@@ -256,7 +257,7 @@ h1, h2, h3, h4, h5, h6{
 .custom_dropDown li a {
     font-family: Tahoma !important;
     font-size: 9pt !important;
-    padding: 3px 10px !important;
+    padding: 2px 10px !important;
 }
 
 .custom_dropDown.user_dropdown_menu {
@@ -480,38 +481,62 @@ a.R_butt_light_gray:hover{
 
 div#nav_search{position: relative}
 
+.select2-container.expert_search_field .select2-choice {
+    height: 22px !important;
+    border-radius: 3px !important;
+}
+
+.select2-container.expert_search_field .select2-choice .select2-chosen {
+    line-height: 19px !important;
+}
+
+.select2-container.expert_search_field .select2-choice .select2-arrow b {
+    background-position: -4px -7px !important;
+}
+
+.select2-container .select2-choice .select2-arrow b {
+    background-position: -4px -1px !important;
+}
+
 .sb_dropdown {
     position: absolute;
-    top: 35px;
+    top: 28px;
+    max-height: 450px;
     right: 0;
     left: 0;
     z-index: 10000;
-	border:1px solid #fff;
+	border: 1px solid #687ca8;
 	background: #f6f7f8;
-	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#fafafa));
-	background: -moz-linear-gradient(top, #f2f2f2, #fafafa);
-	font-size:14px;
-	font-family:"Mitra";
-	-moz-box-shadow:0 0 2px #aaa;
-	-webkit-box-shadow:0 0 2px #aaa;
-	box-shadow:0 0 2px #aaa;
-	outline:none;
-	padding:6px 5px 6px 20px;
-	text-shadow:1px 1px 1px #fff;
-	width:410px;
-	float:left;
-	margin:3px 0px;
-	list-style:none;
+	/*background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#fafafa));*/
+	/*background: -moz-linear-gradient(top, #f2f2f2, #fafafa);*/
+	font-size: 10px;
+	font-family: Tahoma;
+	-moz-box-shadow: 0 0 12px #687ca8;
+	-webkit-box-shadow: 0 0 12px #687ca8;
+	box-shadow: 0 0 12px #687ca8;
+	outline: none;
+	padding: 6px 5px 6px 20px;
+	text-shadow: 1px 1px 1px #fff;
+	width: 350px;
+	float: left;
+	margin: 3px 0px;
+	list-style: none;
 	/*width:360px;*/
 	/*padding:6px 5px;*/
     text-align: right;
 }
+
 .sb_dropdown i.fa-remove {
     position: absolute;
-    left: 10px;
+    opacity: 0.5;
+    left: 5px;
     top: 10px;
     cursor: pointer;
     z-index: 100;
+}
+
+.sb_dropdown i.fa-remove:hover {
+    opacity: 1;
 }
 
 .user_menu{
@@ -1373,11 +1398,10 @@ i.close {
     font-size: 14px;
     list-style: none;
     background-color: #f6f7f8;
-    border: 1px solid #cccccc;
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    border: 1px solid #687ca8;
     /*border-radius: 4px;*/
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 0 12px #687ca8;
     background-clip: padding-box;
     transition: all 0.5s ease 0s;
 }
@@ -1485,9 +1509,9 @@ i.close {
 }
 
 .my-dropdown li a {
-    color: #4d4d4d !important;
+    color: #000 !important;
     width: 100%;
-    padding: 3px;
+    padding: 2px;
     position: relative;
     display: block;
     font-family: Tahoma;
@@ -1496,8 +1520,19 @@ i.close {
 
 .my-dropdown li a:hover {
     background: #CCD1E4 !important;
-    color: #4d4d4d !important;
+    color: #000 !important;
     text-decoration: none;
+}
+
+.my-dropdown li a.not_highlight {
+    font-weight: bold;
+    font-size: 12px !important;
+}
+
+.my-dropdown li a.not_highlight:hover {
+    background: #F6F7F8 !important;
+    text-decoration: none;
+    cursor: auto !important;
 }
 
 .my-dropdown hr {
