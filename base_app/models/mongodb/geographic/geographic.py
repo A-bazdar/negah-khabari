@@ -74,6 +74,40 @@ class GeographicModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all_parent', data='collection > geographic')
             return self.result
 
+    def get_all_geographic_user(self, geographic):
+        try:
+            r = MongodbModel(collection='geographic', body={"_id": {"$in": geographic}, "parent": None}, sort="sort", ascending=1).get_all_sort()
+            if r:
+                l = [dict(
+                    id=i['_id'],
+                    name=i['name'],
+                    sort=i['sort'] if "sort" in i.keys() else 0,
+                    parent=i['parent']
+                ) for i in r]
+                self.result['value'] = l
+                self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
+            return self.result
+
+    def get_all_child_user(self, access):
+        try:
+            r = MongodbModel(collection='geographic', body={"parent": self.parent, "_id": {"$in": access}}).get_all()
+            if r:
+                l = [dict(
+                    id=i['_id'],
+                    name=i['name'],
+                    parent=i['parent'],
+                ) for i in r]
+                self.result['value'] = l
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all_parent', data='collection > subject')
+            return self.result
+
     def get_one(self):
         try:
             r = MongodbModel(collection='geographic', body={'_id': self.id}).get_one()
