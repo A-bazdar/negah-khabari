@@ -679,7 +679,8 @@ class NewsModel:
             if query_sort is not False:
                 body['filter']['and']['filters'] += [query_sort]
             body['filter']['and']['filters'] += query_access
-
+            print query_access
+            print body
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
