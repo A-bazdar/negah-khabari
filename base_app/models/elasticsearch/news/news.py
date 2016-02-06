@@ -682,13 +682,15 @@ class NewsModel:
             print query_access
             print body
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+
             try:
                 count_all = r['hits']['total']
             except:
                 count_all = 0
-
+            print count_all, '############'
             for b in r['hits']['hits']:
                 self.get_news_module_field(b['fields'], b['_id'])
+            print len(self.value)
             self.result['value'] = self.value, count_all
             self.result['status'] = True
             return self.result
