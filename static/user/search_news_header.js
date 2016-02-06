@@ -3,6 +3,22 @@
  */
 
 function create_expert_search(){
+    $('form#header_search_news .new_select').select2().removeClass('new_select');
+
+    $("form#header_search_news .new_select2_keywords").select2({
+        tags: []
+    }).removeClass('new_select2_keywords');
+
+    $("form#header_search_news .new_select_change[name=period]").select2({
+        placeholder: "انتخاب کنید"
+    }).on("change", function () {
+        if ($(this).select2("val") == 'period') {
+            $('.header-period-date').fadeIn();
+        } else {
+            $('.header-period-date').fadeOut();
+        }
+    }).removeClass('new_select_change');
+
     $('select.header-category.search-news').select2().on("change", function(){
         var options = "";
         $.ajax({
@@ -20,15 +36,5 @@ function create_expert_search(){
                 $(".select.search-news[name=header-agency]").select2("data", []).html(options);
             }
         });
-    });
-
-    $(".select[name=header-period]").select2({
-        placeholder: "انتخاب کنید"
-    }).on("change", function () {
-        if ($(this).select2("val") == 'period') {
-            $('.header-period-date').fadeIn();
-        } else {
-            $('.header-period-date').fadeOut();
-        }
     });
 }
