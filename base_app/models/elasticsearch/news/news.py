@@ -26,7 +26,7 @@ class NewsModel:
 
     def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
                  subject=None, body=None, date=None, content=None, full_current_user=None, images=None, video=None,
-                 sound=None, geographic=None, group=None, category=None, direction=None):
+                 sound=None, geographic=None, group=None, category=None, direction=None, permission=None):
         self.id = _id
         self.title = title
         self.agency = agency
@@ -45,6 +45,7 @@ class NewsModel:
         self.geographic = geographic
         self.group = group
         self.direction = direction
+        self.permission = permission
         self.full_current_user = full_current_user
         self.max_char_summary = SettingModel().get_max_char_summary()
         self.result = {'value': {}, 'status': False}
@@ -674,8 +675,10 @@ class NewsModel:
                 "sort": {"date": {"order": "desc"}}
             }
             query_sort = self.get_query_sort(_sort)
+            query_access = self.get_query_access()
             if query_sort is not False:
                 body['filter']['and']['filters'] += [query_sort]
+            body['filter']['and']['filters'] += query_access
 
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
@@ -1077,47 +1080,42 @@ class NewsModel:
             }
         return query_sort
 
-    def get_query_un_sort(self, _sort):
-        query_sort = False
-        if _sort == "date":
-            return False
-        elif _sort == 'unread':
-            query_sort = {
+    def get_query_access(self):
+        try:
+            access_agency = self.permission["access_sources"]["agency"]
+        except:
+            access_agency = []
+        try:
+            access_subject = self.permission["access_sources"]["subject"]
+        except:
+            access_subject = []
+        try:
+            access_geographic = self.permission["access_sources"]["geographic"]
+        except:
+            access_geographic = []
+        return [
+            {
                 "query": {
                     "terms": {
-                        "_id": self.full_current_user['read']
+                        "agency": map(str, access_agency)
+                    }
+                }
+            },
+            {
+                "query": {
+                    "terms": {
+                        "subject": map(str, access_subject)
+                    }
+                }
+            },
+            {
+                "query": {
+                    "terms": {
+                        "geographic": map(str, access_geographic)
                     }
                 }
             }
-        elif _sort == 'star':
-            query_sort = {
-                "not": {
-                    "filter": {
-                        "query": {
-                            "terms": {
-                                "_id": self.full_current_user['star']
-                            }
-                        }
-                    }
-                }
-            }
-        elif _sort == 'important':
-            important = self.full_current_user['important']
-            _news = []
-            for i in important:
-                _news.append(i['news'])
-            query_sort = {
-                "not": {
-                    "filter": {
-                        "query": {
-                            "terms": {
-                                "_id": _news
-                            }
-                        }
-                    }
-                }
-            }
-        return query_sort
+        ]
 
     @staticmethod
     def get_sub_grouping(__grouping, __grouping_type):
@@ -1209,6 +1207,8 @@ class NewsModel:
                 body['filter']['and']['filters'] += [query_sort]
             if query_grouping is not False:
                 body['filter']['and']['filters'] += query_grouping
+            query_access = self.get_query_access()
+            body['filter']['and']['filters'] += query_access
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
