@@ -29,7 +29,7 @@ function create_expert_search(){
             async: true,
             success: function (output3) {
                 if (output3 != '0' && output3['agency'].length > 0) {
-                    for (var i in output3['agency']) {
+                    for (var i = 0; i < output3['agency'].length; i++) {
                         options += "<option value='" + output3['agency'][i]['id'] + "'>" + output3['agency'][i]['text'] + "</option>";
                     }
                 }

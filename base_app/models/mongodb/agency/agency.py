@@ -200,6 +200,18 @@ class AgencyModel:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
             return self.result
 
+    def get_all_agency_user(self, agencies):
+        try:
+            r = MongodbModel(collection='agency', body={"_id": {"$in": agencies}}).get_all()
+            for i in r:
+                self.get_agency(i)
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
+            return self.result
+
     def get_all_links(self):
         try:
             r = MongodbModel(collection='agency', body={}).get_all()
@@ -225,9 +237,13 @@ class AgencyModel:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
             return self.result
 
-    def get_all_by_category(self):
+    def get_all_by_category(self, access=None):
         try:
-            r = MongodbModel(collection='agency', body={'category': self.category}).get_all()
+            if access is not None:
+                r = MongodbModel(collection='agency', body={'category': self.category, "_id": {"$in": access}}).get_all()
+            else:
+                r = MongodbModel(collection='agency', body={'category': self.category}).get_all()
+
             for i in r:
                 self.get_agency(i)
             self.result['value'] = self.value

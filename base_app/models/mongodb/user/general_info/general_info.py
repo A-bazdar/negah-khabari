@@ -1322,7 +1322,7 @@ class UserModel(BaseModel):
             return self.result
 
     @staticmethod
-    def get_agency_direction_show_source_user(full_current_user):
+    def get_agency_direction_show_source_user(full_current_user, agencies):
         def is_exist(_list=None, _key=None, _field='id'):
             for _i in range(len(_list)):
                 if _list[_i][_field] == _key:
@@ -1333,8 +1333,7 @@ class UserModel(BaseModel):
             from base_app.models.mongodb.agency.agency import AgencyModel
 
             r = []
-
-            agencies = AgencyModel().get_all()['value']
+            agencies = AgencyModel().get_all_agency_user(agencies)['value']
             agency_direction = full_current_user['agency_direction']
 
             for __ag in agencies:

@@ -12,6 +12,7 @@ from base_app.models.mongodb.agency.agency import AgencyModel
 import time
 from base_app.models.mongodb.base_model import MongodbModel
 from base_app.models.mongodb.content.content import ContentModel
+from base_app.models.mongodb.geographic.geographic import GeographicModel
 from base_app.models.mongodb.keyword.keyword import KeyWordModel
 from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
@@ -679,18 +680,13 @@ class NewsModel:
             if query_sort is not False:
                 body['filter']['and']['filters'] += [query_sort]
             body['filter']['and']['filters'] += query_access
-            print query_access
-            print body
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
-
             try:
                 count_all = r['hits']['total']
             except:
                 count_all = 0
-            print count_all, '############'
             for b in r['hits']['hits']:
                 self.get_news_module_field(b['fields'], b['_id'])
-            print len(self.value)
             self.result['value'] = self.value, count_all
             self.result['status'] = True
             return self.result
@@ -1083,49 +1079,62 @@ class NewsModel:
             }
         return query_sort
 
-    def get_query_access(self):
-        try:
-            access_agency = self.permission["access_sources"]["agency"]
-        except:
-            access_agency = []
-        try:
-            access_subject = self.permission["access_sources"]["subject"]
-        except:
-            access_subject = []
-        try:
-            access_geographic = self.permission["access_sources"]["geographic"]
-        except:
-            access_geographic = []
-        return [
-            {
+    def get_query_access(self, _agency, _type):
+        query_access = []
+        if not _agency:
+            try:
+                access_agency = self.permission["access_sources"]["agency"]
+            except:
+                access_agency = []
+            query_access.append({
                 "query": {
                     "terms": {
                         "agency": map(str, access_agency)
                     }
                 }
-            },
-            {
+            })
+        if _type != "subject":
+            try:
+                access_subject = self.permission["access_sources"]["subject"]
+            except:
+                access_subject = []
+            query_access.append({
                 "query": {
                     "terms": {
                         "subject": map(str, access_subject)
                     }
                 }
-            },
-            {
+            })
+        if _type != "geographic":
+            try:
+                access_geographic = self.permission["access_sources"]["geographic"]
+            except:
+                access_geographic = []
+            query_access.append({
                 "query": {
                     "terms": {
                         "geographic": map(str, access_geographic)
                     }
                 }
-            }
-        ]
+            })
+        return query_access
 
-    @staticmethod
-    def get_sub_grouping(__grouping, __grouping_type):
+    def get_sub_grouping(self, __grouping, __grouping_type):
         ls = __grouping
         if __grouping_type == 'subject':
+            try:
+                access = self.permission["access_sources"]["subject"]
+            except:
+                access = []
             for sub in __grouping:
-                ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child()['value']]
+                ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child_user(access)['value']]
+        if __grouping_type == 'geographic':
+            try:
+                access = self.permission["access_sources"]["geographic"]
+            except:
+                access = []
+            for sub in __grouping:
+                ls += [str(s['id']) for s in GeographicModel(parent=ObjectId(sub)).get_all_child_user(access)['value']]
         return ls
 
     def get_query_grouping(self, __grouping, __grouping_type):
@@ -1210,7 +1219,7 @@ class NewsModel:
                 body['filter']['and']['filters'] += [query_sort]
             if query_grouping is not False:
                 body['filter']['and']['filters'] += query_grouping
-            query_access = self.get_query_access()
+            query_access = self.get_query_access(len(_search['agency']), _type)
             body['filter']['and']['filters'] += query_access
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
