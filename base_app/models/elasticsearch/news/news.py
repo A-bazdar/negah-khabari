@@ -310,7 +310,13 @@ class NewsModel:
 
     def get_news_module(self, _source, _id):
         try:
-            agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
+            try:
+                agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
+                agency_name = agency["name"]
+                agency_color = agency["color"]
+            except:
+                agency_name = "ندارد"
+                agency_color = "#ffffff"
             try:
                 x = _source['date'].split('T')
                 _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
@@ -325,11 +331,11 @@ class NewsModel:
                 summary=self.summary_text(_source['summary']),
                 thumbnail=_source['thumbnail'],
                 _date=CustomDateTime().get_time_difference(_date),
-                agency_name=agency['name'],
+                agency_name=agency_name,
                 images=_source['images'] if 'images' in _source.keys() else [_source['thumbnail']],
                 video=_source['video'] if 'video' in _source.keys() else None,
                 sound=_source['sound'] if 'sound' in _source.keys() else None,
-                agency_color=agency['color'],
+                agency_color=agency_color,
                 download='',
                 options=dict(note=False, star=False, important=False, read=False),
             ))
@@ -676,7 +682,7 @@ class NewsModel:
                 "sort": {"date": {"order": "desc"}}
             }
             query_sort = self.get_query_sort(_sort)
-            query_access = self.get_query_access()
+            query_access = self.get_query_access(0, False, "index")
             if query_sort is not False:
                 body['filter']['and']['filters'] += [query_sort]
             body['filter']['and']['filters'] += query_access
@@ -1079,7 +1085,7 @@ class NewsModel:
             }
         return query_sort
 
-    def get_query_access(self, _agency, _type):
+    def get_query_access(self, _agency, _grouping, _type):
         query_access = []
         if not _agency:
             try:
@@ -1093,7 +1099,7 @@ class NewsModel:
                     }
                 }
             })
-        if _type != "subject":
+        if _type != "subject" or _grouping is False:
             try:
                 access_subject = self.permission["access_sources"]["subject"]
             except:
@@ -1105,7 +1111,7 @@ class NewsModel:
                     }
                 }
             })
-        if _type != "geographic":
+        if _type != "geographic" or _grouping is False:
             try:
                 access_geographic = self.permission["access_sources"]["geographic"]
             except:
@@ -1123,14 +1129,14 @@ class NewsModel:
         ls = __grouping
         if __grouping_type == 'subject':
             try:
-                access = self.permission["access_sources"]["subject"]
+                access = map(ObjectId, self.permission["access_sources"]["subject"])
             except:
                 access = []
             for sub in __grouping:
                 ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child_user(access)['value']]
         if __grouping_type == 'geographic':
             try:
-                access = self.permission["access_sources"]["geographic"]
+                access = map(ObjectId, self.permission["access_sources"]["geographic"])
             except:
                 access = []
             for sub in __grouping:
@@ -1219,7 +1225,7 @@ class NewsModel:
                 body['filter']['and']['filters'] += [query_sort]
             if query_grouping is not False:
                 body['filter']['and']['filters'] += query_grouping
-            query_access = self.get_query_access(len(_search['agency']), _type)
+            query_access = self.get_query_access(len(_search['agency']), query_grouping, _type)
             body['filter']['and']['filters'] += query_access
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:

@@ -259,7 +259,7 @@ class Extract:
             )
         )
 
-    def get_rss(self, doc, entry):
+    def get_rss(self, doc, summary):
         t_2 = Timer()
         ro_title = self.get_ro_title(doc)
         ro_title_time = t_2.end()
@@ -267,10 +267,6 @@ class Extract:
         title = self.title
         title_time = t_2.end()
         t_2 = Timer()
-        try:
-            summary = entry.description
-        except:
-            summary = None
         if summary is None or summary == '':
             summary = self.get_summary(doc)
         summary_time = t_2.end()

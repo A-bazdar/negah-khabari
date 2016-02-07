@@ -180,6 +180,19 @@ $(document).on('submit', '#edit_setting_user', function(e){
     }
 });
 
+$(document).on('keyup', '#change_password input[name=new_password]', function(e){
+    if($(this).val() != ""){
+        var __strength_password = strength_password($(this).val());
+        $('form#change_password .strength-password-status').html(__strength_password[1]);
+        $('form#change_password .strength-password-error').html(__strength_password[2]);
+        $('.progress-bar').attr('aria-valuenow', __strength_password[3]).css('width', __strength_password[3] + '%').css('background-color', __strength_password[0]).css('background-image', "linear-gradient(to bottom, " + __strength_password[0] + " 0%, " + __strength_password[0] + " 100%) !important").html(__strength_password[3] + '%');
+    }else{
+        $('.progress-bar').attr('aria-valuenow', 0).css('width', 0 + '%').html(0 + '%');
+        $('form#change_password .strength-password-status').html('گذرواژه را وارد کنید');
+        $('form#change_password .strength-password-error').html('حداقل طول گذرواژه باید بیشتر از 6 کاراکتر باشد');
+    }
+});
+
 var __e = true;
 $(document).on('submit', '#change_password', function(e){
     if(__e){
