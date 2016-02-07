@@ -39,5 +39,4 @@ $(document).on('click', function(e) {
         path = name + (path ? '>' + path : '');
         node = parent;
     }
-    alert(path);
 });
