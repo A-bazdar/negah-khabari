@@ -310,7 +310,13 @@ class NewsModel:
 
     def get_news_module(self, _source, _id):
         try:
-            agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
+            try:
+                agency = AgencyModel(_id=ObjectId(_source['agency'])).get_one()
+                agency_name = agency["name"]
+                agency_color = agency["color"]
+            except:
+                agency_name = "ندارد"
+                agency_color = "#ffffff"
             try:
                 x = _source['date'].split('T')
                 _date = datetime.datetime.strptime(x[0] + ' ' + x[1].split('.')[0], '%Y-%m-%d %H:%M:%S')
@@ -325,11 +331,11 @@ class NewsModel:
                 summary=self.summary_text(_source['summary']),
                 thumbnail=_source['thumbnail'],
                 _date=CustomDateTime().get_time_difference(_date),
-                agency_name=agency['name'],
+                agency_name=agency_name,
                 images=_source['images'] if 'images' in _source.keys() else [_source['thumbnail']],
                 video=_source['video'] if 'video' in _source.keys() else None,
                 sound=_source['sound'] if 'sound' in _source.keys() else None,
-                agency_color=agency['color'],
+                agency_color=agency_color,
                 download='',
                 options=dict(note=False, star=False, important=False, read=False),
             ))
