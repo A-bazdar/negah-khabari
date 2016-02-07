@@ -676,7 +676,7 @@ class NewsModel:
                 "sort": {"date": {"order": "desc"}}
             }
             query_sort = self.get_query_sort(_sort)
-            query_access = self.get_query_access()
+            query_access = self.get_query_access(0, False, "index")
             if query_sort is not False:
                 body['filter']['and']['filters'] += [query_sort]
             body['filter']['and']['filters'] += query_access
@@ -1079,7 +1079,7 @@ class NewsModel:
             }
         return query_sort
 
-    def get_query_access(self, _agency, _type):
+    def get_query_access(self, _agency, _grouping, _type):
         query_access = []
         if not _agency:
             try:
@@ -1093,7 +1093,7 @@ class NewsModel:
                     }
                 }
             })
-        if _type != "subject":
+        if _type != "subject" or _grouping is False:
             try:
                 access_subject = self.permission["access_sources"]["subject"]
             except:
@@ -1105,7 +1105,7 @@ class NewsModel:
                     }
                 }
             })
-        if _type != "geographic":
+        if _type != "geographic" or _grouping is False:
             try:
                 access_geographic = self.permission["access_sources"]["geographic"]
             except:
@@ -1123,14 +1123,14 @@ class NewsModel:
         ls = __grouping
         if __grouping_type == 'subject':
             try:
-                access = self.permission["access_sources"]["subject"]
+                access = map(ObjectId, self.permission["access_sources"]["subject"])
             except:
                 access = []
             for sub in __grouping:
                 ls += [str(s['id']) for s in SubjectModel(parent=ObjectId(sub)).get_all_child_user(access)['value']]
         if __grouping_type == 'geographic':
             try:
-                access = self.permission["access_sources"]["geographic"]
+                access = map(ObjectId, self.permission["access_sources"]["geographic"])
             except:
                 access = []
             for sub in __grouping:
@@ -1219,7 +1219,7 @@ class NewsModel:
                 body['filter']['and']['filters'] += [query_sort]
             if query_grouping is not False:
                 body['filter']['and']['filters'] += query_grouping
-            query_access = self.get_query_access(len(_search['agency']), _type)
+            query_access = self.get_query_access(len(_search['agency']), query_grouping, _type)
             body['filter']['and']['filters'] += query_access
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:

@@ -74,6 +74,32 @@ class GeographicModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all_parent', data='collection > geographic')
             return self.result
 
+    def get_all_two_level(self, access):
+        try:
+            r = MongodbModel(collection='geographic', body={"parent": None, "_id": {"$in": access}}).get_all()
+            if r:
+                l = []
+                for i in r:
+                    s_r = MongodbModel(collection='geographic', body={"parent": i['_id'], "_id": {"$in": access}}).get_all()
+                    s_l = []
+                    for j in s_r:
+                        s_l.append(dict(
+                            id=j['_id'],
+                            name=j['name'],
+                        ))
+                    l.append(dict(
+                        id=i['_id'],
+                        name=i['name'],
+                        child=s_l
+                    ))
+                self.result['value'] = l
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > subject')
+            return self.result
+
     def get_all_geographic_user(self, geographic):
         try:
             r = MongodbModel(collection='geographic', body={"_id": {"$in": geographic}, "parent": None}, sort="sort", ascending=1).get_all_sort()
