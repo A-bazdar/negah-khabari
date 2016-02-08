@@ -613,12 +613,18 @@ class UserModel(BaseModel):
                                 data='collection > user')
             return self.result
 
-    def set_last_login(self):
+    def set_last_login(self, user_login, login):
         try:
             condition = {'_id': self.id}
-            body = {'$set': {
-                'last_login': datetime.datetime.now()
-            }}
+            if login:
+                body = {'$set': {
+                    'last_login': datetime.datetime.now(),
+                    'user_login': user_login
+                }}
+            else:
+                body = {'$set': {
+                    'user_login': user_login
+                }}
             self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
             self.result['status'] = True
 
@@ -1338,8 +1344,9 @@ class UserModel(BaseModel):
 
             for __ag in agencies:
                 a_index = is_exist(_list=agency_direction, _key=__ag['id'], _field='agency')
+                print a_index, "###########"
                 if a_index is False:
-                    try:
+                    # try:
                         d_index = is_exist(_list=r, _key=__ag['direction']['id'])
                         if d_index is not False:
                             c_index = is_exist(_list=r[d_index]['categories'], _key=__ag['category']['id'])
@@ -1349,8 +1356,8 @@ class UserModel(BaseModel):
                                 r[d_index]['categories'].append(dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=False)]))
                         else:
                             r.append(dict(id=__ag['direction']['id'], name=__ag['direction']['name'], categories=[dict(id=__ag['category']['id'], name=__ag['category']['name'], agencies=[dict(id=__ag['id'], name=__ag['name'], selected=False)])]))
-                    except:
-                        pass
+                    # except:
+                    #     pass
                 else:
                     try:
                         direction = DirectionModel(_id=agency_direction[a_index]['direction']).get_one()['value']
