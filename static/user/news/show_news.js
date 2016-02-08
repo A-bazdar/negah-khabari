@@ -22,8 +22,10 @@ function make_show_news(news, body_news_font, news_content) {
     }
     if (news['options']['star']) {
         _make.find('i#star_icon').addClass('colorOrange fa-star').attr('data-news', news['id']);
+        _make.find('div#sm_star_icon').removeClass('sm-star-icon').addClass('sm-yellow-star-icon').attr('data-news', news['id']);
     } else {
         _make.find('i#star_icon').addClass('fa-star-o').attr('data-news', news['id']);
+        _make.find('div#sm_star_icon').removeClass('sm-yellow-star-icon').addClass('sm-star-icon').attr('data-news', news['id']);
     }
     var important = news['options']['important'];
     if (important == "Important1" || important == "Important2" || important == "Important3") {

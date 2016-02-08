@@ -323,7 +323,7 @@ class UserModel(BaseModel):
                     name=r['name'],
                     family=r['family'],
                     parent=r['parent'],
-                    collection=r['collection'],
+                    collection=r['collection'] if 'collection' in r.keys() else None,
                     username=r['username'],
                     full_name=u'{} {}'.format(r['name'], r['family']),
                     organization=r['organization'],
