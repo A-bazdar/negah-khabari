@@ -96,11 +96,12 @@ $(document).on('change', 'select.change-date-format', function(){
     $('span.date-format[data-comparative=' + comparative + '][data-type=' + type + ']').fadeIn()
 });
 
-$(document).on('click', '.add-exclude', function(e){
-    var elm = $(e.target).closest('.add-exclude');
+$(document).on('click', '.add-exclude-comparative', function(e){
+    var elm = $(e.target).closest('.add-exclude-comparative');
     var data_comparative = elm.attr('data-comparative');
-    $('.excludes[data-comparative=' + data_comparative + ']').append(html_exclude.replace(/__value__/g, ""));
+    $('.excludes-comparative[data-comparative=' + data_comparative + ']').append(html_exclude.replace(/__value__/g, ""));
 });
+
 $(document).on('click', '.delete-exclude', function(e){
     $(e.target).closest('.row-exclude').remove();
 });

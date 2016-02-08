@@ -97,11 +97,12 @@ $(document).on('change', 'select.change-date-format', function(){
     $('span.date-format[data-link=' + link + '][data-type=' + type + ']').fadeIn()
 });
 
-$(document).on('click', '.add-exclude', function(e){
-    var elm = $(e.target).closest('.add-exclude');
+$(document).on('click', '.add-exclude-link', function(e){
+    var elm = $(e.target).closest('.add-exclude-link');
     var data_link = elm.attr('data-link');
-    $('.excludes[data-link=' + data_link + ']').append(html_exclude.replace(/__value__/g, ""));
+    $('.excludes-link[data-link=' + data_link + ']').append(html_exclude.replace(/__value__/g, ""));
 });
+
 $(document).on('click', '.delete-exclude', function(e){
     $(e.target).closest('.row-exclude').remove();
 });
