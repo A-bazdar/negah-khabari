@@ -105,7 +105,6 @@ class FeedStatisticModel(BaseModel):
             end_time = khayyam.JalaliDatetime(q['end_time']).strftime('%Y/%m/%d %H:%M:%S')
         except:
             end_time = None
-        print q['count_last_read_news']
         self.value.append(
             dict(
                 id=q['_id'],
