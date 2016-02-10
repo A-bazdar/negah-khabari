@@ -3,7 +3,7 @@
  */
 
 var __test_html = '<div class="col-md-12 padding-10">\
-                <div class="row"><div class="col-md-10"><a href="__link__">__link__</a></div><div class="col-md-2"></div>\
+                <div class="row"><div class="col-md-2"><img src="__thumbnail__" height="50" width="50"></div><div class="col-md-8"><a href="__link__">__link__</a></div><div class="col-md-2"></div>\
                 <span data-links="__links__" data-title="__title__" data-summary="__summary__" data-date="__date__" data-base="__base_link__" data-link="__link__" class="refinement-news cursor-pointer">پالایش</span>\
                 </div></div>';
 
@@ -11,19 +11,19 @@ $(document).on('click', '.test-address-agency', function(e){
     var elm = $(e.target).closest('.test-address-agency');
     elm.html(loader);
     elm = elm.closest('.tab-content-row');
+    var address = elm.find('input[name=address]').val();
+    var thumbnail = elm.find('input[name=thumbnail]').val();
     var link = elm.find('input[name=link]').val();
-    if(link == undefined)
-        link = elm.find('input[name=comparative]').val();
-    var address = elm.find('input[name=links]').val();
-    if(address == undefined)
-        address = elm.find('input[name=comparatives]').val();
+    var base = elm.find('input[name=base]').val();
     var data_link = elm.attr('data-link');
     if(data_link == undefined)
         data_link = elm.attr('data-comparative');
     var base_link = elm.closest('form').find('input[name=base_link]').val();
     var postData = [
-        {name: 'link', value: link},
         {name: 'address', value: address},
+        {name: 'thumbnail', value: thumbnail},
+        {name: 'link', value: link},
+        {name: 'base', value: base},
         {name: 'base_link', value: base_link},
         {name: '_xsrf', value: xsrf_token},
         {name: 'action', value: 'test_address'}
@@ -41,7 +41,9 @@ $(document).on('click', '.test-address-agency', function(e){
                     var html = '';
                     if(value.length > 0){
                         for(var i = 0; i < value.length ; i++){
-                            html += __test_html.replace(/__link__/g, value[i]).replace(/__base_link__/g, base_link).replace(/__links__/g, data_link);
+                            html += __test_html.replace(/__link__/g, value[i]['link'])
+                                .replace(/__base_link__/g, base_link).replace(/__thumbnail__/g, value[i]['thumbnail'])
+                                .replace(/__links__/g, data_link);
                         }
                         $('#result_test_address_div').html(html).show();
                         $('#result_test_news_link_div').hide();
@@ -69,7 +71,7 @@ $(document).on('click', '.test-address-agency-rss', function(e){
     var elm = $(e.target).closest('.test-address-agency-rss');
     elm.html(loader);
     elm = elm.closest('.tab-content-row');
-    var link = elm.find('input[name=rss]').val();
+    var link = elm.find('input[name=address]').val();
     var data_link = elm.attr('data-rss');
     var base_link = elm.closest('form').find('input[name=base_link]').val();
     var postData = [
@@ -94,7 +96,7 @@ $(document).on('click', '.test-address-agency-rss', function(e){
                             html += __test_html.replace(/__link__/g, value[i]['link']).replace(/__base_link__/g, base_link)
                                 .replace(/__links__/g, data_link).replace(/__title__/g, value[i]['title'])
                                 .replace(/__summary__/g, value[i]['summary']).replace(/__date__/g, value[i]['date'])
-                                .replace(/refinement-news/g, 'refinement-news-rss');
+                                .replace(/refinement-news/g, 'refinement-news-rss').replace('<div class="col-md-2"><img src="__thumbnail__" height="50" width="50"></div>', '');
                         }
                         $('#result_test_address_div').html(html).show();
                         $('#result_test_news_link_div').hide();
@@ -128,7 +130,7 @@ $(document).on('click', '.refinement-news', function(e){
     var ro_title = $('input[name=ro_title][data-link=' + data_links + ']').val();
     var title = $('input[name=title][data-link=' + data_links + ']').val();
     var date = $('input[name=date][data-link=' + data_links + ']').val();
-    var thumbnail = $('input[name=thumbnail][data-link=' + data_links + ']').val();
+    var image = $('input[name=image][data-link=' + data_links + ']').val();
     var summary = $('input[name=summary][data-link=' + data_links + ']').val();
     var body = $('input[name=body][data-link=' + data_links + ']').val();
     var excludes = [];
@@ -137,7 +139,7 @@ $(document).on('click', '.refinement-news', function(e){
             excludes.push($(this).val());
         }
     });
-    if(title == "" || date == "" || thumbnail  == "" || summary == "" || body == ""){
+    if(title == "" || date == "" || body == ""){
         Alert.render('همه آدرس ها را وارد کنید.', function(){
             elm.html('پالایش');
         });
@@ -149,7 +151,7 @@ $(document).on('click', '.refinement-news', function(e){
         {name: 'title', value: title},
         {name: 'date', value: date},
         {name: 'format_date', value: format_date},
-        {name: 'thumbnail', value: thumbnail},
+        {name: 'image', value: image},
         {name: 'summary', value: summary},
         {name: 'body', value: body},
         {name: 'excludes', value: JSON.stringify(excludes)},
@@ -241,7 +243,7 @@ $(document).on('click', '.refinement-news-rss', function(e){
     var data_date = elm.attr('data-date');
     var data_summary = elm.attr('data-summary');
     var ro_title = $('input[name=ro_title][data-rss=' + data_links + ']').val();
-    var thumbnail = $('input[name=thumbnail][data-rss=' + data_links + ']').val();
+    var image = $('input[name=image][data-rss=' + data_links + ']').val();
     var summary = $('input[name=summary][data-rss=' + data_links + ']').val();
     var body = $('input[name=body][data-rss=' + data_links + ']').val();
     var excludes = [];
@@ -262,7 +264,7 @@ $(document).on('click', '.refinement-news-rss', function(e){
         {name: 'title', value: data_title},
         {name: 'date', value: data_date},
         {name: 'summary', value: data_summary},
-        {name: 'thumbnail', value: thumbnail},
+        {name: 'image', value: image},
         {name: 'address_summary', value: summary},
         {name: 'body', value: body},
         {name: 'excludes', value: JSON.stringify(excludes)},

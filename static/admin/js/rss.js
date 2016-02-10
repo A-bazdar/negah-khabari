@@ -114,11 +114,13 @@ var html_exclude = '<div class="col-md-12 row-exclude">\
         </div>\
     </div>\
 </div>';
-$(document).on('click', '.add-exclude', function(e){
-    var elm = $(e.target).closest('.add-exclude');
+
+$(document).on('click', '.add-exclude-rss', function(e){
+    var elm = $(e.target).closest('.add-exclude-rss');
     var data_rss = elm.attr('data-rss');
-    $('.excludes[data-rss=' + data_rss + ']').append(html_exclude);
+    $('.excludes-rss[data-rss=' + data_rss + ']').append(html_exclude.replace(/__value__/g, ""));
 });
+
 $(document).on('click', '.delete-exclude', function(e){
     $(e.target).closest('.row-exclude').remove();
 });

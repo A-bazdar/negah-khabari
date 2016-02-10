@@ -276,6 +276,7 @@ class NewsModel:
                 id=str(_id),
                 link=_source['link'],
                 title=_source['title'],
+                image=_source['image'] if 'image' in _source.keys() else None,
                 ro_title=_source['ro_title'],
                 body=self.get_body(_source['body']),
                 summary=_source['summary'],
@@ -367,6 +368,11 @@ class NewsModel:
                 video = None
 
             try:
+                image = _fields['image'][0]
+            except:
+                image = None
+
+            try:
                 sound = _fields['sound'][0]
             except:
                 sound = None
@@ -381,6 +387,7 @@ class NewsModel:
                 link=_fields['link'][0],
                 title=_fields['title'][0],
                 ro_title=ro_title,
+                image=image,
                 summary=self.summary_text(summary),
                 thumbnail=thumbnail,
                 read_date=_fields['read_date'][0],
@@ -641,7 +648,7 @@ class NewsModel:
             body = {
                 "from": _page * _size, "size": _size,
                 "fields": ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
-                           "agency", "images", "video", "sound"],
+                           "agency", "images", "image", "video", "sound"],
                 "query": {
                     "match_all": {}
                 },
