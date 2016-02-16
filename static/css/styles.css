@@ -118,21 +118,44 @@ h1, h2, h3, h4, h5, h6{
 
 .right_tabs{
     display: block;
+    position: relative;
     border-bottom: 1px solid #BCBDC1;
     padding: 5px;
     cursor: pointer;
-    font-size: 11pt;
+    font-size: 15px;
+}
+.right_tabs_active_icon{
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 32px;
+    width: 7px;
+    background: url("/static/images/Icons.png") no-repeat;
+    background-position: -295px -127px;
+}
+
+.right_tabs span{
+    margin-right: 10px;
 }
 
 .right_tabs.active{
-    background: #d3d4d8;
-    color: #ffffff;
+    background: #ffffff;
+    color: #000;
+}
+
+.right_tabs.active .right_tabs_active_icon{
+    display: block;
 }
 
 .right_tabs:hover{
     transition: all 0.5s;
-    background: #d3d4d8;
-    color: #ffffff;
+    background: #ffffff;
+    color: #000;
+}
+
+.right_tabs:hover .right_tabs_active_icon{
+    display: block;
 }
 
 .content_title{
@@ -498,9 +521,9 @@ div#nav_search{position: relative}
     background-position: -4px -7px !important;
 }
 
-.select2-container .select2-choice .select2-arrow b {
-    background-position: -4px -1px !important;
-}
+/*.select2-container .select2-choice .select2-arrow b {*/
+    /*background-position: -4px -1px !important;*/
+/*}*/
 
 .sb_dropdown {
     position: absolute;

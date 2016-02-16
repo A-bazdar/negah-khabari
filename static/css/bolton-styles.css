@@ -1,0 +1,115 @@
+.bolton_list_items {
+    padding: 10px;
+    border-radius: 4px;
+    font-family: Tahoma, serif;
+    font-size: 12px;
+}
+.bolton_list_items.r1 {
+    background: #dfe7f1;
+}
+.bolton_list_items.r2 {
+    background: #ffffff;
+}
+
+.icon-news.eye-icon {
+    background-position: -171px -154px;
+    height: 20px;
+    width: 20px;
+    margin-right: -5px;
+}
+
+.icon-news.pencil-icon {
+    background-position: -137px -154px;
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+}
+
+.icon-news.bolton-icon {
+    background-position: -105px -154px;
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+}
+
+.icon-news.trash-icon {
+    background-position: -73px -154px;
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+}
+
+.icon-news.green-turn-off-icon {
+    background-position: -47px -153px;
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+}
+
+.icon-news.red-turn-off-icon {
+    background-position: -25px -153px;
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+}
+
+.right-menu-bolton {
+    position: fixed;
+    top: 80px;
+    width: 240px;
+    display: inline-block;
+    background: #e9eaed;
+    padding: 5px 10px 0 0;
+}
+
+.bolton-selects.select2-dropdown-open .select2-choice .select2-arrow b {
+    background-position: -168px -125px;
+}
+
+.bolton-selects.select2-container .select2-choice .select2-arrow b {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: url('/static/images/Icons.png') no-repeat -168px -125px;
+}
+
+.bolton-selects.select2-container .select2-choice .select2-arrow {
+    border-right: none !important;
+}
+
+.add-bolton-btn {
+    background: #f6f7f8;
+    padding: 3px 10px;
+    width: 11%;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    font-family: Traffic,serif;
+    font-size: 16px;
+    border: 1px solid #afb7c7;
+    border-radius: 0 0 4px 4px;
+}
+
+.add-bolton-btn i {
+    margin-right: 6px;
+    vertical-align: -3px;
+}
+
+.add_bolton_form {
+    box-shadow: 0 0 10px #aaa;
+    padding: 10px 0;
+    font-size: 17px;
+}
+
+.bolton-form-btn {
+    background: -webkit-linear-gradient(#bfcce6, #5f75ad);
+    background: -o-linear-gradient(#bfcce6, #5f75ad);
+    background: -moz-linear-gradient(#bfcce6, #5f75ad);
+    background: linear-gradient(#bfcce6, #5f75ad);
+    padding: 3px 30px;
+    font-family: Traffic, serif;
+    font-size: 16px;
+    color: #000000;
+    border: 1px solid #afb7c7;
+    border-radius: 4px;
+}

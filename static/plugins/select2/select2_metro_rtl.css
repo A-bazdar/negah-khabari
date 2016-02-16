@@ -36,7 +36,7 @@ Modifed by keenthemes for Metronic theme integration.
 .select2-container .select2-choice {
     display: block;
     height: 34px;
-    padding: 2px 8px 0 0;
+    padding: 2px 3px 0 3px;
     overflow: hidden;
     position: relative;
 
