@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import datetime
 from bson import ObjectId
 import khayyam
-from base_app.classes.date import CustomDateTime
 from base_app.classes.debug import Debug
 from base_app.models.elasticsearch.base_model import ElasticSearchModel
 from base_app.models.mongodb.agency.agency import AgencyModel
@@ -12,13 +10,11 @@ from base_app.models.mongodb.content.content import ContentModel
 from base_app.models.mongodb.direction.direction import DirectionModel
 from user_app.classes.keyword import KeyWordClass
 
-from base_config import Config
 
 __author__ = 'Morteza'
 
 
 class NewsChartContentAnalysisModel:
-    index = Config().elasticsearch['index']
     doc_type = 'news'
 
     def __init__(self, user_keyword=None, start=None, end=None):
@@ -54,7 +50,7 @@ class NewsChartContentAnalysisModel:
                     }
                 }
             }
-            r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=self.doc_type, body=body).search()
             result = []
             for b in r['aggregations']['group_by']['buckets']:
                 result.append(dict(key=b['key'], doc_count=b['doc_count']))
@@ -91,7 +87,7 @@ class NewsChartContentAnalysisModel:
                     }
                 }
             }
-            r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=self.doc_type, body=body).search()
             result = []
             for b in r['aggregations']['date']['buckets']:
                 date = khayyam.JalaliDatetime().fromtimestamp(b['key'] / 1e3).date()
@@ -135,7 +131,7 @@ class NewsChartContentAnalysisModel:
 
             }
 
-            r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=self.doc_type, body=body).search()
             result = []
             for b in r['aggregations']['category']['buckets']:
                 contents = []
@@ -180,7 +176,7 @@ class NewsChartContentAnalysisModel:
 
             }
 
-            r = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=self.doc_type, body=body).search()
             result = []
             for b in r['aggregations']['direction']['buckets']:
                 agencies = []
@@ -352,7 +348,7 @@ class NewsChartContentAnalysisModel:
                         }
                     }
                 }
-                news = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
+                news = ElasticSearchModel(doc_type=self.doc_type, body=body).search()
                 try:
                     count_all = news['hits']['total']
                 except:
@@ -422,7 +418,7 @@ class NewsChartContentAnalysisModel:
                         }
                     }
                 }
-                news = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
+                news = ElasticSearchModel(doc_type=self.doc_type, body=body).search()
                 try:
                     count_all = news['hits']['total']
                 except:
@@ -496,7 +492,7 @@ class NewsChartContentAnalysisModel:
                     }
                 }
             }
-            news = ElasticSearchModel(index=self.index, doc_type=self.doc_type, body=body).search()
+            news = ElasticSearchModel(doc_type=self.doc_type, body=body).search()
 
             try:
                 count_all = news['hits']['total']

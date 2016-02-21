@@ -7,16 +7,18 @@ __author__ = 'Morteza'
 c = Config()
 
 
-class ElasticSearchBaseModel():
+class ElasticSearchBaseModel:
     def __init__(self):
         self.db = Elasticsearch(host=c.elasticsearch['host'], port=c.elasticsearch['port'])
+        self.index = Config().elasticsearch['index']
 
 
 class ElasticSearchModel(ElasticSearchBaseModel):
     def __init__(self, _id=None, body=None, index=None, doc_type=None):
         ElasticSearchBaseModel.__init__(self)
         self.body = body
-        self.index = index
+        if index is not None:
+            self.index = index
         self.doc_type = doc_type
         self.id = _id
 

@@ -163,7 +163,6 @@ class Extract:
                     video = self.base_link.encode('utf-8') + video
                 video = video if not any(substring in video.lower() for substring in ["mp3", "wav", "wma", "ogg"]) else None
         except:
-            # Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=self.error_link)
             video = None
         return video
 
@@ -176,7 +175,6 @@ class Extract:
                     sound = self.base_link.encode('utf-8') + sound
                 sound = sound if any(substring in sound.lower() for substring in ["mp3", "wav", "wma", "ogg"]) else None
         except:
-            # Debug.get_exception(sub_system='engine_feed', severity='error', tags='get_body_news', data=self.error_link)
             sound = None
         return sound
 
