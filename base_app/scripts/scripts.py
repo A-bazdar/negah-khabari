@@ -8,59 +8,59 @@ from base_app.models.mongodb.base_model import MongodbModel
 import dateutil.parser as d_parser
 
 
-a = open("base_app/scripts/content.json", "r")
-x = json.loads(a.read())
-for i in x:
-    i['_id'] = ObjectId(i['_id'])
-    MongodbModel(collection="content", body=i).insert()
-a.close()
-
-a = open("base_app/scripts/subject.json", "r")
-x = json.loads(a.read())
-for i in x:
-    i['_id'] = ObjectId(i['_id'])
-    try:
-        i['parent'] = ObjectId(i['parent'])
-    except:
-        i['parent'] = None
-    MongodbModel(collection="subject", body=i).insert()
-a.close()
-
-a = open("base_app/scripts/category.json", "r")
-x = json.loads(a.read())
-for i in x:
-    i['_id'] = ObjectId(i['_id'])
-    MongodbModel(collection="category", body=i).insert()
-a.close()
-
-a = open("base_app/scripts/group.json", "r")
-x = json.loads(a.read())
-for i in x:
-    i['_id'] = ObjectId(i['_id'])
-    try:
-        i['parent'] = ObjectId(i['parent'])
-    except:
-        i['parent'] = None
-    MongodbModel(collection="group", body=i).insert()
-a.close()
-
-a = open("base_app/scripts/direction.json", "r")
-x = json.loads(a.read())
-for i in x:
-    i['_id'] = ObjectId(i['_id'])
-    MongodbModel(collection="direction", body=i).insert()
-a.close()
-
-a = open("base_app/scripts/geographic.json", "r")
-x = json.loads(a.read())
-for i in x:
-    i['_id'] = ObjectId(i['_id'])
-    try:
-        i['parent'] = ObjectId(i['parent'])
-    except:
-        i['parent'] = None
-    MongodbModel(collection="geographic", body=i).insert()
-a.close()
+# a = open("base_app/scripts/content.json", "r")
+# x = json.loads(a.read())
+# for i in x:
+#     i['_id'] = ObjectId(i['_id'])
+#     MongodbModel(collection="content", body=i).insert()
+# a.close()
+#
+# a = open("base_app/scripts/subject.json", "r")
+# x = json.loads(a.read())
+# for i in x:
+#     i['_id'] = ObjectId(i['_id'])
+#     try:
+#         i['parent'] = ObjectId(i['parent'])
+#     except:
+#         i['parent'] = None
+#     MongodbModel(collection="subject", body=i).insert()
+# a.close()
+#
+# a = open("base_app/scripts/category.json", "r")
+# x = json.loads(a.read())
+# for i in x:
+#     i['_id'] = ObjectId(i['_id'])
+#     MongodbModel(collection="category", body=i).insert()
+# a.close()
+#
+# a = open("base_app/scripts/group.json", "r")
+# x = json.loads(a.read())
+# for i in x:
+#     i['_id'] = ObjectId(i['_id'])
+#     try:
+#         i['parent'] = ObjectId(i['parent'])
+#     except:
+#         i['parent'] = None
+#     MongodbModel(collection="group", body=i).insert()
+# a.close()
+#
+# a = open("base_app/scripts/direction.json", "r")
+# x = json.loads(a.read())
+# for i in x:
+#     i['_id'] = ObjectId(i['_id'])
+#     MongodbModel(collection="direction", body=i).insert()
+# a.close()
+#
+# a = open("base_app/scripts/geographic.json", "r")
+# x = json.loads(a.read())
+# for i in x:
+#     i['_id'] = ObjectId(i['_id'])
+#     try:
+#         i['parent'] = ObjectId(i['parent'])
+#     except:
+#         i['parent'] = None
+#     MongodbModel(collection="geographic", body=i).insert()
+# a.close()
 
 a = open("base_app/scripts/agency.json", "r")
 x = json.loads(a.read())
@@ -70,6 +70,7 @@ for i in x:
     i['category'] = ObjectId(i['category'])
     try:
         for l in i['links']:
+            print l['address']
             l['subject'] = ObjectId(l['subject'])
             l['group'] = ObjectId(l['group'])
             l['content'] = ObjectId(l['content'])
