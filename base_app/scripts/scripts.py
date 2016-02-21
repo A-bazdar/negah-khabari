@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
-sys.path.append("/root/projects/negah-khabari")
+sys.path.append("/root/ehsan/negah-khabari")
 import json
 from bson import ObjectId
 from base_app.models.mongodb.base_model import MongodbModel
