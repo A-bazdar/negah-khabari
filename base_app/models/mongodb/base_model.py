@@ -1,14 +1,15 @@
 import pymongo
 from base_app.classes.debug import Debug
 from base_config import Config
+
 __author__ = 'Morteza'
-c = Config()
 
 
-class MongodbBaseModel():
+class MongodbBaseModel:
     def __init__(self):
-        connection = pymongo.MongoClient(host='127.0.0.1', port=27017)
-        self.db = connection['NegahKhabari']
+        mongodb_config = Config().mongodb
+        connection = pymongo.MongoClient(host=mongodb_config['host'], port=mongodb_config['port'])
+        self.db = connection[mongodb_config['db']]
 
 
 class MongodbModel(MongodbBaseModel):
