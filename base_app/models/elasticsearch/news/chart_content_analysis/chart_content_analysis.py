@@ -12,11 +12,13 @@ from base_app.models.mongodb.content.content import ContentModel
 from base_app.models.mongodb.direction.direction import DirectionModel
 from user_app.classes.keyword import KeyWordClass
 
+from base_config import Config
+
 __author__ = 'Morteza'
 
 
 class NewsChartContentAnalysisModel:
-    index = 'negah_khabari'
+    index = Config().elasticsearch['index']
     doc_type = 'news'
 
     def __init__(self, user_keyword=None, start=None, end=None):

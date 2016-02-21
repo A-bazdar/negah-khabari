@@ -4,7 +4,7 @@ import datetime
 from bson import ObjectId
 import khayyam
 from base_app.classes.debug import Debug
-from base_app.classes.public import CreateHash
+from base_app.classes.public import Hash
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
 from base_app.models.mongodb.keyword.keyword import KeyWordModel
 from base_app.models.mongodb.user.collection.collection import UserCollectionModel

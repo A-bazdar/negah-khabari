@@ -31,7 +31,7 @@ class CreateId:
         return str(ObjectId())
 
 
-class CreateHash:
+class Hash:
     def __init__(self):
         pass
 
@@ -47,6 +47,13 @@ class CreateHash:
         ps = hashlib.new('ripemd160')
         ps.update(_hash)
         return ps.hexdigest()[3:40]
+
+    @staticmethod
+    def hash(__key):
+        try:
+            return hashlib.md5(__key.encode('utf-8')).hexdigest()
+        except:
+            return hashlib.md5(__key).hexdigest()
 
 
 class CheckStrengthPassword:
@@ -84,7 +91,7 @@ class CheckStrengthPassword:
         if self.new != self.repeat:
             self.result['message'] = self.errors[3]
             return self.result
-        if self.current != CreateHash().create(self.old):
+        if self.current != Hash.create(self.old):
             self.result['message'] = self.errors[4]
             return self.result
         password_strength = dict.fromkeys(['has_upper', 'has_lower', 'has_num'], False)

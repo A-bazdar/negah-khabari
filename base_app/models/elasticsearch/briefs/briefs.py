@@ -9,12 +9,13 @@ from base_app.models.mongodb.agency.agency import AgencyModel
 from base_app.models.mongodb.content.content import ContentModel
 from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
+from base_config import Config
 
 __author__ = 'Morteza'
 
 
 class BriefsModel:
-    index = 'negah_khabari'
+    index = Config().elasticsearch['index']
     doc_type = 'briefs'
 
     def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,

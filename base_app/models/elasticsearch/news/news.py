@@ -18,11 +18,14 @@ from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
 import re
 import dateutil.parser as d_parser
+
+from base_config import Config
+
 __author__ = 'Morteza'
 
 
 class NewsModel:
-    index = 'negah_khabari'
+    index = Config().elasticsearch['index']
     doc_type = 'news'
 
     def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
@@ -109,7 +112,7 @@ class NewsModel:
                         }
                     }
                 }
-            x = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count()
+            x = ElasticSearchModel(index="negah_khabari", doc_type="news", body=body).count()
             if x:
                 return True
             return False
@@ -272,13 +275,20 @@ class NewsModel:
             _date = d_parser.parse(_source['date'])
             _date = d_parser.parse(_date.strftime("%Y/%m/%d %H:%M:%S"))
             options = self.get_options(_id)
+            body = None
+            if _source['body'] is not None:
+                body = self.get_body(_source['body'])
+
+            if body is None and _source['summary'] is None:
+                body = _source['title']
+
             self.value.append(dict(
                 id=str(_id),
                 link=_source['link'],
                 title=_source['title'],
                 image=_source['image'] if 'image' in _source.keys() else None,
                 ro_title=_source['ro_title'],
-                body=self.get_body(_source['body']),
+                body=body,
                 summary=_source['summary'],
                 thumbnail=_source['thumbnail'],
                 images=_source['images'],
