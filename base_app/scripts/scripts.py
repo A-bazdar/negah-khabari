@@ -8,14 +8,14 @@ from base_app.models.mongodb.base_model import MongodbModel
 import dateutil.parser as d_parser
 
 
-a = open("content.json", "r")
+a = open("base_app/scripts/content.json", "r")
 x = json.loads(a.read())
 for i in x:
     i['_id'] = ObjectId(i['_id'])
     MongodbModel(collection="content", body=i).insert()
 a.close()
 
-a = open("subject.json", "r")
+a = open("base_app/scripts/subject.json", "r")
 x = json.loads(a.read())
 for i in x:
     i['_id'] = ObjectId(i['_id'])
@@ -26,14 +26,14 @@ for i in x:
     MongodbModel(collection="subject", body=i).insert()
 a.close()
 
-a = open("category.json", "r")
+a = open("base_app/scripts/category.json", "r")
 x = json.loads(a.read())
 for i in x:
     i['_id'] = ObjectId(i['_id'])
     MongodbModel(collection="category", body=i).insert()
 a.close()
 
-a = open("group.json", "r")
+a = open("base_app/scripts/group.json", "r")
 x = json.loads(a.read())
 for i in x:
     i['_id'] = ObjectId(i['_id'])
@@ -44,14 +44,14 @@ for i in x:
     MongodbModel(collection="group", body=i).insert()
 a.close()
 
-a = open("direction.json", "r")
+a = open("base_app/scripts/direction.json", "r")
 x = json.loads(a.read())
 for i in x:
     i['_id'] = ObjectId(i['_id'])
     MongodbModel(collection="direction", body=i).insert()
 a.close()
 
-a = open("geographic.json", "r")
+a = open("base_app/scripts/geographic.json", "r")
 x = json.loads(a.read())
 for i in x:
     i['_id'] = ObjectId(i['_id'])
@@ -62,7 +62,7 @@ for i in x:
     MongodbModel(collection="geographic", body=i).insert()
 a.close()
 
-a = open("agency.json", "r")
+a = open("base_app/scripts/agency.json", "r")
 x = json.loads(a.read())
 for i in x:
     i['_id'] = ObjectId(i['_id'])
