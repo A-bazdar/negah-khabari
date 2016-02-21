@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append("/root/projects/negah-khabari")
 import json
 from bson import ObjectId
 from base_app.models.mongodb.base_model import MongodbModel
 import dateutil.parser as d_parser
+
 
 a = open("content.json", "r")
 x = json.loads(a.read())
