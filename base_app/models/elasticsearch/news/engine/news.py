@@ -4,7 +4,6 @@ import datetime
 from base_app.classes.public import Hash, CreateId
 from base_app.models.elasticsearch.base_model import ElasticSearchModel
 from base_app.models.mongodb.base_model import MongodbModel
-from base_config import Config
 
 
 class News:
