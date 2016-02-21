@@ -8,7 +8,7 @@ from base_app.models.mongodb.agency.agency import AgencyModel
 from base_app.models.mongodb.category.category import CategoryModel
 from base_app.models.mongodb.content.content import ContentModel
 from base_app.models.mongodb.direction.direction import DirectionModel
-from user_app.classes.keyword import KeyWordClass
+from base_app.classes.keyword import KeyWordClass
 
 
 __author__ = 'Morteza'
