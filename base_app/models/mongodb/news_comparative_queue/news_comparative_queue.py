@@ -16,8 +16,7 @@ class NewsComparativeQueueModel:
             __body = {"code": _code}
             if agency is not None:
                 __body = {"agency": agency}
-            __key = {"_id": 1}
-            return MongodbModel(collection='news_comparative_queue', body=__body, key=__key).get_all()
+            return MongodbModel(collection='news_comparative_queue', body=__body).get_all()
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > news_queue')
             return False
