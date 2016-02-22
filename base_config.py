@@ -19,7 +19,7 @@ class Config:
 
         self.elasticsearch = {
             'host': '127.0.0.1',
-            'index': 'medxhub',
+            'index': 'negah_khabari',
             'port': 9200,
         }
         self.mongodb = {

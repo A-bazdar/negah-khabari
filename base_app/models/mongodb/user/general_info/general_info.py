@@ -4,7 +4,7 @@ import datetime
 from bson import ObjectId
 import khayyam
 from base_app.classes.debug import Debug
-from base_app.classes.public import CreateHash
+from base_app.classes.public import Hash
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
 from base_app.models.mongodb.keyword.keyword import KeyWordModel
 from base_app.models.mongodb.user.collection.collection import UserCollectionModel
@@ -64,7 +64,7 @@ class UserModel(BaseModel):
                 'collection': None,
                 'username': self.username,
                 'organization': self.organization,
-                'password': CreateHash().create(self.password),
+                'password': Hash.create(self.password),
                 'phone': self.phone,
                 'mobile': self.mobile,
                 'fax': self.fax,
@@ -474,7 +474,7 @@ class UserModel(BaseModel):
                     'name': self.name,
                     'family': self.family,
                     'username': self.username,
-                    'password': CreateHash().create(self.password),
+                    'password': Hash.create(self.password),
                     'mobile': self.mobile,
                     'email': self.email,
                     'pic': self.pic,

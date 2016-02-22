@@ -11,7 +11,6 @@ __author__ = 'Morteza'
 
 
 class NewsLogChartsModel:
-    index = 'negah_khabari'
     doc_type = 'news'
 
     def __init__(self):
@@ -109,7 +108,7 @@ class NewsLogChartsModel:
                 }
             }
 
-            r = ElasticSearchModel(index=NewsLogChartsModel.index, doc_type=NewsLogChartsModel.doc_type, body=body).count()
+            r = ElasticSearchModel(doc_type=NewsLogChartsModel.doc_type, body=body).count()
             body = {
                 "size": r,
                 "filter": {
@@ -122,7 +121,7 @@ class NewsLogChartsModel:
                 }
             }
 
-            r = ElasticSearchModel(index=NewsLogChartsModel.index, doc_type=NewsLogChartsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsLogChartsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
                 self.get_news_log_charts(b['_source'])
             self.result['value'] = dict(all_news=self.all_news, category=self.category,

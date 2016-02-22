@@ -178,6 +178,21 @@ class AgencyModel:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
             return self.result
 
+    def get_all_by_type(self, _type=None):
+        try:
+            __body = {"type": {"$ne": "RSS"}}
+            if _type == "RSS":
+                __body = {"type": "RSS"}
+            r = MongodbModel(collection='agency', body=__body).get_all()
+            for i in r:
+                self.get_agency(i)
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_agency')
+            return self.result
+
     def count_all(self):
         try:
             r = MongodbModel(collection='agency', body={}).count()
@@ -268,6 +283,18 @@ class AgencyModel:
     def get_all_id_by_category(self):
         try:
             r = MongodbModel(collection='agency', body={'category': self.category}).get_all()
+            for i in r:
+                self.value.append(str(i["_id"]))
+            self.result['value'] = self.value
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_all_by_category')
+            return self.result
+
+    def get_all_id_by_type(self, _type):
+        try:
+            r = MongodbModel(collection='agency', body={'type': _type}).get_all()
             for i in r:
                 self.value.append(str(i["_id"]))
             self.result['value'] = self.value

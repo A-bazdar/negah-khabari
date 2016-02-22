@@ -14,7 +14,6 @@ __author__ = 'Morteza'
 
 
 class BriefsModel:
-    index = 'negah_khabari'
     doc_type = 'briefs'
 
     def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
@@ -110,7 +109,7 @@ class BriefsModel:
                     }
                 }
             }
-            e = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
+            e = ElasticSearchModel(doc_type=BriefsModel.doc_type, body=body).search()
             if e['hits']['total']:
                 _id = e['hits']['hits'][0]['_id']
                 if self.content == str(ContentModel().titr1):
@@ -120,7 +119,7 @@ class BriefsModel:
                             "__content": str(ContentModel().titr1)
                         }
                     }
-                    ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=_body, _id=_id).update()
+                    ElasticSearchModel(doc_type=BriefsModel.doc_type, body=_body, _id=_id).update()
                 return _id
             return False
         except:
@@ -128,7 +127,7 @@ class BriefsModel:
 
     def delete(self):
         try:
-            return ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, _id=self.id).delete()
+            return ElasticSearchModel(doc_type=BriefsModel.doc_type, _id=self.id).delete()
         except:
             return False
 
@@ -149,7 +148,7 @@ class BriefsModel:
             }
             e = self.is_exist()
             if e is False:
-                self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).insert()
+                self.result['value'] = ElasticSearchModel(doc_type=BriefsModel.doc_type, body=body).insert()
                 self.result['status'] = True
                 self.result['message'] = 'INSERT'
             else:
@@ -178,7 +177,7 @@ class BriefsModel:
                 'content': body['_source']['content'],
                 'date': body['_source']['date']
             }
-            self.result['value'] = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body, _id=body['_id']).insert()
+            self.result['value'] = ElasticSearchModel(doc_type=BriefsModel.doc_type, body=body, _id=body['_id']).insert()
             self.result['status'] = True
             self.result['message'] = 'INSERT'
 
@@ -197,7 +196,7 @@ class BriefsModel:
                 }
             }
 
-            r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=BriefsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
                 self.get_brief(b['_source'], b['_id'])
             self.result['value'] = self.value
@@ -206,25 +205,25 @@ class BriefsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > count_all',
-                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+                                data='doc_type: ' + BriefsModel.doc_type)
             return self.result
 
     @staticmethod
     def get_count_all():
         try:
-            r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type).count_all()
+            r = ElasticSearchModel(doc_type=BriefsModel.doc_type).count_all()
             if r:
                 return r
             return 0
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+                                data='doc_type: ' + BriefsModel.doc_type)
             return 0
 
     def get_one(self):
         try:
-            r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, _id=self.id).get_one()
+            r = ElasticSearchModel(doc_type=BriefsModel.doc_type, _id=self.id).get_one()
             self.get_brief(r['_source'], r['_id'])
             self.result['value'] = self.value[0]
             self.result['status'] = True
@@ -232,7 +231,7 @@ class BriefsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > count_all',
-                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+                                data='doc_type: ' + BriefsModel.doc_type)
             return self.result
 
     def update_subject_briefs(self):
@@ -244,14 +243,14 @@ class BriefsModel:
                 }
             }
 
-            r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body, _id=self.id).update()
+            r = ElasticSearchModel(doc_type=BriefsModel.doc_type, body=body, _id=self.id).update()
             self.result['value'] = r
             self.result['status'] = True
             return self.result
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+                                data='doc_type: ' + BriefsModel.doc_type)
             return self.result
 
     def get_all_backup(self, _page=0, _size=100):
@@ -264,7 +263,7 @@ class BriefsModel:
                 "sort": {"date": {"order": "desc"}}
             }
 
-            r = ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=BriefsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
                 self.value.append(dict(
                     _id=b['_id'],
@@ -276,7 +275,7 @@ class BriefsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+                                data='doc_type: ' + BriefsModel.doc_type)
             return self.result
 
     def update_news_hash_title(self, __title):
@@ -289,9 +288,9 @@ class BriefsModel:
                 }
             }
 
-            return ElasticSearchModel(index=BriefsModel.index, doc_type=BriefsModel.doc_type, body=body, _id=self.id).update()
+            return ElasticSearchModel(doc_type=BriefsModel.doc_type, body=body, _id=self.id).update()
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + BriefsModel.index + ' doc_type: ' + BriefsModel.doc_type)
+                                data='doc_type: ' + BriefsModel.doc_type)
             return self.result

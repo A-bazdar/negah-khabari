@@ -13,16 +13,15 @@ import time
 from base_app.models.mongodb.base_model import MongodbModel
 from base_app.models.mongodb.content.content import ContentModel
 from base_app.models.mongodb.geographic.geographic import GeographicModel
-from base_app.models.mongodb.keyword.keyword import KeyWordModel
 from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
 import re
 import dateutil.parser as d_parser
+
 __author__ = 'Morteza'
 
 
 class NewsModel:
-    index = 'negah_khabari'
     doc_type = 'news'
 
     def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
@@ -109,7 +108,7 @@ class NewsModel:
                         }
                     }
                 }
-            x = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count()
+            x = ElasticSearchModel(doc_type="news", body=body).count()
             if x:
                 return True
             return False
@@ -120,7 +119,7 @@ class NewsModel:
     def get_news_id():
         __id = CreateId().create_object_id()
         body = {"query": {"term": {"_id": __id}}}
-        while ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).count():
+        while ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).count():
             __id = CreateId().create_object_id()
         return __id
 
@@ -173,7 +172,7 @@ class NewsModel:
             }
             if not self.is_exist():
                 news = self.get_news_id()
-                self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body,
+                self.result['value'] = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body,
                                                           _id=news).insert()
                 self.insert_mongo(body)
                 self.result['status'] = True
@@ -211,7 +210,7 @@ class NewsModel:
                 'read_date': body['_source']['read_date'],
                 'read_timestamp': body['_source']['read_timestamp'],
             }
-            self.result['value'] = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=_body,
+            self.result['value'] = ElasticSearchModel(doc_type=NewsModel.doc_type, body=_body,
                                                       _id=body['_id']).insert()
             self.result['status'] = True
             self.result['message'] = 'INSERT'
@@ -272,13 +271,20 @@ class NewsModel:
             _date = d_parser.parse(_source['date'])
             _date = d_parser.parse(_date.strftime("%Y/%m/%d %H:%M:%S"))
             options = self.get_options(_id)
+            body = None
+            if _source['body'] is not None:
+                body = self.get_body(_source['body'])
+
+            if body is None and _source['summary'] is None:
+                body = _source['title']
+
             self.value.append(dict(
                 id=str(_id),
                 link=_source['link'],
                 title=_source['title'],
                 image=_source['image'] if 'image' in _source.keys() else None,
                 ro_title=_source['ro_title'],
-                body=self.get_body(_source['body']),
+                body=body,
                 summary=_source['summary'],
                 thumbnail=_source['thumbnail'],
                 images=_source['images'],
@@ -518,7 +524,7 @@ class NewsModel:
                 body['filter']['and']['filters'].append({
                     'term': {'agency': agency}
                 })
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
@@ -552,7 +558,7 @@ class NewsModel:
                 }
             }
 
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
@@ -620,7 +626,7 @@ class NewsModel:
                         }
                     }
                 }
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
@@ -655,7 +661,7 @@ class NewsModel:
                 "sort": {_sort: {"order": "desc"}}
             }
 
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
@@ -688,12 +694,12 @@ class NewsModel:
                 },
                 "sort": {"date": {"order": "desc"}}
             }
-            # query_sort = self.get_query_sort(_sort)
-            # query_access = self.get_query_access(0, False, "index")
-            # if query_sort is not False:
-            #     body['filter']['and']['filters'] += [query_sort]
-            # body['filter']['and']['filters'] += query_access
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            query_sort = self.get_query_sort(_sort)
+            query_access = self.get_query_access(0, False, "index")
+            if query_sort is not False:
+                body['filter']['and']['filters'] += [query_sort]
+            body['filter']['and']['filters'] += query_access
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
@@ -726,7 +732,7 @@ class NewsModel:
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             self.result['value'] = [], 0
             return self.result
 
@@ -740,7 +746,7 @@ class NewsModel:
                 "sort": {_sort: {"order": "desc"}}
             }
 
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
                 self.value.append(dict(
                     _id=b['_id'],
@@ -752,20 +758,20 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     @staticmethod
     def get_count_all():
         try:
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type).count_all()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type).count_all()
             if r:
                 return r
             return 0
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return 0
 
     def get_all_by_subject(self, subjects=None, _page=0, _size=30):
@@ -788,7 +794,7 @@ class NewsModel:
                 },
                 "sort": {"date": {"order": "desc"}}
             }
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
@@ -802,7 +808,7 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all_by_subject',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_keyword_info(self, __key):
@@ -1234,7 +1240,7 @@ class NewsModel:
                 body['filter']['and']['filters'] += query_grouping
             query_access = self.get_query_access(len(_search['agency']), query_grouping, _type)
             body['filter']['and']['filters'] += query_access
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
@@ -1247,12 +1253,12 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all_by_subject',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def count_all(self):
         try:
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type).count_all()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type).count_all()
 
             self.result['value'] = r
             self.result['status'] = True
@@ -1260,7 +1266,7 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_all_all(self, _page=0, _size=100, _sort="date"):
@@ -1273,7 +1279,7 @@ class NewsModel:
                 "sort": {_sort: {"order": "desc"}}
             }
 
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             for b in r['hits']['hits']:
                 try:
                     self.value.append({'_id': b['_id'], 'agency': b['_source']['agency']})
@@ -1285,7 +1291,7 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_all_similar(self):
@@ -1340,7 +1346,7 @@ class NewsModel:
                 },
                 "sort": {"date": {"order": "desc"}}
             }
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             ls = []
             for b in r['hits']['hits']:
                 ls.append(b['_id'])
@@ -1350,19 +1356,19 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def delete(self):
         try:
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, _id=self.id).delete()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, _id=self.id).delete()
             self.result['value'] = r
             self.result['status'] = True
             return self.result
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def update_news_hash_title(self, __title):
@@ -1374,12 +1380,12 @@ class NewsModel:
                 }
             }
 
-            return ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body,
+            return ElasticSearchModel(doc_type=NewsModel.doc_type, body=body,
                                       _id=self.id).update()
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def update_subject(self):
@@ -1391,12 +1397,12 @@ class NewsModel:
                 }
             }
 
-            return ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body,
+            return ElasticSearchModel(doc_type=NewsModel.doc_type, body=body,
                                       _id=self.id).update()
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_news_by_subject(self, _page=0, _size=30):
@@ -1411,7 +1417,7 @@ class NewsModel:
                 "sort": {"date": {"order": "desc"}}
             }
 
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
             except:
@@ -1427,7 +1433,7 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_all_titr_1(self, _page=0, _size=12):
@@ -1453,7 +1459,7 @@ class NewsModel:
                 "sort": {"date": {"order": "desc"}}
             }
 
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 for b in r['hits']['hits']:
                     self.get_titr1(b['fields'], b['_id'])
@@ -1465,7 +1471,7 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_top_agency(self, b):
@@ -1489,7 +1495,7 @@ class NewsModel:
                 }
             }
 
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 for b in r['aggregations']['group_by_agency']['buckets']:
                     self.get_top_agency(b)
@@ -1501,12 +1507,12 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_one(self):
         try:
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, _id=self.id).get_one()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, _id=self.id).get_one()
             self.get_news_body_module(r['_source'], r['_id'])
             self.result['value'] = self.value[0]
             self.result['status'] = True
@@ -1514,12 +1520,12 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_one_print(self):
         try:
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, _id=self.id).get_one()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, _id=self.id).get_one()
             self.get_news(r['_source'], r['_id'])
             self.result['value'] = self.value[0]
             self.result['status'] = True
@@ -1527,7 +1533,7 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_one_mongo(self):
@@ -1540,13 +1546,13 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_news_body(self):
         try:
             body = {"fields": ["_id", "body"], "query": {"term": {"_id": self.id}}}
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             body = False
             if r['hits']['total']:
                 body = r['hits']['hits'][0]['fields']['body'][0]
@@ -1557,13 +1563,13 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
     def get_id(self):
         try:
             body = {"query": {"term": {"hash_link": self.get_hash(self.link)}}}
-            r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             _id = False
             if r['hits']['total']:
                 _id = r['hits']['hits'][0]['_id']
@@ -1574,7 +1580,7 @@ class NewsModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
-                                data='index: ' + NewsModel.index + ' doc_type: ' + NewsModel.doc_type)
+                                data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
             # news = NewsModel().get_all()['value']
