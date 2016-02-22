@@ -178,11 +178,11 @@ class News:
 
     @staticmethod
     def delete_queue(_type=None, _code=None):
-        body = dict(
-            code=_code,
-        )
+        body = {
+            "code": _code,
+        }
         if _type == "COMPARATIVE":
             __collection = 'news_comparative_queue'
         else:
             __collection = 'news_queue'
-        MongodbModel(collection=__collection, body=body).delete()
+        print MongodbModel(collection=__collection, body=body).delete()
