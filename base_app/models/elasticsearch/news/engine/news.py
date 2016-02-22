@@ -185,4 +185,4 @@ class News:
             __collection = 'news_comparative_queue'
         else:
             __collection = 'news_queue'
-        print MongodbModel(collection=__collection, body=body).delete()
+        MongodbModel(collection=__collection, body=body).delete()
