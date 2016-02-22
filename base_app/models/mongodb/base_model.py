@@ -72,6 +72,8 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.news_queue
         elif collection == 'news_comparative_queue':
             self.collection = self.db.news_comparative_queue
+        elif collection == 'test_engine':
+            self.collection = self.db.test_engine
 
     def insert(self):
         try:

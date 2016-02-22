@@ -101,3 +101,10 @@ for i in x:
         pass
     MongodbModel(collection="agency", body=i).insert()
 a.close()
+
+a = open("base_app/scripts/setting.json", "r")
+x = json.loads(a.read())
+for i in x:
+    i['_id'] = ObjectId(i['_id'])
+    MongodbModel(collection="setting", body=i).insert()
+a.close()
