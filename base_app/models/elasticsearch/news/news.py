@@ -688,11 +688,11 @@ class NewsModel:
                 },
                 "sort": {"date": {"order": "desc"}}
             }
-            query_sort = self.get_query_sort(_sort)
-            query_access = self.get_query_access(0, False, "index")
-            if query_sort is not False:
-                body['filter']['and']['filters'] += [query_sort]
-            body['filter']['and']['filters'] += query_access
+            # query_sort = self.get_query_sort(_sort)
+            # query_access = self.get_query_access(0, False, "index")
+            # if query_sort is not False:
+            #     body['filter']['and']['filters'] += [query_sort]
+            # body['filter']['and']['filters'] += query_access
             r = ElasticSearchModel(index=NewsModel.index, doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
