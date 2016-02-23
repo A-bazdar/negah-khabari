@@ -22,6 +22,7 @@ class WorkerRedisModel:
     def insert(self):
         try:
             workers = RedisBaseModel(key=self.__key).get()
+            print workers
             if workers is None:
                 workers = []
             workers.append(dict(
@@ -30,6 +31,7 @@ class WorkerRedisModel:
                 pid=self.pid
             ))
             RedisBaseModel(key=self.__key, value=workers).set()
+            print RedisBaseModel(key=self.__key).get()
             return True
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='redis > set', data='')
