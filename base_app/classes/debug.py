@@ -19,13 +19,13 @@ class Debug:
             # if send:
             #     SendError(sub_system=sub_system, severity=severity, tags=tags, file_name=file_name, file_address=file_address,
             #               function=function, line_num=line_num, code=code, message=message, data=data)
-            # try:
-            #     print 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message)
-            # except:
-            #     try:
-            #         print 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message).encode('utf-8')
-            #     except:
-            #         print 'EXCEPTION IN ({}, LINE {} \'{}\')'.format(file_name, line_num, code)
+            try:
+                print 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message)
+            except:
+                try:
+                    print 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message).encode('utf-8')
+                except:
+                    print 'EXCEPTION IN ({}, LINE {} \'{}\')'.format(file_name, line_num, code)
             # if return_error:
             #     return 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message)
         except:
