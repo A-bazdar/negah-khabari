@@ -4,6 +4,8 @@ import re
 import urllib2
 import urlparse
 
+from base_app.classes.timer import Timer
+
 __author__ = 'Morteza'
 
 
@@ -11,6 +13,7 @@ class GetUrl:
     def __init__(self, url):
         self.url = url
         self.value = False
+        self.time = 0
         self.read_url()
 
     @staticmethod
@@ -40,9 +43,11 @@ class GetUrl:
 
     def read_url(self):
         try:
+            t = Timer()
             self.clean_url()
             if not self.get_url(self.iri_to_uri(False)):
                 if not self.get_url(self.iri_to_uri(True)):
                     self.get_url(self.url)
+            self.time = t.end()
         except:
             pass
