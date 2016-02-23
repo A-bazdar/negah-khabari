@@ -116,6 +116,25 @@ class WorkerRedisModel:
             Debug.get_exception(sub_system='admin', severity='error', tags='redis > set', data='')
             return False
 
+    def delete(self):
+        try:
+            workers = RedisBaseModel(key=self.__key).get()
+            try:
+                workers = json.loads(workers)
+            except:
+                workers = []
+            if workers is None:
+                workers = []
+            _workers = []
+            for w in workers:
+                if w['_id'] != self.id:
+                    _workers.append(w)
+            RedisBaseModel(key=self.__key, value=json.dumps(_workers)).set()
+            return True
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='redis > set', data='')
+            return False
+
     def get(self):
         try:
             return RedisBaseModel(key=self.__key).get()
