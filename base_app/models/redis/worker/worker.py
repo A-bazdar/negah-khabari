@@ -13,7 +13,7 @@ __author__ = 'Morteza'
 
 
 class WorkerRedisModel:
-    def __init__(self, key="WORKER", value=None, pid=None):
+    def __init__(self, key="WORKERS", value=None, pid=None):
         self.__key = key
         self.__value = value
         self.pid = pid
