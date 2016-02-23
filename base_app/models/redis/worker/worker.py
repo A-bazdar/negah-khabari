@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+import json
+
 from bson import ObjectId
 
 from base_app.classes.debug import Debug
@@ -22,16 +24,18 @@ class WorkerRedisModel:
     def insert(self):
         try:
             workers = RedisBaseModel(key=self.__key).get()
-            print workers
+            try:
+                workers = json.loads(workers)
+            except:
+                workers = []
             if workers is None:
                 workers = []
             workers.append(dict(
                 _id=self.id,
-                start=datetime.datetime.now(),
+                start=str(datetime.datetime.now()),
                 pid=self.pid
             ))
-            RedisBaseModel(key=self.__key, value=workers).set()
-            print RedisBaseModel(key=self.__key).get()
+            RedisBaseModel(key=self.__key, value=json.dumps(workers)).set()
             return True
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='redis > set', data='')
@@ -40,12 +44,16 @@ class WorkerRedisModel:
     def create_key(self, _key=None, _value=None):
         try:
             workers = RedisBaseModel(key=self.__key).get()
+            try:
+                workers = json.loads(workers)
+            except:
+                workers = []
             if workers is None:
                 workers = []
             for w in workers:
                 if w['_id'] == self.id:
                     w[_key] = _value
-            RedisBaseModel(key=self.__key, value=workers).set()
+            RedisBaseModel(key=self.__key, value=json.dumps(workers)).set()
             return True
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='redis > set', data='')
@@ -54,6 +62,10 @@ class WorkerRedisModel:
     def create_time_key(self, _value=None):
         try:
             workers = RedisBaseModel(key=self.__key).get()
+            try:
+                workers = json.loads(workers)
+            except:
+                workers = []
             if workers is None:
                 workers = []
             _value = dict(
@@ -77,7 +89,7 @@ class WorkerRedisModel:
                     else:
                         w['news'] = [_value]
 
-            RedisBaseModel(key=self.__key, value=workers).set()
+            RedisBaseModel(key=self.__key, value=json.dumps(workers)).set()
             return True
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='redis > set', data='')
@@ -86,6 +98,10 @@ class WorkerRedisModel:
     def increase_key(self, _key=None, _value=1):
         try:
             workers = RedisBaseModel(key=self.__key).get()
+            try:
+                workers = json.loads(workers)
+            except:
+                workers = []
             if workers is None:
                 workers = []
             for w in workers:
@@ -94,7 +110,7 @@ class WorkerRedisModel:
                         w[_key] = int(w[_key]) + _value
                     else:
                         w[_key] = _value
-            RedisBaseModel(key=self.__key, value=workers).set()
+            RedisBaseModel(key=self.__key, value=json.dumps(workers)).set()
             return True
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='redis > set', data='')
