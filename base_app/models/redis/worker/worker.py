@@ -154,7 +154,6 @@ class WorkerRedisModel:
                 i['start'] = d_parser.parse(i['start'])
             count_all = len(workers)
             workers = sorted(workers, key=lambda k: k['start'], reverse=False)[limit * page:limit * (page + 1)]
-            print count_all
             for i in workers:
                 i['start'] = CustomDateTime().get_time_difference(i['start'])
                 d = (datetime.datetime.now() - i['start']).seconds
@@ -168,7 +167,7 @@ class WorkerRedisModel:
 
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='redis > get', data='')
-            return self.result
+            return False, 0
 
 
 class NewsRedis:
