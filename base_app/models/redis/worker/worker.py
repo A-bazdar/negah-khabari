@@ -155,8 +155,6 @@ class WorkerRedisModel:
             count_all = len(workers)
             workers = sorted(workers, key=lambda k: k['start'], reverse=False)[limit * page:limit * (page + 1)]
             for i in workers:
-                print type(i['start'])
-                i['start'] = CustomDateTime().get_time_difference(i['start'])
                 d = (datetime.datetime.now() - i['start']).seconds
                 minute = d / 60
                 second = d % 60
@@ -164,6 +162,7 @@ class WorkerRedisModel:
                     'minute': str(minute) if minute > 9 else '0' + str(minute),
                     'second': str(second) if second > 9 else '0' + str(second)
                 }
+                i['start'] = CustomDateTime().get_time_difference(i['start'])
             return workers, count_all
 
         except:
