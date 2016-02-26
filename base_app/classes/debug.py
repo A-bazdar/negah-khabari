@@ -8,7 +8,7 @@ class Debug:
         pass
 
     @classmethod
-    def get_exception(cls, sub_system=None, severity=None, tags=None, data=None, send=True, return_error=False):
+    def get_exception(cls, sub_system=None, severity=None, tags=None, data=None, send=True, return_error=True):
         try:
 
             exc_type, message, exc_tb = sys.exc_info()
@@ -26,7 +26,7 @@ class Debug:
             #         print 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message).encode('utf-8')
             #     except:
             #         print 'EXCEPTION IN ({}, LINE {} \'{}\')'.format(file_name, line_num, code)
-            # if return_error:
-            #     return 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message)
+            if return_error:
+                return 'EXCEPTION IN ({}, LINE {} \'{}\'): {}'.format(file_name, line_num, code, message)
         except:
             pass

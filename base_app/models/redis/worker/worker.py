@@ -166,7 +166,7 @@ class WorkerRedisModel:
             return workers, count_all
 
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='redis > get', data='')
+            print Debug.get_exception(sub_system='admin', severity='error', tags='redis > get', data='')
             return False, 0
 
 
