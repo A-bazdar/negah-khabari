@@ -5,8 +5,10 @@ import json
 
 from bson import ObjectId
 
+from base_app.classes.date import CustomDateTime
 from base_app.classes.debug import Debug
 from base_app.models.redis.base_model import RedisBaseModel
+import dateutil.parser as d_parser
 
 
 __author__ = 'Morteza'
@@ -33,6 +35,9 @@ class WorkerRedisModel:
             workers.append(dict(
                 _id=self.id,
                 start=str(datetime.datetime.now()),
+                end=None,
+                error=False,
+                message="",
                 pid=self.pid
             ))
             RedisBaseModel(key=self.__key, value=json.dumps(workers)).set()
@@ -135,9 +140,32 @@ class WorkerRedisModel:
             Debug.get_exception(sub_system='admin', severity='error', tags='redis > set', data='')
             return False
 
-    def get(self):
+    def get_all_pagination(self, limit=20, page=1):
         try:
-            return RedisBaseModel(key=self.__key).get()
+            if page > 1:
+                page -= 1
+            workers = RedisBaseModel(key=self.__key).get()
+            try:
+                workers = json.loads(workers)
+            except:
+                workers = []
+
+            for i in workers:
+                i['start'] = d_parser.parse(i['start'])
+            count_all = len(workers)
+            workers = sorted(workers, key=lambda k: k['start'], reverse=False)[limit * page:limit * (page + 1)]
+
+            for i in workers:
+                i['start'] = CustomDateTime().get_time_difference(i['start'])
+                d = (datetime.datetime.now() - i['start']).seconds
+                minute = d / 60
+                second = d % 60
+                i['different'] = {
+                    'minute': str(minute) if minute > 9 else '0' + str(minute),
+                    'second': str(second) if second > 9 else '0' + str(second)
+                }
+            return workers, count_all
+
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='redis > get', data='')
             return self.result
