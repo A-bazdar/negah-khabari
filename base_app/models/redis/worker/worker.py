@@ -3,6 +3,7 @@
 import datetime
 import json
 
+import khayyam
 from bson import ObjectId
 
 from base_app.classes.date import CustomDateTime
@@ -152,10 +153,15 @@ class WorkerRedisModel:
 
             for i in workers:
                 i['start'] = d_parser.parse(i['start'])
+                try:
+                    i['end'] = d_parser.parse(i['end'])
+                except:
+                    print i['end'], "#############"
+                    i['end'] = datetime.datetime.now()
             count_all = len(workers)
             workers = sorted(workers, key=lambda k: k['start'], reverse=True)[limit * page:limit * (page + 1)]
             for i in workers:
-                d = (datetime.datetime.now() - i['start']).seconds
+                d = (i['end'] - i['start']).seconds
                 minute = d / 60
                 second = d % 60
                 i['different'] = {
