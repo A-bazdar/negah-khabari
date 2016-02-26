@@ -152,10 +152,10 @@ class WorkerRedisModel:
 
             for i in workers:
                 i['start'] = d_parser.parse(i['start'])
-                print type(i['start'])
             count_all = len(workers)
             workers = sorted(workers, key=lambda k: k['start'], reverse=False)[limit * page:limit * (page + 1)]
             for i in workers:
+                print type(i['start'])
                 i['start'] = CustomDateTime().get_time_difference(i['start'])
                 d = (datetime.datetime.now() - i['start']).seconds
                 minute = d / 60
