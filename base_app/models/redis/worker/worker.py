@@ -8,6 +8,7 @@ from bson import ObjectId
 
 from base_app.classes.date import CustomDateTime
 from base_app.classes.debug import Debug
+from base_app.models.mongodb.base_model import MongodbModel
 from base_app.models.redis.base_model import RedisBaseModel
 import dateutil.parser as d_parser
 
@@ -132,9 +133,17 @@ class WorkerRedisModel:
             if workers is None:
                 workers = []
             _workers = []
+            _w = None
             for w in workers:
                 if w['_id'] != self.id:
                     _workers.append(w)
+                else:
+                    _w = w
+            if _w is not None:
+                _w['end'] = datetime.datetime.now()
+                _w['start'] = d_parser.parse(_w['start'])
+                _w['type'] = self.__key
+                MongodbModel(collection="worker", body=_w).insert()
             RedisBaseModel(key=self.__key, value=json.dumps(_workers)).set()
             return True
         except:
@@ -153,15 +162,11 @@ class WorkerRedisModel:
 
             for i in workers:
                 i['start'] = d_parser.parse(i['start'])
-                try:
-                    i['end'] = d_parser.parse(i['end'])
-                except:
-                    print i['end'], "#############"
-                    i['end'] = datetime.datetime.now()
+                i['end'] = None
             count_all = len(workers)
             workers = sorted(workers, key=lambda k: k['start'], reverse=True)[limit * page:limit * (page + 1)]
             for i in workers:
-                d = (i['end'] - i['start']).seconds
+                d = (datetime.datetime.now() - i['start']).seconds
                 minute = d / 60
                 second = d % 60
                 i['different'] = {
