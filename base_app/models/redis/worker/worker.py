@@ -22,7 +22,6 @@ class WorkerRedisModel:
         self.__value = value
         self.pid = pid
         self.id = str(ObjectId())
-        self.insert()
         self.result = {'value': {}, 'status': False}
 
     def insert(self):
@@ -80,6 +79,8 @@ class WorkerRedisModel:
                 soap=_value.soap,
                 extract=_value.extract,
                 update=_value.update,
+                link=_value.link,
+                total=_value.total,
                 ro_title=_value.extract_detail['ro_title'],
                 image=_value.extract_detail['image'],
                 body=_value.extract_detail['body'],
@@ -152,28 +153,18 @@ class WorkerRedisModel:
 
     def get_all_pagination(self, limit=20, page=1):
         try:
-            if page > 1:
+            if page > 0:
                 page -= 1
             workers = RedisBaseModel(key=self.__key).get()
             try:
                 workers = json.loads(workers)
             except:
                 workers = []
-
             for i in workers:
                 i['start'] = d_parser.parse(i['start'])
                 i['end'] = None
             count_all = len(workers)
             workers = sorted(workers, key=lambda k: k['start'], reverse=True)[limit * page:limit * (page + 1)]
-            for i in workers:
-                d = (datetime.datetime.now() - i['start']).seconds
-                minute = d / 60
-                second = d % 60
-                i['different'] = {
-                    'minute': str(minute) if minute > 9 else '0' + str(minute),
-                    'second': str(second) if second > 9 else '0' + str(second)
-                }
-                i['start'] = CustomDateTime().get_time_difference(i['start'])
             return workers, count_all
 
         except:
@@ -190,6 +181,7 @@ class NewsRedis:
     soap = 0
     extract = 0
     update = 0
+    total = 0
     extract_detail = dict(
         ro_title=0,
         image=0,
