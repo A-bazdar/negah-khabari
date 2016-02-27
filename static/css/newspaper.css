@@ -2,6 +2,13 @@
     border: 1px solid #dbdbdb;
     height: 200px;
     width: 100%;
+    text-align: center;
+}
+
+.logo_drop p {
+    color: #cccccc;
+    font-size: 20px;
+    margin-top: 75px;
 }
 
 .filter_news_container {
@@ -73,4 +80,104 @@
 .separator3 div {
     min-height: 150px;
     border-right: 1px dashed #000000;
+}
+
+.editable {
+    min-height: 200px;
+    border: 1px solid;
+    padding: 10px;
+}
+
+.my-editor {
+    /*min-height: ;*/
+    font-family: Koodak;
+    width: 100%;
+    min-height: 200px;
+}
+
+.newspaper_template_btn {
+    width: 100%;
+    border-radius: 5px;
+    background: #828282;
+    border: 1px solid #707070 !important;
+    padding: 5px 15px;
+    font-size: 12pt;
+    color: #ffffff !important;
+    vertical-align: middle;
+    margin: 1px !important;
+    cursor: pointer;
+    text-decoration: none;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.newspaper_template_btn:hover {
+    background: #989898;
+    color: #fff !important;
+    text-decoration: none;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.newspaper_back_btn {
+    width: 100%;
+    border-radius: 5px;
+    background: #516b82;
+    border: 1px solid #707070 !important;
+    padding: 5px 15px;
+    font-size: 12pt;
+    color: #ffffff !important;
+    vertical-align: middle;
+    margin: 1px !important;
+    cursor: pointer;
+    text-decoration: none;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.newspaper_back_btn:hover {
+    background: #4c677e;
+    color: #fff !important;
+    text-decoration: none;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.newspaper_choose_template_h {
+    background: -webkit-linear-gradient(#FDFDFD, #E9E9E9);
+    background: -o-linear-gradient(#FDFDFD, #E9E9E9);
+    background: -moz-linear-gradient(#FDFDFD, #E9E9E9);
+    background: linear-gradient(#FDFDFD, #E9E9E9);
+    padding: 5px;
+    color: #979898;
+    border-radius: 7px 7px 0 0;
+    box-shadow: 0 0 2px #aaa;
+}
+
+.newspaper_choose_template_b {
+    background: #FFFFFF;
+    padding: 10px;
+    color: #979898;
+    box-shadow: 0 0 2px #aaa;
+    border-radius: 0 0 7px 7px;
+}
+
+.editable-max-height {
+    height: 800px;
+}
+
+.editable-min-height {
+    height: 400px;
 }
