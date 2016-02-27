@@ -34,6 +34,19 @@ class NewsQueueModel:
             return False
 
     @staticmethod
+    def delete_code(_code):
+        try:
+            __body = {"$set": {
+                "code": -1
+            }}
+            __condition = {"code": _code}
+            __option = {"multi": True}
+            return MongodbModel(collection='news_queue', body=__body, condition=__condition, option=__option).update_option()
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > news_queue')
+            return False
+
+    @staticmethod
     def count():
         try:
             __body = {"code": -1}

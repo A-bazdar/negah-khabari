@@ -2,11 +2,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import json
-
-import khayyam
 from bson import ObjectId
-
-from base_app.classes.date import CustomDateTime
 from base_app.classes.debug import Debug
 from base_app.models.mongodb.base_model import MongodbModel
 from base_app.models.redis.base_model import RedisBaseModel
@@ -17,11 +13,14 @@ __author__ = 'Morteza'
 
 
 class WorkerRedisModel:
-    def __init__(self, key="WORKERS", value=None, pid=None):
+    def __init__(self, key="WORKERS", _id=None, value=None, pid=None, code=None):
         self.__key = key
         self.__value = value
         self.pid = pid
-        self.id = str(ObjectId())
+        self.code = code
+        self.id = _id
+        if self.id is None:
+            self.id = str(ObjectId())
         self.result = {'value': {}, 'status': False}
 
     def insert(self):
@@ -38,6 +37,7 @@ class WorkerRedisModel:
                 start=str(datetime.datetime.now()),
                 end=None,
                 error=False,
+                code=self.code,
                 message="",
                 pid=self.pid
             ))
@@ -124,7 +124,7 @@ class WorkerRedisModel:
             Debug.get_exception(sub_system='admin', severity='error', tags='redis > set', data='')
             return False
 
-    def delete(self):
+    def delete(self, kill=False):
         try:
             workers = RedisBaseModel(key=self.__key).get()
             try:
@@ -144,6 +144,7 @@ class WorkerRedisModel:
                 _w['end'] = datetime.datetime.now()
                 _w['start'] = d_parser.parse(_w['start'])
                 _w['type'] = self.__key
+                _w['kill'] = kill
                 MongodbModel(collection="worker", body=_w).insert()
             RedisBaseModel(key=self.__key, value=json.dumps(_workers)).set()
             return True
@@ -170,6 +171,21 @@ class WorkerRedisModel:
         except:
             print Debug.get_exception(sub_system='admin', severity='error', tags='redis > get', data='')
             return False, 0
+
+    def get_all(self):
+        try:
+            workers = RedisBaseModel(key=self.__key).get()
+            try:
+                workers = json.loads(workers)
+            except:
+                workers = []
+            for i in workers:
+                i['start'] = d_parser.parse(i['start'])
+            return workers
+
+        except:
+            print Debug.get_exception(sub_system='admin', severity='error', tags='redis > get', data='')
+            return False
 
 
 class NewsRedis:

@@ -180,10 +180,9 @@ class News:
         self.result['value'] = str(MongodbModel(collection=__collection, body=body).insert())
         self.result['status'] = True
 
-    @staticmethod
-    def delete_queue(_type=None, _code=None):
+    def delete_queue(self, _type=None):
         body = {
-            "code": _code,
+            "news": self.id,
         }
         if _type == "COMPARATIVE":
             __collection = 'news_comparative_queue'
