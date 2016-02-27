@@ -201,16 +201,30 @@ class Extract:
         return news
 
     def get_news(self, __doc, __type, __selectors):
+        t = Timer()
         ro_title = self.get_ro_title(__doc, __selectors['ro_title'])
+        ro_title_time = t.end()
+        t.start()
         image = self.get_image(__doc, __selectors['image'])
+        image_time = t.end()
+        t.start()
         body = self.get_body(__doc, __selectors['body'], __selectors['excludes'])
+        body_time = t.end()
+        t.start()
         images = self.get_images(__doc, __selectors['body'], __selectors['excludes'], image)
+        images_time = t.end()
+        t.start()
         video = self.get_video(__doc, __selectors['body'])
+        video_time = t.end()
+        t.start()
         sound = self.get_sound(__doc, __selectors['body'])
+        sound_time = t.end()
+        t.start()
         if __type != "RSS":
             date = self.get_date(__doc, __selectors['date'], __selectors['date_format'])
         else:
             date = None
+        date_time = t.end()
         ret = dict(
             ro_title=ro_title,
             image=image,
@@ -220,7 +234,16 @@ class Extract:
             sound=sound,
             images=images,
         )
-        return ret
+        ret_time = dict(
+            ro_title=ro_title_time,
+            image=image_time,
+            body=body_time,
+            video=video_time,
+            date=date_time,
+            sound=sound_time,
+            images=images_time,
+        )
+        return ret, ret_time
 
     def get_rss(self, doc, summary):
         t_2 = Timer()

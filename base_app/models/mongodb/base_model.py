@@ -13,13 +13,15 @@ class MongodbBaseModel:
 
 
 class MongodbModel(MongodbBaseModel):
-    def __init__(self, collection=None, body=None, condition=None, key=None, size=20, page=1, sort="date", ascending=-1):
+    def __init__(self, collection=None, body=None, condition=None, key=None, size=20, page=1, sort="date", option=None,
+                 ascending=-1):
         MongodbBaseModel.__init__(self)
         self.__body = body
         self.__size = size
         self.__page = page
         self.__sort = sort
         self.__key = key
+        self.__option = option
         self.__ascending = ascending
 
         self.__collection = collection
@@ -74,6 +76,8 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.news_comparative_queue
         elif collection == 'test_engine':
             self.collection = self.db.test_engine
+        elif collection == 'worker':
+            self.collection = self.db.worker
 
     def insert(self):
         try:
@@ -166,6 +170,15 @@ class MongodbModel(MongodbBaseModel):
     def update(self):
         try:
             return self.collection.update(self.__condition, self.__body)
+        except:
+            Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > update',
+                                data='collection: ' + self.__collection + ' body: ' + str(
+                                    self.__body) + ' condition: ' + str(self.__condition))
+            return False
+
+    def update_option(self):
+        try:
+            return self.collection.update(self.__condition, self.__body, self.__option)
         except:
             Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > update',
                                 data='collection: ' + self.__collection + ' body: ' + str(

@@ -2,6 +2,7 @@ import time
 import datetime
 
 from base_app.classes.public import Hash, CreateId
+from base_app.classes.timer import Timer
 from base_app.models.elasticsearch.base_model import ElasticSearchModel
 from base_app.models.mongodb.base_model import MongodbModel
 
@@ -34,6 +35,7 @@ class News:
         self.geographic = geographic
         self.group = group
         self.direction = direction
+        self.time_update = 0
 
     def is_exist(self):
         try:
@@ -136,6 +138,7 @@ class News:
         return self.result
 
     def update(self):
+        t = Timer()
         body = {
             "script": "ctx._source.ro_title = __ro_title;ctx._source.image = __image;"
                       "ctx._source.body = __body;ctx._source.video = __video;"
@@ -155,6 +158,7 @@ class News:
         self.result['value'] = ElasticSearchModel(doc_type=self.doc_type, body=body,
                                                   _id=self.id).update()
         self.result['status'] = True
+        self.time_update = t.end()
         return self.result
 
     def insert_queue(self, _type=None, _news=None, _base_link=None, _title=None, _selectors=None):
@@ -176,10 +180,9 @@ class News:
         self.result['value'] = str(MongodbModel(collection=__collection, body=body).insert())
         self.result['status'] = True
 
-    @staticmethod
-    def delete_queue(_type=None, _code=None):
+    def delete_queue(self, _type=None):
         body = {
-            "code": _code,
+            "news": self.id,
         }
         if _type == "COMPARATIVE":
             __collection = 'news_comparative_queue'

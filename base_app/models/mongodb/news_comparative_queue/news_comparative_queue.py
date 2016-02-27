@@ -16,7 +16,9 @@ class NewsComparativeQueueModel:
             __body = {"code": _code}
             if agency is not None:
                 __body = {"agency": agency}
-            return MongodbModel(collection='news_comparative_queue', body=__body).get_all()
+            r = MongodbModel(collection='news_comparative_queue', body=__body).get_all()
+            result = [i for i in r]
+            return result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > news_queue')
             return False
@@ -29,6 +31,19 @@ class NewsComparativeQueueModel:
             }}
             __condition = {"_id": _id}
             return MongodbModel(collection='news_comparative_queue', body=__body, condition=__condition).update()
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > news_queue')
+            return False
+
+    @staticmethod
+    def delete_code(_code):
+        try:
+            __body = {"$set": {
+                "code": -1
+            }}
+            __condition = {"code": _code}
+            __option = {"multi": True}
+            return MongodbModel(collection='news_comparative_queue', body=__body, condition=__condition, option=__option).update_option()
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > news_queue')
             return False
