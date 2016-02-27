@@ -179,8 +179,6 @@ class WorkerRedisModel:
                 workers = json.loads(workers)
             except:
                 workers = []
-            for i in workers:
-                i['start'] = d_parser.parse(i['start'])
             return workers
 
         except:
