@@ -39,7 +39,8 @@ class WorkerRedisModel:
                 error=False,
                 code=self.code,
                 message="",
-                pid=self.pid
+                pid=self.pid,
+                type=self.__key
             ))
             RedisBaseModel(key=self.__key, value=json.dumps(workers)).set()
             return True
@@ -143,7 +144,6 @@ class WorkerRedisModel:
             if _w is not None:
                 _w['end'] = datetime.datetime.now()
                 _w['start'] = d_parser.parse(_w['start'])
-                _w['type'] = self.__key
                 _w['kill'] = kill
                 MongodbModel(collection="worker", body=_w).insert()
             RedisBaseModel(key=self.__key, value=json.dumps(_workers)).set()
