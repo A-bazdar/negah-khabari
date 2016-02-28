@@ -191,7 +191,7 @@ class FeedStatisticModel(BaseModel):
 
     def get_all(self, _page=1, _size=20):
         try:
-            __body = {"content": self.content}
+            __body = {}
             __key = {"_id": 1, "content": 1, "count_read_news": 1, "count_all_links": 1, "count_links_read_with_news": 1,
                      "end_time": 1, "start_time": 1, "error": 1, "message": 1, "killed": 1, "last_read_links": 1,
                      "last_read_news": 1, "count_last_read_news": 1}
@@ -235,7 +235,7 @@ class FeedStatisticModel(BaseModel):
 
     def count_all(self):
         try:
-            __body = {"content": self.content}
+            __body = {}
             r = MongodbModel(collection='feed_statistic', body=__body).count()
             self.result['value'] = r
             self.result['status'] = True
@@ -246,7 +246,7 @@ class FeedStatisticModel(BaseModel):
 
     def get_activity_time(self):
         try:
-            __body = {"content": self.content}
+            __body = {}
             __key = {"start_time": 1, "end_time": 1}
             r = MongodbModel(collection='feed_statistic', body=__body, key=__key).get_all_key()
             import time
@@ -266,7 +266,7 @@ class FeedStatisticModel(BaseModel):
 
     def get_last_activity(self):
         try:
-            __body = {"content": self.content, "end_time": {"$ne": None}}
+            __body = {"end_time": {"$ne": None}}
             r = MongodbModel(collection='feed_statistic', body=__body, page=1, size=1, sort="start_time").get_all_pagination()
             a = datetime.datetime.now()
             for i in r:
