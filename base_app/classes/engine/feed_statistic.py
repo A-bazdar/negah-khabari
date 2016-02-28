@@ -29,7 +29,7 @@ class FeedStatisticTimesSaveNews:
 
 class FeedStatisticTimes:
     def __init__(self):
-        self.id = ObjectId()
+        self._id = ObjectId()
         self.link = ""
         self.extract_news_links = 0
         self.read_news_links = 0
