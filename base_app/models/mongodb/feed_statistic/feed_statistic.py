@@ -40,7 +40,6 @@ class FeedStatisticModel(BaseModel):
                 'error': False,
                 'message': None,
                 'killed': False,
-                'content': self.content,
                 'count_read_news': 0,
                 'count_links_read_with_news': 0,
                 'count_all_links': 0,
@@ -66,6 +65,29 @@ class FeedStatisticModel(BaseModel):
                 'last_read_links': self.last_read_links,
                 'count_all_links': self.count_all_links,
                 'times': self.times,
+                'end_time': self.end_time
+            }}
+            __condition = {"_id": self.id}
+            self.result['value'] = MongodbModel(collection='feed_statistic', body=__body, condition=__condition).update()
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > group')
+            return self.result
+
+    def new_update(self, feed_statistic):
+        try:
+            feed_statistic = feed_statistic.__dict__
+            __body = {"$set": {
+                'message': self.message,
+                'count_read_news': feed_statistic['count_read_news'],
+                'killed': self.killed,
+                'count_links_read_with_news': feed_statistic['count_links_read_with_news'],
+                'last_read_news': self.last_read_news,
+                'count_last_read_news': feed_statistic['count_last_read_news'],
+                'last_read_links': self.last_read_links,
+                'count_all_links': feed_statistic['count_all_links'],
+                'times': feed_statistic['times'],
                 'end_time': self.end_time
             }}
             __condition = {"_id": self.id}

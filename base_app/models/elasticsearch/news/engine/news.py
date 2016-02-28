@@ -35,10 +35,13 @@ class News:
         self.geographic = geographic
         self.group = group
         self.direction = direction
+        self.time_insert = 0
         self.time_update = 0
+        self.time_is_exist = 0
 
     def is_exist(self):
         try:
+            t = Timer()
             if self.title is not None:
                 body = {
                     "query": {
@@ -88,6 +91,7 @@ class News:
                     }
                 }
             x = ElasticSearchModel(doc_type=self.doc_type, body=body).count()
+            self.time_is_exist = t.end()
             if x:
                 return True
             return False
@@ -105,6 +109,7 @@ class News:
             MongodbModel(body={"_id": _id}, collection='news').delete()
 
     def insert(self):
+        t = Timer()
         d = datetime.datetime.now()
         body = {
             'link': self.link,
@@ -135,6 +140,7 @@ class News:
                                                   _id=news).insert()
         self.insert_mongodb(body)
         self.result['status'] = True
+        self.time_insert = t.end()
         return self.result
 
     def update(self):

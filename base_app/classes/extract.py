@@ -192,12 +192,23 @@ class Extract:
         news = []
         for i in list_news:
             self.error_link = None
+            t = Timer()
             __link = self.get_link(i, link)
+            __link_time = t.end()
+            t.start()
             __title = self.get_title(i, title)
+            __title_time = t.end()
+            t.start()
             __summary = self.get_summary(i, summary)
+            __summary_time = t.end()
+            t.start()
             __thumbnail = self.get_thumbnail(i, thumbnail)
+            __thumbnail_time = t.end()
             if __link is not None and __title is not None:
-                news.append(dict(link=__link, title=__title, summary=__summary, thumbnail=__thumbnail))
+                news.append(dict(
+                    news=dict(link=__link, title=__title, summary=__summary, thumbnail=__thumbnail),
+                    time=dict(link=__link_time, title=__title_time, summary=__summary_time, thumbnail=__thumbnail_time),
+                ))
         return news
 
     def get_news(self, __doc, __type, __selectors):
