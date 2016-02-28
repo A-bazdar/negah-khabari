@@ -343,12 +343,17 @@ class AgencyModel:
     def count_links_by_type(self, _type=None):
         try:
             __body = {"type": {"$ne": "RSS"}}
+            __key = {"links": 1}
             if _type == "RSS":
                 __body = {"type": "RSS"}
-            r = MongodbModel(collection='agency', body=__body).get_all()
+                __key = {"rss_list": 1}
+            r = MongodbModel(collection='agency', body=__body, key=__key).get_all_key()
             c = 0
             for i in r:
-                c += len(i['links'])
+                if _type == "RSS":
+                    c += len(i['rss_list'])
+                else:
+                    c += len(i['links'])
             self.result['value'] = c
             self.result['status'] = True
             return self.result
