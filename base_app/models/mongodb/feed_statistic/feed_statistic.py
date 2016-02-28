@@ -14,10 +14,11 @@ __author__ = 'Morteza'
 class FeedStatisticModel(BaseModel):
     def __init__(self, _id=None, start_time=None, error=None, message=None, count_read_news=None,
                  count_links_read_with_news=None, count_all_links=None, times=None, end_time=None, content=None,
-                 killed=False, last_read_links=None, last_read_news=None, count_last_read_news=None):
+                 killed=False, last_read_links=None, last_read_news=None, count_last_read_news=None, _type="ENGINE"):
         BaseModel.__init__(self)
         self.id = _id
         self.start_time = start_time
+        self.type = _type
         self.error = error
         self.message = message
         self.count_read_news = count_read_news
@@ -37,6 +38,7 @@ class FeedStatisticModel(BaseModel):
         try:
             __body = {
                 'start_time': self.start_time,
+                'type': self.type,
                 'error': False,
                 'message': None,
                 'killed': False,
@@ -118,10 +120,6 @@ class FeedStatisticModel(BaseModel):
                 }
             except:
                 different = {'minute': '00', 'second': '00'}
-        try:
-            content = ContentModel(_id=ObjectId(q['content'])).get_one()['value']
-        except:
-            content = None
 
         try:
             end_time = khayyam.JalaliDatetime(q['end_time']).strftime('%Y/%m/%d %H:%M:%S')
@@ -140,7 +138,6 @@ class FeedStatisticModel(BaseModel):
                 last_read_links=q['last_read_links'] if 'last_read_links' in q.keys() else None,
                 last_read_news=q['last_read_news'] if 'last_read_news' in q.keys() else None,
                 count_last_read_news=q['count_last_read_news'] if 'count_last_read_news' in q.keys() else None,
-                content=content,
                 count_links_read_with_news=q['count_links_read_with_news'],
                 count_all_links=q['count_all_links'] if "count_all_links" in q.keys() else 0,
             )
@@ -191,8 +188,8 @@ class FeedStatisticModel(BaseModel):
 
     def get_all(self, _page=1, _size=20):
         try:
-            __body = {}
-            __key = {"_id": 1, "content": 1, "count_read_news": 1, "count_all_links": 1, "count_links_read_with_news": 1,
+            __body = {"type": self.type}
+            __key = {"_id": 1, "count_read_news": 1, "count_all_links": 1, "count_links_read_with_news": 1,
                      "end_time": 1, "start_time": 1, "error": 1, "message": 1, "killed": 1, "last_read_links": 1,
                      "last_read_news": 1, "count_last_read_news": 1}
             r = MongodbModel(collection='feed_statistic', body=__body, key=__key, page=_page, size=_size, sort="start_time").get_all_key_pagination()
@@ -235,7 +232,7 @@ class FeedStatisticModel(BaseModel):
 
     def count_all(self):
         try:
-            __body = {}
+            __body = {"type": self.type}
             r = MongodbModel(collection='feed_statistic', body=__body).count()
             self.result['value'] = r
             self.result['status'] = True
@@ -246,7 +243,7 @@ class FeedStatisticModel(BaseModel):
 
     def get_activity_time(self):
         try:
-            __body = {}
+            __body = {"type": self.type}
             __key = {"start_time": 1, "end_time": 1}
             r = MongodbModel(collection='feed_statistic', body=__body, key=__key).get_all_key()
             import time
@@ -266,7 +263,7 @@ class FeedStatisticModel(BaseModel):
 
     def get_last_activity(self):
         try:
-            __body = {"end_time": {"$ne": None}}
+            __body = {"type": self.type, "end_time": {"$ne": None}}
             r = MongodbModel(collection='feed_statistic', body=__body, page=1, size=1, sort="start_time").get_all_pagination()
             a = datetime.datetime.now()
             for i in r:
