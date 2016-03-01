@@ -6634,6 +6634,7 @@ button.close {
 
 .affix {
   position: fixed;
+  width: 22.75%;
 }
 
 @-ms-viewport {

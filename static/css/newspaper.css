@@ -14,12 +14,87 @@
 .filter_news_container {
     box-shadow: 0 0 2px #aaa;
     border-radius: 5px;
+    padding: 10px;
+    max-height: 550px;
 }
 
 .newspaper-preview {
     font-family: Titr;
     text-align: justify;
     line-height: 35px;
+}
+
+.newspaper-table1{
+    width: 100%;
+}
+
+.newspaper-table1 tr td {
+    border: 1px dashed #000000;
+    position: relative;
+    padding: 10px;
+    vertical-align: top;
+    width: 33.333333333%;
+}
+
+.newspaper-table1 tr td.none-side-border {
+    border-left: none;
+    border-right: none;
+}
+
+.newspaper-table1 tr td.none-left-border {
+    border-left: none;
+}
+
+.newspaper-table1 tr td.none-right-border {
+    border-right: none;
+}
+
+.newspaper-table1 tr td.none-top-border {
+    border-top: none;
+}
+
+.newspaper-table1 tr td.none-bottom-border {
+    border-bottom: none;
+}
+
+.newspaper-table1 tr td.none-border {
+    border: none;
+}
+
+.blue-square-top-left {
+    width: 20px;
+    height: 20px;
+    background: #46639D;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+}
+
+.blue-square-top-right {
+    width: 20px;
+    height: 20px;
+    background: #46639D;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+}
+
+.blue-square-bottom-right {
+    width: 20px;
+    height: 20px;
+    background: #46639D;
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+}
+
+.blue-square-bottom-left {
+    width: 20px;
+    height: 20px;
+    background: #46639D;
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
 }
 
 .separator1 {
@@ -52,17 +127,118 @@
 }
 
 .editor4_preview {
-    display: inline-block;
-    width: 98%;
+
 }
 
 .editor5_preview {
-    display: inline-block;
-    width: 98%;
+
+}
+
+.editor7_preview {
+    height: 800px;
+}
+
+.editor8_preview {
+    height: 800px;
+}
+
+.editor9_preview {
+    height: 800px;
+}
+
+.editor10_preview {
+    height: 400px;
+}
+
+.editor11_preview {
+    height: 400px;
+}
+
+.editor12_preview {
+    height: 800px;
+}
+
+.editor13_preview {
+    height: 400px;
+}
+
+.editor15_preview {
+    height: 800px;
+}
+
+.editor16_preview {
+    height: 400px;
+}
+
+.editor17_preview {
+    height: 400px;
+}
+
+.editor18_preview {
+    height: 800px;
+}
+
+.editor19_preview {
+    height: 400px;
+}
+
+.editor20_preview {
+    height: 400px;
+}
+
+.editor21_preview {
+    height: 1200px;
+}
+
+.editor22_preview {
+    height: 400px;
+}
+
+.editor23_preview {
+    height: 800px;
+}
+
+.editor24_preview {
+    height: 800px;
+}
+
+.editor25_preview {
+    height: 800px;
+}
+
+.editor26_preview {
+    height: 400px;
+}
+
+.editor27_preview {
+    height: 400px;
+}
+
+.editor28_preview {
+    height: 800px;
+}
+
+.editor29_preview {
+    height: 400px;
+}
+
+.editor37_preview {
+    height: 1600px;
+}
+
+.editor31_preview {
+    height: 800px;
+}
+
+.editor32_preview {
+    height: 400px;
+}
+
+.editor33_preview {
+    height: 400px;
 }
 
 .separator2 {
-    /*padding: 5px;*/
     display: inline-block;
     float: left;
     width: 1px;
@@ -70,6 +246,28 @@
 
 .separator2 div {
     min-height: 150px;
+    border-left: 1px dashed #000000;
+}
+
+.separator-ver-max-h {
+    display: inline-block;
+    float: left;
+    width: 1px;
+}
+
+.separator-ver-max-h div {
+    height: 800px;
+    border-left: 1px dashed #000000;
+}
+
+.separator-ver-min-h {
+    display: inline-block;
+    float: left;
+    width: 1px;
+}
+
+.separator-ver-min-h div {
+    height: 400px;
     border-left: 1px dashed #000000;
 }
 
@@ -155,6 +353,37 @@
     transition: all 0.2s;
 }
 
+.newspaper_save_btn {
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    background: #03AF4D;
+    padding: 5px 15px;
+    font-size: 12pt;
+    color: #ffffff !important;
+    vertical-align: middle;
+    margin: 1px !important;
+    /*display: block;*/
+    cursor: pointer;
+    text-decoration: none;
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    -ms-transition: background 0.2s;
+    -o-transition: background 0.2s;
+    transition: background 0.2s;
+}
+
+
+.newspaper_save_btn:hover {
+    background: #039249;
+    text-decoration: none;
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    -ms-transition: background 0.2s;
+    -o-transition: background 0.2s;
+    transition: background 0.2s;
+}
+
 .newspaper_choose_template_h {
     background: -webkit-linear-gradient(#FDFDFD, #E9E9E9);
     background: -o-linear-gradient(#FDFDFD, #E9E9E9);
@@ -178,6 +407,47 @@
     height: 800px;
 }
 
+.editable-s-max-height {
+    height: 1200px;
+}
+
+.editable-s-s-max-height {
+    height: 1600px;
+}
+
 .editable-min-height {
     height: 400px;
+}
+
+.header-page-num {
+    background: #ff0000;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.page-num{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    color: #000000;
+    background: white;
+    padding: 2px;
+    left: 16px;
+    top: 7px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.yellow-square {
+    background: #b8861e;
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+}
+
+.black-box {
+    background: #000000;
+    height: 20px;
 }
