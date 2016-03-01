@@ -339,3 +339,24 @@ class AgencyModel:
         except:
             Debug.get_exception(sub_system='agency', severity='error', tags='delete')
             return self.result
+
+    def count_links_by_type(self, _type=None):
+        try:
+            __body = {"type": {"$ne": "RSS"}}
+            __key = {"links": 1}
+            if _type == "RSS":
+                __body = {"type": "RSS"}
+                __key = {"rss_list": 1}
+            r = MongodbModel(collection='agency', body=__body, key=__key).get_all_key()
+            c = 0
+            for i in r:
+                if _type == "RSS":
+                    c += len(i['rss_list'])
+                else:
+                    c += len(i['links'])
+            self.result['value'] = c
+            self.result['status'] = True
+            return self.result
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='delete')
+            return self.result
