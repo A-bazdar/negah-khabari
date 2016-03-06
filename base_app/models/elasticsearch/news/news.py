@@ -387,6 +387,11 @@ class NewsModel:
                 summary = _fields['summary'][0]
             except:
                 summary = _fields['title'][0]
+
+            try:
+                body = _fields['body'][0]
+            except:
+                body = None
             options = self.get_options(_id)
             self.value.append(dict(
                 id=_id,
@@ -394,6 +399,7 @@ class NewsModel:
                 title=_fields['title'][0],
                 ro_title=ro_title,
                 image=image,
+                body=body,
                 summary=self.summary_text(summary),
                 thumbnail=thumbnail,
                 read_date=_fields['read_date'][0],
@@ -678,15 +684,19 @@ class NewsModel:
             self.result['value'] = [], 0
             return self.result
 
-    def get_all_index(self, _page=0, _size=20, _sort="date"):
+    def get_all_index(self, _page=0, _size=20, _sort="date", detail=False):
         try:
             if _page >= 1:
                 _page -= 1
 
+            fields = ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
+                      "agency", "images", "video", "sound"]
+            if detail:
+                fields += ["body", "image"]
+
             body = {
                 "from": _page * _size, "size": _size,
-                "fields": ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
-                           "agency", "images", "video", "sound"],
+                "fields": fields,
                 "filter": {
                     "and": {
                         "filters": []
