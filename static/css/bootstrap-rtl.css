@@ -6633,7 +6633,8 @@ button.close {
 }
 
 .affix {
-  position: fixed;
+  position: fixed !important;
+  width: 22.75%;
 }
 
 @-ms-viewport {
