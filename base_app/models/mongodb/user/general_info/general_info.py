@@ -359,6 +359,7 @@ class UserModel(BaseModel):
                     sort_news=r['sort_news'] if 'sort_news' in r.keys() else "date",
                     news_content=r['news_content'] if 'news_content' in r.keys() else dict(direction=[], main_source_news=[], news_group=[], news_maker=[]),
                     keyword_setting=r['keyword_setting'] if 'keyword_setting' in r.keys() else dict(add_by_user=False, edit_by_user=False, count_topic=0, count_keyword=0),
+                    bolton_type=r['bolton_type'] if 'bolton_type' in r.keys() else [],
 
                 )
                 self.result['value'] = v
@@ -1499,4 +1500,72 @@ class UserModel(BaseModel):
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save_charts_content', data='collection > user_group')
+            return self.result
+
+    def add_bolton_type(self, _type):
+        try:
+            note = ObjectId()
+            doc = {
+                "_id": note,
+                "name": _type['name'],
+                "time_active": _type['time_active'],
+                "unit": _type['unit'],
+                "from": _type['from'],
+                "active": True,
+                "date": datetime.datetime.now(),
+            }
+            __body = {"$push": {
+                "bolton_type": doc
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = doc
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def update_bolton_type(self, _id, _type, action):
+        try:
+            if action == "active":
+                __body = {"$set": {
+                    'bolton_type.$.active': _type
+                }}
+            else:
+                __body = {"$set": {
+                    'bolton_type.$.name': _type['name'],
+                    'bolton_type.$.time_active': _type['time_active'],
+                    'bolton_type.$.unit': _type['unit'],
+                    'bolton_type.$.from': _type['from'],
+                }}
+            __condition = {'_id': self.id, 'bolton_type._id': _id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def delete_bolton_type(self, _id):
+        try:
+            __body = {
+                "$pull": {
+                    "bolton_type": {
+                        "_id": _id
+                    }
+                }
+            }
+
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = self.get_note()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result

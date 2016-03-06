@@ -4,10 +4,10 @@
     font-family: Tahoma, serif;
     font-size: 12px;
 }
-.bolton_list_items.r1 {
+.bolton_list_items:nth-child(odd) {
     background: #dfe7f1;
 }
-.bolton_list_items.r2 {
+.bolton_list_items:nth-child(even) {
     background: #ffffff;
 }
 

@@ -78,6 +78,8 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.test_engine
         elif collection == 'worker':
             self.collection = self.db.worker
+        elif collection == 'bolton':
+            self.collection = self.db.bolton
 
     def insert(self):
         try:
