@@ -98,6 +98,7 @@ function make_news_list_view(news, font, size) {
     _make.find('div#title_news').html(news['title']).css({'font-size': size + 'pt', 'font-family': font});
     _make.find('span#date_news').html(news['_date']);
     _make.find('div#news_row').attr('data-news', news['id']);
+    _make.find('div#add_to_bolton').attr('data-news', news['id']);
     _make.find('div#detail_news_container').attr('data-news', news['id']);
     _make.find('input.news-select').attr('id', news['id']).val(news['id']).attr(dict_select);
     $('#show_result_news').append(_make.html());
