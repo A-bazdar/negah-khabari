@@ -1533,6 +1533,20 @@ class NewsModel:
                                 data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def get_one_elastic(self):
+        try:
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, _id=self.id).get_one()
+            result = r['_source']
+            result['_id'] = r['_id']
+            self.result['value'] = result
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all',
+                                data='doc_type: ' + NewsModel.doc_type)
+            return self.result
+
     def get_one_print(self):
         try:
             r = ElasticSearchModel(doc_type=NewsModel.doc_type, _id=self.id).get_one()

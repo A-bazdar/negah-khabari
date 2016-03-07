@@ -54,6 +54,13 @@ class BoltonModel(BaseModel):
             sections=_b['sections']
         )
 
+    @staticmethod
+    def get_bolton_detail(_b):
+        return dict(
+            _id=str(_b['_id']),
+            name=_b['name'],
+        )
+
     def get_all(self, bolton_types):
         try:
             __body = {"user": self.user}
@@ -70,4 +77,38 @@ class BoltonModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > bolton')
             self.result['value'] = []
+            return self.result
+
+    def get_all_detail(self):
+        try:
+            __body = {"user": self.user}
+            __key = {"_id": 1, "name": 1}
+            r = MongodbModel(collection='bolton', body=__body, key=__key, sort="date").get_all_key_sort()
+            if r:
+                l = []
+                for i in r:
+                    l.append(self.get_bolton_detail(i))
+                self.result['value'] = l
+
+                self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > bolton')
+            self.result['value'] = []
+            return self.result
+
+    def add_news(self, news):
+        try:
+            __body = {"$push": {
+                "news": news
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='bolton', condition=__condition, body=__body).update()
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result
