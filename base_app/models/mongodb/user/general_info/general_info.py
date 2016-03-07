@@ -360,6 +360,8 @@ class UserModel(BaseModel):
                     news_content=r['news_content'] if 'news_content' in r.keys() else dict(direction=[], main_source_news=[], news_group=[], news_maker=[]),
                     keyword_setting=r['keyword_setting'] if 'keyword_setting' in r.keys() else dict(add_by_user=False, edit_by_user=False, count_topic=0, count_keyword=0),
                     bolton_type=r['bolton_type'] if 'bolton_type' in r.keys() else [],
+                    count_user_login=r['count_user_login'] if 'count_user_login' in r.keys() else 0,
+                    count_online=r['count_online'] if 'count_online' in r.keys() else 1
 
                 )
                 self.result['value'] = v
@@ -614,18 +616,31 @@ class UserModel(BaseModel):
                                 data='collection > user')
             return self.result
 
-    def set_last_login(self, user_login, login):
+    def set_last_login(self):
         try:
             condition = {'_id': self.id}
-            if login:
-                body = {'$set': {
-                    'last_login': datetime.datetime.now(),
-                    'user_login': user_login
-                }}
-            else:
-                body = {'$set': {
-                    'user_login': user_login
-                }}
+            body = {
+                '$set': {
+                    'last_login': datetime.datetime.now()
+                }
+            }
+            self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > update_admin',
+                                data='collection > user')
+            return self.result
+
+    def set_count_user_login(self, amount=1):
+        try:
+            condition = {'_id': self.id}
+            body = {
+                "$inc": {
+                    "count_user_login": amount
+                }
+            }
             self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
             self.result['status'] = True
 
