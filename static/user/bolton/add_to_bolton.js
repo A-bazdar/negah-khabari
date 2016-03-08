@@ -14,11 +14,13 @@ $(document).on('click', '.add-news-to-bolton', function(e){
     var btn_html = elm.html();
     elm.html(loader);
     var bolton = elm.attr('data-bolton');
+    var section = elm.attr('data-section');
     var news = elm.attr('data-news');
     var postData = [
         {name: 'news', value: news},
         {name: '_xsrf', value: xsrf_token},
-        {name: 'bolton', value: bolton}
+        {name: 'bolton', value: bolton},
+        {name: 'section', value: section}
     ];
     jQuery.ajax(
         {
