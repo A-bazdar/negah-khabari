@@ -5,10 +5,21 @@
 function make_news(item, section){
     var item_obj = $('#MakeBoltonNewsItem');
     item_obj.html($('#BoltonNewsItem').html());
+    var dict_select = {
+        'id': item['id'],
+        'data-news': item['id'],
+        'data-read': item['read'] ? 'true' : 'false',
+        'data-star': item['star'] ? 'true' : 'false',
+        'data-note': item['note'] != false ? 'true' : 'false',
+        'data-no-important': item['important'] != false ? 'true' : 'false',
+        'data-important1': item['important'] == "Important1" ? 'true' : 'false',
+        'data-important2': item['important'] == "Important2" ? 'true' : 'false',
+        'data-important3': item['important'] == "Important3" ? 'true' : 'false'
+    };
     item_obj.find('[data-id]').attr('data-id', item['_id']);
     item_obj.find('[data-news]').attr('data-news', item['_id']);
     item_obj.find('#agency_info').css('background', item['agency_color']).html(item['agency_name']);
-    item_obj.find('.news-select').attr('id', item['_id']);
+    item_obj.find('.news-select').attr(dict_select);
     item_obj.find('#label_news_select').attr('for', item['_id']);
     item_obj.find('#title_news').html(item['title']);
     item_obj.find('select#select_content_direction').addClass('new_select').attr('data-news', item['_id']).attr('data-section', section);
@@ -194,4 +205,18 @@ $(document).on('click','.change-sort-news', function(e){
     $('.change-sort-news.active').removeClass('active');
     elm.addClass('active');
     show_news(section, false, sort, reverse);
+});
+
+$(document).on('click', '.filter-news-check', function(e){
+    var elm = $(e.target).closest('.filter-news-check');
+    if(elm.attr('data-filter') == 'all'){
+        $('input[type=checkbox][name=news-select]').prop('checked', true);
+    }else if(elm.attr('data-filter') == 'no-one'){
+        $('input[type=checkbox][name=news-select]').prop('checked', false);
+    }else{
+        var filter = elm.attr('data-filter');
+        var val = elm.attr('data-val');
+        $('input[type=checkbox][name=news-select]').prop('checked', false);
+        $('input[type=checkbox][name=news-select][data-' + filter + '=' + val + ']').prop('checked', true);
+    }
 });

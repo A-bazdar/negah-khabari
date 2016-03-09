@@ -74,6 +74,10 @@ class BoltonNewsModel(BaseModel):
             self.result['value'].append(dict(
                 _id=_news['_id'],
                 title=_news['title'],
+                star=_news['star'],
+                read=_news['read'],
+                important=_news['important'],
+                note=_news['note'],
                 direction_content=str(_news['direction_content']) if 'direction_content' in _news.keys() else False,
                 news_group=str(_news['news_group']) if 'news_group' in _news.keys() else False,
                 main_source_news=str(_news['main_source_news']) if 'main_source_news' in _news.keys() else False,
@@ -125,7 +129,9 @@ class BoltonNewsModel(BaseModel):
     def get_all_detail(self, sort=None, reverse=True):
         try:
             __body = {"bolton": self.bolton, "section": self.section}
-            __key = {"_id": 1, "title": 1, "date": 1, "category": 1, "subject": 1, "agency": 1, "direction": 1, "direction_content": 1, "news_group": 1, "main_source_news": 1, "news_maker": 1}
+            __key = {"_id": 1, "title": 1, "date": 1, "category": 1, "subject": 1, "agency": 1, "direction": 1,
+                     "direction_content": 1, "news_group": 1, "main_source_news": 1, "news_maker": 1,
+                     "star": 1, "read": 1, "important": 1, "note": 1}
             r = MongodbModel(collection='bolton_news', body=__body, key=__key).get_all_key()
             r = [i for i in r]
             if r:

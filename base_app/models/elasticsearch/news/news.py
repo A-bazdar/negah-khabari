@@ -1538,6 +1538,11 @@ class NewsModel:
             r = ElasticSearchModel(doc_type=NewsModel.doc_type, _id=self.id).get_one()
             result = r['_source']
             result['_id'] = r['_id']
+            options = self.get_options(r['_id'])
+            result['note'] = options['note']
+            result['star'] = options['star']
+            result['important'] = options['important']
+            result['read'] = options['read']
             self.result['value'] = result
             self.result['status'] = True
             return self.result
