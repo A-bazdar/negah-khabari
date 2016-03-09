@@ -11,7 +11,9 @@ from base_app.models.elasticsearch.base_model import ElasticSearchModel
 from base_app.models.mongodb.agency.agency import AgencyModel
 import time
 from base_app.models.mongodb.base_model import MongodbModel
+from base_app.models.mongodb.category.category import CategoryModel
 from base_app.models.mongodb.content.content import ContentModel
+from base_app.models.mongodb.direction.direction import DirectionModel
 from base_app.models.mongodb.geographic.geographic import GeographicModel
 from base_app.models.mongodb.setting.setting import SettingModel
 from base_app.models.mongodb.subject.subject import SubjectModel
@@ -859,7 +861,6 @@ class NewsModel:
                 key_query += '({})'.format(_query)
             else:
                 key_query += ' OR ({})'.format(_query)
-        print key_query
         return key_query
 
     def get_query_search(self, _search):
@@ -1543,6 +1544,27 @@ class NewsModel:
             result['star'] = options['star']
             result['important'] = options['important']
             result['read'] = options['read']
+            _date = d_parser.parse(result['date'])
+            result['date'] = d_parser.parse(_date.strftime("%Y/%m/%d %H:%M:%S"))
+            try:
+                result['category_name'] = CategoryModel(_id=ObjectId(result['category'])).get_one()['value']['name']
+            except:
+                result['category_name'] = None
+            try:
+                agency = AgencyModel(_id=ObjectId(result['agency'])).get_one_imp()
+                result['agency_name'] = agency['name']
+                result['agency_color'] = agency['color']
+            except:
+                result['agency_name'] = u'ندارد'
+                result['agency_color'] = None
+            try:
+                result['subject_name'] = SubjectModel(_id=ObjectId(result['subject'])).get_one()['value']['name']
+            except:
+                result['subject_name'] = None
+            try:
+                result['direction_name'] = DirectionModel(_id=ObjectId(result['direction'])).get_one()['value']['name']
+            except:
+                result['direction_name'] = None
             self.result['value'] = result
             self.result['status'] = True
             return self.result

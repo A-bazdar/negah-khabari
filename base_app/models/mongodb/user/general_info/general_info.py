@@ -1272,7 +1272,7 @@ class UserModel(BaseModel):
                 "keyword": {"_id": self.keyword}
             }}
             __condition = {'_id': self.id}
-            print MongodbModel(collection='user', condition=__condition, body=__body).update()
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
             self.result['value'] = self.keyword
             self.result['status'] = True
 
@@ -1360,7 +1360,6 @@ class UserModel(BaseModel):
 
             for __ag in agencies:
                 a_index = is_exist(_list=agency_direction, _key=__ag['id'], _field='agency')
-                print a_index, "###########"
                 if a_index is False:
                     # try:
                         d_index = is_exist(_list=r, _key=__ag['direction']['id'])

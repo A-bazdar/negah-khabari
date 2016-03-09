@@ -319,12 +319,13 @@ class AgencyModel:
     def get_one_imp(self):
         try:
             body = {'_id': self.id}
-            key = {"_id": 1, "name": 1}
+            key = {"_id": 1, "name": 1, "color": 1}
             r = MongodbModel(collection='agency', body=body, key=key).get_one_key()
             if r:
                 return dict(
                     _id=r['_id'],
-                    name=r['name']
+                    name=r['name'],
+                    color=r['color']
                 )
             return {}
         except:

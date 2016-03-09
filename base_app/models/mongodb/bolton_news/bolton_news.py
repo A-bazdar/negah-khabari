@@ -69,8 +69,6 @@ class BoltonNewsModel(BaseModel):
 
     def get_news_detail(self, _news):
         try:
-            agency = AgencyModel(_id=ObjectId(_news['agency'])).get_one()
-
             self.result['value'].append(dict(
                 _id=_news['_id'],
                 title=_news['title'],
@@ -82,65 +80,40 @@ class BoltonNewsModel(BaseModel):
                 news_group=str(_news['news_group']) if 'news_group' in _news.keys() else False,
                 main_source_news=str(_news['main_source_news']) if 'main_source_news' in _news.keys() else False,
                 news_maker=str(_news['news_maker']) if 'news_maker' in _news.keys() else False,
-                agency_name=agency['name'],
-                agency_id=str(agency['id']),
-                agency_color=agency['color']
+                agency_name=_news['agency_name'],
+                agency_id=str(_news['agency']),
+                agency_color=_news['agency_color']
             ))
 
         except:
             pass
 
-    @staticmethod
-    def sort_news(_news, _sort, _reverse):
-        if _sort == 'user_choose':
-            _news.reverse()
-
-        elif _sort == 'date':
-            for i in _news:
-                _date = d_parser.parse(i['date'])
-                i['date'] = d_parser.parse(_date.strftime("%Y/%m/%d %H:%M:%S"))
-            _news = sorted(_news, key=lambda k: k['date'], reverse=_reverse)
-
-        elif _sort == 'category':
-            for i in _news:
-                category = CategoryModel(_id=ObjectId(i['category'])).get_one()['value']
-                i['category'] = category['name']
-            _news = sorted(_news, key=lambda k: k['category'], reverse=_reverse)
-
-        elif _sort == 'agency':
-            for i in _news:
-                agency = AgencyModel(_id=ObjectId(i['agency'])).get_one_imp()
-                i['agency_name'] = agency['name']
-            _news = sorted(_news, key=lambda k: k['agency_name'], reverse=_reverse)
-
-        elif _sort == 'subject':
-            for i in _news:
-                subject = SubjectModel(_id=ObjectId(i['subject'])).get_one()['value']
-                i['subject'] = subject['name']
-            _news = sorted(_news, key=lambda k: k['subject'], reverse=_reverse)
-
-        elif _sort == 'direction':
-            for i in _news:
-                direction = DirectionModel(_id=ObjectId(i['direction'])).get_one()['value']
-                i['direction'] = direction['name']
-            _news = sorted(_news, key=lambda k: k['direction'], reverse=_reverse)
-        return _news
-
     def get_all_detail(self, sort=None, reverse=True):
         try:
             __body = {"bolton": self.bolton, "section": self.section}
-            __key = {"_id": 1, "title": 1, "date": 1, "category": 1, "subject": 1, "agency": 1, "direction": 1,
+            __key = {"_id": 1, "title": 1, "date": 1, "agency": 1, "agency_name": 1, "agency_color": 1,
                      "direction_content": 1, "news_group": 1, "main_source_news": 1, "news_maker": 1,
                      "star": 1, "read": 1, "important": 1, "note": 1}
-            r = MongodbModel(collection='bolton_news', body=__body, key=__key).get_all_key()
+            ascending = 1 if reverse else -1
+            __sort = [('date', ascending)]
+            if sort == 'user_choose':
+                __sort = [('_id', ascending)]
+            elif sort == 'category':
+                __sort = [('category_name', ascending), ('date', ascending), ('agency_name', ascending)]
+            elif sort == 'agency':
+                __sort = [('agency_name', ascending), ('date', ascending)]
+            elif sort == 'subject':
+                __sort = [('subject_name', ascending), ('date', ascending)]
+            elif sort == 'direction':
+                __sort = [('direction_name', ascending), ('date', ascending)]
+            r = MongodbModel(collection='bolton_news', body=__body, key=__key, sort=__sort).get_all_key_multi_sort()
             r = [i for i in r]
-            if r:
-                r = self.sort_news(r, sort, reverse)
-                self.result['value'] = []
-                for i in r:
-                    self.get_news_detail(i)
 
-                self.result['status'] = True
+            self.result['value'] = []
+            for i in r:
+                self.get_news_detail(i)
+
+            self.result['status'] = True
 
             return self.result
         except:
