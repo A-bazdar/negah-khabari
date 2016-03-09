@@ -81,8 +81,10 @@ class BoltonModel(BaseModel):
     def get_one(self):
         try:
             __body = {"_id": self.id}
-            __key = {"_id": 1, "name": 1, "sections.section": 1, "sections._id": 1}
+            __key = {"_id": 1, "name": 1, "sections.section": 1, "sort": 1, "reverse": 1, "sections._id": 1}
             r = MongodbModel(collection='bolton', body=__body, key=__key).get_one_key()
+            r['sort'] = r['sort'] if 'sort' in r.keys() else "user_choose"
+            r['reverse'] = r['reverse'] if 'reverse' in r.keys() else True
             self.result['value'] = r
             self.result['status'] = True
 
@@ -109,4 +111,19 @@ class BoltonModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > bolton')
             self.result['value'] = []
+            return self.result
+
+    def update_sort(self, sort, reverse):
+        try:
+            __body = {"$set": {
+                "sort": sort,
+                "reverse": reverse
+            }}
+            __condition = {"_id": self.id}
+            MongodbModel(collection='bolton', body=__body, condition=__condition).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > bolton_news')
             return self.result

@@ -316,6 +316,21 @@ class AgencyModel:
             Debug.get_exception(sub_system='agency', severity='error', tags='get_one')
             return {}
 
+    def get_one_imp(self):
+        try:
+            body = {'_id': self.id}
+            key = {"_id": 1, "name": 1}
+            r = MongodbModel(collection='agency', body=body, key=key).get_one_key()
+            if r:
+                return dict(
+                    _id=r['_id'],
+                    name=r['name']
+                )
+            return {}
+        except:
+            Debug.get_exception(sub_system='agency', severity='error', tags='get_one')
+            return {}
+
     def delete(self):
         try:
             self.result['value'] = MongodbModel(collection='agency', body={'_id': self.id}).delete()

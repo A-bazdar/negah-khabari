@@ -22,14 +22,17 @@ function make_news(item, section){
     $('#show_result_news').append(item_obj.html());
 }
 
-function show_news(section, name){
+function show_news(section, name, sort, reverse){
     $('.section-tab.active').removeClass('active');
     $('.section-tab[data-section=' + section + ']').addClass('active');
-    $('#section_name').html(name);
+    if(name != false)
+        $('#section_name').html(name);
     $('#show_result_news').html('');
     var postData = [
         {name: 'method', value: "ShowSectionNews"},
         {name: 'section', value: section},
+        {name: 'sort', value: sort},
+        {name: 'reverse', value: reverse},
         {name: '_xsrf', value: xsrf_token}
     ];
     jQuery.ajax(
@@ -44,6 +47,7 @@ function show_news(section, name){
                 if (status) {
                     for(var i = 0; i < value.length ; i++){
                         make_news(value[i], section);
+                        $('.change-sort-news').attr('data-section', section);
                         $('select.select-news-content.new_select').select2().removeClass('new_select');
                     }
                 }
@@ -175,4 +179,19 @@ $(document).on('click', '.option-bolton-news.delete', function(e){
                 }
             });
     }, function(){});
+});
+
+$(document).on('click','.change-sort-news', function(e){
+    var elm = $(e.target).closest('.change-sort-news');
+    var sort = elm.attr('data-sort');
+    var reverse = elm.attr('data-reverse');
+    if(reverse == "True")
+        elm.attr('data-reverse', "False");
+    else
+        elm.attr('data-reverse', "True");
+
+    var section = elm.attr('data-section');
+    $('.change-sort-news.active').removeClass('active');
+    elm.addClass('active');
+    show_news(section, false, sort, reverse);
 });

@@ -10,6 +10,10 @@ from base_app.models.mongodb.agency.agency import AgencyModel
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
 import dateutil.parser as d_parser
 
+from base_app.models.mongodb.category.category import CategoryModel
+from base_app.models.mongodb.direction.direction import DirectionModel
+from base_app.models.mongodb.subject.subject import SubjectModel
+
 __author__ = 'Morteza'
 
 
@@ -82,12 +86,50 @@ class BoltonNewsModel(BaseModel):
         except:
             pass
 
-    def get_all_detail(self):
+    @staticmethod
+    def sort_news(_news, _sort, _reverse):
+        if _sort == 'user_choose':
+            _news.reverse()
+
+        elif _sort == 'date':
+            for i in _news:
+                _date = d_parser.parse(i['date'])
+                i['date'] = d_parser.parse(_date.strftime("%Y/%m/%d %H:%M:%S"))
+            _news = sorted(_news, key=lambda k: k['date'], reverse=_reverse)
+
+        elif _sort == 'category':
+            for i in _news:
+                category = CategoryModel(_id=ObjectId(i['category'])).get_one()['value']
+                i['category'] = category['name']
+            _news = sorted(_news, key=lambda k: k['category'], reverse=_reverse)
+
+        elif _sort == 'agency':
+            for i in _news:
+                agency = AgencyModel(_id=ObjectId(i['agency'])).get_one_imp()
+                i['agency_name'] = agency['name']
+            _news = sorted(_news, key=lambda k: k['agency_name'], reverse=_reverse)
+
+        elif _sort == 'subject':
+            for i in _news:
+                subject = SubjectModel(_id=ObjectId(i['subject'])).get_one()['value']
+                i['subject'] = subject['name']
+            _news = sorted(_news, key=lambda k: k['subject'], reverse=_reverse)
+
+        elif _sort == 'direction':
+            for i in _news:
+                direction = DirectionModel(_id=ObjectId(i['direction'])).get_one()['value']
+                i['direction'] = direction['name']
+            _news = sorted(_news, key=lambda k: k['direction'], reverse=_reverse)
+        return _news
+
+    def get_all_detail(self, sort=None, reverse=True):
         try:
             __body = {"bolton": self.bolton, "section": self.section}
-            __key = {"_id": 1, "title": 1, "agency": 1, "direction_content": 1, "news_group": 1, "main_source_news": 1, "news_maker": 1}
-            r = MongodbModel(collection='bolton_news', body=__body, key=__key, sort="sort").get_all_key_sort()
+            __key = {"_id": 1, "title": 1, "date": 1, "category": 1, "subject": 1, "agency": 1, "direction": 1, "direction_content": 1, "news_group": 1, "main_source_news": 1, "news_maker": 1}
+            r = MongodbModel(collection='bolton_news', body=__body, key=__key).get_all_key()
+            r = [i for i in r]
             if r:
+                r = self.sort_news(r, sort, reverse)
                 self.result['value'] = []
                 for i in r:
                     self.get_news_detail(i)
@@ -96,7 +138,7 @@ class BoltonNewsModel(BaseModel):
 
             return self.result
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > bolton_news')
+            print Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > bolton_news')
             self.result['value'] = []
             return self.result
 
