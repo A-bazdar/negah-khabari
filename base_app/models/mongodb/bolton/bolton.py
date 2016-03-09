@@ -2,13 +2,8 @@
 # -*- coding: utf-8 -*-
 import datetime
 import khayyam
-from bson import ObjectId
-
-from base_app.classes.date import CustomDateTime
 from base_app.classes.debug import Debug
-from base_app.models.mongodb.agency.agency import AgencyModel
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
-import dateutil.parser as d_parser
 
 __author__ = 'Morteza'
 
@@ -114,105 +109,4 @@ class BoltonModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > bolton')
             self.result['value'] = []
-            return self.result
-
-    def add_news(self, section, news):
-        try:
-            __body = {"$push": {
-                "sections.$.news": news
-            }}
-            __condition = {'_id': self.id, "sections._id": section}
-            MongodbModel(collection='bolton', condition=__condition, body=__body).update()
-            self.result['value'] = True
-            self.result['status'] = True
-
-            return self.result
-        except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
-            return self.result
-
-    @staticmethod
-    def get_news(_fields):
-        try:
-            agency = AgencyModel(_id=ObjectId(_fields['agency'])).get_one()
-            try:
-                _date = d_parser.parse(_fields['date'])
-                _date = d_parser.parse(_date.strftime("%Y/%m/%d %H:%M:%S"))
-            except:
-                _date = _fields['date']
-
-            try:
-                ro_title = _fields['ro_title']
-            except:
-                ro_title = None
-
-            try:
-                thumbnail = _fields['thumbnail']
-            except:
-                thumbnail = None
-
-            try:
-                video = _fields['video']
-            except:
-                video = None
-
-            try:
-                image = _fields['image']
-            except:
-                image = None
-
-            try:
-                sound = _fields['sound']
-            except:
-                sound = None
-
-            try:
-                summary = _fields['summary']
-            except:
-                summary = _fields['title']
-
-            try:
-                body = _fields['body']
-            except:
-                body = None
-            return dict(
-                id=_fields['_id'],
-                link=_fields['link'],
-                title=_fields['title'],
-                ro_title=ro_title,
-                image=image,
-                body=body,
-                summary=summary,
-                thumbnail=thumbnail,
-                read_date=_fields['read_date'],
-                _date=CustomDateTime().get_time_difference(_date),
-                agency_name=agency['name'],
-                images=_fields['images'] if 'images' in _fields.keys() else [],
-                video=video,
-                download='',
-                sound=sound,
-                agency_id=str(agency['id']),
-                agency_color=agency['color']
-            )
-        except:
-            print "Error get_news_module_field"
-            print Debug.get_exception(send=False)
-
-    def get_section_news(self, section):
-        try:
-            __body = {'_id': self.id, "sections._id": section}
-            __key = {"sections.$.news": 1}
-            try:
-                news = MongodbModel(collection='bolton', body=__body, key=__key).get_one_key()['sections'][0]['news']
-            except:
-                news = []
-            result = []
-            for i in news:
-                result.append(self.get_news(i))
-            self.result['value'] = result
-            self.result['status'] = True
-
-            return self.result
-        except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result

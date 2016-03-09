@@ -80,6 +80,8 @@ class MongodbModel(MongodbBaseModel):
             self.collection = self.db.worker
         elif collection == 'bolton':
             self.collection = self.db.bolton
+        elif collection == 'bolton_news':
+            self.collection = self.db.bolton_news
 
     def insert(self):
         try:
@@ -181,7 +183,7 @@ class MongodbModel(MongodbBaseModel):
         try:
             return self.collection.update(self.__condition, self.__body)
         except:
-            Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > update',
+            print Debug.get_exception(sub_system='admin', severity='critical_error', tags='mongodb > update',
                                 data='collection: ' + self.__collection + ' body: ' + str(
                                     self.__body) + ' condition: ' + str(self.__condition))
             return False
