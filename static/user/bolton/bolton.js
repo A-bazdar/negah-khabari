@@ -32,7 +32,7 @@ function make_bolton_list(item, type){
     item_obj.find('.bolton-date').html(item['date']);
     item_obj.find('.bolton-type').html(item['type']['name']);
     item_obj.find('.bolton-count-section').html(item['sections'].length);
-    item_obj.find('.show-bolton').attr('onclick', 'location.href="' + show_bolton_by_id_url.replace('__id__', item['_id']) + '"');
+    item_obj.find('.show-bolton').attr('onclick', 'location.href="' + bolton_by_id_url.replace('__id__', item['_id']) + '"');
     if(type == "append")
         $('.bolton-list-list').append(item_obj.html());
     else
