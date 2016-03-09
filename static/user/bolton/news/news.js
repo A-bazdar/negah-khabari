@@ -6,7 +6,6 @@ function make_news(item, section){
     var item_obj = $('#MakeBoltonNewsItem');
     item_obj.html($('#BoltonNewsItem').html());
     var dict_select = {
-        'id': item['id'],
         'data-news': item['id'],
         'data-read': item['read'] ? 'true' : 'false',
         'data-star': item['star'] ? 'true' : 'false',
@@ -19,8 +18,7 @@ function make_news(item, section){
     item_obj.find('[data-id]').attr('data-id', item['_id']);
     item_obj.find('[data-news]').attr('data-news', item['_id']);
     item_obj.find('#agency_info').css('background', item['agency_color']).html(item['agency_name']);
-    item_obj.find('.news-select').attr(dict_select);
-    item_obj.find('#label_news_select').attr('for', item['_id']);
+    item_obj.find('.news-select').attr(dict_select).val(item['_id']);
     item_obj.find('#title_news').html(item['title']);
     item_obj.find('select#select_content_direction').addClass('new_select').attr('data-news', item['_id']).attr('data-section', section);
     item_obj.find('select#select_content_direction option[value=' + item['direction_content'] + ']').attr('selected', 'selected');
@@ -159,6 +157,38 @@ $(document).on('click', '.add-news-to-bolton', function(e){
                 }
                 elm.html(btn_html);
                 $('#add_to_bolton_modal').modal('toggle');
+            }
+        });
+});
+
+$(document).on('click', '.move-news-to-bolton', function(e){
+    var elm = $(e.target).closest('.move-news-to-bolton');
+    var bolton = elm.attr('data-bolton');
+    var section = elm.attr('data-section');
+    var postData = [
+        {name: '_xsrf', value: xsrf_token},
+        {name: 'bolton', value: bolton},
+        {name: 'section', value: section},
+        {name: 'method', value: "MoveBoltonMultiNews"}
+    ];
+    $.each($('div#show_result_news input[type=checkbox][name=news-select]:checked'), function(){
+        postData.push({name: "news", value: $(this).val()});
+    });
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData,
+            success: function (response) {
+                var status = response['status'];
+                var value = response['value'];
+                var messages = response['messages'];
+                if (status) {
+                    $.each($('input[type=checkbox][name=news-select]:checked'), function(){
+                        $('.news_row[data-news=' + $(this).val() + ']').remove();
+                    });
+
+                }
             }
         });
 });
