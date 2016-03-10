@@ -144,7 +144,7 @@ $(document).on('click', ".bolton-type-edit", function(e){
     $('form#BoltonTypeForm select[name=unit]').select2("val", unit);
     $('form#BoltonTypeForm input[name=from]').val(from);
     $('.add-bolton-btn i').removeClass('fa-caret-down').addClass('fa-caret-up');
-    $(this).removeClass('closebox').addClass('open');
+    $('.add-bolton-btn').removeClass('closebox').addClass('open');
     $('.add_bolton_form_con[data-id=2]').slideDown();
 });
 

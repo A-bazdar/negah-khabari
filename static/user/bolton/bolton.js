@@ -18,6 +18,11 @@ function make_bolton(item, type){
     item_obj.find('.bolton-date').html(item['date']);
     item_obj.find('.bolton-type').html(item['type']['name']);
     item_obj.find('.bolton-count-section').html(item['sections'].length);
+    if(item['active']){
+        item_obj.find('.bolton-active').addClass('red-turn-off-icon').attr('data-action', 'deactive');
+    }else{
+        item_obj.find('.bolton-active').addClass('green-turn-off-icon').attr('data-action', 'active');
+    }
     if(type == "append")
         $('.bolton-list').append(item_obj.html());
     else
@@ -78,14 +83,16 @@ $(document).on('submit', "#BoltonForm", function(e){
                         if($('form#BoltonForm input[name=method]').val() == "AddBolton"){
                             make_bolton(value, "prepend");
                             make_bolton_list(value, "prepend");
-                        //}else{
-                            //var obj = $('.bolton_list_items[data-id=' + value['_id'] + ']');
-                            //obj.find('.bolton-type-name').html(value['name']);
-                            //obj.find('.bolton-time-active').html(value['time_active']);
-                            //obj.find('[data-name]').attr('data-name', value['name']);
-                            //obj.find('[data-time-active]').attr('data-time-active', value['time_active']);
-                            //obj.find('[data-unit]').attr('data-unit', value['unit']);
-                            //obj.find('[data-from]').attr('data-from', value['from']);
+                        }else{
+                            var obj = $('.bolton_list_items[data-id=' + value['_id'] + ']');
+                            obj.find('.bolton-name').html(value['name']);
+                            obj.find('.bolton-type').html(value['type']['name']);
+                            obj.find('.bolton-count-section').html(value['sections'].length);
+                            for(var i = 0; i < __all_bolton.length ; i++) {
+                                if (__all_bolton[i]['_id'] == value['_id']) {
+                                    __all_bolton[i] = value;
+                                }
+                            }
                         }
                         empty_form_bolton();
                         __a = true;
@@ -100,4 +107,125 @@ $(document).on('submit', "#BoltonForm", function(e){
                 });
             }
         });
+});
+
+$(document).on('click', ".bolton-active", function(e){
+    var elm = $(e.target).closest('.bolton-active');
+    var postData = [
+        {name: '_xsrf', value: xsrf_token},
+        {name: 'action', value: elm.attr('data-action')},
+        {name: 'method', value: "ActiveBolton"},
+        {name: '_id', value: elm.attr('data-id')}
+    ];
+    var btn = $('.bolton-type-btn');
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData,
+            success: function (response) {
+                var status = response['status'];
+                var value = response['value'];
+                var messages = response['messages'];
+                if (!status) {
+                    var error = '';
+                    for(var i = 0; i < messages.length ; i++){
+                        error += messages[i] + '<br>';
+                    }
+                    if(error == '')
+                        error = 'error';
+                    Alert.render(error, function(){
+                        btn.html('ثبت');
+                        __a = true;
+                    });
+                }else{
+                    if(elm.attr('data-action') == 'active'){
+                        elm.addClass('red-turn-off-icon').removeClass('green-turn-off-icon').attr('data-action', 'deactive');
+                    }else{
+                        elm.addClass('green-turn-off-icon').removeClass('red-turn-off-icon').attr('data-action', 'active');
+                    }
+                }
+            },
+            error: function () {
+                Alert.render('error', function(){
+                    btn.html('ثبت');
+                    __a = true;
+                });
+            }
+        });
+});
+
+$(document).on('click', '.bolton-delete', function(e){
+    Confirm.render(0, 0, 0, 0, 0, function(){
+        var elm = $(e.target).closest('.bolton-delete');
+        var _id = elm.attr('data-id');
+        elm.html(loader.replace(/20/g, '15'));
+        var postData = [
+            {name: '_id', value: _id},
+            {name: '_xsrf', value: xsrf_token},
+            {name: 'method', value: 'DeleteBolton'}
+        ];
+        jQuery.ajax(
+            {
+                url: '',
+                type: "post",
+                data: postData,
+                success: function (response) {
+                    var status = response['status'];
+                    var value = response['value'];
+                    var messages = response['messages'];
+                    if (status) {
+                        Alert.render('success', function () {
+                            elm.closest('.bolton_list_items').remove();
+                        });
+                    }else{
+                        var error = '';
+                        for(var i = 0; i < messages.length ; i++){
+                            error += messages[i] + '<br>';
+                        }
+                        if(error == '')
+                            error = 'error';
+                        Alert.render(error, function(){
+                            elm.html(trash);
+                        });
+                    }
+                },
+                error: function () {
+                    Alert.render('error', function(){
+                        elm.html(trash);
+                    });
+                }
+            });
+    }, function(){});
+});
+
+$(document).on('click', ".bolton-edit", function(e){
+    var elm = $(e.target).closest('.bolton-edit');
+    var _id = elm.attr('data-id');
+    for(var i = 0; i < __all_bolton.length ; i++) {
+        var _b = __all_bolton[i];
+        if(_b['_id'] == _id){
+            $('form#BoltonForm input[name=method]').val("EditBolton");
+            $('form#BoltonForm input[name=_id]').val(_id);
+            $('form#BoltonForm input[name=name]').val(_b['name']);
+            $('form#BoltonForm select[name=format]').select2("val", _b['format']);
+            $('form#BoltonForm select[name=type]').select2("val", _b['type']['_id']);
+            $('form#BoltonForm input[name=section_id]').val(_b['sections'][0]['_id']);
+            $('form#BoltonForm input[name=news_section]').val(_b['sections'][0]['section']);
+            $('form#BoltonForm select[name=pattern_search]').select2("val", _b['sections'][0]['pattern']);
+            for(var j = 1; j < _b['sections'].length ; j++) {
+                var _c = _b['sections'][j];
+                var temp = $('#Temp');
+                temp.html(news_section);
+                temp.find('input[name=news_section]').attr('value', _c['section']);
+                temp.find('input[name=section_id]').attr('value', _c['_id']);
+                temp.find('select[name=pattern_search] option[data-val=' + _c['pattern'] + ']').attr('selected', 'selected');
+                $('.news-section-divs').append(temp.html());
+                $('.news-section-divs .new_select').select2().removeClass('new_select').addClass('select');
+            }
+        }
+    }
+    $('.add-bolton-btn i').removeClass('fa-caret-down').addClass('fa-caret-up');
+    $('.add-bolton-btn').removeClass('closebox').addClass('open');
+    $('.add_bolton_form_con[data-id=1]').slideDown();
 });

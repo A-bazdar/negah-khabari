@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import datetime
 import khayyam
+from bson import ObjectId
+
 from base_app.classes.debug import Debug
 from base_app.models.mongodb.base_model import MongodbModel, BaseModel
 
@@ -37,6 +39,30 @@ class BoltonModel(BaseModel):
             print Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > bolton')
             return self.result
 
+    def update(self):
+        try:
+            for i in self.sections:
+                if i['_id'] == "None":
+                    i['_id'] = ObjectId()
+                else:
+                    i['_id'] = ObjectId(i['_id'])
+
+            __body = {"$set": {
+                'name': self.name,
+                'format': self.format,
+                'type': self.type,
+                'sections': self.sections
+            }}
+
+            __condition = {"_id": self.id}
+            MongodbModel(collection='bolton', body=__body, condition=__condition).update()
+
+            self.result['status'] = True
+            return self.result
+        except:
+            print Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > bolton')
+            return self.result
+
     @staticmethod
     def get_bolton(bolton_types, _b):
         def find_type(_id):
@@ -44,11 +70,16 @@ class BoltonModel(BaseModel):
                 if j['_id'] == _id:
                     return dict(_id=str(j['_id']), name=j['name'])
             return dict(_id=None, name="ندارد")
+        for i in _b['sections']:
+            i['pattern'] = str(i['pattern'])
+            i['_id'] = str(i['_id'])
         return dict(
             _id=str(_b['_id']),
             name=_b['name'],
             date=khayyam.JalaliDatetime(_b['date']).strftime("%Y/%m/%d"),
             type=find_type(_b['type']),
+            format=_b['format'],
+            active=_b['active'] if 'active' in _b.keys() else True,
             sections=_b['sections']
         )
 
@@ -94,6 +125,19 @@ class BoltonModel(BaseModel):
             self.result['value'] = []
             return self.result
 
+    def get_one_full(self, bolton_types):
+        try:
+            __body = {"_id": self.id}
+            r = MongodbModel(collection='bolton', body=__body).get_one()
+            self.result['value'] = self.get_bolton(bolton_types, r)
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > bolton')
+            self.result['value'] = []
+            return self.result
+
     def get_all_detail(self):
         try:
             __body = {"user": self.user}
@@ -126,4 +170,31 @@ class BoltonModel(BaseModel):
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > bolton_news')
+            return self.result
+
+    def update_bolton_active(self, _type):
+        try:
+            __body = {"$set": {
+                'active': _type
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='bolton', condition=__condition, body=__body).update()
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def delete(self):
+        try:
+            __body = {'_id': self.id}
+            MongodbModel(collection='bolton', body=__body).delete()
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result
