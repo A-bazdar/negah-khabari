@@ -39,6 +39,31 @@ class BoltonModel(BaseModel):
             print Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > bolton')
             return self.result
 
+    def search(self, name, date, _type, count_bolton_section, bolton_types):
+        try:
+            __body = {"$and": []}
+            if name != '':
+                __body['$and'].append({'name': {"$regex": '^' + name}})
+            if date != '':
+                start_date = khayyam.JalaliDatetime().strptime(date + " 00:00:00", "%Y/%m/%d %H:%M:%S").todatetime()
+                end_date = khayyam.JalaliDatetime().strptime(date + " 23:59:59", "%Y/%m/%d %H:%M:%S").todatetime()
+                __body['$and'].append({'date': {"$gte": start_date, "$lt": end_date}})
+            if _type != '':
+                __body['$and'].append({'type': ObjectId(_type)})
+            if count_bolton_section != '':
+                __body['$and'].append({'sections': {"$size": int(count_bolton_section)}})
+            if not len(__body['$and']):
+                __body = {}
+            all_bolton = MongodbModel(collection='bolton', body=__body).get_all()
+            self.result['value'] = []
+            for i in all_bolton:
+                self.result['value'].append(self.get_bolton(bolton_types, i))
+            self.result['status'] = True
+            return self.result
+        except:
+            print Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > bolton')
+            return self.result
+
     def update(self):
         try:
             for i in self.sections:

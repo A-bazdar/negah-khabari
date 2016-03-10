@@ -10,6 +10,7 @@ function empty_form_bolton(){
     $('.news-section-divs').html(news_section_base);
     $('form#BoltonForm select.new_select').select2().removeClass('new_select').addClass('select');
 }
+
 function make_bolton(item, type){
     var item_obj = $('#MakeBoltonItem');
     item_obj.html($('#BoltonItem').html());
@@ -42,6 +43,60 @@ function make_bolton_list(item, type){
         $('.bolton-list-list').append(item_obj.html());
     else
         $('.bolton-list-list').prepend(item_obj.html());
+}
+
+function show_search_result(__type){
+    var search_box = $('.search-bolton-box[data-type=' + __type + ']');
+    var name = search_box.find('input[name=name]').val();
+    var date = search_box.find('input[name=date]').val();
+    var type = search_box.find('select[name=type] option:selected').attr("value");
+    var count_bolton_section = search_box.find('input[name=count-bolton-section]').val();
+    if((name == "") && date == "" && type == "" && count_bolton_section == "")
+        return;
+    var postData = [
+        {name: 'name', value: name},
+        {name: 'date', value: date},
+        {name: 'type', value: type},
+        {name: 'count_bolton_section', value: count_bolton_section},
+        {name: 'show_type', value: __type},
+        {name: '_xsrf', value: xsrf_token},
+        {name: 'method', value: 'SearchBolton'}
+    ];
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData,
+            success: function (response) {
+                var status = response['status'];
+                var value = response['value'];
+                var messages = response['messages'];
+                if (status) {
+                    if(__type == "list"){
+                        $('.bolton-list-list').html('');
+                        for(i = 0; i < value.length ; i++){
+                            make_bolton_list(value[i], 'append');
+                        }
+                    }else if(__type == "topic"){
+                        $('.bolton-list').html('');
+                        for(i = 0; i < value.length ; i++){
+                            make_bolton(value[i], 'append');
+                        }
+                    }
+                }else{
+                    var error = '';
+                    for(var i = 0; i < messages.length ; i++){
+                        error += messages[i] + '<br>';
+                    }
+                    if(error == '')
+                        error = 'error';
+                    Alert.render(error, function(){});
+                }
+            },
+            error: function () {
+                Alert.render('error', function(){});
+            }
+        });
 }
 
 $(document).on('click', '.add-section-news', function(){
@@ -228,4 +283,21 @@ $(document).on('click', ".bolton-edit", function(e){
     $('.add-bolton-btn i').removeClass('fa-caret-down').addClass('fa-caret-up');
     $('.add-bolton-btn').removeClass('closebox').addClass('open');
     $('.add_bolton_form_con[data-id=1]').slideDown();
+});
+
+$(document).on('keyup', ".search-bolton-box input", function(e){
+    show_search_result($(this).closest('.search-bolton-box').attr('data-type'));
+});
+
+$(document).on('change', ".search-bolton-box select", function(e){
+    show_search_result($(this).closest('.search-bolton-box').attr('data-type'));
+});
+
+$('.bolton-date-picker').persianDatepicker({
+    onSelect: function () {
+        var _type = "topic";
+        if($('.right_tabs.active').attr('data-action') == "bolton_list")
+            _type = "list";
+        show_search_result(_type);
+    }
 });
