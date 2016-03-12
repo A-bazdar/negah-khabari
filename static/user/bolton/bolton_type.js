@@ -144,7 +144,7 @@ $(document).on('click', ".bolton-type-edit", function(e){
     $('form#BoltonTypeForm select[name=unit]').select2("val", unit);
     $('form#BoltonTypeForm input[name=from]').val(from);
     $('.add-bolton-btn i').removeClass('fa-caret-down').addClass('fa-caret-up');
-    $('.add-bolton-btn').removeClass('closebox').addClass('open');
+    $(this).removeClass('closebox').addClass('open');
     $('.add_bolton_form_con[data-id=2]').slideDown();
 });
 
@@ -192,4 +192,46 @@ $(document).on('click', '.bolton-type-delete', function(e){
                 }
             });
     }, function(){});
+});
+
+function show_search_type_result(){
+    var search_box = $('.search-bolton-type-box');
+    var name = search_box.find('input[name=name]').val();
+    var postData = [
+        {name: 'name', value: name},
+        {name: '_xsrf', value: xsrf_token},
+        {name: 'method', value: 'SearchBoltonType'}
+    ];
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData,
+            success: function (response) {
+                var status = response['status'];
+                var value = response['value'];
+                var messages = response['messages'];
+                if (status) {
+                    $('.bolton-type-list').html('');
+                    for(i = 0; i < value.length ; i++){
+                        make_bolton_type(value[i], 'append');
+                    }
+                }else{
+                    var error = '';
+                    for(var i = 0; i < messages.length ; i++){
+                        error += messages[i] + '<br>';
+                    }
+                    if(error == '')
+                        error = 'error';
+                    Alert.render(error, function(){});
+                }
+            },
+            error: function () {
+                Alert.render('error', function(){});
+            }
+        });
+}
+
+$(document).on('keyup', ".search-bolton-type-box input", function(e){
+    show_search_type_result();
 });

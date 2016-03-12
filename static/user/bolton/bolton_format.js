@@ -3,6 +3,24 @@
  */
 
 
+var highlight_phrases = [];
+function empty_form_bolton_format(){
+    var _form = $('form#BoltonFormat');
+    _form.find('input[name=method]').val("AddBoltonFormat");
+    _form.find('input[name=_id]').val('');
+    _form.find('input[name=name]').val('');
+    _form.find('input[name=show_summary][value=in_list]').prop('checked', true);
+    _form.find('input[name=page_breake][value=after_group]').prop('checked', true);
+    _form.find('input[type=checkbox]').val('');
+    _form.find('input[name=title_1]').val('');
+    _form.find('input[name=title_2]').val('');
+    _form.find('input[name=title_3]').val('');
+    _form.find('input[name=title_4]').val('');
+    $('.fileupload-exists.remove-logo-btn').click();
+    highlight_phrases = [];
+    $('div.highlight_phrases').html('');
+}
+
 function make_bolton_format(item, type){
     var item_obj = $('#MakeBoltonFormatItem');
     item_obj.html($('#BoltonFormatItem').html());
@@ -19,8 +37,6 @@ function make_bolton_format(item, type){
     else
         $('.bolton-format-list').prepend(item_obj.html());
 }
-
-var highlight_phrases = [];
 $(document).on('click', '.delete_highlight_phrase', function(e){
     $(e.target).closest('.highlight_phrase').remove();
     var temp_highlight_phrases = [];
@@ -114,7 +130,6 @@ $(document).on('submit', '#BoltonFormat', function(e){
     data.append('highlight_phrases', JSON.stringify(highlight_phrases));
 
     data.append('logo', _form.find('input[type=file][name=logo]')[0].files[0]);
-
     data.append('format_cover', _form.find('select[name=format_cover]').select2('val'));
     data.append('format_pages', _form.find('select[name=format_pages]').select2('val'));
     data.append('title_1', check_value(_form.find('input[name=title_1]').val(), 'تیتر 1 را وارد کنید.'));
@@ -152,10 +167,10 @@ $(document).on('submit', '#BoltonFormat', function(e){
             url: '',
             type: "post",
             data: data,
-            async: false,
             cache: false,
             contentType: false,
             processData: false,
+            async: true,
             success: function (response) {
                 var status = response['status'];
                 var value = response['value'];
@@ -205,6 +220,7 @@ $(document).on('click', ".bolton-format-edit", function(e){
             _form.find('input[name=method]').val("EditBoltonFormat");
             _form.find('input[name=_id]').val(_id);
             _form.find('input[name=name]').val(_b['name']);
+            _form.find('img.logo-image-format').attr('src', static_url_images_format + _b['logo']);
             _form.find('input[name=show_summary][value=' + _b['show_summary'] + ']').prop('checked', true);
             _form.find('input[name=page_breake][value=' + _b['page_breake'] + ']').prop('checked', true);
             _form.find('input[name=note]').prop('checked', _b['note'] ? true : false);
@@ -344,4 +360,46 @@ $(document).on('click', '.bolton-format-delete', function(e){
                 }
             });
     }, function(){});
+});
+
+function show_search_format_result(){
+    var search_box = $('.search-bolton-format-box');
+    var name = search_box.find('input[name=name]').val();
+    var postData = [
+        {name: 'name', value: name},
+        {name: '_xsrf', value: xsrf_token},
+        {name: 'method', value: 'SearchBoltonFormat'}
+    ];
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData,
+            success: function (response) {
+                var status = response['status'];
+                var value = response['value'];
+                var messages = response['messages'];
+                if (status) {
+                    $('.bolton-format-list').html('');
+                    for(i = 0; i < value.length ; i++){
+                        make_bolton_format(value[i], 'append');
+                    }
+                }else{
+                    var error = '';
+                    for(var i = 0; i < messages.length ; i++){
+                        error += messages[i] + '<br>';
+                    }
+                    if(error == '')
+                        error = 'error';
+                    Alert.render(error, function(){});
+                }
+            },
+            error: function () {
+                Alert.render('error', function(){});
+            }
+        });
+}
+
+$(document).on('keyup', ".search-bolton-format-box input", function(e){
+    show_search_format_result();
 });

@@ -154,6 +154,8 @@ class UploadPic:
             pic = self.__handler.request.files[self.name][0]
             extension = os.path.splitext(pic['filename'])[1].lower()
             upload_folder = os.path.join(Config().applications_root, 'static', 'images', self.folder)
+            if not os.path.exists(upload_folder):
+                os.makedirs(upload_folder)
             photo_name = pic_name + extension
             full_name = os.path.join(upload_folder, photo_name)
             output = open(full_name, 'wb')
@@ -161,7 +163,6 @@ class UploadPic:
             output.close()
             self.status = True
             return photo_name
-
         except:
             return self.default
 
@@ -171,6 +172,8 @@ class UploadPic:
             pic = self.__handler.request.files[self.name][0]
             extension = ".png"
             upload_folder = os.path.join(Config().applications_root, 'static', 'images')
+            if not os.path.exists(upload_folder):
+                os.makedirs(upload_folder)
             photo_name = pic_name + extension
             full_name = os.path.join(upload_folder, photo_name)
             output = open(full_name, 'wb')
