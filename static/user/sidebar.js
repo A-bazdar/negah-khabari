@@ -35,7 +35,7 @@ $(document).on("click", ".open-side-menu.show-grouping", function (e) {
         $('#news_grouping_type').attr('data-type', grouping);
         classie.add(this, 'active');
         classie.add(menuRight, 'cbp-spmenu-open');
-        $(".__scrolling").niceScroll({
+        $("._scrolling").niceScroll({
             cursorcolor: "#000",
             cursorwidth: "5px",
             railalign: "right",
@@ -67,7 +67,7 @@ $(document).on("click", ".open-side-menu.show-grouping", function (e) {
         });
         classie.add(this, 'active');
         classie.add(menuRight, 'cbp-spmenu-open');
-        $(".__scrolling").niceScroll({
+        $("._scrolling").niceScroll({
             cursorcolor: "#000",
             cursorwidth: "5px",
             railalign: "right",

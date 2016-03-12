@@ -135,107 +135,107 @@
 }
 
 .editor7_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor8_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor9_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor10_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor11_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor12_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor13_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor15_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor16_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor17_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor18_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor19_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor20_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor21_preview {
-    height: 1200px;
+    min-height: 1200px;
 }
 
 .editor22_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor23_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor24_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor25_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor26_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor27_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor28_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor29_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor37_preview {
-    height: 1600px;
+    min-height: 1600px;
 }
 
 .editor31_preview {
-    height: 800px;
+    min-height: 800px;
 }
 
 .editor32_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .editor33_preview {
-    height: 400px;
+    min-height: 400px;
 }
 
 .separator2 {
@@ -404,19 +404,19 @@
 }
 
 .editable-max-height {
-    height: 800px;
+    min-height: 1000px;
 }
 
 .editable-s-max-height {
-    height: 1200px;
+    min-height: 1500px;
 }
 
 .editable-s-s-max-height {
-    height: 1600px;
+    min-height: 2000px;
 }
 
 .editable-min-height {
-    height: 400px;
+    min-height: 500px;
 }
 
 .header-page-num {

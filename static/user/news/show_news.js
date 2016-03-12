@@ -102,9 +102,11 @@ function make_show_news(news, body_news_font, news_content) {
     _make.find('div#note_body').attr('data-news', news['id']);
     $('.detail_news_container[data-news=' + news['id'] + ']').html(_make.html()).fadeIn();
     $(".__scrolling").niceScroll({
-        cursorcolor: "#000",
-        cursorwidth: "5px",
-        railalign: "right",
+        cursorcolor: "#7D8DCA",
+        cursorwidth: "10px",
+        cursorradius: "0px",
+        cursorborder: "0px",
+        railalign: "left",
         autohidemode: true,
         horizrailenabled: false
     });
