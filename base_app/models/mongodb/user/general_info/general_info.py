@@ -360,6 +360,7 @@ class UserModel(BaseModel):
                     news_content=r['news_content'] if 'news_content' in r.keys() else dict(direction=[], main_source_news=[], news_group=[], news_maker=[]),
                     keyword_setting=r['keyword_setting'] if 'keyword_setting' in r.keys() else dict(add_by_user=False, edit_by_user=False, count_topic=0, count_keyword=0),
                     bolton_type=r['bolton_type'] if 'bolton_type' in r.keys() else [],
+                    bolton_format=r['bolton_format'] if 'bolton_format' in r.keys() else [],
                     count_user_login=r['count_user_login'] if 'count_user_login' in r.keys() else 0,
                     count_online=r['count_online'] if 'count_online' in r.keys() else 1
 
@@ -1541,6 +1542,28 @@ class UserModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result
 
+    def add_bolton_format(self, _format):
+        try:
+            _id = ObjectId()
+            doc = dict(
+                _id=_id,
+                active=True,
+                date=datetime.datetime.now(),
+                **_format
+            )
+            __body = {"$push": {
+                "bolton_format": doc
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = doc
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
     def update_bolton_type(self, _id, _type, action):
         try:
             if action == "active":
@@ -1564,11 +1587,52 @@ class UserModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result
 
+    def update_bolton_format(self, _id, _format, action):
+        try:
+            if action == "active":
+                __body = {"$set": {
+                    'bolton_format.$.active': _format
+                }}
+            else:
+                temp_format = dict()
+                for i in _format:
+                    temp_format["bolton_format.$." + i] = _format[i]
+                __body = {"$set": temp_format}
+            __condition = {'_id': self.id, 'bolton_format._id': _id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = _format
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
     def delete_bolton_type(self, _id):
         try:
             __body = {
                 "$pull": {
                     "bolton_type": {
+                        "_id": _id
+                    }
+                }
+            }
+
+            __condition = {'_id': self.id}
+            MongodbModel(collection='user', condition=__condition, body=__body).update()
+            self.result['value'] = self.get_note()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
+    def delete_bolton_format(self, _id):
+        try:
+            __body = {
+                "$pull": {
+                    "bolton_format": {
                         "_id": _id
                     }
                 }

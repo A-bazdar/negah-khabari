@@ -130,7 +130,6 @@ $(document).on('submit', "#BoltonForm", function(e){
                         error = 'error';
                     Alert.render(error, function(){
                         btn.html('ثبت');
-                        __a = true;
                     });
                 }else{
                     Alert.render('success', function(){
@@ -138,6 +137,7 @@ $(document).on('submit', "#BoltonForm", function(e){
                         if($('form#BoltonForm input[name=method]').val() == "AddBolton"){
                             make_bolton(value, "prepend");
                             make_bolton_list(value, "prepend");
+                            __bolton_types.push(value);
                         }else{
                             var obj = $('.bolton_list_items[data-id=' + value['_id'] + ']');
                             obj.find('.bolton-name').html(value['name']);
@@ -150,7 +150,6 @@ $(document).on('submit', "#BoltonForm", function(e){
                             }
                         }
                         empty_form_bolton();
-                        __a = true;
 
                     });
                 }
@@ -158,7 +157,6 @@ $(document).on('submit', "#BoltonForm", function(e){
             error: function () {
                 Alert.render('error', function(){
                     btn.html('ثبت');
-                    __a = true;
                 });
             }
         });
@@ -191,7 +189,6 @@ $(document).on('click', ".bolton-active", function(e){
                         error = 'error';
                     Alert.render(error, function(){
                         btn.html('ثبت');
-                        __a = true;
                     });
                 }else{
                     if(elm.attr('data-action') == 'active'){
@@ -204,7 +201,6 @@ $(document).on('click', ".bolton-active", function(e){
             error: function () {
                 Alert.render('error', function(){
                     btn.html('ثبت');
-                    __a = true;
                 });
             }
         });
