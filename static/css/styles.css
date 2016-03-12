@@ -2235,3 +2235,29 @@ a.change-page.active {
 .highcharts-legend{
     display: none !important;
 }
+
+
+
+.bolton-header-icons {
+    background: url("/static/images/Icons.png") no-repeat;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.bolton-header-icons.copy-icon {
+    background-position: -106px -151px;
+}
+
+.bolton-header-icons.tag-icon {
+    background-position: -195px -154px;
+}
+
+.bolton-header-icons.message-icon {
+    background-position: -219px -154px;
+}
+
+.bolton-header-icons.eye-icon {
+    background-position: -172px -151px;
+}

@@ -148,3 +148,25 @@
     border-radius: 5px;
     border: 1px solid #afb7c7;
 }
+
+.bolton-header-icons {
+    background: url("/static/images/Icons.png") no-repeat;
+    width: 20px;
+    height: 20px;
+}
+
+.bolton-header-icons.copy-icon {
+    background-position: -137px -154px;
+}
+
+.bolton-header-icons.tag-icon {
+    background-position: -137px -154px;
+}
+
+.bolton-header-icons.message-icon {
+    background-position: -137px -154px;
+}
+
+.bolton-header-icons.eye-icon {
+    background-position: -137px -154px;
+}
