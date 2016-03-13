@@ -70,8 +70,6 @@ $(document).on('submit', "#BoltonTypeForm", function(e){
                             obj.find('[data-from]').attr('data-from', value['from']);
                         }
                         empty_form_bolton_type();
-                        __a = true;
-
                     });
                 }
             },

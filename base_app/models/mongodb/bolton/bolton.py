@@ -103,7 +103,7 @@ class BoltonModel(BaseModel):
             name=_b['name'],
             date=khayyam.JalaliDatetime(_b['date']).strftime("%Y/%m/%d"),
             type=find_type(_b['type']),
-            format=_b['format'],
+            format=str(_b['format']),
             active=_b['active'] if 'active' in _b.keys() else True,
             sections=_b['sections']
         )
