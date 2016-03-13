@@ -62,7 +62,7 @@ class BoltonNewsModel(BaseModel):
             try:
                 r['body'] = re.sub('<img[^>]+\>', '', r['body'])
             except:
-                r['body'] = None
+                r['body'] = r['body']
             self.result['value'] = r
             self.result['status'] = True
 
