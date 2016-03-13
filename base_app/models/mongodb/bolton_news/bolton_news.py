@@ -155,6 +155,25 @@ class BoltonNewsModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > bolton_news')
             return self.result
 
+    def update_html_news_bolton(self, news):
+        try:
+            __body = {"$set": {
+                "body": news['body'],
+                "title": news['title'],
+                "ro_title": news['ro_title'],
+                "summary": news['summary'],
+                "image": news['image'],
+                "images": news['images']
+            }}
+            __condition = {"_id": self.id}
+            MongodbModel(collection='bolton_news', body=__body, condition=__condition).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > bolton_news')
+            return self.result
+
     def delete(self):
         try:
             __body = {

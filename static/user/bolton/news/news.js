@@ -258,6 +258,34 @@ $(document).on('click', '.user-actions-save', function(e){
             move_news_to_bolton(action['_bolton'], action['_section'], action['_news']);
         }
     }
+    var bolton_news = [];
+    $.each($('.news_list_detail[data-is-show=true]'), function(){
+        var news = $(this).attr('data-news');
+        var news_container = $('.detail_news_container[data-news=' + news + ']');
+        bolton_news.push({
+            _id: news,
+            ro_title: news_container.find('.ro-title').html(),
+            title: news_container.find('.title').html(),
+            summary: news_container.find('.summary').html(),
+            body: news_container.find('.body').html(),
+            image: news_container.find('.image').html(),
+            images: news_container.find('.images').html()
+        });
+    });
+    bolton_news = JSON.stringify(bolton_news);
+    if(bolton_news.length){
+        var postData = [
+            {name: '_xsrf', value: xsrf_token},
+            {name: 'bolton_news', value: bolton_news},
+            {name: 'method', value: "EditBoltonNews"}
+        ];
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData
+        });
+    }
     elm.html(elm_html);
 
 });
