@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import khayyam
+import re
 from bson import ObjectId
 
 from base_app.classes.date import CustomDateTime
@@ -58,6 +59,10 @@ class BoltonNewsModel(BaseModel):
         try:
             __body = {"_id": self.id}
             r = MongodbModel(collection='bolton_news', body=__body).get_one()
+            try:
+                r['body'] = re.sub('<img[^>]+\>', '', r['body'])
+            except:
+                r['body'] = None
             self.result['value'] = r
             self.result['status'] = True
 
