@@ -137,10 +137,11 @@ class BoltonModel(BaseModel):
     def get_one(self):
         try:
             __body = {"_id": self.id}
-            __key = {"_id": 1, "name": 1, "sections.section": 1, "sort": 1, "reverse": 1, "sections._id": 1}
+            __key = {"_id": 1, "name": 1, "sections.section": 1, "sort": 1, "visit": 1, "reverse": 1, "sections._id": 1}
             r = MongodbModel(collection='bolton', body=__body, key=__key).get_one_key()
             r['sort'] = r['sort'] if 'sort' in r.keys() else "user_choose"
             r['reverse'] = r['reverse'] if 'reverse' in r.keys() else True
+            r['visit'] = r['visit'] if 'visit' in r.keys() else 0
             self.result['value'] = r
             self.result['status'] = True
 
