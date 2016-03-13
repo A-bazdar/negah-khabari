@@ -33,6 +33,10 @@ class BoltonNewsModel(BaseModel):
             news['_id'] = str(ObjectId())
             news['section'] = self.section
             news['bolton'] = self.bolton
+            try:
+                news['body'] = re.sub('<img[^>]+\>', '', news['body'])
+            except:
+                pass
             MongodbModel(collection='bolton_news', body=news).insert()
             self.result['value'] = True
             self.result['status'] = True
@@ -59,10 +63,6 @@ class BoltonNewsModel(BaseModel):
         try:
             __body = {"_id": self.id}
             r = MongodbModel(collection='bolton_news', body=__body).get_one()
-            try:
-                r['body'] = re.sub('<img[^>]+\>', '', r['body'])
-            except:
-                r['body'] = r['body']
             self.result['value'] = r
             self.result['status'] = True
 
