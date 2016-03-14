@@ -16,6 +16,11 @@ function make_bolton(item, type){
     item_obj.html($('#BoltonItem').html());
     item_obj.find('[data-id]').attr('data-id', item['_id']);
     item_obj.find('.bolton-name').html(item['name']);
+    if(item['manual']){
+        item_obj.find('.bolton-is-manual').html('دستی');
+    }else{
+        item_obj.find('.bolton-is-manual').html('خودکار');
+    }
     item_obj.find('.bolton-date').html(item['date']);
     item_obj.find('.bolton-type').html(item['type']['name']);
     item_obj.find('.bolton-count-section').html(item['sections'].length);
@@ -36,6 +41,11 @@ function make_bolton_list(item, type){
     item_obj.find('[data-id]').attr('data-id', item['_id']);
     item_obj.find('.bolton-name').html(item['name']);
     item_obj.find('.bolton-date').html(item['date']);
+    if(item['manual']){
+        item_obj.find('.bolton-is-manual').html('دستی');
+    }else{
+        item_obj.find('.bolton-is-manual').html('خودکار');
+    }
     item_obj.find('.bolton-type').html(item['type']['name']);
     item_obj.find('.bolton-count-section').html(item['sections'].length);
     item_obj.find('.show-bolton').attr('onclick', 'location.href="' + bolton_by_id_url.replace('__id__', item['_id']) + '"');
@@ -50,13 +60,15 @@ function show_search_result(__type){
     var name = search_box.find('input[name=name]').val();
     var date = search_box.find('input[name=date]').val();
     var type = search_box.find('select[name=type] option:selected').attr("value");
+    var manual = search_box.find('select[name=manual] option:selected').attr("value");
     var count_bolton_section = search_box.find('input[name=count-bolton-section]').val();
-    if((name == "") && date == "" && type == "" && count_bolton_section == "")
+    if(name == "" && manual == "" && date == "" && type == "" && count_bolton_section == "")
         return;
     var postData = [
         {name: 'name', value: name},
         {name: 'date', value: date},
         {name: 'type', value: type},
+        {name: 'manual', value: manual},
         {name: 'count_bolton_section', value: count_bolton_section},
         {name: 'show_type', value: __type},
         {name: '_xsrf', value: xsrf_token},
@@ -100,7 +112,11 @@ function show_search_result(__type){
 }
 
 $(document).on('click', '.add-section-news', function(){
-    $('.news-section-divs').append(news_section);
+    var display = 'block';
+    if($('input[name=manual]:checked').val() == "True"){
+        display = 'none';
+    }
+    $('.news-section-divs').append(news_section.replace('__display__', display));
     $('.news-section-divs .new_select').select2().removeClass('new_select').addClass('select');
 });
 
@@ -260,6 +276,16 @@ $(document).on('click', ".bolton-edit", function(e){
             $('form#BoltonForm input[name=_id]').val(_id);
             $('form#BoltonForm input[name=name]').val(_b['name']);
             $('form#BoltonForm select[name=format]').select2("val", _b['format']);
+            var display = "block";
+            if(_b['manual']){
+                $('form#BoltonForm input[name=manual][value=True]').prop("checked", true);
+                $('.bolton-type-div').hide();
+                display = "none";
+            }else{
+                $('form#BoltonForm input[name=manual][value=False]').prop("checked", true);
+                $('.bolton-type-div').show();
+                display = "block";
+            }
             $('form#BoltonForm select[name=type]').select2("val", _b['type']['_id']);
             $('form#BoltonForm input[name=section_id]').val(_b['sections'][0]['_id']);
             $('form#BoltonForm input[name=news_section]').val(_b['sections'][0]['section']);
@@ -267,7 +293,7 @@ $(document).on('click', ".bolton-edit", function(e){
             for(var j = 1; j < _b['sections'].length ; j++) {
                 var _c = _b['sections'][j];
                 var temp = $('#Temp');
-                temp.html(news_section);
+                temp.html(news_section.replace('__display__', display));
                 temp.find('input[name=news_section]').attr('value', _c['section']);
                 temp.find('input[name=section_id]').attr('value', _c['_id']);
                 temp.find('select[name=pattern_search] option[data-val=' + _c['pattern'] + ']').attr('selected', 'selected');
@@ -295,5 +321,16 @@ $('.bolton-date-picker').persianDatepicker({
         if($('.right_tabs.active').attr('data-action') == "bolton_list")
             _type = "list";
         show_search_result(_type);
+    }
+});
+
+$(document).on('change', "input[name=manual]", function(e){
+    if($('input[name=manual]:checked').val() == "True"){
+        $('.bolton-type-div').hide();
+        $('.pattern-search-div').hide();
+    }
+    else{
+        $('.bolton-type-div').show();
+        $('.pattern-search-div').show();
     }
 });

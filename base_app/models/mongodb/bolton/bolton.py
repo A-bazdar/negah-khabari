@@ -11,13 +11,14 @@ __author__ = 'Morteza'
 
 
 class BoltonModel(BaseModel):
-    def __init__(self, _id=None, name=None, user=None, _type=None, _format=None, sections=None):
+    def __init__(self, _id=None, name=None, user=None, _type=None, _format=None, sections=None, manual=None):
         BaseModel.__init__(self)
         self.id = _id
         self.name = name
         self.type = _type
         self.format = _format
         self.sections = sections
+        self.manual = manual
         self.user = user
         self.result = {'value': {}, 'status': False}
 
@@ -28,6 +29,7 @@ class BoltonModel(BaseModel):
                 'format': self.format,
                 'type': self.type,
                 'sections': self.sections,
+                'manual': self.manual,
                 'user': self.user,
                 'date': datetime.datetime.now()
             }
@@ -39,7 +41,7 @@ class BoltonModel(BaseModel):
             print Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > save', data='collection > bolton')
             return self.result
 
-    def search(self, name, date, _type, count_bolton_section, bolton_types):
+    def search(self, name, date, _type, manual, count_bolton_section, bolton_types):
         try:
             __body = {"$and": []}
             if name != '':
@@ -50,6 +52,8 @@ class BoltonModel(BaseModel):
                 __body['$and'].append({'date': {"$gte": start_date, "$lt": end_date}})
             if _type != '':
                 __body['$and'].append({'type': ObjectId(_type)})
+            if manual != '':
+                __body['$and'].append({'manual': manual})
             if count_bolton_section != '':
                 __body['$and'].append({'sections': {"$size": int(count_bolton_section)}})
             if not len(__body['$and']):
@@ -76,6 +80,7 @@ class BoltonModel(BaseModel):
                 'name': self.name,
                 'format': self.format,
                 'type': self.type,
+                'manual': self.manual,
                 'sections': self.sections
             }}
 
@@ -104,6 +109,7 @@ class BoltonModel(BaseModel):
             date=khayyam.JalaliDatetime(_b['date']).strftime("%Y/%m/%d"),
             type=find_type(_b['type']),
             format=str(_b['format']),
+            manual=_b['manual'],
             active=_b['active'] if 'active' in _b.keys() else True,
             sections=_b['sections']
         )
