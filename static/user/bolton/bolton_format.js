@@ -176,20 +176,23 @@ $(document).on('submit', '#BoltonFormat', function(e){
                 var value = response['value'];
                 var messages = response['messages'];
                 if (status) {
-                    if(_form.find('input[name=method]').val() == "AddBoltonFormat"){
-                        make_bolton_format(value, "prepend");
-                        __bolton_formats.push(value);
-                    }else{
-                        var obj = $('.bolton_list_items[data-id=' + _form.find('input[name=_id]').val() + ']');
-                        obj.find('.bolton-format-name').html(value['name']);
-                        for(i = 0; i < __bolton_formats.length ; i++) {
-                            if (__bolton_formats[i]['_id'] == _form.find('input[name=_id]').val()) {
-                                value['_id'] = _form.find('input[name=_id]').val();
-                                __bolton_formats[i] = value;
+                    Alert.render('success', function(){
+                        btn.html('ثبت');
+                        if(_form.find('input[name=method]').val() == "AddBoltonFormat"){
+                            make_bolton_format(value, "prepend");
+                            __bolton_formats.push(value);
+                        }else{
+                            var obj = $('.bolton_list_items[data-id=' + _form.find('input[name=_id]').val() + ']');
+                            obj.find('.bolton-format-name').html(value['name']);
+                            for(i = 0; i < __bolton_formats.length ; i++) {
+                                if (__bolton_formats[i]['_id'] == _form.find('input[name=_id]').val()) {
+                                    value['_id'] = _form.find('input[name=_id]').val();
+                                    __bolton_formats[i] = value;
+                                }
                             }
                         }
-                    }
-                        btn.html('ثبت');
+                        empty_form_bolton_format();
+                    });
                 }else{
                     var error = '';
                     for(var i = 0; i < messages.length ; i++){

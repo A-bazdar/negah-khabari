@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import khayyam
+import re
 from bson import ObjectId
 
 from base_app.classes.date import CustomDateTime
@@ -32,6 +33,10 @@ class BoltonNewsModel(BaseModel):
             news['_id'] = str(ObjectId())
             news['section'] = self.section
             news['bolton'] = self.bolton
+            try:
+                news['body'] = re.sub('<img[^>]+\>', '', news['body'])
+            except:
+                pass
             MongodbModel(collection='bolton_news', body=news).insert()
             self.result['value'] = True
             self.result['status'] = True
@@ -140,6 +145,25 @@ class BoltonNewsModel(BaseModel):
             __body = {"$set": {
                 "bolton": self.bolton,
                 "section": self.section
+            }}
+            __condition = {"_id": self.id}
+            MongodbModel(collection='bolton_news', body=__body, condition=__condition).update()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > bolton_news')
+            return self.result
+
+    def update_html_news_bolton(self, news):
+        try:
+            __body = {"$set": {
+                "body": news['body'],
+                "title": news['title'],
+                "ro_title": news['ro_title'],
+                "summary": news['summary'],
+                "image": news['image'],
+                "images": news['images']
             }}
             __condition = {"_id": self.id}
             MongodbModel(collection='bolton_news', body=__body, condition=__condition).update()

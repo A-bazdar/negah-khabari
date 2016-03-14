@@ -2,6 +2,8 @@
  * Created by Morteza on 08/03/2016.
  */
 
+var user_actions = [];
+
 function make_news(item, section){
     var item_obj = $('#MakeBoltonNewsItem');
     item_obj.html($('#BoltonNewsItem').html());
@@ -64,12 +66,7 @@ function show_news(section, name, sort, reverse){
         });
 }
 
-$(document).on('change', 'select.select-news-content', function(e){
-    var elm = $(e.target).closest('.select-news-content');
-    var _type = elm.attr('data-type');
-    var _news = elm.attr('data-news');
-    var _section = elm.attr('data-section');
-    var _value = elm.select2('val');
+function select_news_content(_type, _news, _section, _value){
     var postData = [
         {name: '_xsrf', value: xsrf_token},
         {name: 'type', value: _type},
@@ -84,34 +81,80 @@ $(document).on('change', 'select.select-news-content', function(e){
             type: "post",
             data: postData
         });
+}
+
+function delete_news(_news){
+    var postData = [
+        {name: '_xsrf', value: xsrf_token},
+        {name: 'news', value: _news},
+        {name: 'method', value: "DeleteBoltonNews"}
+    ];
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData
+        });
+}
+
+function add_news_to_bolton(_news, _bolton, _section, _method){
+    var postData = [
+        {name: 'news', value: _news},
+        {name: '_xsrf', value: xsrf_token},
+        {name: 'bolton', value: _bolton},
+        {name: 'section', value: _section},
+        {name: 'method', value: _method}
+    ];
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData
+        });
+}
+
+function move_news_to_bolton(_bolton, _section, _news){
+
+    var postData = [
+        {name: '_xsrf', value: xsrf_token},
+        {name: 'bolton', value: _bolton},
+        {name: 'section', value: _section},
+        {name: 'method', value: "MoveBoltonMultiNews"}
+    ].add(_news);
+
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData
+        });
+}
+
+$(document).on('change', 'select.select-news-content', function(e){
+    var elm = $(e.target).closest('.select-news-content');
+    var _type = elm.attr('data-type');
+    var _news = elm.attr('data-news');
+    var _section = elm.attr('data-section');
+    var _value = elm.select2('val');
+    user_actions.push({
+        function: 'select_news_content',
+        _type: _type,
+        _news: _news,
+        _section: _section,
+        _value: _value
+    });
 });
 
 $(document).on('click', '.option-bolton-news.delete', function(e){
     Confirm.render(0, 0, 0, 0, 0, function(){
         var elm = $(e.target).closest('.option-bolton-news.delete');
-        var elm_html = elm.html();
         elm.html(loader.replace(/20/g, '15'));
         var _news = elm.attr('data-news');
-        var postData = [
-            {name: '_xsrf', value: xsrf_token},
-            {name: 'news', value: _news},
-            {name: 'method', value: "DeleteBoltonNews"}
-        ];
-        jQuery.ajax(
-            {
-                url: '',
-                type: "post",
-                data: postData,
-                success: function (response) {
-                    var status = response['status'];
-                    var value = response['value'];
-                    var messages = response['messages'];
-                    if (status) {
-                        elm.closest('.news_row').remove();
-                    }
-                    elm.html(elm_html);
-                }
-            });
+        user_actions.push({
+            function: 'delete_news',
+            _news: _news
+        });
+        elm.closest('.news_row').remove();
     }, function(){});
 });
 
@@ -135,91 +178,39 @@ $(document).on('click', '.add-news-to-bolton', function(e){
     var method = "MoveBoltonNews";
     if(elm.attr('data-action') == 'copy')
         method = "CopyBoltonNews";
-    var postData = [
-        {name: 'news', value: news},
-        {name: '_xsrf', value: xsrf_token},
-        {name: 'bolton', value: bolton},
-        {name: 'section', value: section},
-        {name: 'method', value: method}
-    ];
-    jQuery.ajax(
-        {
-            url: '',
-            type: "post",
-            data: postData,
-            success: function (response) {
-                var status = response['status'];
-                var value = response['value'];
-                var messages = response['messages'];
-                if (status) {
-                    if(method == "MoveBoltonNews")
-                        $('.news_row[data-news=' + news + ']').remove();
-                }
-                elm.html(btn_html);
-                $('#add_to_bolton_modal').modal('toggle');
-            }
-        });
+
+    user_actions.push({
+        function: 'add_news_to_bolton',
+        _news: news,
+        _bolton: bolton,
+        _section: section,
+        _method: method
+    });
+
+    if(method == "MoveBoltonNews")
+        $('.news_row[data-news=' + news + ']').remove();
+    elm.html(btn_html);
+    $('#add_to_bolton_modal').modal('toggle');
 });
 
 $(document).on('click', '.move-news-to-bolton', function(e){
     var elm = $(e.target).closest('.move-news-to-bolton');
     var bolton = elm.attr('data-bolton');
     var section = elm.attr('data-section');
-    var postData = [
-        {name: '_xsrf', value: xsrf_token},
-        {name: 'bolton', value: bolton},
-        {name: 'section', value: section},
-        {name: 'method', value: "MoveBoltonMultiNews"}
-    ];
+    var news = [];
     $.each($('div#show_result_news input[type=checkbox][name=news-select]:checked'), function(){
-        postData.push({name: "news", value: $(this).val()});
+        news.push({name: "news", value: $(this).val()});
     });
-    jQuery.ajax(
-        {
-            url: '',
-            type: "post",
-            data: postData,
-            success: function (response) {
-                var status = response['status'];
-                var value = response['value'];
-                var messages = response['messages'];
-                if (status) {
-                    $.each($('input[type=checkbox][name=news-select]:checked'), function(){
-                        $('.news_row[data-news=' + $(this).val() + ']').remove();
-                    });
+    user_actions.push({
+        function: 'move_news_to_bolton',
+        _bolton: bolton,
+        _section: section,
+        _news: news
+    });
 
-                }
-            }
-        });
-});
-
-$(document).on('click', '.option-bolton-news.delete', function(e){
-    Confirm.render(0, 0, 0, 0, 0, function(){
-        var elm = $(e.target).closest('.option-bolton-news.delete');
-        var elm_html = elm.html();
-        elm.html(loader.replace(/20/g, '15'));
-        var _news = elm.attr('data-news');
-        var postData = [
-            {name: '_xsrf', value: xsrf_token},
-            {name: 'news', value: _news},
-            {name: 'method', value: "DeleteBoltonNews"}
-        ];
-        jQuery.ajax(
-            {
-                url: '',
-                type: "post",
-                data: postData,
-                success: function (response) {
-                    var status = response['status'];
-                    var value = response['value'];
-                    var messages = response['messages'];
-                    if (status) {
-                        elm.closest('.news_row').remove();
-                    }
-                    elm.html(elm_html);
-                }
-            });
-    }, function(){});
+    $.each($('input[type=checkbox][name=news-select]:checked'), function(){
+        $('.news_row[data-news=' + $(this).val() + ']').remove();
+    });
 });
 
 $(document).on('click','.change-sort-news', function(e){
@@ -249,4 +240,52 @@ $(document).on('click', '.filter-news-check', function(e){
         $('input[type=checkbox][name=news-select]').prop('checked', false);
         $('input[type=checkbox][name=news-select][data-' + filter + '=' + val + ']').prop('checked', true);
     }
+});
+
+$(document).on('click', '.user-actions-save', function(e){
+    var elm = $(e.target).closest('.user-actions-save');
+    var elm_html = elm.html();
+    elm.html(loader);
+    for(var i = 0; i < user_actions.length; i++){
+        var action = user_actions[i];
+        if(action['function'] == 'select_news_content'){
+            select_news_content(action['_type'], action['_news'], action['_section'], action['_value']);
+        }else if(action['function'] == 'delete_news'){
+            delete_news(action['_news']);
+        }else if(action['function'] == 'add_news_to_bolton'){
+            add_news_to_bolton(action['_news'], action['_bolton'], action['_section'], action['_method']);
+        }else if(action['function'] == 'move_news_to_bolton'){
+            move_news_to_bolton(action['_bolton'], action['_section'], action['_news']);
+        }
+    }
+    var bolton_news = [];
+    $.each($('.news_list_detail[data-is-show=true]'), function(){
+        var news = $(this).attr('data-news');
+        var news_container = $('.detail_news_container[data-news=' + news + ']');
+        bolton_news.push({
+            _id: news,
+            ro_title: news_container.find('.ro-title').html(),
+            title: news_container.find('.title').html(),
+            summary: news_container.find('.summary').html(),
+            body: news_container.find('.body').html(),
+            image: news_container.find('.image').html(),
+            images: news_container.find('.images').html()
+        });
+    });
+    bolton_news = JSON.stringify(bolton_news);
+    if(bolton_news.length){
+        var postData = [
+            {name: '_xsrf', value: xsrf_token},
+            {name: 'bolton_news', value: bolton_news},
+            {name: 'method', value: "EditBoltonNews"}
+        ];
+    jQuery.ajax(
+        {
+            url: '',
+            type: "post",
+            data: postData
+        });
+    }
+    elm.html(elm_html);
+
 });
