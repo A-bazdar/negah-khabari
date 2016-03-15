@@ -1286,7 +1286,7 @@ class NewsModel:
             query_access = self.get_query_access(0, False, "index")
             body['query']['filtered']['filter']['and']['filters'] += query_access
             body['size'] = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).count()
-            print body['size']
+            body['size'] = 30
             r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             self.result['value'] = []
             for i in r['hits']['hits']:
