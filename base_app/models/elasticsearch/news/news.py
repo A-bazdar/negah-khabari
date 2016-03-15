@@ -1281,9 +1281,9 @@ class NewsModel:
                 }
             }
             query_search = self.get_query_search(_search)
-            body['filter']['and']['filters'] += query_search
+            body['query']['filtered']['filter']['and']['filters'] += query_search
             query_access = self.get_query_access(0, False, "index")
-            body['filter']['and']['filters'] += query_access
+            body['query']['filtered']['filter']['and']['filters'] += query_access
             body['size'] = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).count()
             print body['size']
             r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
