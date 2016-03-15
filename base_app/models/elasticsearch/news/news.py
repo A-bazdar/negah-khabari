@@ -1251,6 +1251,7 @@ class NewsModel:
                 body['filter']['and']['filters'] += query_grouping
             query_access = self.get_query_access(len(_search['agency']), query_grouping, _type)
             body['filter']['and']['filters'] += query_access
+            print body
             r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             try:
                 count_all = r['hits']['total']
