@@ -67,8 +67,9 @@ for bolton in all_bolton:
     bolton_type = UserModel(_id=bolton['user']).get_bolton_type(bolton['type'])
     for section in bolton['sections']:
         pattern_search = UserModel(_id=bolton['user']).get_pattern_search(section['pattern'])['value']
-        print section
-        print pattern_search
+        print int(bolton_type['from'])
+        print now.hour
+        print int(bolton_type['time_active'])
         # if (int(bolton_type['from']) <= now.hour <= int(bolton_type['from']) + int(bolton_type['time_active'])) and (bolton_type['read_date'] is None or (now - bolton_type['read_date']).days < 1):
         #     _search = get_searches(pattern_search)
         #     permission = PermissionClass(user=bolton['user']).permission()
