@@ -77,6 +77,7 @@ for bolton in all_bolton:
             keyword=pattern_search['keyword']
         )
         for news in NewsModel(full_current_user=full_current_user, permission=permission).get_all_full(_search=_search)['value']:
-            print news['_id']
+            print bolton['_id'], type(bolton['_id'])
+            print section['_id'], type(section['_id'])
                 # BoltonNewsModel(bolton=bolton['_id'], section=section['_id']).save(news=news)
 
