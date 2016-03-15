@@ -1267,6 +1267,33 @@ class NewsModel:
                                 data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def get_all_full(self, _search=None):
+        try:
+            body = {
+                "filter": {
+                    "and": {
+                        "filters": []
+                    }
+                },
+                "sort": {"date": {"order": "desc"}}
+            }
+            body['size'] = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).count()
+            query_search = self.get_query_search(_search)
+            body['filter']['and']['filters'] += query_search
+            query_access = self.get_query_access(0, False, "index")
+            body['filter']['and']['filters'] += query_access
+            r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
+            self.result['value'] = []
+            for i in r['hits']['hits']:
+                self.result['value'].append(self.get_elastic(i))
+            self.result['status'] = True
+            return self.result
+
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all_by_subject',
+                                data='doc_type: ' + NewsModel.doc_type)
+            return self.result
+
     def count_all(self):
         try:
             r = ElasticSearchModel(doc_type=NewsModel.doc_type).count_all()
@@ -1534,38 +1561,41 @@ class NewsModel:
                                 data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
+    def get_elastic(self, _r):
+        result = _r['_source']
+        result['_id'] = _r['_id']
+        options = self.get_options(_r['_id'])
+        result['note'] = options['note']
+        result['star'] = options['star']
+        result['important'] = options['important']
+        result['read'] = options['read']
+        _date = d_parser.parse(result['date'])
+        result['date'] = d_parser.parse(_date.strftime("%Y/%m/%d %H:%M:%S"))
+        try:
+            result['category_name'] = CategoryModel(_id=ObjectId(result['category'])).get_one()['value']['name']
+        except:
+            result['category_name'] = None
+        try:
+            agency = AgencyModel(_id=ObjectId(result['agency'])).get_one_imp()
+            result['agency_name'] = agency['name']
+            result['agency_color'] = agency['color']
+        except:
+            result['agency_name'] = u'ندارد'
+            result['agency_color'] = None
+        try:
+            result['subject_name'] = SubjectModel(_id=ObjectId(result['subject'])).get_one()['value']['name']
+        except:
+            result['subject_name'] = None
+        try:
+            result['direction_name'] = DirectionModel(_id=ObjectId(result['direction'])).get_one()['value']['name']
+        except:
+            result['direction_name'] = None
+        return result
+
     def get_one_elastic(self):
         try:
             r = ElasticSearchModel(doc_type=NewsModel.doc_type, _id=self.id).get_one()
-            result = r['_source']
-            result['_id'] = r['_id']
-            options = self.get_options(r['_id'])
-            result['note'] = options['note']
-            result['star'] = options['star']
-            result['important'] = options['important']
-            result['read'] = options['read']
-            _date = d_parser.parse(result['date'])
-            result['date'] = d_parser.parse(_date.strftime("%Y/%m/%d %H:%M:%S"))
-            try:
-                result['category_name'] = CategoryModel(_id=ObjectId(result['category'])).get_one()['value']['name']
-            except:
-                result['category_name'] = None
-            try:
-                agency = AgencyModel(_id=ObjectId(result['agency'])).get_one_imp()
-                result['agency_name'] = agency['name']
-                result['agency_color'] = agency['color']
-            except:
-                result['agency_name'] = u'ندارد'
-                result['agency_color'] = None
-            try:
-                result['subject_name'] = SubjectModel(_id=ObjectId(result['subject'])).get_one()['value']['name']
-            except:
-                result['subject_name'] = None
-            try:
-                result['direction_name'] = DirectionModel(_id=ObjectId(result['direction'])).get_one()['value']['name']
-            except:
-                result['direction_name'] = None
-            self.result['value'] = result
+            self.result['value'] = self.get_elastic(r)
             self.result['status'] = True
             return self.result
 

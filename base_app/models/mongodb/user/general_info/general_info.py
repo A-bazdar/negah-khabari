@@ -1647,3 +1647,40 @@ class UserModel(BaseModel):
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result
+
+    def get_bolton_type(self, _type):
+        try:
+            __body = {'_id': self.id, 'bolton_type._id': _type}
+            __key = {"bolton_type.$": 1}
+            a = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
+            a = a['bolton_type'][0] if 'bolton_type' in a.keys() else {}
+            self.result['value'] = {
+                "from": a['from'],
+                "name": a['name'],
+                "time_active": a['time_active'],
+                "date": a['date'],
+                "active": a['active'],
+                "read_date": a['read_date'] if 'read_date' in a.keys() else None,
+                "_id": a['_id']
+            }
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            self.result['value'] = False
+            return self.result
+
+    def get_pattern_search(self, _pattern):
+        try:
+            __body = {'_id': self.id, 'pattern_search._id': _pattern}
+            __key = {"pattern_search.$": 1}
+            a = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
+            self.result['value'] = a['pattern_search'][0] if 'pattern_search' in a.keys() else []
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            self.result['value'] = False
+            return self.result

@@ -140,6 +140,18 @@ class BoltonModel(BaseModel):
             self.result['value'] = []
             return self.result
 
+    def get_all_automatic(self):
+        try:
+            __body = {"manual": False}
+            self.result['value'] = MongodbModel(collection='bolton', body=__body).get_all()
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > bolton')
+            self.result['value'] = []
+            return self.result
+
     def get_one(self):
         try:
             __body = {"_id": self.id}
