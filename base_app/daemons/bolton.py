@@ -69,6 +69,7 @@ all_bolton = BoltonModel().get_all_automatic()['value']
 for bolton in all_bolton:
     bolton_type = UserModel(_id=bolton['user']).get_bolton_type(bolton['type'])['value']
     for section in bolton['sections']:
+        print section
         pattern_search = UserModel(_id=bolton['user']).get_pattern_search(section['pattern'])['value']
         if (int(bolton_type['from']) <= now.hour <= int(bolton_type['from']) + int(bolton_type['time_active'])) and (bolton_type['read_date'] is None or (now - bolton_type['read_date']).days < 1):
             _search = get_searches(pattern_search['pattern_search'])
