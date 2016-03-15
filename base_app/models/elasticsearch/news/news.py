@@ -1270,18 +1270,22 @@ class NewsModel:
     def get_all_full(self, _search=None):
         try:
             body = {
-                "filter": {
-                    "and": {
-                        "filters": []
+                "query": {
+                    "filtered": {
+                        "filter": {
+                            "and": {
+                                "filters": []
+                            }
+                        }
                     }
-                },
-                "sort": {"date": {"order": "desc"}}
+                }
             }
             query_search = self.get_query_search(_search)
             body['filter']['and']['filters'] += query_search
             query_access = self.get_query_access(0, False, "index")
             body['filter']['and']['filters'] += query_access
             body['size'] = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).count()
+
             r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             self.result['value'] = []
             for i in r['hits']['hits']:
