@@ -67,11 +67,8 @@ for bolton in all_bolton:
     bolton_type = UserModel(_id=bolton['user']).get_bolton_type(bolton['type'])['value']
     for section in bolton['sections']:
         pattern_search = UserModel(_id=bolton['user']).get_pattern_search(section['pattern'])['value']
-        print int(bolton_type['from'])
-        print now.hour
-        print int(bolton_type['time_active'])
-        print bolton_type['read_date']
-        # if (int(bolton_type['from']) <= now.hour <= int(bolton_type['from']) + int(bolton_type['time_active'])) and (bolton_type['read_date'] is None or (now - bolton_type['read_date']).days < 1):
+        if (int(bolton_type['from']) <= now.hour <= int(bolton_type['from']) + int(bolton_type['time_active'])) and (bolton_type['read_date'] is None or (now - bolton_type['read_date']).days < 1):
+            print section
         #     _search = get_searches(pattern_search)
         #     permission = PermissionClass(user=bolton['user']).permission()
         #     for news in NewsModel(permission=permission).get_all_full(_search=_search)['value']:
