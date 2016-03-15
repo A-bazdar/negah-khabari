@@ -70,6 +70,7 @@ for bolton in all_bolton:
         print int(bolton_type['from'])
         print now.hour
         print int(bolton_type['time_active'])
+        print bolton_type['read_date']
         # if (int(bolton_type['from']) <= now.hour <= int(bolton_type['from']) + int(bolton_type['time_active'])) and (bolton_type['read_date'] is None or (now - bolton_type['read_date']).days < 1):
         #     _search = get_searches(pattern_search)
         #     permission = PermissionClass(user=bolton['user']).permission()
