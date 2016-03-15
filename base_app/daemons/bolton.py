@@ -64,7 +64,7 @@ def get_searches(search):
 now = datetime.datetime.now()
 all_bolton = BoltonModel().get_all_automatic()['value']
 for bolton in all_bolton:
-    bolton_type = UserModel(_id=bolton['user']).get_bolton_type(bolton['type'])
+    bolton_type = UserModel(_id=bolton['user']).get_bolton_type(bolton['type'])['value']
     for section in bolton['sections']:
         pattern_search = UserModel(_id=bolton['user']).get_pattern_search(section['pattern'])['value']
         print int(bolton_type['from'])
