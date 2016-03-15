@@ -54,8 +54,11 @@ def get_searches(search):
     except:
         key_words = []
     exactly_word = search['exactly_word']
-    agency = search['agency']
-    agency = [str(i['id']) for i in agency]
+    try:
+        agency = search['agency']
+        agency = [str(i['id']) for i in agency]
+    except:
+        agency = []
     each_words = search['each_words']
     without_words = search['without_words']
 
