@@ -1277,11 +1277,12 @@ class NewsModel:
                 },
                 "sort": {"date": {"order": "desc"}}
             }
-            body['size'] = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).count()
             query_search = self.get_query_search(_search)
             body['filter']['and']['filters'] += query_search
             query_access = self.get_query_access(0, False, "index")
             body['filter']['and']['filters'] += query_access
+            body['size'] = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).count()
+            print body['size']
             r = ElasticSearchModel(doc_type=NewsModel.doc_type, body=body).search()
             self.result['value'] = []
             for i in r['hits']['hits']:
@@ -1290,7 +1291,7 @@ class NewsModel:
             return self.result
 
         except:
-            Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all_by_subject',
+            print Debug.get_exception(sub_system='admin', severity='error', tags='briefs > get_all_by_subject',
                                 data='doc_type: ' + NewsModel.doc_type)
             return self.result
 
