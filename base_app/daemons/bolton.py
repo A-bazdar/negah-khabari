@@ -45,7 +45,7 @@ for bolton in all_bolton:
     for section in bolton['sections']:
         pattern_search = UserModel(_id=bolton['user']).get_pattern_search(section['pattern'])['value']
         _date = now.replace(hour=int(bolton_type['from']) + int(bolton_type['time_active']), minute=0, second=0, microsecond=0)
-        if _date << now and (bolton_type['read_date'] is None or (now.date() != bolton_type['read_date'].date())):
+        if _date << now and (bolton['read_date'] is None or (now.date() != bolton['read_date'].date())):
             _search = get_searches(pattern_search['pattern_search'], int(bolton_type['from']), int(bolton_type['time_active']))
             permission = PermissionClass(user=bolton['user']).permission()
             full_current_user = dict(

@@ -1660,7 +1660,6 @@ class UserModel(BaseModel):
                 "time_active": a['time_active'],
                 "date": a['date'],
                 "active": a['active'],
-                "read_date": a['read_date'] if 'read_date' in a.keys() else None,
                 "_id": a['_id']
             }
             self.result['status'] = True

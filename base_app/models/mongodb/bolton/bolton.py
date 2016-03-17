@@ -144,8 +144,8 @@ class BoltonModel(BaseModel):
         try:
             __body = {"manual": False}
             self.result['value'] = MongodbModel(collection='bolton', body=__body).get_all()
+            self.result['value']["read_date"] = self.result['value']['read_date'] if 'read_date' in self.result['value'].keys() else None,
             self.result['status'] = True
-
             return self.result
         except:
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > get_all', data='collection > bolton')
