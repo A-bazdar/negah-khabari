@@ -1676,8 +1676,7 @@ class UserModel(BaseModel):
             __body = {'_id': self.id, 'pattern_search._id': _pattern}
             __key = {"pattern_search.$": 1, "keyword": 1}
             a = MongodbModel(collection='user', body=__body, key=__key).get_one_key()
-            self.result['value'] = dict(
-                keyword=a['keyword'] if 'keyword' in a.keys() else [],
+            self.result['value'] = dict(keyword=a['keyword'] if 'keyword' in a.keys() else [],
                 pattern_search=a['pattern_search'][0] if 'pattern_search' in a.keys() else []
             )
             self.result['status'] = True

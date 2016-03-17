@@ -231,6 +231,21 @@ class BoltonModel(BaseModel):
             Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
             return self.result
 
+    def update_bolton_read_date(self, _read_date):
+        try:
+            __body = {"$set": {
+                'read_date': _read_date
+            }}
+            __condition = {'_id': self.id}
+            MongodbModel(collection='bolton', condition=__condition, body=__body).update()
+            self.result['value'] = True
+            self.result['status'] = True
+
+            return self.result
+        except:
+            Debug.get_exception(sub_system='admin', severity='error', tags='mongodb > delete', data='collection > user')
+            return self.result
+
     def delete(self):
         try:
             __body = {'_id': self.id}
