@@ -391,7 +391,7 @@ class NewsModel:
                 summary = _fields['title'][0]
 
             try:
-                body = _fields['body'][0]
+                body = self.get_body(_fields['body'][0])
             except:
                 body = None
             options = self.get_options(_id)
