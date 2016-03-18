@@ -27,7 +27,7 @@ class NewsModel:
     doc_type = 'news'
 
     def __init__(self, _id=None, title=None, ro_title=None, summary=None, thumbnail=None, link=None, agency=None,
-                 subject=None, body=None, date=None, content=None, full_current_user=None, images=None, video=None,
+                 subject=None, body=None, date=None, content=None, full_current_user=None, images=None, image=None, video=None,
                  sound=None, geographic=None, group=None, category=None, direction=None, permission=None):
         self.id = _id
         self.title = title
@@ -42,6 +42,7 @@ class NewsModel:
         self.link = link
         self.content = content
         self.images = images
+        self.image = image
         self.video = video
         self.sound = sound
         self.geographic = geographic
@@ -165,6 +166,7 @@ class NewsModel:
                 'date': self.date,
                 'content': self.content,
                 'images': self.images,
+                'image': self.image,
                 'video': self.video,
                 'sound': self.sound,
                 'geographic': self.geographic,
@@ -207,6 +209,7 @@ class NewsModel:
                 'date': body['_source']['date'],
                 'content': body['_source']['content'],
                 'images': body['_source']['images'],
+                'image': body['_source']['image'],
                 'video': body['_source']['video'],
                 'sound': body['_source']['sound'],
                 'read_date': body['_source']['read_date'],
@@ -252,6 +255,7 @@ class NewsModel:
                 content=content,
                 subject=subject,
                 images=_source['images'],
+                image=_source['image'],
                 video=_source['video'],
                 sound=_source['sound'],
                 options=options,
@@ -341,7 +345,8 @@ class NewsModel:
                 thumbnail=_source['thumbnail'],
                 _date=CustomDateTime().get_time_difference(_date),
                 agency_name=agency_name,
-                images=_source['images'] if 'images' in _source.keys() else [_source['thumbnail']],
+                images=_source['images'] if 'images' in _source.keys() else [],
+                image=_source['image'] if 'image' in _source.keys() else None,
                 video=_source['video'] if 'video' in _source.keys() else None,
                 sound=_source['sound'] if 'sound' in _source.keys() else None,
                 agency_color=agency_color,
@@ -1224,7 +1229,7 @@ class NewsModel:
             body = {
                 "from": _page * _size, "size": _size,
                 "fields": ["_id", "link", "title", "ro_title", "summary", "thumbnail", "read_date", "date",
-                           "agency", "images", "video", "sound"],
+                           "agency", "images", "image", "video", "sound"],
                 "filter": {
                     "and": {
                         "filters": []
@@ -1417,9 +1422,9 @@ class NewsModel:
     def update_news_hash_title(self, __title):
         try:
             body = {
-                "script": "ctx._source.hash_title = __read_date",
+                "script": "ctx._source.image = __read_date",
                 "params": {
-                    "__read_date": self.get_hash(__title)
+                    "__read_date": "http://media.mehrnews.com/d/2016/03/18/3/2030977.jpg"
                 }
             }
 
@@ -1484,7 +1489,7 @@ class NewsModel:
             body = {
                 "from": _page * _size, "size": _size,
                 "fields": ["_id", "title", "thumbnail", "read_date", "date",
-                           "agency", "images", "video", "sound"],
+                           "agency", "images", "image", "video", "sound"],
                 "query": {
                     "filtered": {
                         "filter": {
