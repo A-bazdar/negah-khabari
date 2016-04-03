@@ -617,14 +617,18 @@ class UserModel(BaseModel):
                                 data='collection > user')
             return self.result
 
-    def set_last_login(self):
+    def set_last_login(self, user_login, login):
         try:
             condition = {'_id': self.id}
-            body = {
-                '$set': {
-                    'last_login': datetime.datetime.now()
-                }
-            }
+            if login:
+                body = {'$set': {
+                    'last_login': datetime.datetime.now(),
+                    'user_login': user_login
+                }}
+            else:
+                body = {'$set': {
+                    'user_login': user_login
+                }}
             self.result['value'] = MongodbModel(collection='user', condition=condition, body=body).update()
             self.result['status'] = True
 
