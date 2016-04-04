@@ -155,7 +155,7 @@
 }
 
 .editor11_preview {
-    height: 400px;
+    height: 800px;
 }
 
 .editor12_preview {
@@ -167,6 +167,10 @@
 }
 
 .editor15_preview {
+    height: 800px;
+}
+
+.editor14_preview {
     height: 800px;
 }
 
