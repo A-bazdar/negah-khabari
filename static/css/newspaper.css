@@ -247,8 +247,8 @@
     height: 400px;
 }
 
-.editor37_preview {
-    height: 1600px;
+.editor30_preview {
+    height: 400px;
 }
 
 .editor31_preview {
@@ -261,6 +261,22 @@
 
 .editor33_preview {
     height: 400px;
+}
+
+.editor34_preview {
+    height: 800px;
+}
+
+.editor35_preview {
+    height: 400px;
+}
+
+.editor36_preview {
+    height: 400px;
+}
+
+.editor37_preview {
+    height: 1600px;
 }
 
 .separator2 {
