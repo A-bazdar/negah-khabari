@@ -126,18 +126,35 @@
     background: #46639D;
 }
 
-.editor4_preview {
-
-}
-
-.editor5_preview {
-
-}
-
 .editor_preview{
     overflow: hidden;
 }
 
+
+.editor1_preview {
+    height: 400px;
+}
+
+.editor2_preview {
+    height: 400px;
+}
+
+
+.editor3_preview {
+    height: 400px;
+}
+
+.editor4_preview {
+    height: 400px;
+}
+
+.editor5_preview {
+    height: 400px;
+}
+
+.editor6_preview {
+    height: 400px;
+}
 .editor7_preview {
     height: 800px;
 }
